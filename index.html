@@ -6,113 +6,106 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="시간표">
-<title>2026-1학기 시간표</title>
+<title>2026-1 시간표</title>
 <style>
-/* 1. 기본 리셋 및 폰트 */
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Pretendard','Helvetica Neue',sans-serif;background:#F2F2F7;color:#1C1C1E}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:#F2F2F7;color:#1C1C1E;overflow:hidden;}
 
-/* 2. 상단 헤더 */
-.hdr{background:#fff;padding:12px 14px 10px;border-bottom:1px solid #E5E5EA;position:sticky;top:0;z-index:200;box-shadow:0 1px 3px rgba(0,0,0,0.02)}
+.hdr{background:#fff;padding:12px 14px 10px;border-bottom:1px solid #E5E5EA;position:sticky;top:0;z-index:200}
 .hdr-top{display:flex;align-items:center;justify-content:space-between}
-.ht{font-size:17px;font-weight:800;letter-spacing:-0.3px}
-.hs{font-size:12px;color:#8E8E93;margin-top:3px;font-weight:500}
+.ht{font-size:16px;font-weight:700}
+.hs{font-size:11px;color:#8E8E93;margin-top:2px}
 .hdr-right{display:flex;align-items:center;gap:6px}
 .wnav{display:flex;align-items:center;gap:6px}
-.nb{background:#F2F2F7;border:none;border-radius:8px;width:34px;height:34px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#007AFF;transition:background 0.2s;-webkit-tap-highlight-color:transparent}
-.nb:active{background:#E5E5EA}
-.nb:disabled{color:#C7C7CC;background:#F9F9FB}
-.wl{font-size:15px;font-weight:700;min-width:48px;text-align:center;letter-spacing:-0.3px}
-.icon-btn{background:none;border:none;font-size:20px;cursor:pointer;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:background 0.2s;-webkit-tap-highlight-color:transparent}
-.icon-btn:active{background:#F2F2F7}
+.nb{background:#F2F2F7;border:none;border-radius:8px;width:34px;height:34px;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#007AFF;-webkit-tap-highlight-color:transparent}
+.nb:disabled{color:#C7C7CC}
+.wl{font-size:15px;font-weight:600;min-width:48px;text-align:center}
+.icon-btn{background:none;border:none;font-size:20px;cursor:pointer;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px;-webkit-tap-highlight-color:transparent}
 
-/* 3. 메인 콘텐츠 및 테이블 스와이프 래퍼 */
-.main{padding:12px 10px;padding-bottom:90px}
-.sw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.06);border:1px solid #EFEFEF}
+/* 한 화면에 맞추기 위한 레이아웃 조정 */
+.main{padding:10px 8px; height:calc(100vh - 120px); overflow-y:auto;}
+.sw{height:100%; border-radius:14px; background:#fff; box-shadow:0 1px 6px rgba(0,0,0,0.09); display:flex;}
 
-/* 4. 테이블 레이아웃 및 요일 헤더 강조 */
-.tt{width:100%;min-width:350px;border-collapse:collapse;table-layout:fixed;border-radius:14px;overflow:hidden;background:#fff}
-.th-t{width:42px;background:#007AFF;border-bottom:none}
-.td-t{width:42px;background:#F9F9FB;border-top:1px solid #EFEFEF;border-right:1px solid #EFEFEF;padding:8px 2px;text-align:center;vertical-align:top}
-.pn{display:block;font-size:11px;font-weight:800;color:#3A3A3C}
-.pt{display:block;font-size:9px;color:#AEAEB2;margin-top:2px;font-weight:500}
+.tt{width:100%;min-width:360px;border-collapse:collapse;table-layout:fixed; height:100%;}
+.tt tbody tr {height:9%;} /* 10교시 + 점심시간 = 11줄이 균등 분할됨 */
 
-/* 요일 헤더 강조 (파란색 톤) */
-.th-d{font-size:14px;font-weight:700;text-align:center;padding:10px 2px 8px;background:#007AFF;color:#FFFFFF;border-left:1px solid rgba(255,255,255,0.15)}
-.th-date{font-size:10px;font-weight:500;color:rgba(255,255,255,0.85);display:block;margin-top:2px}
-/* 오늘 날짜 하이라이트 */
-.th-d.tc{background:#0056D2;box-shadow:inset 0 -3px 0 #FFF}
-
-/* 5. 셀 크기 고정 (세로 간격 통일) */
-.td-c{border-top:1px solid #EFEFEF;border-left:1px solid #EFEFEF;padding:4px;vertical-align:top;height:72px;overflow:hidden}
+.th-t{width:40px;background:#F9F9FB;border-bottom:2px solid #E5E5EA}
+.td-t{width:40px;background:#F9F9FB;border-top:1px solid #EFEFEF;padding:4px 2px;text-align:center;vertical-align:middle}
+.pn{display:block;font-size:10px;font-weight:700;color:#8E8E93}
+.pt{display:block;font-size:9px;color:#AEAEB2;margin-top:1px}
+.th-d{font-size:13px;font-weight:600;text-align:center;padding:8px 2px 6px;background:#F9F9FB;border-bottom:2px solid #E5E5EA;border-left:1px solid #EFEFEF; height:45px;}
+.th-date{font-size:10px;font-weight:400;color:#8E8E93;display:block;margin-top:1px}
+.th-d.tc{background:#F0EFFF;color:#5856D6;border-bottom:2px solid #5856D6;box-shadow:inset 2px 0 0 #5856D6,inset -2px 0 0 #5856D6}
+.th-d.tc .th-date{color:#5856D6;opacity:.85}
 .td-c.tc{background:#FAFAFF;box-shadow:inset 2px 0 0 #5856D6,inset -2px 0 0 #5856D6}
-.td-e{background:#FCFCFC}
+.tt tbody tr:last-child .td-c.tc{box-shadow:inset 2px 0 0 #5856D6,inset -2px 0 0 #5856D6,inset 0 -2px 0 #5856D6}
 
-/* 점심시간 행 분리 및 압축 */
-.lunchrow .td-t{border-top:1px dashed #C7C7CC;background:#F9F9FB;height:32px;padding:4px 0}
-.td-lunch{text-align:center;font-size:11px;font-weight:600;color:#8E8E93;padding:4px;border-top:1px dashed #C7C7CC;border-left:1px solid #EFEFEF;height:32px;background:#FCFCFD}
+.td-c{border-top:1px solid #EFEFEF;border-left:1px solid #EFEFEF;padding:2px;vertical-align:middle;max-height:0;} /* max-height 0 trick for flex child overflow */
+.td-e{background:#FAFAFA}
+.card{border-radius:6px;padding:3px 4px;height:100%;display:flex;flex-direction:column;justify-content:center;min-height:0;overflow:hidden;}
+.cn-s, .cn-exam, .cn-name, .cn-p, .cn-t {
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.cn-s{font-size:11px;font-weight:700;color:#fff;line-height:1.2;}
+.cn-exam{font-size:11px;font-weight:800}
+.cn-name{font-size:10px;font-weight:600;color:rgba(255,255,255,.95);margin-top:1px;}
+.cn-p{font-size:9px;color:rgba(255,255,255,.88);margin-top:1px;}
+.cn-t{font-size:8px;color:rgba(255,255,255,.72);margin-top:auto;}
+.lunchrow .td-t{border-top:1px dashed #C7C7CC;background:#F9F9FB}
+.td-lunch{text-align:center;font-size:11px;color:#8E8E93;padding:5px;border-top:1px dashed #C7C7CC;border-left:1px solid #EFEFEF}
 
-/* 6. 카드 디자인 다듬기 */
-.card{border-radius:6px;padding:6px 7px;height:100%;display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(0,0,0,0.08);border:1px solid rgba(0,0,0,0.04);overflow:hidden}
-.cn-s{font-size:11.5px;font-weight:700;color:#fff;line-height:1.2;word-break:keep-all;overflow-wrap:break-word;white-space:normal;letter-spacing:-0.2px}
-.cn-exam{font-size:12px;font-weight:800;color:#FFF8D6;text-shadow:0 1px 1px rgba(0,0,0,0.2)}
-.cn-name{font-size:11px;font-weight:600;color:rgba(255,255,255,.95);margin-top:2px;word-break:keep-all}
-.cn-p{font-size:10px;color:rgba(255,255,255,.9);margin-top:3px;font-weight:500;word-break:keep-all}
-.cn-t{font-size:9.5px;color:rgba(255,255,255,.75);margin-top:auto;padding-top:4px;font-weight:600}
-
-/* 범례 */
-.legend{margin-top:14px;background:#fff;border-radius:14px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.04);border:1px solid #E5E5EA}
-.lg-title{font-size:12px;font-weight:700;color:#8E8E93;margin-bottom:10px}
-.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.legend{margin-top:10px;background:#fff;border-radius:14px;padding:12px 14px}
+.lg-title{font-size:12px;font-weight:600;color:#8E8E93;margin-bottom:8px}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
 .li{display:flex;align-items:flex-start;gap:6px}
-.ld{width:11px;height:11px;border-radius:4px;flex-shrink:0;margin-top:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.05)}
-.ln{font-size:12px;font-weight:500;color:#3C3C43;line-height:1.4;word-break:keep-all;letter-spacing:-0.2px}
+.ld{width:10px;height:10px;border-radius:3px;flex-shrink:0;margin-top:2px}
+.ln{font-size:11px;color:#3C3C43;line-height:1.4;word-break:keep-all}
 
-/* 하단 네비게이션 */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid #E5E5EA;display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:100}
-.bn{flex:1;border:none;background:none;padding:10px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11px;font-weight:600;color:#8E8E93;cursor:pointer;-webkit-tap-highlight-color:transparent}
+/* bottom nav */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #E5E5EA;display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:100;height:60px;}
+.bn{flex:1;border:none;background:none;padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:#8E8E93;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bn.on{color:#007AFF}
 .bn-ic{font-size:22px;line-height:1}
 
-/* 목록 뷰 (List) */
+/* list view */
 .list-wrap{padding:4px 0}
-.dg{margin-bottom:12px}
-.dh{font-size:13px;font-weight:800;color:#8E8E93;padding:6px 4px 6px;letter-spacing:-0.2px}
-.lcard{background:#fff;border-radius:12px;margin-bottom:8px;display:flex;overflow:hidden;min-height:65px;box-shadow:0 1px 4px rgba(0,0,0,0.04);border:1px solid #E5E5EA}
-.lc-bar{width:6px;flex-shrink:0}
-.lc-body{flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:3px}
-.lc-s{font-size:14.5px;font-weight:700;word-break:keep-all;color:#1C1C1E;letter-spacing:-0.3px}
-.lc-p{font-size:12.5px;font-weight:500;color:#636366}
-.lc-t{font-size:11.5px;font-weight:600;color:#8E8E93;margin-top:2px}
+.dg{margin-bottom:8px}
+.dh{font-size:12px;font-weight:700;color:#8E8E93;padding:6px 4px 4px}
+.lcard{background:#fff;border-radius:12px;margin-bottom:6px;display:flex;overflow:hidden;min-height:60px}
+.lc-bar{width:5px;flex-shrink:0}
+.lc-body{flex:1;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.lc-s{font-size:14px;font-weight:700;word-break:keep-all}
+.lc-p{font-size:12px;color:#636366}
+.lc-t{font-size:11px;color:#8E8E93;margin-top:2px}
 
-/* 필터 뷰 (Filter) */
+/* filter */
 .fw{padding:4px 0}
-.fs{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,0.04);border:1px solid #E5E5EA}
-.fs-ttl{font-size:14px;font-weight:800;margin-bottom:12px;color:#1C1C1E}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:600;border:1.5px solid #E5E5EA;background:#fff;cursor:pointer;color:#636366;-webkit-tap-highlight-color:transparent;transition:all 0.2s}
-.no-res{text-align:center;padding:50px 20px;color:#8E8E93;font-size:15px;font-weight:600}
+.fs{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px}
+.fs-ttl{font-size:13px;font-weight:700;margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:5px 12px;border-radius:20px;font-size:12px;border:1.5px solid #E5E5EA;background:#fff;cursor:pointer;color:#636366;-webkit-tap-highlight-color:transparent}
+.no-res{text-align:center;padding:40px;color:#8E8E93;font-size:14px}
 
-/* 모달 오버레이 (Calendar) */
-.ovl{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s ease}
+/* calendar overlay */
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
 .ovl.show{opacity:1;pointer-events:all}
-.cal-sh{background:#fff;border-radius:24px 24px 0 0;width:100%;padding-bottom:env(safe-area-inset-bottom,20px);transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 -4px 16px rgba(0,0,0,0.1)}
+.cal-sh{background:#fff;border-radius:20px 20px 0 0;width:100%;padding-bottom:env(safe-area-inset-bottom,16px);transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .ovl.show .cal-sh{transform:translateY(0)}
-.cal-top{display:flex;align-items:center;justify-content:space-between;padding:18px 20px 12px}
-.cal-ttl{font-size:18px;font-weight:800}
-.cal-x{background:#F2F2F7;border:none;border-radius:12px;width:32px;height:32px;font-size:16px;cursor:pointer;color:#636366;display:flex;align-items:center;justify-content:center}
-.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px 12px}
-.cal-m{font-size:16px;font-weight:700}
-.cal-nb{background:#F2F2F7;border:none;border-radius:10px;width:34px;height:34px;font-size:20px;cursor:pointer;color:#007AFF;display:flex;align-items:center;justify-content:center}
-.cal-g{display:grid;grid-template-columns:repeat(7,1fr);padding:0 12px 16px;gap:4px}
-.cal-dow{text-align:center;font-size:12px;font-weight:700;color:#8E8E93;padding:4px 0}
-.cday{text-align:center;padding:4px;cursor:default;-webkit-tap-highlight-color:transparent}
+.cal-top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px}
+.cal-ttl{font-size:16px;font-weight:700}
+.cal-x{background:none;border:none;font-size:22px;cursor:pointer;color:#636366;padding:4px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0 16px 8px}
+.cal-m{font-size:15px;font-weight:600}
+.cal-nb{background:#F2F2F7;border:none;border-radius:8px;width:30px;height:30px;font-size:18px;cursor:pointer;color:#007AFF;display:flex;align-items:center;justify-content:center}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 14px;gap:2px}
+.cal-dow{text-align:center;font-size:11px;font-weight:600;color:#8E8E93;padding:4px 0}
+.cday{text-align:center;padding:2px;cursor:default;-webkit-tap-highlight-color:transparent}
 .cday.ck{cursor:pointer}
-.cdn{font-size:15px;font-weight:600;line-height:1;padding:8px 0 4px;border-radius:10px;transition:background 0.2s, color 0.2s}
-.cday.iw .cdn{background:#EEF1FF;color:#5856D6;font-weight:800;}
-.cday.td2 .cdn{background:#007AFF!important;color:#fff!important;border-radius:10px!important;box-shadow:0 2px 6px rgba(0,122,255,0.4)}
-.cdot{height:6px;display:flex;justify-content:center;align-items:center;margin-top:3px}
-.dtr{width:6px;height:6px;border-radius:50%;background:#E74C3C;display:inline-block}
+.cdn{font-size:14px;line-height:1;padding:6px 0 2px;border-radius:8px}
+.cday.iw .cdn{background:#EEF1FF;color:#5856D6;font-weight:700;border-radius:0}
+.cday.td2 .cdn{background:#007AFF!important;color:#fff!important;border-radius:8px!important}
+.cdot{height:5px;display:flex;justify-content:center;align-items:center;margin-top:2px}
+.dtr{width:5px;height:5px;border-radius:50%;background:#E74C3C;display:inline-block}
 </style>
 </head>
 <body>
@@ -124,9 +117,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Pretendard','Helvetica Neue',
       <div class="hs" id="wr"></div>
     </div>
     <div class="hdr-right">
-      <label for="csv-upload" class="icon-btn" title="엑셀(CSV) 시간표 업로드">📤</label>
-      <input type="file" id="csv-upload" accept=".csv" style="display:none;">
-      
+      <input type="file" id="csv-upload" accept=".csv" style="display:none">
+      <button class="icon-btn" onclick="document.getElementById('csv-upload').click()" title="CSV 업로드">📂</button>
       <button class="icon-btn" id="cal-btn">📅</button>
       <div class="wnav" id="wnav">
         <button class="nb" id="pb">‹</button>
@@ -154,29 +146,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Pretendard','Helvetica Neue',
       <button class="cal-nb" id="cal-n">›</button>
     </div>
     <div class="cal-g">
-      <div class="cal-dow" style="color:#E74C3C">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div>
-      <div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow" style="color:#007AFF">토</div>
+      <div class="cal-dow">일</div><div class="cal-dow">월</div><div class="cal-dow">화</div>
+      <div class="cal-dow">수</div><div class="cal-dow">목</div><div class="cal-dow">금</div><div class="cal-dow">토</div>
     </div>
     <div class="cal-g" id="cal-g"></div>
   </div>
 </div>
 
 <script>
-// 기본 색상 팔레트 (새로운 과목 업로드 시 동적 할당용)
-var defaultColors = ['#4A90D9', '#5CB85C', '#F39C12', '#1ABC9C', '#27AE60', '#95A5A6', '#2980B9', '#8E44AD', '#E74C3C', '#34495E', '#D35400', '#16A085', '#C0392B', '#2C3E50'];
-var colorIndex = 0;
+// 전역 변수 초기화 (기본값 비워둠 - 로드시 샘플 생성 방지용이나, 기존 데이터 대체)
+var wh = {}, wl = {}, wdd = {};
+var wks = [], ed = [], merged = [], fsubj = [];
+var cmap = {"근로자의날": "#95A5A6", "대체휴무": "#95A5A6", "문제바탕학습1": "#4A90D9", "생애주기": "#E8734A", "시험": "#E8734A", "실험및논문연구2": "#5CB85C", "어린이날": "#95A5A6", "의료면담1": "#F39C12", "의학생화학": "#1ABC9C", "인체미세구조 실습": "#3498DB", "인체미세구조와 기능": "#27AE60", "인체반응 및 병태생리": "#D35400", "인체질병형태학실습": "#16A085", "환자의사사회1": "#2980B9"};
+var palette = ['#1ABC9C', '#2ECC71', '#3498DB', '#9B59B6', '#34495E', '#F1C40F', '#E67E22', '#E74C3C', '#95A5A6', '#16A085', '#27AE60', '#2980B9', '#8E44AD', '#F39C12', '#D35400', '#C0392B'];
 
-// 초기 제공된 데이터
-var merged = [{"week": "1", "date": "2026-03-16", "day": "월", "period": 1, "subject": "진급식", "professor": "", "is_exam": false}, {"week": "1", "date": "2026-03-16", "day": "월", "period": 3, "subject": "인체미세구조와 기능", "professor": "송창호", "is_exam": false}, {"week": "1", "date": "2026-03-17", "day": "화", "period": 1, "subject": "의학생화학", "professor": "김종석", "is_exam": false}, {"week": "1", "date": "2026-03-17", "day": "화", "period": 2, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "1", "date": "2026-03-17", "day": "화", "period": 3, "subject": "인체미세구조와 기능", "professor": "송창호", "is_exam": false}, {"week": "1", "date": "2026-03-17", "day": "화", "period": 5, "subject": "환자의사사회1", "professor": "권근상", "is_exam": false}, {"week": "1", "date": "2026-03-17", "day": "화", "period": 6, "subject": "환자의사사회1", "professor": "박지영", "is_exam": false}, {"week": "1", "date": "2026-03-17", "day": "화", "period": 7, "subject": "의료면담1", "professor": "박태원", "is_exam": false}, {"week": "1", "date": "2026-03-18", "day": "수", "period": 1, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "1", "date": "2026-03-18", "day": "수", "period": 3, "subject": "인체미세구조와 기능", "professor": "송창호", "is_exam": false}, {"week": "1", "date": "2026-03-18", "day": "수", "period": 5, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "1", "date": "2026-03-18", "day": "수", "period": 7, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "1", "date": "2026-03-19", "day": "목", "period": 1, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "1", "date": "2026-03-19", "day": "목", "period": 3, "subject": "인체미세구조와 기능", "professor": "송창호", "is_exam": false}, {"week": "1", "date": "2026-03-19", "day": "목", "period": 5, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "1", "date": "2026-03-19", "day": "목", "period": 7, "subject": "실험및논문연구2", "professor": "노상재", "is_exam": false}, {"week": "1", "date": "2026-03-19", "day": "목", "period": 9, "subject": "실험및논문연구2", "professor": "강경표", "is_exam": false}, {"week": "2", "date": "2026-03-23", "day": "월", "period": 1, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "2", "date": "2026-03-23", "day": "월", "period": 3, "subject": "인체미세구조와 기능", "professor": "송창호", "is_exam": false}, {"week": "2", "date": "2026-03-23", "day": "월", "period": 5, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "2", "date": "2026-03-24", "day": "화", "period": 1, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "2", "date": "2026-03-24", "day": "화", "period": 3, "subject": "인체미세구조와 기능", "professor": "송창호", "is_exam": false}, {"week": "2", "date": "2026-03-24", "day": "화", "period": 5, "subject": "환자의사사회1", "professor": "박지영", "is_exam": false}, {"week": "2", "date": "2026-03-24", "day": "화", "period": 6, "subject": "환자의사사회1", "professor": "권근상", "is_exam": false}, {"week": "2", "date": "2026-03-24", "day": "화", "period": 7, "subject": "의료면담1", "professor": "박태원", "is_exam": false}, {"week": "2", "date": "2026-03-24", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "2", "date": "2026-03-25", "day": "수", "period": 1, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "2", "date": "2026-03-25", "day": "수", "period": 3, "subject": "인체미세구조와 기능", "professor": "채옥희", "is_exam": false}, {"week": "2", "date": "2026-03-25", "day": "수", "period": 5, "subject": "의학생화학 중간 시험 (퀴즈)", "professor": "방인혁", "is_exam": true}, {"week": "2", "date": "2026-03-26", "day": "목", "period": 3, "subject": "인체미세구조와 기능", "professor": "채옥희", "is_exam": false}, {"week": "2", "date": "2026-03-26", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "강경표", "is_exam": false}, {"week": "2", "date": "2026-03-26", "day": "목", "period": 9, "subject": "실험및논문연구2", "professor": "김경민", "is_exam": false}, {"week": "2", "date": "2026-03-27", "day": "금", "period": 1, "subject": "의학생화학", "professor": "김종석", "is_exam": false}, {"week": "3", "date": "2026-03-30", "day": "월", "period": 1, "subject": "조직학 시험", "professor": "S", "is_exam": true}, {"week": "3", "date": "2026-03-30", "day": "월", "period": 3, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "3", "date": "2026-03-31", "day": "화", "period": 1, "subject": "의학생화학", "professor": "문영재", "is_exam": false}, {"week": "3", "date": "2026-03-31", "day": "화", "period": 5, "subject": "환자의사사회1", "professor": "김연동", "is_exam": false}, {"week": "3", "date": "2026-03-31", "day": "화", "period": 6, "subject": "환자의사사회1", "professor": "박지영", "is_exam": false}, {"week": "3", "date": "2026-03-31", "day": "화", "period": 7, "subject": "의료면담1", "professor": "정재희", "is_exam": false}, {"week": "3", "date": "2026-03-31", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "3", "date": "2026-04-01", "day": "수", "period": 1, "subject": "의학생화학", "professor": "문영재", "is_exam": false}, {"week": "3", "date": "2026-04-01", "day": "수", "period": 3, "subject": "인체미세구조와 기능", "professor": "최윤호", "is_exam": false}, {"week": "3", "date": "2026-04-01", "day": "수", "period": 5, "subject": "의학생화학", "professor": "문영재", "is_exam": false}, {"week": "3", "date": "2026-04-01", "day": "수", "period": 7, "subject": "인체미세구조와 기능", "professor": "최윤호", "is_exam": false}, {"week": "3", "date": "2026-04-02", "day": "목", "period": 1, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "3", "date": "2026-04-02", "day": "목", "period": 4, "subject": "의학생화학", "professor": "김종석", "is_exam": false}, {"week": "3", "date": "2026-04-02", "day": "목", "period": 5, "subject": "인체미세구조와 기능", "professor": "채옥희", "is_exam": false}, {"week": "3", "date": "2026-04-02", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "김기욱", "is_exam": false}, {"week": "3", "date": "2026-04-02", "day": "목", "period": 10, "subject": "실험및논문연구2", "professor": "김민걸", "is_exam": false}, {"week": "3", "date": "2026-04-03", "day": "금", "period": 1, "subject": "의학생화학", "professor": "김종석", "is_exam": false}, {"week": "4", "date": "2026-04-06", "day": "월", "period": 1, "subject": "의학생화학", "professor": "김종석", "is_exam": false}, {"week": "4", "date": "2026-04-06", "day": "월", "period": 3, "subject": "인체미세구조와 기능", "professor": "김형태", "is_exam": false}, {"week": "4", "date": "2026-04-06", "day": "월", "period": 5, "subject": "인체미세구조 실습", "professor": "송창호", "is_exam": false}, {"week": "4", "date": "2026-04-07", "day": "화", "period": 1, "subject": "의학생화학", "professor": "김종석", "is_exam": false}, {"week": "4", "date": "2026-04-07", "day": "화", "period": 3, "subject": "인체미세구조와 기능", "professor": "최윤호", "is_exam": false}, {"week": "4", "date": "2026-04-07", "day": "화", "period": 5, "subject": "환자의사사회1", "professor": "두아람", "is_exam": false}, {"week": "4", "date": "2026-04-07", "day": "화", "period": 6, "subject": "환자의사사회1", "professor": "김연동", "is_exam": false}, {"week": "4", "date": "2026-04-07", "day": "화", "period": 7, "subject": "의료면담1", "professor": "정재희", "is_exam": false}, {"week": "4", "date": "2026-04-07", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "4", "date": "2026-04-08", "day": "수", "period": 1, "subject": "의학생화학", "professor": "방인혁", "is_exam": false}, {"week": "4", "date": "2026-04-08", "day": "수", "period": 3, "subject": "인체미세구조와 기능", "professor": "김형태", "is_exam": false}, {"week": "4", "date": "2026-04-08", "day": "수", "period": 5, "subject": "인체미세구조 실습", "professor": "송창호", "is_exam": false}, {"week": "4", "date": "2026-04-09", "day": "목", "period": 1, "subject": "의학생화학 기말 시험", "professor": "방인혁", "is_exam": true}, {"week": "4", "date": "2026-04-09", "day": "목", "period": 3, "subject": "인체미세구조와 기능", "professor": "최윤호", "is_exam": false}, {"week": "4", "date": "2026-04-09", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "김민걸", "is_exam": false}, {"week": "4", "date": "2026-04-09", "day": "목", "period": 9, "subject": "실험및논문연구2", "professor": "김성훈", "is_exam": false}, {"week": "5", "date": "2026-04-13", "day": "월", "period": 1, "subject": "인체미세구조와 기능", "professor": "김형태", "is_exam": false}, {"week": "5", "date": "2026-04-13", "day": "월", "period": 3, "subject": "인체미세구조와 기능", "professor": "최윤호", "is_exam": false}, {"week": "5", "date": "2026-04-13", "day": "월", "period": 5, "subject": "인체미세구조 실습", "professor": "채옥희", "is_exam": false}, {"week": "5", "date": "2026-04-14", "day": "화", "period": 3, "subject": "인체미세구조와 기능", "professor": "최윤호", "is_exam": false}, {"week": "5", "date": "2026-04-14", "day": "화", "period": 5, "subject": "환자의사사회1", "professor": "박지영", "is_exam": false}, {"week": "5", "date": "2026-04-14", "day": "화", "period": 7, "subject": "의료면담1", "professor": "정영철", "is_exam": false}, {"week": "5", "date": "2026-04-14", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "5", "date": "2026-04-15", "day": "수", "period": 1, "subject": "인체미세구조와 기능", "professor": "한의혁", "is_exam": false}, {"week": "5", "date": "2026-04-15", "day": "수", "period": 3, "subject": "인체미세구조와 기능", "professor": "최윤호", "is_exam": false}, {"week": "5", "date": "2026-04-15", "day": "수", "period": 5, "subject": "인체미세구조 실습", "professor": "김형태", "is_exam": false}, {"week": "5", "date": "2026-04-16", "day": "목", "period": 1, "subject": "인체미세구조와 기능", "professor": "천성근", "is_exam": false}, {"week": "5", "date": "2026-04-16", "day": "목", "period": 3, "subject": "인체미세구조와 기능", "professor": "박선지", "is_exam": false}, {"week": "5", "date": "2026-04-16", "day": "목", "period": 5, "subject": "인체미세구조와 기능", "professor": "최원일", "is_exam": false}, {"week": "5", "date": "2026-04-16", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "김종석", "is_exam": false}, {"week": "5", "date": "2026-04-16", "day": "목", "period": 10, "subject": "실험및논문연구2", "professor": "김종승", "is_exam": false}, {"week": "5", "date": "2026-04-17", "day": "금", "period": 1, "subject": "인체미세구조와 기능", "professor": "박선지", "is_exam": false}, {"week": "5", "date": "2026-04-17", "day": "금", "period": 3, "subject": "인체미세구조와 기능", "professor": "최원일", "is_exam": false}, {"week": "6", "date": "2026-04-20", "day": "월", "period": 1, "subject": "조직학 시험", "professor": "K, C, H", "is_exam": true}, {"week": "6", "date": "2026-04-20", "day": "월", "period": 3, "subject": "인체미세구조와 기능", "professor": "최원일", "is_exam": false}, {"week": "6", "date": "2026-04-20", "day": "월", "period": 5, "subject": "인체미세구조 실습", "professor": "김형태", "is_exam": false}, {"week": "6", "date": "2026-04-21", "day": "화", "period": 1, "subject": "인체미세구조와 기능", "professor": "천성근", "is_exam": false}, {"week": "6", "date": "2026-04-21", "day": "화", "period": 3, "subject": "인체미세구조와 기능", "professor": "박선지", "is_exam": false}, {"week": "6", "date": "2026-04-21", "day": "화", "period": 5, "subject": "환자의사사회1", "professor": "이식", "is_exam": false}, {"week": "6", "date": "2026-04-21", "day": "화", "period": 6, "subject": "환자의사사회1", "professor": "이호", "is_exam": false}, {"week": "6", "date": "2026-04-21", "day": "화", "period": 7, "subject": "의료면담1", "professor": "정영철", "is_exam": false}, {"week": "6", "date": "2026-04-21", "day": "화", "period": 8, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "6", "date": "2026-04-22", "day": "수", "period": 1, "subject": "인체미세구조와 기능", "professor": "천성근", "is_exam": false}, {"week": "6", "date": "2026-04-22", "day": "수", "period": 3, "subject": "인체미세구조와 기능", "professor": "박선지", "is_exam": false}, {"week": "6", "date": "2026-04-22", "day": "수", "period": 5, "subject": "인체미세구조 실습", "professor": "한의혁", "is_exam": false}, {"week": "6", "date": "2026-04-23", "day": "목", "period": 1, "subject": "인체미세구조와 기능", "professor": "최원일", "is_exam": false}, {"week": "6", "date": "2026-04-23", "day": "목", "period": 3, "subject": "인체미세구조와 기능", "professor": "천성근", "is_exam": false}, {"week": "6", "date": "2026-04-23", "day": "목", "period": 5, "subject": "인체미세구조와 기능", "professor": "박선지", "is_exam": false}, {"week": "6", "date": "2026-04-23", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "김종승", "is_exam": false}, {"week": "6", "date": "2026-04-23", "day": "목", "period": 9, "subject": "실험및논문연구2", "professor": "김희권", "is_exam": false}, {"week": "6", "date": "2026-04-24", "day": "금", "period": 1, "subject": "인체미세구조와 기능", "professor": "최원일", "is_exam": false}, {"week": "6", "date": "2026-04-24", "day": "금", "period": 3, "subject": "인체미세구조와 기능", "professor": "천성근", "is_exam": false}, {"week": "7", "date": "2026-04-27", "day": "월", "period": 1, "subject": "조직학 시험", "professor": "Y", "is_exam": true}, {"week": "7", "date": "2026-04-27", "day": "월", "period": 3, "subject": "인체미세구조와 기능", "professor": "최원일", "is_exam": false}, {"week": "7", "date": "2026-04-27", "day": "월", "period": 5, "subject": "인체미세구조 실습", "professor": "최윤호", "is_exam": false}, {"week": "7", "date": "2026-04-28", "day": "화", "period": 1, "subject": "인체미세구조와 기능", "professor": "천성근", "is_exam": false}, {"week": "7", "date": "2026-04-28", "day": "화", "period": 3, "subject": "인체미세구조와 기능", "professor": "박선지", "is_exam": false}, {"week": "7", "date": "2026-04-28", "day": "화", "period": 5, "subject": "환자의사사회1", "professor": "노상재", "is_exam": false}, {"week": "7", "date": "2026-04-28", "day": "화", "period": 7, "subject": "의료면담1", "professor": "양종철", "is_exam": false}, {"week": "7", "date": "2026-04-28", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "7", "date": "2026-04-29", "day": "수", "period": 1, "subject": "인체미세구조와 기능", "professor": "천성근", "is_exam": false}, {"week": "7", "date": "2026-04-29", "day": "수", "period": 3, "subject": "인체미세구조와 기능", "professor": "최원일", "is_exam": false}, {"week": "7", "date": "2026-04-29", "day": "수", "period": 5, "subject": "인체미세구조 실습", "professor": "최윤호", "is_exam": false}, {"week": "7", "date": "2026-04-30", "day": "목", "period": 1, "subject": "인체미세구조와 기능", "professor": "박선지", "is_exam": false}, {"week": "7", "date": "2026-04-30", "day": "목", "period": 3, "subject": "인체미세구조와 기능", "professor": "천성근", "is_exam": false}, {"week": "7", "date": "2026-04-30", "day": "목", "period": 5, "subject": "인체미세구조와 기능", "professor": "최원일", "is_exam": false}, {"week": "7", "date": "2026-04-30", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "문설주", "is_exam": false}, {"week": "7", "date": "2026-04-30", "day": "목", "period": 10, "subject": "실험및논문연구2", "professor": "문영재", "is_exam": false}, {"week": "7", "date": "2026-05-01", "day": "금", "period": 1, "subject": "근로자의날", "professor": "", "is_exam": false}, {"week": "8", "date": "2026-05-05", "day": "화", "period": 1, "subject": "어린이날", "professor": "", "is_exam": false}, {"week": "8", "date": "2026-05-06", "day": "수", "period": 1, "subject": "인체미세구조와 기능", "professor": "박선지", "is_exam": false}, {"week": "8", "date": "2026-05-06", "day": "수", "period": 3, "subject": "인체미세구조와 기능", "professor": "천성근", "is_exam": false}, {"week": "8", "date": "2026-05-06", "day": "수", "period": 5, "subject": "인체미세구조 실습", "professor": "채옥희", "is_exam": false}, {"week": "8", "date": "2026-05-07", "day": "목", "period": 1, "subject": "인체미세구조와 기능", "professor": "최원일", "is_exam": false}, {"week": "8", "date": "2026-05-07", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "문영재", "is_exam": false}, {"week": "8", "date": "2026-05-07", "day": "목", "period": 9, "subject": "실험및논문연구2", "professor": "박준홍", "is_exam": false}, {"week": "8", "date": "2026-05-08", "day": "금", "period": 1, "subject": "시험", "professor": "", "is_exam": true}, {"week": "9", "date": "2026-05-11", "day": "월", "period": 1, "subject": "인체반응 및 병태생리", "professor": "정명자", "is_exam": false}, {"week": "9", "date": "2026-05-11", "day": "월", "period": 2, "subject": "인체반응 및 병태생리", "professor": "최진경", "is_exam": false}, {"week": "9", "date": "2026-05-12", "day": "화", "period": 1, "subject": "인체반응 및 병태생리", "professor": "김민걸", "is_exam": false}, {"week": "9", "date": "2026-05-12", "day": "화", "period": 3, "subject": "인체반응 및 병태생리", "professor": "최진경", "is_exam": false}, {"week": "9", "date": "2026-05-12", "day": "화", "period": 5, "subject": "환자의사사회1", "professor": "김연동", "is_exam": false}, {"week": "9", "date": "2026-05-12", "day": "화", "period": 6, "subject": "환자의사사회1", "professor": "박지영", "is_exam": false}, {"week": "9", "date": "2026-05-12", "day": "화", "period": 7, "subject": "의료면담1", "professor": "양종철", "is_exam": false}, {"week": "9", "date": "2026-05-12", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "9", "date": "2026-05-13", "day": "수", "period": 1, "subject": "인체반응 및 병태생리", "professor": "김민걸", "is_exam": false}, {"week": "9", "date": "2026-05-13", "day": "수", "period": 3, "subject": "인체반응 및 병태생리", "professor": "최진경", "is_exam": false}, {"week": "9", "date": "2026-05-13", "day": "수", "period": 5, "subject": "인체질병형태학실습", "professor": "김경민", "is_exam": false}, {"week": "9", "date": "2026-05-14", "day": "목", "period": 1, "subject": "인체반응 및 병태생리", "professor": "김민걸", "is_exam": false}, {"week": "9", "date": "2026-05-14", "day": "목", "period": 3, "subject": "인체반응 및 병태생리", "professor": "최진경", "is_exam": false}, {"week": "9", "date": "2026-05-14", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "송지수", "is_exam": false}, {"week": "9", "date": "2026-05-14", "day": "목", "period": 10, "subject": "실험및논문연구2", "professor": "안애리", "is_exam": false}, {"week": "9", "date": "2026-05-15", "day": "금", "period": 1, "subject": "인체반응 및 병태생리", "professor": "김민걸", "is_exam": false}, {"week": "9", "date": "2026-05-15", "day": "금", "period": 3, "subject": "인체반응 및 병태생리", "professor": "최진경", "is_exam": false}, {"week": "10", "date": "2026-05-18", "day": "월", "period": 1, "subject": "인체반응 및 병태생리", "professor": "김민걸", "is_exam": false}, {"week": "10", "date": "2026-05-18", "day": "월", "period": 3, "subject": "인체반응 및 병태생리", "professor": "최진경", "is_exam": false}, {"week": "10", "date": "2026-05-19", "day": "화", "period": 1, "subject": "인체반응 및 병태생리", "professor": "김민걸", "is_exam": false}, {"week": "10", "date": "2026-05-19", "day": "화", "period": 3, "subject": "인체반응 및 병태생리", "professor": "최진경", "is_exam": false}, {"week": "10", "date": "2026-05-19", "day": "화", "period": 5, "subject": "환자의사사회1", "professor": "권근상 외 6인", "is_exam": false}, {"week": "10", "date": "2026-05-19", "day": "화", "period": 6, "subject": "환자의사사회1", "professor": "박지영", "is_exam": false}, {"week": "10", "date": "2026-05-19", "day": "화", "period": 7, "subject": "의료면담1", "professor": "박종일", "is_exam": false}, {"week": "10", "date": "2026-05-19", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "10", "date": "2026-05-20", "day": "수", "period": 1, "subject": "인체반응 및 병태생리", "professor": "문설주", "is_exam": false}, {"week": "10", "date": "2026-05-20", "day": "수", "period": 3, "subject": "인체반응 및 병태생리", "professor": "김대기", "is_exam": false}, {"week": "10", "date": "2026-05-20", "day": "수", "period": 5, "subject": "인체질병형태학실습", "professor": "안애리", "is_exam": false}, {"week": "10", "date": "2026-05-21", "day": "목", "period": 1, "subject": "인체반응 및 병태생리", "professor": "문설주", "is_exam": false}, {"week": "10", "date": "2026-05-21", "day": "목", "period": 3, "subject": "인체반응 및 병태생리", "professor": "김대기", "is_exam": false}, {"week": "10", "date": "2026-05-21", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "안애리", "is_exam": false}, {"week": "10", "date": "2026-05-21", "day": "목", "period": 9, "subject": "실험및논문연구2", "professor": "양재도", "is_exam": false}, {"week": "10", "date": "2026-05-22", "day": "금", "period": 1, "subject": "인체반응 및 병태생리", "professor": "문설주", "is_exam": false}, {"week": "10", "date": "2026-05-22", "day": "금", "period": 3, "subject": "인체반응 및 병태생리", "professor": "김대기", "is_exam": false}, {"week": "11", "date": "2026-05-25", "day": "월", "period": 1, "subject": "대체휴무", "professor": "", "is_exam": false}, {"week": "11", "date": "2026-05-26", "day": "화", "period": 1, "subject": "인체반응 및 병태생리", "professor": "문설주", "is_exam": false}, {"week": "11", "date": "2026-05-26", "day": "화", "period": 3, "subject": "인체반응 및 병태생리", "professor": "김대기", "is_exam": false}, {"week": "11", "date": "2026-05-26", "day": "화", "period": 5, "subject": "환자의사사회1", "professor": "권근상 외 6인", "is_exam": false}, {"week": "11", "date": "2026-05-26", "day": "화", "period": 6, "subject": "환자의사사회1", "professor": "박지영", "is_exam": false}, {"week": "11", "date": "2026-05-26", "day": "화", "period": 7, "subject": "의료면담1", "professor": "박종일", "is_exam": false}, {"week": "11", "date": "2026-05-26", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "11", "date": "2026-05-27", "day": "수", "period": 1, "subject": "인체반응 및 병태생리", "professor": "문설주", "is_exam": false}, {"week": "11", "date": "2026-05-27", "day": "수", "period": 3, "subject": "인체반응 및 병태생리", "professor": "김대기", "is_exam": false}, {"week": "11", "date": "2026-05-27", "day": "수", "period": 5, "subject": "인체질병형태학실습", "professor": "박호성", "is_exam": false}, {"week": "11", "date": "2026-05-28", "day": "목", "period": 1, "subject": "인체반응 및 병태생리", "professor": "문설주", "is_exam": false}, {"week": "11", "date": "2026-05-28", "day": "목", "period": 3, "subject": "인체반응 및 병태생리", "professor": "김대기", "is_exam": false}, {"week": "11", "date": "2026-05-28", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "이주형", "is_exam": false}, {"week": "11", "date": "2026-05-28", "day": "목", "period": 10, "subject": "실험및논문연구2", "professor": "이준호", "is_exam": false}, {"week": "11", "date": "2026-05-29", "day": "금", "period": 1, "subject": "인체반응 및 병태생리", "professor": "권영배", "is_exam": false}, {"week": "11", "date": "2026-05-29", "day": "금", "period": 3, "subject": "인체반응 및 병태생리", "professor": "김대기", "is_exam": false}, {"week": "12", "date": "2026-06-01", "day": "월", "period": 1, "subject": "인체반응 및 병태생리", "professor": "최진경", "is_exam": false}, {"week": "12", "date": "2026-06-01", "day": "월", "period": 2, "subject": "인체반응 및 병태생리", "professor": "김대기", "is_exam": false}, {"week": "12", "date": "2026-06-01", "day": "월", "period": 3, "subject": "인체반응 및 병태생리", "professor": "곽용근", "is_exam": false}, {"week": "12", "date": "2026-06-01", "day": "월", "period": 5, "subject": "인체반응 및 병태생리", "professor": "최복희", "is_exam": false}, {"week": "12", "date": "2026-06-02", "day": "화", "period": 1, "subject": "인체반응 및 병태생리", "professor": "권영배", "is_exam": false}, {"week": "12", "date": "2026-06-02", "day": "화", "period": 3, "subject": "인체반응 및 병태생리", "professor": "곽용근", "is_exam": false}, {"week": "12", "date": "2026-06-02", "day": "화", "period": 5, "subject": "인체반응 및 병태생리", "professor": "최복희", "is_exam": false}, {"week": "12", "date": "2026-06-02", "day": "화", "period": 7, "subject": "의료면담1", "professor": "박종일", "is_exam": false}, {"week": "12", "date": "2026-06-02", "day": "화", "period": 8, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "12", "date": "2026-06-03", "day": "수", "period": 1, "subject": "지방선거", "professor": "", "is_exam": false}, {"week": "12", "date": "2026-06-04", "day": "목", "period": 1, "subject": "인체반응 및 병태생리", "professor": "권영배", "is_exam": false}, {"week": "12", "date": "2026-06-04", "day": "목", "period": 3, "subject": "인체반응 및 병태생리", "professor": "곽용근", "is_exam": false}, {"week": "12", "date": "2026-06-04", "day": "목", "period": 5, "subject": "인체반응 및 병태생리", "professor": "최복희", "is_exam": false}, {"week": "12", "date": "2026-06-04", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "이준호", "is_exam": false}, {"week": "12", "date": "2026-06-04", "day": "목", "period": 9, "subject": "실험및논문연구2", "professor": "정경민", "is_exam": false}, {"week": "12", "date": "2026-06-05", "day": "금", "period": 1, "subject": "인체반응 및 병태생리", "professor": "권영배", "is_exam": false}, {"week": "12", "date": "2026-06-05", "day": "금", "period": 3, "subject": "인체반응 및 병태생리", "professor": "곽용근", "is_exam": false}, {"week": "13", "date": "2026-06-08", "day": "월", "period": 1, "subject": "인체반응 및 병태생리", "professor": "김민걸", "is_exam": false}, {"week": "13", "date": "2026-06-08", "day": "월", "period": 2, "subject": "인체반응 및 병태생리", "professor": "문설주", "is_exam": false}, {"week": "13", "date": "2026-06-08", "day": "월", "period": 3, "subject": "인체반응 및 병태생리", "professor": "곽용근", "is_exam": false}, {"week": "13", "date": "2026-06-08", "day": "월", "period": 5, "subject": "인체반응 및 병태생리", "professor": "최복희", "is_exam": false}, {"week": "13", "date": "2026-06-09", "day": "화", "period": 1, "subject": "인체반응 및 병태생리", "professor": "손지선", "is_exam": false}, {"week": "13", "date": "2026-06-09", "day": "화", "period": 3, "subject": "인체반응 및 병태생리", "professor": "곽용근", "is_exam": false}, {"week": "13", "date": "2026-06-09", "day": "화", "period": 4, "subject": "인체반응 및 병태생리", "professor": "최복희", "is_exam": false}, {"week": "13", "date": "2026-06-09", "day": "화", "period": 7, "subject": "의료면담1", "professor": "박종일", "is_exam": false}, {"week": "13", "date": "2026-06-09", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "13", "date": "2026-06-10", "day": "수", "period": 1, "subject": "인체반응 및 병태생리", "professor": "권영배", "is_exam": false}, {"week": "13", "date": "2026-06-10", "day": "수", "period": 3, "subject": "인체반응 및 병태생리", "professor": "박호성", "is_exam": false}, {"week": "13", "date": "2026-06-10", "day": "수", "period": 5, "subject": "인체질병형태학실습", "professor": "장규윤", "is_exam": false}, {"week": "13", "date": "2026-06-11", "day": "목", "period": 1, "subject": "인체반응 및 병태생리", "professor": "박호성", "is_exam": false}, {"week": "13", "date": "2026-06-11", "day": "목", "period": 3, "subject": "인체반응 및 병태생리", "professor": "안애리", "is_exam": false}, {"week": "13", "date": "2026-06-11", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "진공용", "is_exam": false}, {"week": "13", "date": "2026-06-11", "day": "목", "period": 10, "subject": "실험및논문연구2", "professor": "천성근", "is_exam": false}, {"week": "13", "date": "2026-06-12", "day": "금", "period": 1, "subject": "인체반응 및 병태생리", "professor": "정명자", "is_exam": false}, {"week": "13", "date": "2026-06-12", "day": "금", "period": 3, "subject": "인체반응 및 병태생리", "professor": "안애리", "is_exam": false}, {"week": "14", "date": "2026-06-15", "day": "월", "period": 1, "subject": "인체반응 및 병태생리", "professor": "곽용근", "is_exam": false}, {"week": "14", "date": "2026-06-15", "day": "월", "period": 2, "subject": "인체반응 및 병태생리", "professor": "최복희", "is_exam": false}, {"week": "14", "date": "2026-06-15", "day": "월", "period": 3, "subject": "인체반응 및 병태생리", "professor": "권영배", "is_exam": false}, {"week": "14", "date": "2026-06-15", "day": "월", "period": 4, "subject": "인체반응 및 병태생리", "professor": "안애리", "is_exam": false}, {"week": "14", "date": "2026-06-16", "day": "화", "period": 1, "subject": "인체반응 및 병태생리", "professor": "정명자", "is_exam": false}, {"week": "14", "date": "2026-06-16", "day": "화", "period": 3, "subject": "인체반응 및 병태생리", "professor": "문우성", "is_exam": false}, {"week": "14", "date": "2026-06-16", "day": "화", "period": 7, "subject": "의료면담1", "professor": "양종철", "is_exam": false}, {"week": "14", "date": "2026-06-16", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "14", "date": "2026-06-17", "day": "수", "period": 1, "subject": "인체반응 및 병태생리", "professor": "정명자", "is_exam": false}, {"week": "14", "date": "2026-06-17", "day": "수", "period": 2, "subject": "인체반응 및 병태생리", "professor": "문우성", "is_exam": false}, {"week": "14", "date": "2026-06-17", "day": "수", "period": 5, "subject": "인체질병형태학실습", "professor": "정명자", "is_exam": false}, {"week": "14", "date": "2026-06-18", "day": "목", "period": 1, "subject": "인체반응 및 병태생리", "professor": "홍성출", "is_exam": false}, {"week": "14", "date": "2026-06-18", "day": "목", "period": 3, "subject": "인체반응 및 병태생리", "professor": "장규윤", "is_exam": false}, {"week": "14", "date": "2026-06-18", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "천성근", "is_exam": false}, {"week": "14", "date": "2026-06-18", "day": "목", "period": 9, "subject": "실험및논문연구2", "professor": "최진경", "is_exam": false}, {"week": "14", "date": "2026-06-19", "day": "금", "period": 1, "subject": "인체반응 및 병태생리", "professor": "김경민", "is_exam": false}, {"week": "14", "date": "2026-06-19", "day": "금", "period": 2, "subject": "인체반응 및 병태생리", "professor": "문우성", "is_exam": false}, {"week": "14", "date": "2026-06-19", "day": "금", "period": 3, "subject": "인체반응 및 병태생리", "professor": "홍성출", "is_exam": false}, {"week": "15", "date": "2026-06-22", "day": "월", "period": 1, "subject": "인체반응 및 병태생리", "professor": "김경민", "is_exam": false}, {"week": "15", "date": "2026-06-22", "day": "월", "period": 3, "subject": "인체반응 및 병태생리", "professor": "홍성출", "is_exam": false}, {"week": "15", "date": "2026-06-23", "day": "화", "period": 1, "subject": "시험", "professor": "", "is_exam": true}, {"week": "15", "date": "2026-06-23", "day": "화", "period": 7, "subject": "의료면담1", "professor": "양종철", "is_exam": false}, {"week": "15", "date": "2026-06-23", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "15", "date": "2026-06-24", "day": "수", "period": 1, "subject": "생애주기", "professor": "박태원", "is_exam": false}, {"week": "15", "date": "2026-06-24", "day": "수", "period": 2, "subject": "생애주기", "professor": "김형태", "is_exam": false}, {"week": "15", "date": "2026-06-24", "day": "수", "period": 5, "subject": "인체질병형태학실습", "professor": "문우성", "is_exam": false}, {"week": "15", "date": "2026-06-25", "day": "목", "period": 1, "subject": "생애주기", "professor": "김형태", "is_exam": false}, {"week": "15", "date": "2026-06-25", "day": "목", "period": 3, "subject": "생애주기", "professor": "송창호", "is_exam": false}, {"week": "15", "date": "2026-06-25", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "한연희", "is_exam": false}, {"week": "15", "date": "2026-06-25", "day": "목", "period": 10, "subject": "실험및논문연구2", "professor": "홍성출", "is_exam": false}, {"week": "16", "date": "2026-06-29", "day": "월", "period": 1, "subject": "생애주기", "professor": "한의혁", "is_exam": false}, {"week": "16", "date": "2026-06-29", "day": "월", "period": 3, "subject": "생애주기", "professor": "송창호", "is_exam": false}, {"week": "16", "date": "2026-06-29", "day": "월", "period": 4, "subject": "생애주기", "professor": "최윤호", "is_exam": false}, {"week": "16", "date": "2026-06-30", "day": "화", "period": 1, "subject": "생애주기", "professor": "채옥희", "is_exam": false}, {"week": "16", "date": "2026-06-30", "day": "화", "period": 2, "subject": "생애주기", "professor": "송창호", "is_exam": false}, {"week": "16", "date": "2026-06-30", "day": "화", "period": 4, "subject": "생애주기", "professor": "한의혁", "is_exam": false}, {"week": "16", "date": "2026-06-30", "day": "화", "period": 7, "subject": "의료면담1", "professor": "정재희", "is_exam": false}, {"week": "16", "date": "2026-06-30", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "16", "date": "2026-07-01", "day": "수", "period": 1, "subject": "생애주기", "professor": "최윤호", "is_exam": false}, {"week": "16", "date": "2026-07-01", "day": "수", "period": 3, "subject": "생애주기", "professor": "김민선", "is_exam": false}, {"week": "16", "date": "2026-07-01", "day": "수", "period": 5, "subject": "인체질병형태학실습", "professor": "김경민", "is_exam": false}, {"week": "16", "date": "2026-07-02", "day": "목", "period": 1, "subject": "생애주기", "professor": "조대선", "is_exam": false}, {"week": "16", "date": "2026-07-02", "day": "목", "period": 2, "subject": "생애주기", "professor": "김선준", "is_exam": false}, {"week": "16", "date": "2026-07-02", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "홍성출", "is_exam": false}, {"week": "16", "date": "2026-07-02", "day": "목", "period": 9, "subject": "실험및논문연구2", "professor": "노상재", "is_exam": false}, {"week": "16", "date": "2026-07-03", "day": "금", "period": 1, "subject": "생애주기", "professor": "박태원", "is_exam": false}, {"week": "16", "date": "2026-07-03", "day": "금", "period": 4, "subject": "생애주기", "professor": "김민선", "is_exam": false}, {"week": "17", "date": "2026-07-06", "day": "월", "period": 1, "subject": "생애주기", "professor": "김순철", "is_exam": false}, {"week": "17", "date": "2026-07-06", "day": "월", "period": 3, "subject": "생애주기", "professor": "김민선", "is_exam": false}, {"week": "17", "date": "2026-07-07", "day": "화", "period": 1, "subject": "생애주기", "professor": "박종일", "is_exam": false}, {"week": "17", "date": "2026-07-07", "day": "화", "period": 3, "subject": "생애주기", "professor": "김다솔", "is_exam": false}, {"week": "17", "date": "2026-07-07", "day": "화", "period": 6, "subject": "의료면담1", "professor": "정영철", "is_exam": false}, {"week": "17", "date": "2026-07-07", "day": "화", "period": 7, "subject": "의료면담1", "professor": "박태원", "is_exam": false}, {"week": "17", "date": "2026-07-07", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "17", "date": "2026-07-08", "day": "수", "period": 1, "subject": "시험", "professor": "", "is_exam": true}, {"week": "17", "date": "2026-07-08", "day": "수", "period": 5, "subject": "인체질병형태학실습", "professor": "안애리", "is_exam": false}, {"week": "17", "date": "2026-07-09", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "노상재", "is_exam": false}, {"week": "18", "date": "2026-07-14", "day": "화", "period": 7, "subject": "의료면담1", "professor": "양종철", "is_exam": false}, {"week": "18", "date": "2026-07-14", "day": "화", "period": 9, "subject": "문제바탕학습1", "professor": "", "is_exam": false}, {"week": "18", "date": "2026-07-15", "day": "수", "period": 5, "subject": "인체질병형태학실습", "professor": "김경민", "is_exam": false}, {"week": "18", "date": "2026-07-16", "day": "목", "period": 8, "subject": "실험및논문연구2", "professor": "노상재", "is_exam": false}];
-
-// 전역 변수 초기화
-var wdd = {}, wks = [], wh = {}, wl = {}, fsubj = [], cmap = {};
 var DAYS = ['월','화','수','목','금'];
 var WN   = ['일','월','화','수','목','금','토'];
 var ML   = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
 var EVK  = ['진급식','근로자의날','대체휴무','어린이날','지방선거'];
-var tMap = {0:"8:30",1:"9:30",2:"10:30",3:"11:30",4:"13:30",5:"14:30",6:"15:30",7:"16:30",8:"17:30",9:"18:30"};
-var eMap = {0:"9:20",1:"10:20",2:"11:20",3:"12:20",4:"14:20",5:"15:20",6:"16:20",7:"17:20",8:"18:20",9:"19:20"};
+
 var ci=0, vw='weekly', cy, cm2;
 var fExam=false, fsubj2=[];
 
@@ -184,15 +172,13 @@ function p2(n){return ('0'+n).slice(-2);}
 function today(){var d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
 function isEx(s){return s.indexOf('시험')>=0;}
 function isEv(s){return EVK.indexOf(s)>=0;}
-function wvals(w){var o=wdd[w];if(!o)return[];return Object.keys(o).map(function(k){return o[k];}).filter(Boolean);}
-
+function wvals(w){var o=wdd[w];if(!o)return[];return Object.keys(o).map(function(k){return o[k];}).filter(Boolean).sort();}
 function gcol(s){
   if(cmap[s]) return cmap[s];
-  cmap[s] = defaultColors[colorIndex % defaultColors.length];
-  colorIndex++;
-  return cmap[s];
+  let hash = 0;
+  for(let i=0; i<s.length; i++) hash = s.charCodeAt(i) + ((hash << 5) - hash);
+  return palette[Math.abs(hash) % palette.length];
 }
-
 function exLabel(s){
   if(s.indexOf('중간 시험 (퀴즈)')>=0)return['중간 시험 (퀴즈)',s.replace('중간 시험 (퀴즈)','').trim()];
   if(s.indexOf('중간 시험')>=0)return['중간 시험',s.replace('중간 시험','').trim()];
@@ -201,200 +187,159 @@ function exLabel(s){
   return['시험',s.replace('시험','').trim()];
 }
 
-// 동적 데이터 파싱 및 전역 자료구조 재생성
-function regenerateGlobals() {
-    wdd = {}; wks = []; wh = {}; wl = {}; fsubj = []; cmap = {}; colorIndex = 0;
-    
-    var forcedCmap = {"근로자의날": "#95A5A6", "대체휴무": "#95A5A6", "문제바탕학습1": "#4A90D9", "생애주기": "#E8734A", "시험": "#E8734A", "실험및논문연구2": "#5CB85C", "어린이날": "#95A5A6", "의료면담1": "#F39C12", "의학생화학": "#1ABC9C", "의학생화학 기말 시험": "#1ABC9C", "의학생화학 중간 시험 (퀴즈)": "#1ABC9C", "인체미세구조 실습": "#3498DB", "인체미세구조와 기능": "#27AE60", "인체반응 및 병태생리": "#D35400", "인체질병형태학실습": "#16A085", "조직학 시험": "#27AE60", "지방선거": "#95A5A6", "진급식": "#95A5A6", "환자의사사회1": "#2980B9"};
-    
-    let wSet = new Set(), sSet = new Set();
-    let weekGroups = {};
-
-    merged.forEach(it => {
-        wSet.add(it.week);
-        if(!isEv(it.subject)) sSet.add(it.subject);
-        if(!wdd[it.week]) wdd[it.week] = {};
-        wdd[it.week][it.day] = it.date;
-        
-        if(!weekGroups[it.week]) weekGroups[it.week] = [];
-        weekGroups[it.week].push(it);
-        
-        if(forcedCmap[it.subject]) cmap[it.subject] = forcedCmap[it.subject];
-    });
-
-    wks = Array.from(wSet).sort((a,b) => parseInt(a) - parseInt(b));
-    fsubj = Array.from(sSet).sort();
-    fsubj2 = [...fsubj];
-
-    wks.forEach(w => {
-        let items = weekGroups[w];
-        wh[w] = buildTableHTML(w, items, wdd[w]);
-        wl[w] = buildLegendHTML(items);
-    });
-}
-
-function buildTableHTML(weekStr, items, dd) {
-    let mat = Array(10).fill(null).map(() => Array(5).fill(null));
-    items.forEach(it => {
-        let dIdx = DAYS.indexOf(it.day);
-        let pIdx = it.period - 1;
-        if(dIdx >= 0 && pIdx >= 0 && pIdx < 10) mat[pIdx][dIdx] = it;
-    });
-
-    let spanMat = Array(10).fill(null).map(() => Array(5).fill(1));
-    let skipMat = Array(10).fill(null).map(() => Array(5).fill(false));
-
-    for(let d=0; d<5; d++){
-        for(let p=0; p<10; p++){
-            if(skipMat[p][d]) continue;
-            let current = mat[p][d];
-            if(!current) continue;
-            let span = 1;
-            for(let np=p+1; np<10; np++){
-                let next = mat[np][d];
-                if(next && next.subject === current.subject && next.professor === current.professor && next.is_exam === current.is_exam){
-                    span++; skipMat[np][d] = true;
-                } else break;
-            }
-            spanMat[p][d] = span;
-        }
+// 간단한 CSV 파서 (따옴표 내 개행 처리 포함)
+function parseCSV(str) {
+  let arr = [], row = [], col = '', quote = false;
+  for (let c = 0; c < str.length; c++) {
+    let cc = str[c], nc = str[c+1];
+    if (cc === '"' && quote && nc === '"') { col += '"'; c++; continue; }
+    if (cc === '"') { quote = !quote; continue; }
+    if (cc === ',' && !quote) { row.push(col); col = ''; continue; }
+    if (cc === '\n' && !quote) {
+      if (col || row.length) { row.push(col); arr.push(row); }
+      row = []; col = ''; continue;
     }
-
-    let h = '<table class="tt"><thead><tr><th class="th-t"></th>';
-    DAYS.forEach(d => {
-        let dStr = dd[d] || '';
-        let showDate = dStr ? dStr.substring(5) : '';
-        h += `<th class="th-d" data-day="${d}" data-date="${dStr}">${d}<br><span class="th-date">${showDate}</span></th>`;
-    });
-    h += '</tr></thead><tbody>';
-
-    for(let p=0; p<10; p++){
-        h += `<tr><td class="td-t"><span class="pn">${p+1}</span><span class="pt">${tMap[p]}</span></td>`;
-        for(let d=0; d<5; d++){
-            if(skipMat[p][d]) continue;
-            let it = mat[p][d];
-            if(!it){
-                h += `<td class="td-c td-e" data-day="${DAYS[d]}"></td>`;
-            } else {
-                let span = spanMat[p][d];
-                let rs = span > 1 ? ` rowspan="${span}"` : '';
-                let bg = gcol(it.subject);
-                
-                let sName = it.subject;
-                let exHtml = '';
-                if(isEx(sName)){
-                    let pts = exLabel(sName);
-                    exHtml = `<div class="cn-s cn-exam">‼️ ${pts[0]}</div>` + (pts[1] ? `<div class="cn-name">${pts[1]}</div>` : '');
-                    sName = '';
-                }
-                
-                let tHtml = sName ? `<div class="cn-s">${sName}</div>` : '';
-                let pHtml = it.professor ? `<div class="cn-p">${it.professor}</div>` : '';
-                let timeStr = `${tMap[p]}~${eMap[p+span-1]}`;
-                
-                h += `<td class="td-c" data-day="${DAYS[d]}"${rs}><div class="card" style="background:${bg}">${exHtml}${tHtml}${pHtml}<div class="cn-t">${timeStr}</div></div></td>`;
-            }
-        }
-        h += '</tr>';
-        if(p===3) h += `<tr class="lunchrow"><td class="td-t"><span style="font-size:12px">🍱</span></td><td colspan="5" class="td-lunch">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr>`;
-    }
-    h += '</tbody></table>';
-    return h;
-}
-
-function buildLegendHTML(items) {
-    let sMap = {};
-    items.forEach(it => {
-        let label = (it.is_exam || isEx(it.subject)) ? (isEx(it.subject) ? it.subject : '‼️ 시험') : it.subject;
-        sMap[label] = gcol(it.subject);
-    });
-    let keys = Object.keys(sMap).sort();
-    let h = '';
-    keys.forEach(k => {
-        h += `<div class="li"><span class="ld" style="background:${sMap[k]}"></span><span class="ln">${k}</span></div>`;
-    });
-    return h;
-}
-
-// CSV 업로드 파싱 로직
-function parseCSVRow(str) {
-    let arr = [], quote = false, val = '';
-    for (let i = 0; i < str.length; i++) {
-        let cc = str[i], nc = str[i+1];
-        if (cc === '"' && quote && nc === '"') { val += '"'; i++; continue; }
-        if (cc === '"') { quote = !quote; continue; }
-        if (cc === ',' && !quote) { arr.push(val.trim()); val = ''; continue; }
-        val += cc;
-    }
-    arr.push(val.trim());
-    return arr;
-}
-
-document.getElementById('csv-upload').addEventListener('change', function(e) {
-    let file = e.target.files[0];
-    if(!file) return;
-    let reader = new FileReader();
-    reader.onload = function(e) {
-        let text = e.target.result;
-        let lines = text.split(/\r?\n/);
-        let newMerged = [];
-        
-        for(let i=1; i<lines.length; i++){
-            let line = lines[i].trim();
-            if(!line) continue;
-            let cols = parseCSVRow(line);
-            let week = cols[0], dateStr = cols[1], dayStr = cols[2];
-            if(!week || isNaN(parseInt(week))) continue;
-            
-            for(let p=0; p<10; p++){
-                let cell = cols[3+p];
-                if(!cell) continue;
-                let parts = cell.replace(/\n/g, ' ').split('-');
-                let subj = parts[0].trim();
-                if(!subj) continue;
-                let prof = parts.length > 1 ? parts[1].trim() : '';
-                
-                newMerged.push({
-                    week: week.toString(),
-                    date: dateStr,
-                    day: dayStr,
-                    period: p+1,
-                    subject: subj,
-                    professor: prof,
-                    is_exam: subj.indexOf('시험') >= 0
-                });
-            }
-        }
-        
-        if(newMerged.length > 0) {
-            merged = newMerged;
-            regenerateGlobals();
-            initDateLogic();
-            render();
-            alert("✅ 새로운 시간표 엑셀 파일이 성공적으로 반영되었습니다!");
-        } else {
-            alert("❌ CSV 파일을 읽을 수 없습니다. 서식을 다시 확인해주세요.");
-        }
-    };
-    reader.readAsText(file);
-    e.target.value = ''; // Reset
-});
-
-// 코어 초기화 
-function initDateLogic(){
-  var t=today();
-  ci = 0;
-  for(var i=0;i<wks.length;i++){
-    var v=wvals(wks[i]).sort();
-    if(v.length&&t>=v[0]&&t<=v[v.length-1]){ci=i;break;}
+    col += cc;
   }
+  if (col || row.length) { row.push(col); arr.push(row); }
+  return arr;
+}
+
+// CSV 데이터로 시간표 정보 새로 빌드
+function generateDataFromCSV(csvText) {
+  let rows = parseCSV(csvText);
+  wdd = {}; merged = []; fsubj = []; ed = [];
+  let wkMap = {}; 
+  
+  rows.forEach(row => {
+    if(row.length < 13) return;
+    let wk = row[0].trim(), date = row[1].trim(), day = row[2].trim();
+    if(!wk || isNaN(wk)) return; 
+    
+    if(!wdd[wk]) wdd[wk] = {};
+    wdd[wk][day] = date;
+    if(!wkMap[wk]) wkMap[wk] = {};
+    if(!wkMap[wk][date]) wkMap[wk][date] = { day: day, periods: [] };
+
+    let hasExam = false;
+    for(let p=1; p<=10; p++) {
+      let cell = (row[p+2] || '').trim();
+      wkMap[wk][date].periods[p] = cell;
+      if(cell) {
+        let lines = cell.split('\n');
+        let subject = lines[0].trim(), prof = '';
+        let dashIdx = subject.lastIndexOf('-');
+        if(dashIdx > 0) {
+          prof = subject.substring(dashIdx+1).trim();
+          subject = subject.substring(0, dashIdx).trim();
+        }
+        
+        let isE = cell.includes('시험');
+        if(isE) hasExam = true;
+        
+        merged.push({week: wk, date: date, day: day, period: p, subject: subject, professor: prof, is_exam: isE});
+        if(!fsubj.includes(subject) && !isEv(subject)) fsubj.push(subject);
+      }
+    }
+    if(hasExam && !ed.includes(date)) ed.push(date);
+  });
+
+  fsubj.sort();
+  fsubj2 = fsubj.slice();
+  wks = Object.keys(wdd).sort((a,b)=>parseInt(a)-parseInt(b));
+  
+  // Build wh (Weekly HTML Table Strings) and wl (Legend Strings)
+  wh = {}; wl = {};
+  wks.forEach(w => {
+    let dates = Object.keys(wkMap[w]).sort();
+    let dateOf = {};
+    dates.forEach(d => { dateOf[wkMap[w][d].day] = d; });
+
+    // Build Legend
+    let wSubj = [];
+    merged.filter(m => m.week === w).forEach(m => {
+      if(!wSubj.includes(m.subject)) wSubj.push(m.subject);
+    });
+    wSubj.sort();
+    let lh = '';
+    wSubj.forEach(s => {
+      lh += `<div class="li"><span class="ld" style="background:${gcol(s)}"></span><span class="ln">${s}</span></div>`;
+    });
+    wl[w] = lh;
+
+    // Build Table
+    let ths = DAYS.map(d => `<th class="th-d" data-day="${d}" data-date="${dateOf[d]||''}">${d}<br><span class="th-date">${(dateOf[d]||'').slice(5)}</span></th>`).join('');
+    let tb = `<table class="tt"><thead><tr><th class="th-t"></th>${ths}</tr></thead><tbody>`;
+
+    let skip = {월:0, 화:0, 수:0, 목:0, 금:0};
+
+    for(let p=1; p<=10; p++) {
+      if(p === 5) {
+        tb += `<tr class="lunchrow"><td class="td-t"><span style="font-size:12px">🍱</span></td><td colspan="5" class="td-lunch">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr>`;
+      }
+      let pTime = ['8:30','9:30','10:30','11:30','13:30','14:30','15:30','16:30','17:30','18:30'][p-1];
+      tb += `<tr><td class="td-t"><span class="pn">${p}</span><span class="pt">${pTime}</span></td>`;
+
+      DAYS.forEach(d => {
+        if(skip[d] > 0) { skip[d]--; return; }
+        
+        let date = dateOf[d];
+        let cellStr = date && wkMap[w][date].periods[p] ? wkMap[w][date].periods[p] : '';
+
+        if(!cellStr) {
+          tb += `<td class="td-c td-e" data-day="${d}"></td>`;
+        } else {
+          let rs = 1;
+          for(let np=p+1; np<=10; np++) {
+            if((wkMap[w][date].periods[np] || '') === cellStr) rs++;
+            else break;
+          }
+          skip[d] = rs - 1;
+
+          let lines = cellStr.split('\n');
+          let fLine = lines[0].trim(), prof = '';
+          let dIdx = fLine.lastIndexOf('-');
+          if(dIdx > 0) { prof = fLine.substring(dIdx+1).trim(); fLine = fLine.substring(0, dIdx).trim(); }
+          
+          let isE = cellStr.includes('시험');
+          let bg = gcol(fLine);
+          let eMap = {1:'9:20', 2:'10:20', 3:'11:20', 4:'12:20', 5:'14:20', 6:'15:20', 7:'16:20', 8:'17:20', 9:'18:20', 10:'19:20'};
+          let tRange = pTime + '~' + eMap[p+rs-1];
+
+          let inH = '';
+          if(isE) {
+            let ename = lines.length > 1 ? lines[1].trim() : fLine + ' 시험';
+            inH = `<div class="cn-s cn-exam">‼️ ${ename}</div>`;
+            if(!ename.includes(fLine) && fLine) inH += `<div class="cn-name">${fLine}</div>`;
+            if(prof) inH += `<div class="cn-p">${prof}</div>`;
+            inH += `<div class="cn-t">${tRange}</div>`;
+          } else {
+            inH = `<div class="cn-s">${fLine}</div>`;
+            if(prof) inH += `<div class="cn-p">${prof}</div>`;
+            inH += `<div class="cn-t">${tRange}</div>`;
+          }
+          tb += `<td class="td-c" data-day="${d}" ${rs>1?'rowspan="'+rs+'"':''}><div class="card" style="background:${bg}">${inH}</div></td>`;
+        }
+      });
+      tb += `</tr>`;
+    }
+    tb += `</tbody></table>`;
+    wh[w] = tb;
+  });
+
+  ci = 0; // 주차 초기화
+  let t = today();
+  for(let i=0; i<wks.length; i++) {
+    let v = wvals(wks[i]);
+    if(v.length && t >= v[0] && t <= v[v.length-1]) { ci = i; break; }
+  }
+  
+  render(); // 데이터 재구축 후 렌더링
+  alert("새로운 시간표가 업로드되었습니다!");
 }
 
 function init(){
-  regenerateGlobals();
-  initDateLogic();
-  var nd=new Date();cy=nd.getFullYear();cm2=nd.getMonth();
-
+  // 이벤트 바인딩
   document.getElementById('pb').onclick=function(){if(ci>0){ci--;render();}};
   document.getElementById('nb').onclick=function(){if(ci<wks.length-1){ci++;render();}};
   document.getElementById('bn-w').onclick=function(){setView('weekly');};
@@ -405,8 +350,21 @@ function init(){
   document.getElementById('ovl').onclick=function(e){if(e.target===document.getElementById('ovl'))closeCal();};
   document.getElementById('cal-p').onclick=function(){cm2--;if(cm2<0){cm2=11;cy--;}renderCal();};
   document.getElementById('cal-n').onclick=function(){cm2++;if(cm2>11){cm2=0;cy++;}renderCal();};
+  
+  // CSV 파일 업로드 이벤트
+  document.getElementById('csv-upload').addEventListener('change', function(e) {
+    let file = e.target.files[0];
+    if(!file) return;
+    let reader = new FileReader();
+    reader.onload = function(evt) {
+      generateDataFromCSV(evt.target.result);
+      e.target.value = ''; // 재업로드를 위해 초기화
+    };
+    reader.readAsText(file, 'UTF-8');
+  });
 
-  render();
+  // 최초 샘플 데이터가 없으므로 화면은 비어있게 됨. (CSV를 업로드하면 채워짐)
+  let t = new Date(); cy = t.getFullYear(); cm2 = t.getMonth();
 }
 
 function setView(v){
@@ -419,10 +377,16 @@ function setView(v){
 }
 
 function updHdr(){
+  if(wks.length === 0) {
+    document.getElementById('wl').textContent = '데이터 없음';
+    document.getElementById('wr').textContent = 'CSV 파일을 업로드하세요';
+    document.getElementById('pb').disabled = true;
+    document.getElementById('nb').disabled = true;
+    return;
+  }
   var w=wks[ci];
-  if(!w) return;
   document.getElementById('wl').textContent=w+'주차';
-  var v=wvals(w).sort();
+  var v=wvals(w);
   document.getElementById('wr').textContent=v.length>=2?v[0].slice(5)+' ~ '+v[v.length-1].slice(5):(v[0]||'').slice(5);
   document.getElementById('pb').disabled=(ci===0);
   document.getElementById('nb').disabled=(ci===wks.length-1);
@@ -430,6 +394,10 @@ function updHdr(){
 
 function render(){
   updHdr();
+  if(wks.length === 0) {
+    document.getElementById('main').innerHTML = '<div style="text-align:center; padding:40px; color:#8E8E93;">상단의 📂 아이콘을 눌러<br>엑셀(CSV) 시간표를 업로드해주세요.</div>';
+    return;
+  }
   if(vw==='weekly')renderW();
   else if(vw==='list')renderL();
   else renderF();
@@ -438,10 +406,9 @@ function render(){
 /* ── WEEKLY ── */
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
-  if(!wh[w]) { document.getElementById('main').innerHTML = ''; return; }
   document.getElementById('main').innerHTML=
-    '<div class="sw">'+wh[w]+'</div>'
-    +'<div class="legend"><div class="lg-title">과목 범례</div><div class="lg-grid">'+wl[w]+'</div></div>';
+    '<div class="sw">'+(wh[w]||'')+'</div>'
+    +'<div class="legend"><div class="lg-title">과목 범례</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
   for(var i=0;i<DAYS.length;i++){
     var d=DAYS[i];
     if(dd[d]===t){
@@ -454,14 +421,14 @@ function renderW(){
 /* ── LIST ── */
 function lcardH(it){
   var c=gcol(it.subject),sh='',ex='';
-  if(isEx(it.subject) || it.is_exam){
+  if(it.is_exam){
     var lb=exLabel(it.subject),et=lb[0],ba=lb[1];
     sh='<div class="lc-s" style="color:#C0392B">‼️ '+et+'</div>'+(ba?'<div style="font-size:13px;color:#555;margin-top:2px">'+ba+'</div>':'');
     ex='border:2px solid '+c+';';
   }else{sh='<div class="lc-s">'+it.subject+'</div>';}
   var ph=it.professor?'<div class="lc-p">'+it.professor+'</div>':'';
   return'<div class="lcard" style="'+ex+'"><div class="lc-bar" style="background:'+c+'"></div>'
-    +'<div class="lc-body">'+sh+ph+'<div class="lc-t">'+it.day+'요일 '+tMap[it.period-1]+'~'+eMap[it.period-1]+'</div></div></div>';
+    +'<div class="lc-body">'+sh+ph+'<div class="lc-t">'+it.day+'요일 '+it.period+'교시</div></div></div>';
 }
 function byDateH(items){
   var bd={};
@@ -470,7 +437,7 @@ function byDateH(items){
   for(var di=0;di<dates.length;di++){
     var dt=dates[di],d=new Date(dt),grp=bd[dt];
     var lbl=dt.slice(5)+' ('+WN[d.getDay()]+')';
-    var hx=false;for(var gi=0;gi<grp.length;gi++)if(isEx(grp[gi].subject) || grp[gi].is_exam){hx=true;break;}
+    var hx=false;for(var gi=0;gi<grp.length;gi++)if(grp[gi].is_exam){hx=true;break;}
     h+='<div class="dg"><div class="dh">'+(hx?'‼️ ':'')+lbl+'</div>';
     grp.sort(function(a,b){return a.period-b.period;});
     for(var gi2=0;gi2<grp.length;gi2++)h+=lcardH(grp[gi2]);
@@ -531,7 +498,7 @@ function renderF(){
 }
 function renderFR(){
   var items=merged.slice();
-  if(fExam)items=items.filter(function(i){return isEx(i.subject) || i.is_exam;});
+  if(fExam)items=items.filter(function(i){return i.is_exam;});
   else items=items.filter(function(i){return fsubj2.indexOf(i.subject)>=0||isEv(i.subject);});
   var el=document.getElementById('fres');if(!el)return;
   if(!items.length){el.innerHTML='<div class="no-res">조건에 맞는 수업이 없습니다</div>';return;}
@@ -540,6 +507,7 @@ function renderFR(){
 
 /* ── CALENDAR ── */
 function openCal(){
+  if(wks.length===0) return;
   var nd=new Date();cy=nd.getFullYear();cm2=nd.getMonth();
   renderCal();
   document.getElementById('ovl').classList.add('show');
@@ -549,43 +517,41 @@ function renderCal(){
   document.getElementById('cal-ml').textContent=cy+'년 '+ML[cm2];
   var t=today(),dw={},cv=wvals(wks[ci]);
   for(var wi=0;wi<wks.length;wi++){var w2=wks[wi],o=wdd[w2]||{},ks=Object.keys(o);for(var ki=0;ki<ks.length;ki++)if(o[ks[ki]])dw[o[ks[ki]]]=true;}
+  var edSet={};for(var ei=0;ei<ed.length;ei++)edSet[ed[ei]]=true;
   var first=new Date(cy,cm2,1),last=new Date(cy,cm2+1,0),g='';
   for(var i=0;i<first.getDay();i++)g+='<div class="cday"></div>';
   for(var day=1;day<=last.getDate();day++){
     var ds=cy+'-'+p2(cm2+1)+'-'+p2(day);
     var dow=new Date(cy,cm2,day).getDay(),isWD=dow>=1&&dow<=5;
-    var it2=ds===t,iw=cv.indexOf(ds)>=0&&isWD,ck=!!dw[ds];
-    // 간단히 시험이 있는 날짜인지 체크
-    var hx = merged.some(m => m.date === ds && (isEx(m.subject) || m.is_exam));
+    var hx=!!edSet[ds],it2=ds===t,iw=cv.indexOf(ds)>=0&&isWD,ck=!!dw[ds];
     var cls='cday'+(ck?' ck':'')+(it2?' td2':'')+(iw&&!it2?' iw':'');
     var dot=hx?'<div class="cdot"><span class="dtr"></span></div>':'<div class="cdot"></div>';
     var oc=ck?' id="cd-'+ds+'"':'';
     g+='<div class="'+cls+'"'+oc+'><div class="cdn">'+day+'</div>'+dot+'</div>';
   }
   document.getElementById('cal-g').innerHTML=g;
-  
-  // 캘린더 날짜 클릭 이벤트 바인딩 (수정된 로직)
-  var ckEls = document.querySelectorAll('.cday.ck');
-  for(var ci2=0; ci2<ckEls.length; ci2++){
-    ckEls[ci2].onclick = function(){
-      var id = this.id; 
-      if(!id) return;
-      var ds2 = id.replace('cd-','');
-      for(var ii=0; ii<wks.length; ii++){
-        if(wvals(wks[ii]).indexOf(ds2) >= 0){
-          ci=ii; 
-          break;
-        }
-      }
-      closeCal();
-      setView('weekly');
-      render();
-    };
+  if(ck){
+    var ckEls=document.querySelectorAll('.cday.ck');
+    for(var ci2=0;ci2<ckEls.length;ci2++){
+      ckEls[ci2].onclick=(function(el){
+        return function(){
+          var id=el.id;if(!id)return;
+          var ds2=id.replace('cd-','');
+          for(var ii=0;ii<wks.length;ii++){if(wvals(wks[ii]).indexOf(ds2)>=0){ci=ii;break;}}
+          closeCal();setView('weekly');render();
+        };
+      })(ckEls[ci2]);
+    }
   }
 }
 
-// 초기 실행
+// 처음 로드될 때 바로 기존 제공된 파일 텍스트 내용을 파싱할 수도 있으나,
+// 이 버전에선 사용자가 엑셀 파일을 업로드 하도록 안내함
 init();
+
+// 제공하신 샘플 파일 데이터가 페이지 로드 시 바로 보이게 하고 싶다면 
+// 아래 주석을 풀고 템플릿 리터럴 안에 업로드하신 csv 파일 내용을 넣어 실행되게 할 수 있습니다.
+// generateDataFromCSV(`업로드하신 엑셀 내용`);
 </script>
 </body>
 </html>
