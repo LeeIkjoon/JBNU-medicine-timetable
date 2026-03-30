@@ -8,104 +8,159 @@
 <meta name="apple-mobile-web-app-title" content="시간표">
 <title>2026-1 시간표</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:#F2F2F7;color:#1C1C1E;overflow:hidden;}
-
-.hdr{background:#fff;padding:12px 14px 10px;border-bottom:1px solid #E5E5EA;position:sticky;top:0;z-index:200}
-.hdr-top{display:flex;align-items:center;justify-content:space-between}
-.ht{font-size:16px;font-weight:700}
-.hs{font-size:11px;color:#8E8E93;margin-top:2px}
-.hdr-right{display:flex;align-items:center;gap:6px}
-.wnav{display:flex;align-items:center;gap:6px}
-.nb{background:#F2F2F7;border:none;border-radius:8px;width:34px;height:34px;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#007AFF;-webkit-tap-highlight-color:transparent}
-.nb:disabled{color:#C7C7CC}
-.wl{font-size:15px;font-weight:600;min-width:48px;text-align:center}
-.icon-btn{background:none;border:none;font-size:20px;cursor:pointer;width:34px;height:34px;display:flex;align-items:center;justify-content:center;border-radius:8px;-webkit-tap-highlight-color:transparent}
-
-/* 한 화면에 맞추기 위한 레이아웃 조정 */
-.main{padding:10px 8px; height:calc(100vh - 120px); overflow-y:auto;}
-.sw{height:100%; border-radius:14px; background:#fff; box-shadow:0 1px 6px rgba(0,0,0,0.09); display:flex;}
-
-.tt{width:100%;min-width:360px;border-collapse:collapse;table-layout:fixed; height:100%;}
-.tt tbody tr {height:9%;} /* 10교시 + 점심시간 = 11줄이 균등 분할됨 */
-
-.th-t{width:40px;background:#F9F9FB;border-bottom:2px solid #E5E5EA}
-.td-t{width:40px;background:#F9F9FB;border-top:1px solid #EFEFEF;padding:4px 2px;text-align:center;vertical-align:middle}
-.pn{display:block;font-size:10px;font-weight:700;color:#8E8E93}
-.pt{display:block;font-size:9px;color:#AEAEB2;margin-top:1px}
-.th-d{font-size:13px;font-weight:600;text-align:center;padding:8px 2px 6px;background:#F9F9FB;border-bottom:2px solid #E5E5EA;border-left:1px solid #EFEFEF; height:45px;}
-.th-date{font-size:10px;font-weight:400;color:#8E8E93;display:block;margin-top:1px}
-.th-d.tc{background:#F0EFFF;color:#5856D6;border-bottom:2px solid #5856D6;box-shadow:inset 2px 0 0 #5856D6,inset -2px 0 0 #5856D6}
-.th-d.tc .th-date{color:#5856D6;opacity:.85}
-.td-c.tc{background:#FAFAFF;box-shadow:inset 2px 0 0 #5856D6,inset -2px 0 0 #5856D6}
-.tt tbody tr:last-child .td-c.tc{box-shadow:inset 2px 0 0 #5856D6,inset -2px 0 0 #5856D6,inset 0 -2px 0 #5856D6}
-
-.td-c{border-top:1px solid #EFEFEF;border-left:1px solid #EFEFEF;padding:2px;vertical-align:middle;max-height:0;} /* max-height 0 trick for flex child overflow */
-.td-e{background:#FAFAFA}
-.card{border-radius:6px;padding:3px 4px;height:100%;display:flex;flex-direction:column;justify-content:center;min-height:0;overflow:hidden;}
-.cn-s, .cn-exam, .cn-name, .cn-p, .cn-t {
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+/* 전역 스타일 */
+:root {
+  --app-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --app-background: #F2F2F7;
+  --app-header-background: #fff;
+  --app-nav-background: #fff;
+  --app-text-color: #1C1C1E;
+  --app-text-secondary: #8E8E93;
+  --app-primary-color: #FF2D55; /* 현재 시간선 색상 */
+  --app-current-day-highlight: #FFECEC; /* 현재 요일 강조 색상 */
+  
+  /* 부드러운 파스텔톤 색상 팔레트 */
+  --palette-1: #FFDDC1;
+  --palette-2: #FFC8C8;
+  --palette-3: #FFABAB;
+  --palette-4: #FFC3A0;
+  --palette-5: #D5AAFF;
+  --palette-6: #B5D8FF;
+  --palette-7: #85E3FF;
+  --palette-8: #ACE6F1;
+  --palette-9: #A0FFE3;
+  --palette-10: #B8FFB8;
+  --palette-11: #E2F0CB;
+  --palette-12: #FFECEC;
 }
-.cn-s{font-size:11px;font-weight:700;color:#fff;line-height:1.2;}
-.cn-exam{font-size:11px;font-weight:800}
-.cn-name{font-size:10px;font-weight:600;color:rgba(255,255,255,.95);margin-top:1px;}
-.cn-p{font-size:9px;color:rgba(255,255,255,.88);margin-top:1px;}
-.cn-t{font-size:8px;color:rgba(255,255,255,.72);margin-top:auto;}
-.lunchrow .td-t{border-top:1px dashed #C7C7CC;background:#F9F9FB}
-.td-lunch{text-align:center;font-size:11px;color:#8E8E93;padding:5px;border-top:1px dashed #C7C7CC;border-left:1px solid #EFEFEF}
 
-.legend{margin-top:10px;background:#fff;border-radius:14px;padding:12px 14px}
-.lg-title{font-size:12px;font-weight:600;color:#8E8E93;margin-bottom:8px}
-.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.li{display:flex;align-items:flex-start;gap:6px}
-.ld{width:10px;height:10px;border-radius:3px;flex-shrink:0;margin-top:2px}
-.ln{font-size:11px;color:#3C3C43;line-height:1.4;word-break:keep-all}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family: var(--app-font-family); background: var(--app-background); color: var(--app-text-color); overflow:hidden;}
 
-/* bottom nav */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #E5E5EA;display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:100;height:60px;}
-.bn{flex:1;border:none;background:none;padding:8px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:#8E8E93;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.bn.on{color:#007AFF}
-.bn-ic{font-size:22px;line-height:1}
+/* 헤더 디자인 */
+.hdr{background: var(--app-header-background); padding: 10px 14px; border-bottom: 1px solid #E5E5EA; position: sticky; top: 0; z-index: 200;}
+.hdr-top{display:flex; align-items:center; justify-content:space-between; margin-bottom: 5px;}
+.ht{font-size: 14px; font-weight: 700; color: #1C1C1E;}
+.hs{font-size: 11px; color: var(--app-text-secondary);}
+.hdr-right{display:flex; align-items:center; gap: 8px;}
+.wnav{display:flex; align-items:center; gap: 6px;}
+.nb{background: var(--app-background); border: none; border-radius: 8px; width: 34px; height: 34px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #007AFF; -webkit-tap-highlight-color: transparent;}
+.nb:disabled{color: #C7C7CC;}
+.wl{font-size: 15px; font-weight: 600; min-width: 48px; text-align: center;}
+.icon-btn{background:none; border:none; font-size: 20px; cursor:pointer; width: 34px; height: 34px; display:flex; align-items:center; justify-content:center; border-radius: 8px; -webkit-tap-highlight-color: transparent;}
 
-/* list view */
-.list-wrap{padding:4px 0}
-.dg{margin-bottom:8px}
-.dh{font-size:12px;font-weight:700;color:#8E8E93;padding:6px 4px 4px}
-.lcard{background:#fff;border-radius:12px;margin-bottom:6px;display:flex;overflow:hidden;min-height:60px}
-.lc-bar{width:5px;flex-shrink:0}
-.lc-body{flex:1;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;gap:2px}
-.lc-s{font-size:14px;font-weight:700;word-break:keep-all}
-.lc-p{font-size:12px;color:#636366}
-.lc-t{font-size:11px;color:#8E8E93;margin-top:2px}
+/* 본문 레이아웃 및 시간표 디자인 */
+.main{padding: 10px 8px; height: calc(100vh - 120px); overflow-y: auto;}
+.sw{height: 100%; border-radius: 12px; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,0.06); display:flex; position: relative;} /* 현재 시간선 추가를 위해 position: relative */
 
-/* filter */
-.fw{padding:4px 0}
-.fs{background:#fff;border-radius:14px;padding:14px;margin-bottom:10px}
-.fs-ttl{font-size:13px;font-weight:700;margin-bottom:10px}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{padding:5px 12px;border-radius:20px;font-size:12px;border:1.5px solid #E5E5EA;background:#fff;cursor:pointer;color:#636366;-webkit-tap-highlight-color:transparent}
-.no-res{text-align:center;padding:40px;color:#8E8E93;font-size:14px}
+.tt{width: 100%; min-width: 360px; border-collapse: collapse; table-layout: fixed; height: 100%;}
+.tt tbody tr {height: 9%;} /* 10교시 + 점심시간 = 11줄이 균등 분할됨 */
 
-/* calendar overlay */
-.ovl{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
-.ovl.show{opacity:1;pointer-events:all}
-.cal-sh{background:#fff;border-radius:20px 20px 0 0;width:100%;padding-bottom:env(safe-area-inset-bottom,16px);transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.ovl.show .cal-sh{transform:translateY(0)}
-.cal-top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px}
-.cal-ttl{font-size:16px;font-weight:700}
-.cal-x{background:none;border:none;font-size:22px;cursor:pointer;color:#636366;padding:4px}
-.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0 16px 8px}
-.cal-m{font-size:15px;font-weight:600}
-.cal-nb{background:#F2F2F7;border:none;border-radius:8px;width:30px;height:30px;font-size:18px;cursor:pointer;color:#007AFF;display:flex;align-items:center;justify-content:center}
-.cal-g{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 14px;gap:2px}
-.cal-dow{text-align:center;font-size:11px;font-weight:600;color:#8E8E93;padding:4px 0}
-.cday{text-align:center;padding:2px;cursor:default;-webkit-tap-highlight-color:transparent}
-.cday.ck{cursor:pointer}
-.cdn{font-size:14px;line-height:1;padding:6px 0 2px;border-radius:8px}
-.cday.iw .cdn{background:#EEF1FF;color:#5856D6;font-weight:700;border-radius:0}
-.cday.td2 .cdn{background:#007AFF!important;color:#fff!important;border-radius:8px!important}
-.cdot{height:5px;display:flex;justify-content:center;align-items:center;margin-top:2px}
-.dtr{width:5px;height:5px;border-radius:50%;background:#E74C3C;display:inline-block}
+.th-t{width: 40px; background: #fff; border-bottom: 1px solid #E5E5EA;}
+.td-t{width: 40px; background: #fff; border-top: 1px solid #EFEFEF; padding: 4px 2px; text-align: center; vertical-align: middle;}
+.pn{display: block; font-size: 12px; font-weight: 600; color: #1C1C1E;}
+.pt{display: block; font-size: 10px; color: var(--app-text-secondary); margin-top: 1px;}
+
+.th-d{font-size: 12px; font-weight: 700; text-align: center; padding: 6px 2px 4px; background: #fff; border-bottom: 1px solid #E5E5EA; border-left: 1px solid #EFEFEF; height: 40px;}
+.th-date{font-size: 10px; font-weight: 400; color: var(--app-text-secondary); display: block; margin-top: 1px;}
+.th-d.current-day{background: var(--app-current-day-highlight); color: #C0392B; border-radius: 8px;} /* 현재 요일 강조 */
+
+.td-c{border-top: 1px solid #EFEFEF; border-left: 1px solid #EFEFEF; padding: 2px; vertical-align: middle;}
+.td-e{background: #fff;}
+.card{border-radius: 6px; padding: 4px 5px; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; min-height: 0; overflow: hidden;}
+.cn-subject, .cn-professor, .cn-time {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.cn-subject{font-size: 12px; font-weight: 700; color: #1C1C1E; line-height: 1.2; margin-bottom: 1px;}
+.cn-professor{font-size: 10px; font-weight: 600; color: #1C1C1E; margin-top: 1px;}
+.cn-time{font-size: 9px; color: #3C3C43; margin-top: auto;}
+
+/* 시험 카드 디자인 */
+.card.exam {
+  border: 1.5px solid #C0392B;
+}
+.cn-exam-badge {
+  font-size: 12px; font-weight: 800; color: #C0392B; margin-bottom: 2px;
+}
+
+/* 점심시간 디자인 */
+.lunchrow .td-t{border-top: 1px dashed #C7C7CC; background: #fff;}
+.td-lunch{text-align: center; font-size: 11px; color: var(--app-text-secondary); padding: 5px; border-top: 1px dashed #C7C7CC; border-left: 1px solid #EFEFEF; font-weight: 600;}
+
+/* 현재 시간선 디자인 */
+#current-time-line {
+  position: absolute;
+  left: 40px; /* 시간 컬럼 너비만큼 띔 */
+  right: 0;
+  height: 2px;
+  background-color: var(--app-primary-color);
+  z-index: 100;
+  display: none; /* 기본적으로 숨김 */
+}
+#current-time-line::after {
+  content: '';
+  position: absolute;
+  left: -4px; /* 시간 컬럼 너비만큼 띔 */
+  top: -4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--app-primary-color);
+}
+
+/* 과목 범례 디자인 */
+.legend{margin-top: 10px; background: #fff; border-radius: 12px; padding: 12px 14px;}
+.lg-title{font-size: 12px; font-weight: 600; color: var(--app-text-secondary); margin-bottom: 8px;}
+.lg-grid{display:grid; grid-template-columns: 1fr 1fr; gap: 7px;}
+.li{display:flex; align-items: flex-start; gap: 6px;}
+.ld{width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; margin-top: 2px;}
+.ln{font-size: 11px; color: #3C3C43; line-height: 1.4; word-break: keep-all;}
+
+/* 하단 내비게이션 바 디자인 */
+.bnav{position:fixed; bottom:0; left:0; right:0; background: var(--app-nav-background); border-top: 1px solid #E5E5EA; display:flex; padding-bottom:env(safe-area-inset-bottom,0px); z-index:100; height: 60px;}
+.bn{flex:1; border:none; background:none; padding: 8px 4px 6px; display:flex; flex-direction:column; align-items:center; gap: 2px; font-size: 10px; color: var(--app-text-secondary); cursor:pointer; -webkit-tap-highlight-color: transparent;}
+.bn.on{color: #007AFF;}
+.bn-ic{font-size: 22px; line-height: 1;}
+
+/* 목록 뷰 디자인 */
+.list-wrap{padding: 4px 0;}
+.dg{margin-bottom: 8px;}
+.dh{font-size: 12px; font-weight: 700; color: var(--app-text-secondary); padding: 6px 4px 4px;}
+.lcard{background: #fff; border-radius: 12px; margin-bottom: 6px; display:flex; overflow:hidden; min-height: 60px; border: 1.5px solid transparent;}
+.lc-bar{width: 5px; flex-shrink: 0;}
+.lc-body{flex:1; padding: 10px 12px; display:flex; flex-direction:column; justify-content:center; gap: 2px;}
+.lc-s{font-size: 14px; font-weight: 700; word-break: keep-all; color: #1C1C1E;}
+.lc-p{font-size: 12px; color: #636366;}
+.lc-t{font-size: 11px; color: var(--app-text-secondary); margin-top: 2px;}
+
+/* 필터 뷰 디자인 */
+.fw{padding: 4px 0;}
+.fs{background: #fff; border-radius: 12px; padding: 14px; margin-bottom: 10px;}
+.fs-ttl{font-size: 13px; font-weight: 700; margin-bottom: 10px;}
+.chips{display:flex; flex-wrap:wrap; gap: 6px;}
+.chip{padding: 5px 12px; border-radius: 20px; font-size: 12px; border: 1.5px solid #E5E5EA; background: #fff; cursor: pointer; color: #636366; -webkit-tap-highlight-color: transparent;}
+.no-res{text-align:center; padding: 40px; color: var(--app-text-secondary); font-size: 14px;}
+
+/* 달력 팝업 디자인 */
+.ovl{position:fixed; inset:0; background: rgba(0,0,0,.45); z-index: 500; display:flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity .25s;}
+.ovl.show{opacity: 1; pointer-events: all;}
+.cal-sh{background: #fff; border-radius: 20px 20px 0 0; width: 100%; padding-bottom:env(safe-area-inset-bottom,16px); transform: translateY(100%); transition: transform .3s cubic-bezier(.4,0,.2,1);}
+.ovl.show .cal-sh{transform: translateY(0);}
+.cal-top{display:flex; align-items:center; justify-content:space-between; padding: 14px 16px 10px;}
+.cal-ttl{font-size: 16px; font-weight: 700;}
+.cal-x{background:none; border:none; font-size: 22px; cursor:pointer; color: #636366; padding: 4px;}
+.cal-nav{display:flex; align-items:center; justify-content:space-between; padding: 0 16px 8px;}
+.cal-m{font-size: 15px; font-weight: 600;}
+.cal-nb{background: var(--app-background); border: none; border-radius: 8px; width: 30px; height: 30px; font-size: 18px; cursor: pointer; color: #007AFF; display: flex; align-items: center; justify-content: center;}
+.cal-g{display:grid; grid-template-columns: repeat(7,1fr); padding: 0 10px 14px; gap: 2px;}
+.cal-dow{text-align: center; font-size: 11px; font-weight: 600; color: var(--app-text-secondary); padding: 4px 0;}
+.cday{text-align: center; padding: 2px; cursor: default; -webkit-tap-highlight-color: transparent;}
+.cday.ck{cursor: pointer;}
+.cdn{font-size: 14px; line-height: 1; padding: 6px 0 2px; border-radius: 8px;}
+.cday.iw .cdn{background: #EEF1FF; color: #5856D6; font-weight: 700; border-radius: 0;}
+.cday.td2 .cdn{background: #007AFF!important; color: #fff!important; border-radius: 8px!important;}
+.cdot{height: 5px; display:flex; justify-content:center; align-items:center; margin-top: 2px;}
+.dtr{width: 5px; height: 5px; border-radius: 50%; background: var(--app-primary-color); display: inline-block;}
 </style>
 </head>
 <body>
@@ -113,23 +168,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 <div class="hdr">
   <div class="hdr-top">
     <div>
-      <div class="ht">📚 2026-1학기 시간표</div>
-      <div class="hs" id="wr"></div>
+      <div class="ht">2026-1 시간표</div>
+      <div class="hs" id="wr">CSV 파일을 업로드하세요</div>
     </div>
     <div class="hdr-right">
       <input type="file" id="csv-upload" accept=".csv" style="display:none">
       <button class="icon-btn" onclick="document.getElementById('csv-upload').click()" title="CSV 업로드">📂</button>
       <button class="icon-btn" id="cal-btn">📅</button>
-      <div class="wnav" id="wnav">
+      <div class="wnav" id="wnav" style="display:none;">
         <button class="nb" id="pb">‹</button>
-        <span class="wl" id="wl"></span>
+        <span class="wl" id="wl">데이터 없음</span>
         <button class="nb" id="nb">›</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="main" id="main"></div>
+<div class="main" id="main">
+  <div style="text-align:center; padding:40px; color: var(--app-text-secondary);">
+    상단의 📂 아이콘을 눌러<br>엑셀(CSV) 시간표를 업로드해주세요.
+  </div>
+</div>
 
 <div class="bnav">
   <button class="bn on" id="bn-w"><span class="bn-ic">📅</span>주간</button>
@@ -154,12 +213,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 </div>
 
 <script>
-// 전역 변수 초기화 (기본값 비워둠 - 로드시 샘플 생성 방지용이나, 기존 데이터 대체)
+// 전역 변수 초기화
 var wh = {}, wl = {}, wdd = {};
 var wks = [], ed = [], merged = [], fsubj = [];
-var cmap = {"근로자의날": "#95A5A6", "대체휴무": "#95A5A6", "문제바탕학습1": "#4A90D9", "생애주기": "#E8734A", "시험": "#E8734A", "실험및논문연구2": "#5CB85C", "어린이날": "#95A5A6", "의료면담1": "#F39C12", "의학생화학": "#1ABC9C", "인체미세구조 실습": "#3498DB", "인체미세구조와 기능": "#27AE60", "인체반응 및 병태생리": "#D35400", "인체질병형태학실습": "#16A085", "환자의사사회1": "#2980B9"};
-var palette = ['#1ABC9C', '#2ECC71', '#3498DB', '#9B59B6', '#34495E', '#F1C40F', '#E67E22', '#E74C3C', '#95A5A6', '#16A085', '#27AE60', '#2980B9', '#8E44AD', '#F39C12', '#D35400', '#C0392B'];
-
+var palette = ['#FFDDC1', '#FFC8C8', '#FFABAB', '#FFC3A0', '#D5AAFF', '#B5D8FF', '#85E3FF', '#ACE6F1', '#A0FFE3', '#B8FFB8', '#E2F0CB', '#FFECEC']; // 새로운 파스텔톤 팔레트
 var DAYS = ['월','화','수','목','금'];
 var WN   = ['일','월','화','수','목','금','토'];
 var ML   = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
@@ -174,7 +231,6 @@ function isEx(s){return s.indexOf('시험')>=0;}
 function isEv(s){return EVK.indexOf(s)>=0;}
 function wvals(w){var o=wdd[w];if(!o)return[];return Object.keys(o).map(function(k){return o[k];}).filter(Boolean).sort();}
 function gcol(s){
-  if(cmap[s]) return cmap[s];
   let hash = 0;
   for(let i=0; i<s.length; i++) hash = s.charCodeAt(i) + ((hash << 5) - hash);
   return palette[Math.abs(hash) % palette.length];
@@ -187,7 +243,7 @@ function exLabel(s){
   return['시험',s.replace('시험','').trim()];
 }
 
-// 간단한 CSV 파서 (따옴표 내 개행 처리 포함)
+// CSV 파서
 function parseCSV(str) {
   let arr = [], row = [], col = '', quote = false;
   for (let c = 0; c < str.length; c++) {
@@ -248,14 +304,14 @@ function generateDataFromCSV(csvText) {
   fsubj2 = fsubj.slice();
   wks = Object.keys(wdd).sort((a,b)=>parseInt(a)-parseInt(b));
   
-  // Build wh (Weekly HTML Table Strings) and wl (Legend Strings)
+  // wh (주간 HTML 표 문자열) 및 wl (범례 문자열) 빌드
   wh = {}; wl = {};
   wks.forEach(w => {
     let dates = Object.keys(wkMap[w]).sort();
     let dateOf = {};
     dates.forEach(d => { dateOf[wkMap[w][d].day] = d; });
 
-    // Build Legend
+    // 범례 빌드
     let wSubj = [];
     merged.filter(m => m.week === w).forEach(m => {
       if(!wSubj.includes(m.subject)) wSubj.push(m.subject);
@@ -267,7 +323,7 @@ function generateDataFromCSV(csvText) {
     });
     wl[w] = lh;
 
-    // Build Table
+    // 시간표 표 빌드
     let ths = DAYS.map(d => `<th class="th-d" data-day="${d}" data-date="${dateOf[d]||''}">${d}<br><span class="th-date">${(dateOf[d]||'').slice(5)}</span></th>`).join('');
     let tb = `<table class="tt"><thead><tr><th class="th-t"></th>${ths}</tr></thead><tbody>`;
 
@@ -307,18 +363,20 @@ function generateDataFromCSV(csvText) {
           let tRange = pTime + '~' + eMap[p+rs-1];
 
           let inH = '';
+          let cardClass = 'card';
           if(isE) {
+            cardClass += ' exam';
             let ename = lines.length > 1 ? lines[1].trim() : fLine + ' 시험';
-            inH = `<div class="cn-s cn-exam">‼️ ${ename}</div>`;
-            if(!ename.includes(fLine) && fLine) inH += `<div class="cn-name">${fLine}</div>`;
-            if(prof) inH += `<div class="cn-p">${prof}</div>`;
-            inH += `<div class="cn-t">${tRange}</div>`;
+            inH = `<div class="cn-exam-badge">‼️ ${ename}</div>`;
+            if(!ename.includes(fLine) && fLine) inH += `<div class="cn-subject">${fLine}</div>`;
+            if(prof) inH += `<div class="cn-professor">${prof}</div>`;
+            inH += `<div class="cn-time">${tRange}</div>`;
           } else {
-            inH = `<div class="cn-s">${fLine}</div>`;
-            if(prof) inH += `<div class="cn-p">${prof}</div>`;
-            inH += `<div class="cn-t">${tRange}</div>`;
+            inH = `<div class="cn-subject">${fLine}</div>`;
+            if(prof) inH += `<div class="cn-professor">${prof}</div>`;
+            inH += `<div class="cn-time">${tRange}</div>`;
           }
-          tb += `<td class="td-c" data-day="${d}" ${rs>1?'rowspan="'+rs+'"':''}><div class="card" style="background:${bg}">${inH}</div></td>`;
+          tb += `<td class="td-c" data-day="${d}" ${rs>1?'rowspan="'+rs+'"':''}><div class="${cardClass}" style="background:${bg}">${inH}</div></td>`;
         }
       });
       tb += `</tr>`;
@@ -334,7 +392,9 @@ function generateDataFromCSV(csvText) {
     if(v.length && t >= v[0] && t <= v[v.length-1]) { ci = i; break; }
   }
   
-  render(); // 데이터 재구축 후 렌더링
+  // 업로드 성공 시 UI 업데이트 및 렌더링
+  document.getElementById('wnav').style.display = 'flex';
+  render(); 
   alert("새로운 시간표가 업로드되었습니다!");
 }
 
@@ -363,8 +423,11 @@ function init(){
     reader.readAsText(file, 'UTF-8');
   });
 
-  // 최초 샘플 데이터가 없으므로 화면은 비어있게 됨. (CSV를 업로드하면 채워짐)
   let t = new Date(); cy = t.getFullYear(); cm2 = t.getMonth();
+  
+  // 현재 시간선 업데이트 시작
+  drawCurrentTimeLine();
+  setInterval(drawCurrentTimeLine, 60000); // 1분마다 업데이트
 }
 
 function setView(v){
@@ -372,7 +435,7 @@ function setView(v){
   document.getElementById('bn-w').className='bn'+(v==='weekly'?' on':'');
   document.getElementById('bn-l').className='bn'+(v==='list'?' on':'');
   document.getElementById('bn-f').className='bn'+(v==='filter'?' on':'');
-  document.getElementById('wnav').style.display=(v==='weekly')?'flex':'none';
+  document.getElementById('wnav').style.display=(v==='weekly' && wks.length > 0)?'flex':'none';
   render();
 }
 
@@ -382,6 +445,7 @@ function updHdr(){
     document.getElementById('wr').textContent = 'CSV 파일을 업로드하세요';
     document.getElementById('pb').disabled = true;
     document.getElementById('nb').disabled = true;
+    document.getElementById('wnav').style.display = 'none';
     return;
   }
   var w=wks[ci];
@@ -395,7 +459,7 @@ function updHdr(){
 function render(){
   updHdr();
   if(wks.length === 0) {
-    document.getElementById('main').innerHTML = '<div style="text-align:center; padding:40px; color:#8E8E93;">상단의 📂 아이콘을 눌러<br>엑셀(CSV) 시간표를 업로드해주세요.</div>';
+    document.getElementById('main').innerHTML = '<div style="text-align:center; padding:40px; color: var(--app-text-secondary);">상단의 📂 아이콘을 눌러<br>엑셀(CSV) 시간표를 업로드해주세요.</div>';
     return;
   }
   if(vw==='weekly')renderW();
@@ -403,31 +467,36 @@ function render(){
   else renderF();
 }
 
-/* ── WEEKLY ── */
+/* ── 주간 뷰 ── */
 function renderW(){
-  var w=wks[ci],t=today(),dd=wdd[w]||{};
+  var w=wks[ci],t=today();
   document.getElementById('main').innerHTML=
-    '<div class="sw">'+(wh[w]||'')+'</div>'
+    '<div class="sw"><div id="current-time-line"></div>'+(wh[w]||'')+'</div>'
     +'<div class="legend"><div class="lg-title">과목 범례</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
-  for(var i=0;i<DAYS.length;i++){
-    var d=DAYS[i];
-    if(dd[d]===t){
-      var els=document.querySelectorAll('[data-day="'+d+'"]');
-      for(var j=0;j<els.length;j++)els[j].classList.add('tc');
-    }
+  
+  // 현재 요일 강조
+  var dowNum = new Date().getDay();
+  if (dowNum >= 1 && dowNum <= 5) {
+    var dowStr = DAYS[dowNum - 1];
+    var th = document.querySelector(`.th-d[data-day="${dowStr}"]`);
+    if (th) th.classList.add('current-day');
   }
+  
+  drawCurrentTimeLine(); // 시간표 렌더링 후 시간선 업데이트
 }
 
-/* ── LIST ── */
+/* ── 목록 뷰 ── */
 function lcardH(it){
-  var c=gcol(it.subject),sh='',ex='';
+  var c=gcol(it.subject),ex='';
+  var cardClass = 'lcard';
+  var sh = '';
   if(it.is_exam){
+    cardClass += ' exam';
     var lb=exLabel(it.subject),et=lb[0],ba=lb[1];
-    sh='<div class="lc-s" style="color:#C0392B">‼️ '+et+'</div>'+(ba?'<div style="font-size:13px;color:#555;margin-top:2px">'+ba+'</div>':'');
-    ex='border:2px solid '+c+';';
+    sh='<div class="cn-exam-badge">‼️ '+et+'</div>'+(ba?'<div style="font-size:13px;color:#555;margin-top:2px">'+ba+'</div>':'');
   }else{sh='<div class="lc-s">'+it.subject+'</div>';}
   var ph=it.professor?'<div class="lc-p">'+it.professor+'</div>':'';
-  return'<div class="lcard" style="'+ex+'"><div class="lc-bar" style="background:'+c+'"></div>'
+  return'<div class="'+cardClass+'"><div class="lc-bar" style="background:'+c+'"></div>'
     +'<div class="lc-body">'+sh+ph+'<div class="lc-t">'+it.day+'요일 '+it.period+'교시</div></div></div>';
 }
 function byDateH(items){
@@ -449,7 +518,7 @@ function renderL(){
   document.getElementById('main').innerHTML='<div class="list-wrap">'+byDateH(merged)+'</div>';
 }
 
-/* ── FILTER ── */
+/* ── 필터 뷰 ── */
 function renderF(){
   var eS=fsubj.filter(function(s){return isEx(s);});
   var nS=fsubj.filter(function(s){return!isEx(s)&&!isEv(s);});
@@ -505,7 +574,7 @@ function renderFR(){
   el.innerHTML='<div class="list-wrap">'+byDateH(items)+'</div>';
 }
 
-/* ── CALENDAR ── */
+/* ── 달력 ── */
 function openCal(){
   if(wks.length===0) return;
   var nd=new Date();cy=nd.getFullYear();cm2=nd.getMonth();
@@ -545,13 +614,65 @@ function renderCal(){
   }
 }
 
-// 처음 로드될 때 바로 기존 제공된 파일 텍스트 내용을 파싱할 수도 있으나,
-// 이 버전에선 사용자가 엑셀 파일을 업로드 하도록 안내함
-init();
+/* ── 현재 시간선 그리기 ── */
+function drawCurrentTimeLine() {
+  var lineEl = document.getElementById('current-time-line');
+  if (!lineEl || vw !== 'weekly' || wks.length === 0) {
+    if (lineEl) lineEl.style.display = 'none';
+    return;
+  }
+  
+  var now = new Date();
+  var hours = now.getHours();
+  var minutes = now.getMinutes();
+  
+  var startHour = 8;
+  var startMinute = 30;
+  var hourHeight = 100 / 11; // 전체 높이를 11개(10교시+점심)로 나눈 한 교시 높이
+  
+  // 점심시간 고려를 위해 총 분으로 환산
+  var totalMinutes = hours * 60 + minutes;
+  var totalStartMinutes = startHour * 60 + startMinute;
+  
+  if (totalMinutes < totalStartMinutes) {
+    lineEl.style.display = 'none';
+    return;
+  }
+  
+  var period = Math.floor((totalMinutes - totalStartMinutes) / 60) + 1;
+  var minuteInPeriod = (totalMinutes - totalStartMinutes) % 60;
+  
+  // 5교시(점심시간) 조정
+  if (period >= 5) {
+    // 점심시간 12:20 ~ 13:30 (70분)
+    var lunchStart = 12 * 60 + 20;
+    if (totalMinutes < lunchStart) {
+      // 4교시 진행중
+      period = 4;
+      minuteInPeriod = (totalMinutes - (startHour * 60 + startMinute + 3 * 60));
+    } else if (totalMinutes < lunchStart + 70) {
+      // 점심시간 진행중
+      period = 5;
+      minuteInPeriod = (totalMinutes - lunchStart) * (60 / 70); // 70분을 60분 높이에 맞춤
+    } else {
+      // 5교시 이후
+      period = Math.floor((totalMinutes - (totalStartMinutes + 70)) / 60) + 2; // 5교시부터 시작하므로 +2
+      minuteInPeriod = (totalMinutes - (totalStartMinutes + 70)) % 60;
+    }
+  }
+  
+  if (period > 11) {
+    lineEl.style.display = 'none';
+    return;
+  }
+  
+  // 헤더 높이(40px) 고려
+  var topPercent = (period - 1 + minuteInPeriod / 60) * hourHeight;
+  lineEl.style.top = `calc(40px + ${topPercent}%)`;
+  lineEl.style.display = 'block';
+}
 
-// 제공하신 샘플 파일 데이터가 페이지 로드 시 바로 보이게 하고 싶다면 
-// 아래 주석을 풀고 템플릿 리터럴 안에 업로드하신 csv 파일 내용을 넣어 실행되게 할 수 있습니다.
-// generateDataFromCSV(`업로드하신 엑셀 내용`);
+init();
 </script>
 </body>
 </html>
