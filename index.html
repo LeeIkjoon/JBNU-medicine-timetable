@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="시간표">
 <title>2026-1 시간표</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 /* 전역 스타일 */
 :root {
@@ -16,10 +17,9 @@
   --app-nav-background: #fff;
   --app-text-color: #1C1C1E;
   --app-text-secondary: #8E8E93;
-  --app-primary-color: #FF2D55; /* 현재 시간선 색상 */
-  --app-current-day-highlight: #FFECEC; /* 현재 요일 강조 색상 */
+  --app-primary-color: #FF2D55; 
+  --app-current-day-highlight: #FFECEC; 
   
-  /* 부드러운 파스텔톤 색상 팔레트 */
   --palette-1: #FFDDC1;
   --palette-2: #FFC8C8;
   --palette-3: #FFABAB;
@@ -51,10 +51,10 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
 
 /* 본문 레이아웃 및 시간표 디자인 */
 .main{padding: 10px 8px; height: calc(100vh - 120px); overflow-y: auto;}
-.sw{height: 100%; border-radius: 12px; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,0.06); display:flex; position: relative;} /* 현재 시간선 추가를 위해 position: relative */
+.sw{height: 100%; border-radius: 12px; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,0.06); display:flex; position: relative;}
 
 .tt{width: 100%; min-width: 360px; border-collapse: collapse; table-layout: fixed; height: 100%;}
-.tt tbody tr {height: 9%;} /* 10교시 + 점심시간 = 11줄이 균등 분할됨 */
+.tt tbody tr {height: 9%;}
 
 .th-t{width: 40px; background: #fff; border-bottom: 1px solid #E5E5EA;}
 .td-t{width: 40px; background: #fff; border-top: 1px solid #EFEFEF; padding: 4px 2px; text-align: center; vertical-align: middle;}
@@ -63,7 +63,7 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
 
 .th-d{font-size: 12px; font-weight: 700; text-align: center; padding: 6px 2px 4px; background: #fff; border-bottom: 1px solid #E5E5EA; border-left: 1px solid #EFEFEF; height: 40px;}
 .th-date{font-size: 10px; font-weight: 400; color: var(--app-text-secondary); display: block; margin-top: 1px;}
-.th-d.current-day{background: var(--app-current-day-highlight); color: #C0392B; border-radius: 8px;} /* 현재 요일 강조 */
+.th-d.current-day{background: var(--app-current-day-highlight); color: #C0392B; border-radius: 8px;} 
 
 .td-c{border-top: 1px solid #EFEFEF; border-left: 1px solid #EFEFEF; padding: 2px; vertical-align: middle;}
 .td-e{background: #fff;}
@@ -75,40 +75,19 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
 .cn-professor{font-size: 10px; font-weight: 600; color: #1C1C1E; margin-top: 1px;}
 .cn-time{font-size: 9px; color: #3C3C43; margin-top: auto;}
 
-/* 시험 카드 디자인 */
-.card.exam {
-  border: 1.5px solid #C0392B;
-}
-.cn-exam-badge {
-  font-size: 12px; font-weight: 800; color: #C0392B; margin-bottom: 2px;
-}
+.card.exam { border: 1.5px solid #C0392B; }
+.cn-exam-badge { font-size: 12px; font-weight: 800; color: #C0392B; margin-bottom: 2px; }
 
-/* 점심시간 디자인 */
 .lunchrow .td-t{border-top: 1px dashed #C7C7CC; background: #fff;}
 .td-lunch{text-align: center; font-size: 11px; color: var(--app-text-secondary); padding: 5px; border-top: 1px dashed #C7C7CC; border-left: 1px solid #EFEFEF; font-weight: 600;}
 
-/* 현재 시간선 디자인 */
 #current-time-line {
-  position: absolute;
-  left: 40px; /* 시간 컬럼 너비만큼 띔 */
-  right: 0;
-  height: 2px;
-  background-color: var(--app-primary-color);
-  z-index: 100;
-  display: none; /* 기본적으로 숨김 */
+  position: absolute; left: 40px; right: 0; height: 2px; background-color: var(--app-primary-color); z-index: 100; display: none;
 }
 #current-time-line::after {
-  content: '';
-  position: absolute;
-  left: -4px; /* 시간 컬럼 너비만큼 띔 */
-  top: -4px;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background-color: var(--app-primary-color);
+  content: ''; position: absolute; left: -4px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background-color: var(--app-primary-color);
 }
 
-/* 과목 범례 디자인 */
 .legend{margin-top: 10px; background: #fff; border-radius: 12px; padding: 12px 14px;}
 .lg-title{font-size: 12px; font-weight: 600; color: var(--app-text-secondary); margin-bottom: 8px;}
 .lg-grid{display:grid; grid-template-columns: 1fr 1fr; gap: 7px;}
@@ -116,13 +95,11 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
 .ld{width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; margin-top: 2px;}
 .ln{font-size: 11px; color: #3C3C43; line-height: 1.4; word-break: keep-all;}
 
-/* 하단 내비게이션 바 디자인 */
 .bnav{position:fixed; bottom:0; left:0; right:0; background: var(--app-nav-background); border-top: 1px solid #E5E5EA; display:flex; padding-bottom:env(safe-area-inset-bottom,0px); z-index:100; height: 60px;}
 .bn{flex:1; border:none; background:none; padding: 8px 4px 6px; display:flex; flex-direction:column; align-items:center; gap: 2px; font-size: 10px; color: var(--app-text-secondary); cursor:pointer; -webkit-tap-highlight-color: transparent;}
 .bn.on{color: #007AFF;}
 .bn-ic{font-size: 22px; line-height: 1;}
 
-/* 목록 뷰 디자인 */
 .list-wrap{padding: 4px 0;}
 .dg{margin-bottom: 8px;}
 .dh{font-size: 12px; font-weight: 700; color: var(--app-text-secondary); padding: 6px 4px 4px;}
@@ -133,7 +110,6 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
 .lc-p{font-size: 12px; color: #636366;}
 .lc-t{font-size: 11px; color: var(--app-text-secondary); margin-top: 2px;}
 
-/* 필터 뷰 디자인 */
 .fw{padding: 4px 0;}
 .fs{background: #fff; border-radius: 12px; padding: 14px; margin-bottom: 10px;}
 .fs-ttl{font-size: 13px; font-weight: 700; margin-bottom: 10px;}
@@ -141,7 +117,6 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
 .chip{padding: 5px 12px; border-radius: 20px; font-size: 12px; border: 1.5px solid #E5E5EA; background: #fff; cursor: pointer; color: #636366; -webkit-tap-highlight-color: transparent;}
 .no-res{text-align:center; padding: 40px; color: var(--app-text-secondary); font-size: 14px;}
 
-/* 달력 팝업 디자인 */
 .ovl{position:fixed; inset:0; background: rgba(0,0,0,.45); z-index: 500; display:flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity .25s;}
 .ovl.show{opacity: 1; pointer-events: all;}
 .cal-sh{background: #fff; border-radius: 20px 20px 0 0; width: 100%; padding-bottom:env(safe-area-inset-bottom,16px); transform: translateY(100%); transition: transform .3s cubic-bezier(.4,0,.2,1);}
@@ -169,11 +144,11 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
   <div class="hdr-top">
     <div>
       <div class="ht">2026-1 시간표</div>
-      <div class="hs" id="wr">CSV 파일을 업로드하세요</div>
+      <div class="hs" id="wr">엑셀 또는 CSV 파일을 업로드하세요</div>
     </div>
     <div class="hdr-right">
-      <input type="file" id="csv-upload" accept=".csv" style="display:none">
-      <button class="icon-btn" onclick="document.getElementById('csv-upload').click()" title="CSV 업로드">📂</button>
+      <input type="file" id="csv-upload" accept=".csv, .xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display:none">
+      <button class="icon-btn" onclick="document.getElementById('csv-upload').click()" title="시간표 업로드">📂</button>
       <button class="icon-btn" id="cal-btn">📅</button>
       <div class="wnav" id="wnav" style="display:none;">
         <button class="nb" id="pb">‹</button>
@@ -186,7 +161,7 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
 
 <div class="main" id="main">
   <div style="text-align:center; padding:40px; color: var(--app-text-secondary);">
-    상단의 📂 아이콘을 눌러<br>엑셀(CSV) 시간표를 업로드해주세요.
+    상단의 📂 아이콘을 눌러<br>엑셀(.xlsx) 또는 CSV 시간표를 업로드해주세요.
   </div>
 </div>
 
@@ -216,7 +191,7 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
 // 전역 변수 초기화
 var wh = {}, wl = {}, wdd = {};
 var wks = [], ed = [], merged = [], fsubj = [];
-var palette = ['#FFDDC1', '#FFC8C8', '#FFABAB', '#FFC3A0', '#D5AAFF', '#B5D8FF', '#85E3FF', '#ACE6F1', '#A0FFE3', '#B8FFB8', '#E2F0CB', '#FFECEC']; // 새로운 파스텔톤 팔레트
+var palette = ['#FFDDC1', '#FFC8C8', '#FFABAB', '#FFC3A0', '#D5AAFF', '#B5D8FF', '#85E3FF', '#ACE6F1', '#A0FFE3', '#B8FFB8', '#E2F0CB', '#FFECEC']; 
 var DAYS = ['월','화','수','목','금'];
 var WN   = ['일','월','화','수','목','금','토'];
 var ML   = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
@@ -261,7 +236,7 @@ function parseCSV(str) {
   return arr;
 }
 
-// CSV 데이터로 시간표 정보 새로 빌드
+// 데이터를 읽고 화면을 그리는 함수
 function generateDataFromCSV(csvText) {
   let rows = parseCSV(csvText);
   wdd = {}; merged = []; fsubj = []; ed = [];
@@ -304,14 +279,12 @@ function generateDataFromCSV(csvText) {
   fsubj2 = fsubj.slice();
   wks = Object.keys(wdd).sort((a,b)=>parseInt(a)-parseInt(b));
   
-  // wh (주간 HTML 표 문자열) 및 wl (범례 문자열) 빌드
   wh = {}; wl = {};
   wks.forEach(w => {
     let dates = Object.keys(wkMap[w]).sort();
     let dateOf = {};
     dates.forEach(d => { dateOf[wkMap[w][d].day] = d; });
 
-    // 범례 빌드
     let wSubj = [];
     merged.filter(m => m.week === w).forEach(m => {
       if(!wSubj.includes(m.subject)) wSubj.push(m.subject);
@@ -323,7 +296,6 @@ function generateDataFromCSV(csvText) {
     });
     wl[w] = lh;
 
-    // 시간표 표 빌드
     let ths = DAYS.map(d => `<th class="th-d" data-day="${d}" data-date="${dateOf[d]||''}">${d}<br><span class="th-date">${(dateOf[d]||'').slice(5)}</span></th>`).join('');
     let tb = `<table class="tt"><thead><tr><th class="th-t"></th>${ths}</tr></thead><tbody>`;
 
@@ -385,21 +357,19 @@ function generateDataFromCSV(csvText) {
     wh[w] = tb;
   });
 
-  ci = 0; // 주차 초기화
+  ci = 0; 
   let t = today();
   for(let i=0; i<wks.length; i++) {
     let v = wvals(wks[i]);
     if(v.length && t >= v[0] && t <= v[v.length-1]) { ci = i; break; }
   }
   
-  // 업로드 성공 시 UI 업데이트 및 렌더링
   document.getElementById('wnav').style.display = 'flex';
   render(); 
-  alert("새로운 시간표가 업로드되었습니다!");
+  alert("새로운 시간표가 성공적으로 적용되었습니다!");
 }
 
 function init(){
-  // 이벤트 바인딩
   document.getElementById('pb').onclick=function(){if(ci>0){ci--;render();}};
   document.getElementById('nb').onclick=function(){if(ci<wks.length-1){ci++;render();}};
   document.getElementById('bn-w').onclick=function(){setView('weekly');};
@@ -411,23 +381,45 @@ function init(){
   document.getElementById('cal-p').onclick=function(){cm2--;if(cm2<0){cm2=11;cy--;}renderCal();};
   document.getElementById('cal-n').onclick=function(){cm2++;if(cm2>11){cm2=0;cy++;}renderCal();};
   
-  // CSV 파일 업로드 이벤트
+  // 엑셀(.xlsx) 및 CSV 통합 업로드 처리 이벤트
   document.getElementById('csv-upload').addEventListener('change', function(e) {
     let file = e.target.files[0];
     if(!file) return;
-    let reader = new FileReader();
-    reader.onload = function(evt) {
-      generateDataFromCSV(evt.target.result);
-      e.target.value = ''; // 재업로드를 위해 초기화
-    };
-    reader.readAsText(file, 'UTF-8');
+    
+    let ext = file.name.split('.').pop().toLowerCase();
+    
+    if (ext === 'csv') {
+      let reader = new FileReader();
+      reader.onload = function(evt) {
+        generateDataFromCSV(evt.target.result);
+        e.target.value = ''; 
+      };
+      reader.readAsText(file, 'UTF-8');
+    } else if (ext === 'xlsx' || ext === 'xls') {
+      let reader = new FileReader();
+      reader.onload = function(evt) {
+        try {
+          let data = new Uint8Array(evt.target.result);
+          let workbook = XLSX.read(data, {type: 'array'});
+          // 첫 번째 시트를 읽어옴
+          let firstSheetName = workbook.SheetNames[0];
+          let worksheet = workbook.Sheets[firstSheetName];
+          // 읽어온 시트를 CSV 텍스트로 변환하여 기존 로직 태우기
+          let csvText = XLSX.utils.sheet_to_csv(worksheet);
+          generateDataFromCSV(csvText);
+        } catch (error) {
+          alert("엑셀 파일을 읽는 중 오류가 발생했습니다. 파일 형식을 확인해주세요.");
+        }
+        e.target.value = ''; 
+      };
+      reader.readAsArrayBuffer(file);
+    }
   });
 
   let t = new Date(); cy = t.getFullYear(); cm2 = t.getMonth();
   
-  // 현재 시간선 업데이트 시작
   drawCurrentTimeLine();
-  setInterval(drawCurrentTimeLine, 60000); // 1분마다 업데이트
+  setInterval(drawCurrentTimeLine, 60000); 
 }
 
 function setView(v){
@@ -442,7 +434,7 @@ function setView(v){
 function updHdr(){
   if(wks.length === 0) {
     document.getElementById('wl').textContent = '데이터 없음';
-    document.getElementById('wr').textContent = 'CSV 파일을 업로드하세요';
+    document.getElementById('wr').textContent = '엑셀 파일을 업로드하세요';
     document.getElementById('pb').disabled = true;
     document.getElementById('nb').disabled = true;
     document.getElementById('wnav').style.display = 'none';
@@ -459,7 +451,7 @@ function updHdr(){
 function render(){
   updHdr();
   if(wks.length === 0) {
-    document.getElementById('main').innerHTML = '<div style="text-align:center; padding:40px; color: var(--app-text-secondary);">상단의 📂 아이콘을 눌러<br>엑셀(CSV) 시간표를 업로드해주세요.</div>';
+    document.getElementById('main').innerHTML = '<div style="text-align:center; padding:40px; color: var(--app-text-secondary);">상단의 📂 아이콘을 눌러<br>엑셀(.xlsx) 또는 CSV 시간표를 업로드해주세요.</div>';
     return;
   }
   if(vw==='weekly')renderW();
@@ -474,7 +466,6 @@ function renderW(){
     '<div class="sw"><div id="current-time-line"></div>'+(wh[w]||'')+'</div>'
     +'<div class="legend"><div class="lg-title">과목 범례</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
   
-  // 현재 요일 강조
   var dowNum = new Date().getDay();
   if (dowNum >= 1 && dowNum <= 5) {
     var dowStr = DAYS[dowNum - 1];
@@ -482,7 +473,7 @@ function renderW(){
     if (th) th.classList.add('current-day');
   }
   
-  drawCurrentTimeLine(); // 시간표 렌더링 후 시간선 업데이트
+  drawCurrentTimeLine(); 
 }
 
 /* ── 목록 뷰 ── */
@@ -628,9 +619,8 @@ function drawCurrentTimeLine() {
   
   var startHour = 8;
   var startMinute = 30;
-  var hourHeight = 100 / 11; // 전체 높이를 11개(10교시+점심)로 나눈 한 교시 높이
+  var hourHeight = 100 / 11; 
   
-  // 점심시간 고려를 위해 총 분으로 환산
   var totalMinutes = hours * 60 + minutes;
   var totalStartMinutes = startHour * 60 + startMinute;
   
@@ -642,21 +632,16 @@ function drawCurrentTimeLine() {
   var period = Math.floor((totalMinutes - totalStartMinutes) / 60) + 1;
   var minuteInPeriod = (totalMinutes - totalStartMinutes) % 60;
   
-  // 5교시(점심시간) 조정
   if (period >= 5) {
-    // 점심시간 12:20 ~ 13:30 (70분)
     var lunchStart = 12 * 60 + 20;
     if (totalMinutes < lunchStart) {
-      // 4교시 진행중
       period = 4;
       minuteInPeriod = (totalMinutes - (startHour * 60 + startMinute + 3 * 60));
     } else if (totalMinutes < lunchStart + 70) {
-      // 점심시간 진행중
       period = 5;
-      minuteInPeriod = (totalMinutes - lunchStart) * (60 / 70); // 70분을 60분 높이에 맞춤
+      minuteInPeriod = (totalMinutes - lunchStart) * (60 / 70); 
     } else {
-      // 5교시 이후
-      period = Math.floor((totalMinutes - (totalStartMinutes + 70)) / 60) + 2; // 5교시부터 시작하므로 +2
+      period = Math.floor((totalMinutes - (totalStartMinutes + 70)) / 60) + 2; 
       minuteInPeriod = (totalMinutes - (totalStartMinutes + 70)) % 60;
     }
   }
@@ -666,7 +651,6 @@ function drawCurrentTimeLine() {
     return;
   }
   
-  // 헤더 높이(40px) 고려
   var topPercent = (period - 1 + minuteInPeriod / 60) * hourHeight;
   lineEl.style.top = `calc(40px + ${topPercent}%)`;
   lineEl.style.display = 'block';
