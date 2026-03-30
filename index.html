@@ -7,135 +7,198 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="시간표">
 <title>2026-1 시간표</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
-/* 전역 스타일 */
-:root {
-  --app-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --app-background: #F2F2F7;
-  --app-header-background: #fff;
-  --app-nav-background: #fff;
-  --app-text-color: #1C1C1E;
-  --app-text-secondary: #8E8E93;
-  --app-primary-color: #FF2D55; 
-  --app-current-day-highlight: #FFECEC; 
-  
-  --palette-1: #FFDDC1;
-  --palette-2: #FFC8C8;
-  --palette-3: #FFABAB;
-  --palette-4: #FFC3A0;
-  --palette-5: #D5AAFF;
-  --palette-6: #B5D8FF;
-  --palette-7: #85E3FF;
-  --palette-8: #ACE6F1;
-  --palette-9: #A0FFE3;
-  --palette-10: #B8FFB8;
-  --palette-11: #E2F0CB;
-  --palette-12: #FFECEC;
-}
-
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family: var(--app-font-family); background: var(--app-background); color: var(--app-text-color); overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;background:#F2F2F7;color:#1C1C1E}
 
-/* 헤더 디자인 */
-.hdr{background: var(--app-header-background); padding: 10px 14px; border-bottom: 1px solid #E5E5EA; position: sticky; top: 0; z-index: 200;}
-.hdr-top{display:flex; align-items:center; justify-content:space-between; margin-bottom: 5px;}
-.ht{font-size: 14px; font-weight: 700; color: #1C1C1E;}
-.hs{font-size: 11px; color: var(--app-text-secondary);}
-.hdr-right{display:flex; align-items:center; gap: 8px;}
-.wnav{display:flex; align-items:center; gap: 6px;}
-.nb{background: var(--app-background); border: none; border-radius: 8px; width: 34px; height: 34px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #007AFF; -webkit-tap-highlight-color: transparent;}
-.nb:disabled{color: #C7C7CC;}
-.wl{font-size: 15px; font-weight: 600; min-width: 48px; text-align: center;}
-.icon-btn{background:none; border:none; font-size: 20px; cursor:pointer; width: 34px; height: 34px; display:flex; align-items:center; justify-content:center; border-radius: 8px; -webkit-tap-highlight-color: transparent;}
+/* ── HEADER ── */
+.hdr{background:#fff;padding:10px 14px 8px;border-bottom:1px solid #E5E5EA;position:sticky;top:0;z-index:200}
+.hdr-top{display:flex;align-items:center;justify-content:space-between}
+.ht{font-size:15px;font-weight:700}
+.hs{font-size:11px;color:#8E8E93;margin-top:1px}
+.hdr-right{display:flex;align-items:center;gap:6px}
+.wnav{display:flex;align-items:center;gap:4px}
+.nb{background:#F2F2F7;border:none;border-radius:8px;width:32px;height:32px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#007AFF;-webkit-tap-highlight-color:transparent}
+.nb:disabled{color:#C7C7CC}
+.wl{font-size:14px;font-weight:700;min-width:44px;text-align:center;color:#1C1C1E}
+.icon-btn{background:none;border:none;font-size:18px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;-webkit-tap-highlight-color:transparent}
 
-/* 본문 레이아웃 및 시간표 디자인 */
-.main{padding: 10px 8px; height: calc(100vh - 120px); overflow-y: auto;}
-.sw{height: 100%; border-radius: 12px; background: #fff; box-shadow: 0 1px 6px rgba(0,0,0,0.06); display:flex; position: relative;}
+/* ── MAIN ── */
+.main{padding:8px 6px;padding-bottom:80px}
+.sw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
 
-.tt{width: 100%; min-width: 360px; border-collapse: collapse; table-layout: fixed; height: 100%;}
-.tt tbody tr {height: 9%;}
+/* ── TABLE ── */
+.tt{width:100%;min-width:320px;border-collapse:collapse;table-layout:fixed}
 
-.th-t{width: 40px; background: #fff; border-bottom: 1px solid #E5E5EA;}
-.td-t{width: 40px; background: #fff; border-top: 1px solid #EFEFEF; padding: 4px 2px; text-align: center; vertical-align: middle;}
-.pn{display: block; font-size: 12px; font-weight: 600; color: #1C1C1E;}
-.pt{display: block; font-size: 10px; color: var(--app-text-secondary); margin-top: 1px;}
-
-.th-d{font-size: 12px; font-weight: 700; text-align: center; padding: 6px 2px 4px; background: #fff; border-bottom: 1px solid #E5E5EA; border-left: 1px solid #EFEFEF; height: 40px;}
-.th-date{font-size: 10px; font-weight: 400; color: var(--app-text-secondary); display: block; margin-top: 1px;}
-.th-d.current-day{background: var(--app-current-day-highlight); color: #C0392B; border-radius: 8px;} 
-
-.td-c{border-top: 1px solid #EFEFEF; border-left: 1px solid #EFEFEF; padding: 2px; vertical-align: middle;}
-.td-e{background: #fff;}
-.card{border-radius: 6px; padding: 4px 5px; height: 100%; display: flex; flex-direction: column; justify-content: flex-start; min-height: 0; overflow: hidden;}
-.cn-subject, .cn-professor, .cn-time {
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+/* 교시 열 */
+.th-t{width:36px;background:#1D3461;border-bottom:2px solid #1D3461;padding:0}
+.td-t{
+  width:36px;
+  background:#fff;
+  border-top:1px solid #EFEFEF;
+  padding:0 2px;
+  text-align:center;
+  vertical-align:middle;
+  height:58px; /* ← 고정 높이 */
 }
-.cn-subject{font-size: 12px; font-weight: 700; color: #1C1C1E; line-height: 1.2; margin-bottom: 1px;}
-.cn-professor{font-size: 10px; font-weight: 600; color: #1C1C1E; margin-top: 1px;}
-.cn-time{font-size: 9px; color: #3C3C43; margin-top: auto;}
+.pn{display:block;font-size:10px;font-weight:700;color:#8E8E93;line-height:1.2}
+.pt{display:block;font-size:8px;color:#AEAEB2;margin-top:1px}
 
-.card.exam { border: 1.5px solid #C0392B; }
-.cn-exam-badge { font-size: 12px; font-weight: 800; color: #C0392B; margin-bottom: 2px; }
-
-.lunchrow .td-t{border-top: 1px dashed #C7C7CC; background: #fff;}
-.td-lunch{text-align: center; font-size: 11px; color: var(--app-text-secondary); padding: 5px; border-top: 1px dashed #C7C7CC; border-left: 1px solid #EFEFEF; font-weight: 600;}
-
-#current-time-line {
-  position: absolute; left: 40px; right: 0; height: 2px; background-color: var(--app-primary-color); z-index: 100; display: none;
+/* 요일 헤더 – 채색 */
+.th-d{
+  font-size:13px;font-weight:700;text-align:center;
+  padding:8px 2px 7px;
+  background:#1D3461; /* 네이비 헤더 */
+  color:#fff;
+  border-bottom:2px solid #1D3461;
+  border-left:1px solid rgba(255,255,255,0.12);
 }
-#current-time-line::after {
-  content: ''; position: absolute; left: -4px; top: -4px; width: 10px; height: 10px; border-radius: 50%; background-color: var(--app-primary-color);
+.th-date{font-size:9px;font-weight:400;color:rgba(255,255,255,0.72);display:block;margin-top:2px}
+
+/* 오늘 요일 강조 */
+.th-d.tc{background:#3B5BDB;border-bottom:2px solid #3B5BDB}
+.th-d.tc .th-date{color:rgba(255,255,255,0.85)}
+.td-c.tc{background:#F0F4FF}
+.tt tbody tr:last-child .td-c.tc{}
+
+/* 일반 셀 */
+.td-c{
+  border-top:1px solid #EFEFEF;
+  border-left:1px solid #EFEFEF;
+  padding:2px;
+  vertical-align:top;
+  height:58px; /* ← 고정 높이 */
+  overflow:hidden;
 }
+.td-e{background:#FAFAFA}
 
-.legend{margin-top: 10px; background: #fff; border-radius: 12px; padding: 12px 14px;}
-.lg-title{font-size: 12px; font-weight: 600; color: var(--app-text-secondary); margin-bottom: 8px;}
-.lg-grid{display:grid; grid-template-columns: 1fr 1fr; gap: 7px;}
-.li{display:flex; align-items: flex-start; gap: 6px;}
-.ld{width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; margin-top: 2px;}
-.ln{font-size: 11px; color: #3C3C43; line-height: 1.4; word-break: keep-all;}
+/* 수업 카드 */
+.card{
+  border-radius:7px;
+  padding:4px 5px;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+}
+/* rowspan 적용 시 카드 높이 자동 */
+.td-c[rowspan] .card{height:100%}
 
-.bnav{position:fixed; bottom:0; left:0; right:0; background: var(--app-nav-background); border-top: 1px solid #E5E5EA; display:flex; padding-bottom:env(safe-area-inset-bottom,0px); z-index:100; height: 60px;}
-.bn{flex:1; border:none; background:none; padding: 8px 4px 6px; display:flex; flex-direction:column; align-items:center; gap: 2px; font-size: 10px; color: var(--app-text-secondary); cursor:pointer; -webkit-tap-highlight-color: transparent;}
-.bn.on{color: #007AFF;}
-.bn-ic{font-size: 22px; line-height: 1;}
+.cn-s{
+  font-size:10.5px;font-weight:700;color:#fff;
+  line-height:1.3;
+  word-break:keep-all;
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+}
+.cn-exam{font-size:11px;font-weight:800}
+.cn-name{font-size:10px;font-weight:600;color:rgba(255,255,255,.9);margin-top:1px;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.cn-p{
+  font-size:9.5px;color:rgba(255,255,255,.85);margin-top:1px;
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+}
+.cn-t{font-size:8.5px;color:rgba(255,255,255,.7);margin-top:auto;padding-top:2px;white-space:nowrap}
 
-.list-wrap{padding: 4px 0;}
-.dg{margin-bottom: 8px;}
-.dh{font-size: 12px; font-weight: 700; color: var(--app-text-secondary); padding: 6px 4px 4px;}
-.lcard{background: #fff; border-radius: 12px; margin-bottom: 6px; display:flex; overflow:hidden; min-height: 60px; border: 1.5px solid transparent;}
-.lc-bar{width: 5px; flex-shrink: 0;}
-.lc-body{flex:1; padding: 10px 12px; display:flex; flex-direction:column; justify-content:center; gap: 2px;}
-.lc-s{font-size: 14px; font-weight: 700; word-break: keep-all; color: #1C1C1E;}
-.lc-p{font-size: 12px; color: #636366;}
-.lc-t{font-size: 11px; color: var(--app-text-secondary); margin-top: 2px;}
+/* 점심 행 */
+.lunchrow .td-t{border-top:1px dashed #C7C7CC;background:#1D3461;height:22px!important;padding:0}
+.td-lunch{text-align:center;font-size:9.5px;color:#8E8E93;padding:2px 4px;
+  border-top:1px dashed #C7C7CC;border-left:1px solid #EFEFEF;background:#F7F7FA;height:22px}
 
-.fw{padding: 4px 0;}
-.fs{background: #fff; border-radius: 12px; padding: 14px; margin-bottom: 10px;}
-.fs-ttl{font-size: 13px; font-weight: 700; margin-bottom: 10px;}
-.chips{display:flex; flex-wrap:wrap; gap: 6px;}
-.chip{padding: 5px 12px; border-radius: 20px; font-size: 12px; border: 1.5px solid #E5E5EA; background: #fff; cursor: pointer; color: #636366; -webkit-tap-highlight-color: transparent;}
-.no-res{text-align:center; padding: 40px; color: var(--app-text-secondary); font-size: 14px;}
+/* ── LEGEND ── */
+.legend{margin-top:8px;background:#fff;border-radius:12px;padding:10px 12px}
+.lg-title{font-size:11px;font-weight:600;color:#8E8E93;margin-bottom:7px}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.li{display:flex;align-items:flex-start;gap:5px}
+.ld{width:9px;height:9px;border-radius:3px;flex-shrink:0;margin-top:2px}
+.ln{font-size:10.5px;color:#3C3C43;line-height:1.4;word-break:keep-all}
 
-.ovl{position:fixed; inset:0; background: rgba(0,0,0,.45); z-index: 500; display:flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity .25s;}
-.ovl.show{opacity: 1; pointer-events: all;}
-.cal-sh{background: #fff; border-radius: 20px 20px 0 0; width: 100%; padding-bottom:env(safe-area-inset-bottom,16px); transform: translateY(100%); transition: transform .3s cubic-bezier(.4,0,.2,1);}
-.ovl.show .cal-sh{transform: translateY(0);}
-.cal-top{display:flex; align-items:center; justify-content:space-between; padding: 14px 16px 10px;}
-.cal-ttl{font-size: 16px; font-weight: 700;}
-.cal-x{background:none; border:none; font-size: 22px; cursor:pointer; color: #636366; padding: 4px;}
-.cal-nav{display:flex; align-items:center; justify-content:space-between; padding: 0 16px 8px;}
-.cal-m{font-size: 15px; font-weight: 600;}
-.cal-nb{background: var(--app-background); border: none; border-radius: 8px; width: 30px; height: 30px; font-size: 18px; cursor: pointer; color: #007AFF; display: flex; align-items: center; justify-content: center;}
-.cal-g{display:grid; grid-template-columns: repeat(7,1fr); padding: 0 10px 14px; gap: 2px;}
-.cal-dow{text-align: center; font-size: 11px; font-weight: 600; color: var(--app-text-secondary); padding: 4px 0;}
-.cday{text-align: center; padding: 2px; cursor: default; -webkit-tap-highlight-color: transparent;}
-.cday.ck{cursor: pointer;}
-.cdn{font-size: 14px; line-height: 1; padding: 6px 0 2px; border-radius: 8px;}
-.cday.iw .cdn{background: #EEF1FF; color: #5856D6; font-weight: 700; border-radius: 0;}
-.cday.td2 .cdn{background: #007AFF!important; color: #fff!important; border-radius: 8px!important;}
-.cdot{height: 5px; display:flex; justify-content:center; align-items:center; margin-top: 2px;}
-.dtr{width: 5px; height: 5px; border-radius: 50%; background: var(--app-primary-color); display: inline-block;}
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #E5E5EA;
+  display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:100}
+.bn{flex:1;border:none;background:none;padding:7px 4px 5px;display:flex;flex-direction:column;
+  align-items:center;gap:2px;font-size:10px;color:#8E8E93;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bn.on{color:#007AFF}
+.bn-ic{font-size:20px;line-height:1}
+
+/* ── LIST VIEW ── */
+.list-wrap{padding:4px 0}
+.dg{margin-bottom:8px}
+.dh{font-size:12px;font-weight:700;color:#8E8E93;padding:6px 4px 4px}
+.lcard{background:#fff;border-radius:10px;margin-bottom:5px;display:flex;overflow:hidden;min-height:56px}
+.lc-bar{width:4px;flex-shrink:0}
+.lc-body{flex:1;padding:9px 12px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+.lc-s{font-size:13px;font-weight:700;word-break:keep-all}
+.lc-p{font-size:11px;color:#636366}
+.lc-t{font-size:10px;color:#8E8E93;margin-top:2px}
+
+/* ── FILTER ── */
+.fw{padding:4px 0}
+.fs{background:#fff;border-radius:12px;padding:12px;margin-bottom:8px}
+.fs-ttl{font-size:12px;font-weight:700;margin-bottom:9px}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{padding:5px 11px;border-radius:18px;font-size:11px;border:1.5px solid #E5E5EA;
+  background:#fff;cursor:pointer;color:#636366;-webkit-tap-highlight-color:transparent}
+.no-res{text-align:center;padding:36px;color:#8E8E93;font-size:13px}
+
+/* ── CALENDAR OVERLAY ── */
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;
+  display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
+.ovl.show{opacity:1;pointer-events:all}
+.cal-sh{background:#fff;border-radius:20px 20px 0 0;width:100%;
+  padding-bottom:env(safe-area-inset-bottom,16px);
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.ovl.show .cal-sh{transform:translateY(0)}
+.cal-top{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px}
+.cal-ttl{font-size:15px;font-weight:700}
+.cal-x{background:none;border:none;font-size:20px;cursor:pointer;color:#636366;padding:4px}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0 16px 8px}
+.cal-m{font-size:14px;font-weight:600}
+.cal-nb{background:#F2F2F7;border:none;border-radius:8px;width:28px;height:28px;
+  font-size:16px;cursor:pointer;color:#007AFF;display:flex;align-items:center;justify-content:center}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 12px;gap:2px}
+.cal-dow{text-align:center;font-size:10px;font-weight:600;color:#8E8E93;padding:3px 0}
+.cday{text-align:center;padding:1px;cursor:default;-webkit-tap-highlight-color:transparent}
+.cday.ck{cursor:pointer}
+.cdn{font-size:13px;line-height:1;padding:5px 0 2px;border-radius:7px}
+.cday.iw .cdn{background:#EEF1FF;color:#3B5BDB;font-weight:700;border-radius:0}
+.cday.td2 .cdn{background:#007AFF!important;color:#fff!important;border-radius:7px!important}
+.cdot{height:5px;display:flex;justify-content:center;align-items:center;margin-top:1px}
+.dtr{width:4px;height:4px;border-radius:50%;background:#E74C3C;display:inline-block}
+
+/* ── EXCEL UPLOAD OVERLAY ── */
+.xl-ovl{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;
+  display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
+.xl-ovl.show{opacity:1;pointer-events:all}
+.xl-sh{background:#fff;border-radius:20px 20px 0 0;width:100%;padding:20px 20px 36px;
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.xl-ovl.show .xl-sh{transform:translateY(0)}
+.xl-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.xl-ttl{font-size:16px;font-weight:700}
+.xl-x{background:none;border:none;font-size:22px;cursor:pointer;color:#636366}
+.xl-desc{font-size:12px;color:#636366;line-height:1.6;margin-bottom:16px;background:#F9F9FB;
+  border-radius:10px;padding:12px}
+.xl-desc code{background:#E5E5EA;border-radius:4px;padding:1px 4px;font-size:11px}
+.xl-dropzone{border:2px dashed #C7C7CC;border-radius:12px;padding:28px 16px;
+  text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:12px}
+.xl-dropzone:hover,.xl-dropzone.drag{border-color:#007AFF;background:#F0F6FF}
+.xl-dropzone input{display:none}
+.xl-di{font-size:30px;margin-bottom:8px}
+.xl-dt{font-size:13px;font-weight:600;color:#1C1C1E;margin-bottom:4px}
+.xl-ds{font-size:11px;color:#8E8E93}
+.xl-status{font-size:12px;color:#636366;min-height:18px;text-align:center}
+.xl-status.ok{color:#27AE60;font-weight:600}
+.xl-status.err{color:#E74C3C}
+.xl-btn{width:100%;background:#007AFF;color:#fff;border:none;border-radius:12px;
+  padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px}
+.xl-btn:disabled{background:#C7C7CC;cursor:not-allowed}
+
+/* ── FORMAT INFO BADGE ── */
+.fmt-badge{display:inline-flex;align-items:center;gap:4px;background:#EEF1FF;
+  color:#3B5BDB;border-radius:6px;padding:2px 7px;font-size:10px;font-weight:600;
+  margin-left:6px;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -143,27 +206,22 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
 <div class="hdr">
   <div class="hdr-top">
     <div>
-      <div class="ht">2026-1 시간표</div>
-      <div class="hs" id="wr">엑셀 또는 CSV 파일을 업로드하세요</div>
+      <div class="ht">📚 2026-1학기 시간표</div>
+      <div class="hs" id="wr"></div>
     </div>
     <div class="hdr-right">
-      <input type="file" id="csv-upload" accept=".csv, .xlsx, .xls, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="display:none">
-      <button class="icon-btn" onclick="document.getElementById('csv-upload').click()" title="시간표 업로드">📂</button>
+      <button class="icon-btn" title="엑셀 업로드" id="xl-btn-open">📂</button>
       <button class="icon-btn" id="cal-btn">📅</button>
-      <div class="wnav" id="wnav" style="display:none;">
+      <div class="wnav" id="wnav">
         <button class="nb" id="pb">‹</button>
-        <span class="wl" id="wl">데이터 없음</span>
+        <span class="wl" id="wl"></span>
         <button class="nb" id="nb">›</button>
       </div>
     </div>
   </div>
 </div>
 
-<div class="main" id="main">
-  <div style="text-align:center; padding:40px; color: var(--app-text-secondary);">
-    상단의 📂 아이콘을 눌러<br>엑셀(.xlsx) 또는 CSV 시간표를 업로드해주세요.
-  </div>
-</div>
+<div class="main" id="main"></div>
 
 <div class="bnav">
   <button class="bn on" id="bn-w"><span class="bn-ic">📅</span>주간</button>
@@ -171,6 +229,7 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
   <button class="bn"    id="bn-f"><span class="bn-ic">🔍</span>필터</button>
 </div>
 
+<!-- 날짜 선택 캘린더 -->
 <div class="ovl" id="ovl">
   <div class="cal-sh">
     <div class="cal-top"><span class="cal-ttl">📅 날짜 선택</span><button class="cal-x" id="cal-x">✕</button></div>
@@ -187,29 +246,77 @@ body{font-family: var(--app-font-family); background: var(--app-background); col
   </div>
 </div>
 
+<!-- 엑셀 업로드 시트 -->
+<div class="xl-ovl" id="xl-ovl">
+  <div class="xl-sh">
+    <div class="xl-top">
+      <span class="xl-ttl">📂 시간표 업로드</span>
+      <button class="xl-x" id="xl-x">✕</button>
+    </div>
+    <div class="xl-desc">
+      <b>CSV 또는 Excel(.xlsx) 파일</b>을 업로드하세요.<br>
+      필수 열: <code>week</code> <code>date</code> <code>day</code> <code>period</code> <code>start</code> <code>end</code> <code>subject</code> <code>professor</code> <code>is_exam</code><br>
+      <code>is_exam</code>: TRUE/FALSE 또는 1/0 입력
+    </div>
+    <div class="xl-dropzone" id="xl-drop">
+      <input type="file" id="xl-file" accept=".csv,.xlsx,.xls">
+      <div class="xl-di">📄</div>
+      <div class="xl-dt">파일을 여기에 끌어놓거나 탭하세요</div>
+      <div class="xl-ds">CSV, XLSX 지원</div>
+    </div>
+    <div class="xl-status" id="xl-status"></div>
+    <button class="xl-btn" id="xl-apply" disabled>시간표 적용</button>
+  </div>
+</div>
+
 <script>
-// 전역 변수 초기화
-var wh = {}, wl = {}, wdd = {};
-var wks = [], ed = [], merged = [], fsubj = [];
-var palette = ['#FFDDC1', '#FFC8C8', '#FFABAB', '#FFC3A0', '#D5AAFF', '#B5D8FF', '#85E3FF', '#ACE6F1', '#A0FFE3', '#B8FFB8', '#E2F0CB', '#FFECEC']; 
+/* ══════════════════════════════════════════
+   원본 시간표 데이터 (기본값)
+══════════════════════════════════════════ */
+var wh  = {"1": "<table class=\"tt\"><thead><tr><th class=\"th-t\"></th><th class=\"th-d\" data-day=\"월\" data-date=\"2026-03-16\">월<br><span class=\"th-date\">03-16</span></th><th class=\"th-d\" data-day=\"화\" data-date=\"2026-03-17\">화<br><span class=\"th-date\">03-17</span></th><th class=\"th-d\" data-day=\"수\" data-date=\"2026-03-18\">수<br><span class=\"th-date\">03-18</span></th><th class=\"th-d\" data-day=\"목\" data-date=\"2026-03-19\">목<br><span class=\"th-date\">03-19</span></th><th class=\"th-d\" data-day=\"금\" data-date=\"2026-03-20\">금<br><span class=\"th-date\">03-20</span></th></tr></thead><tbody><tr><td class=\"td-t\"><span class=\"pn\">1</span><span class=\"pt\">8:30</span></td><td class=\"td-c\" data-day=\"월\"><div class=\"card\" style=\"background:#95A5A6\"><div class=\"cn-s\">진급식</div><div class=\"cn-t\">8:30~9:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">김종석</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">2</span><span class=\"pt\">9:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">3</span><span class=\"pt\">10:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">송창호</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">송창호</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">송창호</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">송창호</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">4</span><span class=\"pt\">11:30</span></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr class=\"lunchrow\"><td class=\"td-t\"><span style=\"font-size:12px\">🍱</span></td><td colspan=\"5\" class=\"td-lunch\">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr><tr><td class=\"td-t\"><span class=\"pn\">5</span><span class=\"pt\">13:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#2980B9\"><div class=\"cn-s\">환자의사사회1</div><div class=\"cn-p\">권근상</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">6</span><span class=\"pt\">14:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">7</span><span class=\"pt\">15:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c\" data-day=\"화\"><div class=\"card\" style=\"background:#F39C12\"><div class=\"cn-s\">의료면담1</div><div class=\"cn-p\">박태원</div><div class=\"cn-t\">15:30~16:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#4A90D9\"><div class=\"cn-s\">문제바탕학습1</div><div class=\"cn-t\">15:30~17:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"3\"><div class=\"card\" style=\"background:#5CB85C\"><div class=\"cn-s\">실험및논문연구2</div><div class=\"cn-p\">노상재</div><div class=\"cn-t\">15:30~18:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">8</span><span class=\"pt\">16:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"화\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">9</span><span class=\"pt\">17:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"화\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">10</span><span class=\"pt\">18:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"화\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr></tbody></table>", "2": "<table class=\"tt\"><thead><tr><th class=\"th-t\"></th><th class=\"th-d\" data-day=\"월\" data-date=\"2026-03-23\">월<br><span class=\"th-date\">03-23</span></th><th class=\"th-d\" data-day=\"화\" data-date=\"2026-03-24\">화<br><span class=\"th-date\">03-24</span></th><th class=\"th-d\" data-day=\"수\" data-date=\"2026-03-25\">수<br><span class=\"th-date\">03-25</span></th><th class=\"th-d\" data-day=\"목\" data-date=\"2026-03-26\">목<br><span class=\"th-date\">03-26</span></th><th class=\"th-d\" data-day=\"금\" data-date=\"2026-03-27\">금<br><span class=\"th-date\">03-27</span></th></tr></thead><tbody><tr><td class=\"td-t\"><span class=\"pn\">1</span><span class=\"pt\">8:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c\" data-day=\"금\" rowspan=\"4\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">김종석</div><div class=\"cn-t\">8:30~12:20</div></div></td></tr><tr><td class=\"td-t\"><span class=\"pn\">2</span><span class=\"pt\">9:30</span></td><td class=\"td-c td-e\" data-day=\"목\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">3</span><span class=\"pt\">10:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">송창호</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c\" data-day=\"화\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">송창호</div><div class=\"cn-t\">10:30~11:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">채옥희</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">채옥희</div><div class=\"cn-t\">10:30~12:20</div></div></td></tr><tr><td class=\"td-t\"><span class=\"pn\">4</span><span class=\"pt\">11:30</span></td><td class=\"td-c td-e\" data-day=\"화\"></td></tr><tr class=\"lunchrow\"><td class=\"td-t\"><span style=\"font-size:12px\">🍱</span></td><td colspan=\"5\" class=\"td-lunch\">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr><tr><td class=\"td-t\"><span class=\"pn\">5</span><span class=\"pt\">13:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"4\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">13:30~17:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#2980B9\"><div class=\"cn-s\">환자의사사회1</div><div class=\"cn-p\">박지영</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s cn-exam\">‼️ 중간 시험 (퀴즈)</div><div class=\"cn-name\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">6</span><span class=\"pt\">14:30</span></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">7</span><span class=\"pt\">15:30</span></td><td class=\"td-c\" data-day=\"화\"><div class=\"card\" style=\"background:#F39C12\"><div class=\"cn-s\">의료면담1</div><div class=\"cn-p\">박태원</div><div class=\"cn-t\">15:30~16:20</div></div></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">8</span><span class=\"pt\">16:30</span></td><td class=\"td-c td-e\" data-day=\"화\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c\" data-day=\"목\" rowspan=\"3\"><div class=\"card\" style=\"background:#5CB85C\"><div class=\"cn-s\">실험및논문연구2</div><div class=\"cn-p\">강경표</div><div class=\"cn-t\">16:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">9</span><span class=\"pt\">17:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#4A90D9\"><div class=\"cn-s\">문제바탕학습1</div><div class=\"cn-t\">17:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">10</span><span class=\"pt\">18:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr></tbody></table>", "3": "<table class=\"tt\"><thead><tr><th class=\"th-t\"></th><th class=\"th-d\" data-day=\"월\" data-date=\"2026-03-30\">월<br><span class=\"th-date\">03-30</span></th><th class=\"th-d\" data-day=\"화\" data-date=\"2026-03-31\">화<br><span class=\"th-date\">03-31</span></th><th class=\"th-d\" data-day=\"수\" data-date=\"2026-04-01\">수<br><span class=\"th-date\">04-01</span></th><th class=\"th-d\" data-day=\"목\" data-date=\"2026-04-02\">목<br><span class=\"th-date\">04-02</span></th><th class=\"th-d\" data-day=\"금\" data-date=\"2026-04-03\">금<br><span class=\"th-date\">04-03</span></th></tr></thead><tbody><tr><td class=\"td-t\"><span class=\"pn\">1</span><span class=\"pt\">8:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s cn-exam\">‼️ 조직학 시험</div><div class=\"cn-p\">S</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">문영재</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">문영재</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"4\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">8:30~12:20</div></div></td><td class=\"td-c\" data-day=\"금\" rowspan=\"4\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">김종석</div><div class=\"cn-t\">8:30~12:20</div></div></td></tr><tr><td class=\"td-t\"><span class=\"pn\">2</span><span class=\"pt\">9:30</span></td></tr><tr><td class=\"td-t\"><span class=\"pn\">3</span><span class=\"pt\">10:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c td-e\" data-day=\"화\"></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최윤호</div><div class=\"cn-t\">10:30~12:20</div></div></td></tr><tr><td class=\"td-t\"><span class=\"pn\">4</span><span class=\"pt\">11:30</span></td><td class=\"td-c td-e\" data-day=\"화\"></td></tr><tr class=\"lunchrow\"><td class=\"td-t\"><span style=\"font-size:12px\">🍱</span></td><td colspan=\"5\" class=\"td-lunch\">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr><tr><td class=\"td-t\"><span class=\"pn\">5</span><span class=\"pt\">13:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"4\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">13:30~17:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#2980B9\"><div class=\"cn-s\">환자의사사회1</div><div class=\"cn-p\">김연동</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">문영재</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">채옥희</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">6</span><span class=\"pt\">14:30</span></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">7</span><span class=\"pt\">15:30</span></td><td class=\"td-c\" data-day=\"화\"><div class=\"card\" style=\"background:#F39C12\"><div class=\"cn-s\">의료면담1</div><div class=\"cn-p\">정재희</div><div class=\"cn-t\">15:30~16:20</div></div></td><td class=\"td-c\" data-day=\"수\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최윤호</div><div class=\"cn-t\">15:30~16:20</div></div></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">8</span><span class=\"pt\">16:30</span></td><td class=\"td-c td-e\" data-day=\"화\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c\" data-day=\"목\" rowspan=\"3\"><div class=\"card\" style=\"background:#5CB85C\"><div class=\"cn-s\">실험및논문연구2</div><div class=\"cn-p\">김기욱</div><div class=\"cn-t\">16:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">9</span><span class=\"pt\">17:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#4A90D9\"><div class=\"cn-s\">문제바탕학습1</div><div class=\"cn-t\">17:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">10</span><span class=\"pt\">18:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr></tbody></table>", "4": "<table class=\"tt\"><thead><tr><th class=\"th-t\"></th><th class=\"th-d\" data-day=\"월\" data-date=\"2026-04-06\">월<br><span class=\"th-date\">04-06</span></th><th class=\"th-d\" data-day=\"화\" data-date=\"2026-04-07\">화<br><span class=\"th-date\">04-07</span></th><th class=\"th-d\" data-day=\"수\" data-date=\"2026-04-08\">수<br><span class=\"th-date\">04-08</span></th><th class=\"th-d\" data-day=\"목\" data-date=\"2026-04-09\">목<br><span class=\"th-date\">04-09</span></th><th class=\"th-d\" data-day=\"금\" data-date=\"2026-04-10\">금<br><span class=\"th-date\">04-10</span></th></tr></thead><tbody><tr><td class=\"td-t\"><span class=\"pn\">1</span><span class=\"pt\">8:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">김종석</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">김종석</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"2\"><div class=\"card\" style=\"background:#1ABC9C\"><div class=\"cn-s cn-exam\">‼️ 기말 시험</div><div class=\"cn-name\">의학생화학</div><div class=\"cn-p\">방인혁</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">2</span><span class=\"pt\">9:30</span></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">3</span><span class=\"pt\">10:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">김형태</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최윤호</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">김형태</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최윤호</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">4</span><span class=\"pt\">11:30</span></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr class=\"lunchrow\"><td class=\"td-t\"><span style=\"font-size:12px\">🍱</span></td><td colspan=\"5\" class=\"td-lunch\">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr><tr><td class=\"td-t\"><span class=\"pn\">5</span><span class=\"pt\">13:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"4\"><div class=\"card\" style=\"background:#3498DB\"><div class=\"cn-s\">인체미세구조 실습</div><div class=\"cn-p\">송창호</div><div class=\"cn-t\">13:30~17:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#2980B9\"><div class=\"cn-s\">환자의사사회1</div><div class=\"cn-p\">두아람</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"4\"><div class=\"card\" style=\"background:#3498DB\"><div class=\"cn-s\">인체미세구조 실습</div><div class=\"cn-p\">송창호</div><div class=\"cn-t\">13:30~17:20</div></div></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">6</span><span class=\"pt\">14:30</span></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">7</span><span class=\"pt\">15:30</span></td><td class=\"td-c\" data-day=\"화\"><div class=\"card\" style=\"background:#F39C12\"><div class=\"cn-s\">의료면담1</div><div class=\"cn-p\">정재희</div><div class=\"cn-t\">15:30~16:20</div></div></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">8</span><span class=\"pt\">16:30</span></td><td class=\"td-c td-e\" data-day=\"화\"></td><td class=\"td-c\" data-day=\"목\" rowspan=\"3\"><div class=\"card\" style=\"background:#5CB85C\"><div class=\"cn-s\">실험및논문연구2</div><div class=\"cn-p\">김민걸</div><div class=\"cn-t\">16:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">9</span><span class=\"pt\">17:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#4A90D9\"><div class=\"cn-s\">문제바탕학습1</div><div class=\"cn-t\">17:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">10</span><span class=\"pt\">18:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr></tbody></table>", "5": "<table class=\"tt\"><thead><tr><th class=\"th-t\"></th><th class=\"th-d\" data-day=\"월\" data-date=\"2026-04-13\">월<br><span class=\"th-date\">04-13</span></th><th class=\"th-d\" data-day=\"화\" data-date=\"2026-04-14\">화<br><span class=\"th-date\">04-14</span></th><th class=\"th-d\" data-day=\"수\" data-date=\"2026-04-15\">수<br><span class=\"th-date\">04-15</span></th><th class=\"th-d\" data-day=\"목\" data-date=\"2026-04-16\">목<br><span class=\"th-date\">04-16</span></th><th class=\"th-d\" data-day=\"금\" data-date=\"2026-04-17\">금<br><span class=\"th-date\">04-17</span></th></tr></thead><tbody><tr><td class=\"td-t\"><span class=\"pn\">1</span><span class=\"pt\">8:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">김형태</div><div class=\"cn-t\">8:30~12:20</div></div></td><td class=\"td-c td-e\" data-day=\"화\"></td><td class=\"td-c\" data-day=\"수\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">한의혁</div><div class=\"cn-t\">8:30~12:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">천성근</div><div class=\"cn-t\">8:30~12:20</div></div></td><td class=\"td-c\" data-day=\"금\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">박선지</div><div class=\"cn-t\">8:30~12:20</div></div></td></tr><tr><td class=\"td-t\"><span class=\"pn\">2</span><span class=\"pt\">9:30</span></td><td class=\"td-c td-e\" data-day=\"화\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">3</span><span class=\"pt\">10:30</span></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최윤호</div><div class=\"cn-t\">10:30~12:20</div></div></td></tr><tr><td class=\"td-t\"><span class=\"pn\">4</span><span class=\"pt\">11:30</span></td></tr><tr class=\"lunchrow\"><td class=\"td-t\"><span style=\"font-size:12px\">🍱</span></td><td colspan=\"5\" class=\"td-lunch\">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr><tr><td class=\"td-t\"><span class=\"pn\">5</span><span class=\"pt\">13:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"4\"><div class=\"card\" style=\"background:#3498DB\"><div class=\"cn-s\">인체미세구조 실습</div><div class=\"cn-p\">채옥희</div><div class=\"cn-t\">13:30~17:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#2980B9\"><div class=\"cn-s\">환자의사사회1</div><div class=\"cn-p\">박지영</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"4\"><div class=\"card\" style=\"background:#3498DB\"><div class=\"cn-s\">인체미세구조 실습</div><div class=\"cn-p\">김형태</div><div class=\"cn-t\">13:30~17:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최원일</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">6</span><span class=\"pt\">14:30</span></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">7</span><span class=\"pt\">15:30</span></td><td class=\"td-c\" data-day=\"화\"><div class=\"card\" style=\"background:#F39C12\"><div class=\"cn-s\">의료면담1</div><div class=\"cn-p\">정영철</div><div class=\"cn-t\">15:30~16:20</div></div></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">8</span><span class=\"pt\">16:30</span></td><td class=\"td-c td-e\" data-day=\"화\"></td><td class=\"td-c\" data-day=\"목\" rowspan=\"3\"><div class=\"card\" style=\"background:#5CB85C\"><div class=\"cn-s\">실험및논문연구2</div><div class=\"cn-p\">김종석</div><div class=\"cn-t\">16:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">9</span><span class=\"pt\">17:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#4A90D9\"><div class=\"cn-s\">문제바탕학습1</div><div class=\"cn-t\">17:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">10</span><span class=\"pt\">18:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr></tbody></table>", "6": "<table class=\"tt\"><thead><tr><th class=\"th-t\"></th><th class=\"th-d\" data-day=\"월\" data-date=\"2026-04-20\">월<br><span class=\"th-date\">04-20</span></th><th class=\"th-d\" data-day=\"화\" data-date=\"2026-04-21\">화<br><span class=\"th-date\">04-21</span></th><th class=\"th-d\" data-day=\"수\" data-date=\"2026-04-22\">수<br><span class=\"th-date\">04-22</span></th><th class=\"th-d\" data-day=\"목\" data-date=\"2026-04-23\">목<br><span class=\"th-date\">04-23</span></th><th class=\"th-d\" data-day=\"금\" data-date=\"2026-04-24\">금<br><span class=\"th-date\">04-24</span></th></tr></thead><tbody><tr><td class=\"td-t\"><span class=\"pn\">1</span><span class=\"pt\">8:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s cn-exam\">‼️ 조직학 시험</div><div class=\"cn-p\">K, C, H</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">천성근</div><div class=\"cn-t\">8:30~12:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">천성근</div><div class=\"cn-t\">8:30~12:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최원일</div><div class=\"cn-t\">8:30~12:20</div></div></td><td class=\"td-c\" data-day=\"금\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최원일</div><div class=\"cn-t\">8:30~12:20</div></div></td></tr><tr><td class=\"td-t\"><span class=\"pn\">2</span><span class=\"pt\">9:30</span></td></tr><tr><td class=\"td-t\"><span class=\"pn\">3</span><span class=\"pt\">10:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최원일</div><div class=\"cn-t\">10:30~12:20</div></div></td></tr><tr><td class=\"td-t\"><span class=\"pn\">4</span><span class=\"pt\">11:30</span></td></tr><tr class=\"lunchrow\"><td class=\"td-t\"><span style=\"font-size:12px\">🍱</span></td><td colspan=\"5\" class=\"td-lunch\">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr><tr><td class=\"td-t\"><span class=\"pn\">5</span><span class=\"pt\">13:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"4\"><div class=\"card\" style=\"background:#3498DB\"><div class=\"cn-s\">인체미세구조 실습</div><div class=\"cn-p\">김형태</div><div class=\"cn-t\">13:30~17:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#2980B9\"><div class=\"cn-s\">환자의사사회1</div><div class=\"cn-p\">이식</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"4\"><div class=\"card\" style=\"background:#3498DB\"><div class=\"cn-s\">인체미세구조 실습</div><div class=\"cn-p\">한의혁</div><div class=\"cn-t\">13:30~17:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">박선지</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">6</span><span class=\"pt\">14:30</span></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">7</span><span class=\"pt\">15:30</span></td><td class=\"td-c\" data-day=\"화\"><div class=\"card\" style=\"background:#F39C12\"><div class=\"cn-s\">의료면담1</div><div class=\"cn-p\">정영철</div><div class=\"cn-t\">15:30~16:20</div></div></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">8</span><span class=\"pt\">16:30</span></td><td class=\"td-c\" data-day=\"화\" rowspan=\"3\"><div class=\"card\" style=\"background:#4A90D9\"><div class=\"cn-s\">문제바탕학습1</div><div class=\"cn-t\">16:30~19:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"3\"><div class=\"card\" style=\"background:#5CB85C\"><div class=\"cn-s\">실험및논문연구2</div><div class=\"cn-p\">김종승</div><div class=\"cn-t\">16:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">9</span><span class=\"pt\">17:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">10</span><span class=\"pt\">18:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr></tbody></table>", "7": "<table class=\"tt\"><thead><tr><th class=\"th-t\"></th><th class=\"th-d\" data-day=\"월\" data-date=\"2026-04-27\">월<br><span class=\"th-date\">04-27</span></th><th class=\"th-d\" data-day=\"화\" data-date=\"2026-04-28\">화<br><span class=\"th-date\">04-28</span></th><th class=\"th-d\" data-day=\"수\" data-date=\"2026-04-29\">수<br><span class=\"th-date\">04-29</span></th><th class=\"th-d\" data-day=\"목\" data-date=\"2026-04-30\">목<br><span class=\"th-date\">04-30</span></th><th class=\"th-d\" data-day=\"금\" data-date=\"2026-05-01\">금<br><span class=\"th-date\">05-01</span></th></tr></thead><tbody><tr><td class=\"td-t\"><span class=\"pn\">1</span><span class=\"pt\">8:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s cn-exam\">‼️ 조직학 시험</div><div class=\"cn-p\">Y</div><div class=\"cn-t\">8:30~10:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">천성근</div><div class=\"cn-t\">8:30~12:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">천성근</div><div class=\"cn-t\">8:30~12:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"4\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">박선지</div><div class=\"cn-t\">8:30~12:20</div></div></td><td class=\"td-c\" data-day=\"금\"><div class=\"card\" style=\"background:#95A5A6\"><div class=\"cn-s\">근로자의날</div><div class=\"cn-t\">8:30~9:20</div></div></td></tr><tr><td class=\"td-t\"><span class=\"pn\">2</span><span class=\"pt\">9:30</span></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">3</span><span class=\"pt\">10:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최원일</div><div class=\"cn-t\">10:30~12:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">4</span><span class=\"pt\">11:30</span></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr class=\"lunchrow\"><td class=\"td-t\"><span style=\"font-size:12px\">🍱</span></td><td colspan=\"5\" class=\"td-lunch\">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr><tr><td class=\"td-t\"><span class=\"pn\">5</span><span class=\"pt\">13:30</span></td><td class=\"td-c\" data-day=\"월\" rowspan=\"4\"><div class=\"card\" style=\"background:#3498DB\"><div class=\"cn-s\">인체미세구조 실습</div><div class=\"cn-p\">최윤호</div><div class=\"cn-t\">13:30~17:20</div></div></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#2980B9\"><div class=\"cn-s\">환자의사사회1</div><div class=\"cn-p\">노상재</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c\" data-day=\"수\" rowspan=\"4\"><div class=\"card\" style=\"background:#3498DB\"><div class=\"cn-s\">인체미세구조 실습</div><div class=\"cn-p\">최윤호</div><div class=\"cn-t\">13:30~17:20</div></div></td><td class=\"td-c\" data-day=\"목\" rowspan=\"2\"><div class=\"card\" style=\"background:#27AE60\"><div class=\"cn-s\">인체미세구조와 기능</div><div class=\"cn-p\">최원일</div><div class=\"cn-t\">13:30~15:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">6</span><span class=\"pt\">14:30</span></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">7</span><span class=\"pt\">15:30</span></td><td class=\"td-c\" data-day=\"화\"><div class=\"card\" style=\"background:#F39C12\"><div class=\"cn-s\">의료면담1</div><div class=\"cn-p\">양종철</div><div class=\"cn-t\">15:30~16:20</div></div></td><td class=\"td-c td-e\" data-day=\"목\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">8</span><span class=\"pt\">16:30</span></td><td class=\"td-c td-e\" data-day=\"화\"></td><td class=\"td-c\" data-day=\"목\" rowspan=\"3\"><div class=\"card\" style=\"background:#5CB85C\"><div class=\"cn-s\">실험및논문연구2</div><div class=\"cn-p\">문설주</div><div class=\"cn-t\">16:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">9</span><span class=\"pt\">17:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c\" data-day=\"화\" rowspan=\"2\"><div class=\"card\" style=\"background:#4A90D9\"><div class=\"cn-s\">문제바탕학습1</div><div class=\"cn-t\">17:30~19:20</div></div></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr><tr><td class=\"td-t\"><span class=\"pn\">10</span><span class=\"pt\">18:30</span></td><td class=\"td-c td-e\" data-day=\"월\"></td><td class=\"td-c td-e\" data-day=\"수\"></td><td class=\"td-c td-e\" data-day=\"금\"></td></tr></tbody></table>"};
+var wl  = {"1":"<div class=\"li\"><span class=\"ld\" style=\"background:#4A90D9\"></span><span class=\"ln\">문제바탕학습1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#5CB85C\"></span><span class=\"ln\">실험및논문연구2</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#F39C12\"></span><span class=\"ln\">의료면담1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#1ABC9C\"></span><span class=\"ln\">의학생화학</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#27AE60\"></span><span class=\"ln\">인체미세구조와 기능</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#95A5A6\"></span><span class=\"ln\">진급식</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#2980B9\"></span><span class=\"ln\">환자의사사회1</span></div>","2":"<div class=\"li\"><span class=\"ld\" style=\"background:#4A90D9\"></span><span class=\"ln\">문제바탕학습1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#5CB85C\"></span><span class=\"ln\">실험및논문연구2</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#F39C12\"></span><span class=\"ln\">의료면담1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#1ABC9C\"></span><span class=\"ln\">의학생화학</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#27AE60\"></span><span class=\"ln\">인체미세구조와 기능</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#2980B9\"></span><span class=\"ln\">환자의사사회1</span></div>","3":"<div class=\"li\"><span class=\"ld\" style=\"background:#4A90D9\"></span><span class=\"ln\">문제바탕학습1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#5CB85C\"></span><span class=\"ln\">실험및논문연구2</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#F39C12\"></span><span class=\"ln\">의료면담1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#1ABC9C\"></span><span class=\"ln\">의학생화학</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#27AE60\"></span><span class=\"ln\">인체미세구조와 기능</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#27AE60\"></span><span class=\"ln\">‼️ 조직학 시험</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#2980B9\"></span><span class=\"ln\">환자의사사회1</span></div>","4":"<div class=\"li\"><span class=\"ld\" style=\"background:#4A90D9\"></span><span class=\"ln\">문제바탕학습1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#5CB85C\"></span><span class=\"ln\">실험및논문연구2</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#F39C12\"></span><span class=\"ln\">의료면담1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#1ABC9C\"></span><span class=\"ln\">의학생화학</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#3498DB\"></span><span class=\"ln\">인체미세구조 실습</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#27AE60\"></span><span class=\"ln\">인체미세구조와 기능</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#2980B9\"></span><span class=\"ln\">환자의사사회1</span></div>","5":"<div class=\"li\"><span class=\"ld\" style=\"background:#4A90D9\"></span><span class=\"ln\">문제바탕학습1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#5CB85C\"></span><span class=\"ln\">실험및논문연구2</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#F39C12\"></span><span class=\"ln\">의료면담1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#3498DB\"></span><span class=\"ln\">인체미세구조 실습</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#27AE60\"></span><span class=\"ln\">인체미세구조와 기능</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#2980B9\"></span><span class=\"ln\">환자의사사회1</span></div>","6":"<div class=\"li\"><span class=\"ld\" style=\"background:#4A90D9\"></span><span class=\"ln\">문제바탕학습1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#5CB85C\"></span><span class=\"ln\">실험및논문연구2</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#F39C12\"></span><span class=\"ln\">의료면담1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#3498DB\"></span><span class=\"ln\">인체미세구조 실습</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#27AE60\"></span><span class=\"ln\">인체미세구조와 기능</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#2980B9\"></span><span class=\"ln\">환자의사사회1</span></div>","7":"<div class=\"li\"><span class=\"ld\" style=\"background:#95A5A6\"></span><span class=\"ln\">근로자의날</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#4A90D9\"></span><span class=\"ln\">문제바탕학습1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#5CB85C\"></span><span class=\"ln\">실험및논문연구2</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#F39C12\"></span><span class=\"ln\">의료면담1</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#3498DB\"></span><span class=\"ln\">인체미세구조 실습</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#27AE60\"></span><span class=\"ln\">인체미세구조와 기능</span></div><div class=\"li\"><span class=\"ld\" style=\"background:#2980B9\"></span><span class=\"ln\">환자의사사회1</span></div>"};
+var wdd = {"1":{"월":"2026-03-16","화":"2026-03-17","수":"2026-03-18","목":"2026-03-19","금":"2026-03-20"},"2":{"월":"2026-03-23","화":"2026-03-24","수":"2026-03-25","목":"2026-03-26","금":"2026-03-27"},"3":{"월":"2026-03-30","화":"2026-03-31","수":"2026-04-01","목":"2026-04-02","금":"2026-04-03"},"4":{"월":"2026-04-06","화":"2026-04-07","수":"2026-04-08","목":"2026-04-09","금":"2026-04-10"},"5":{"월":"2026-04-13","화":"2026-04-14","수":"2026-04-15","목":"2026-04-16","금":"2026-04-17"},"6":{"월":"2026-04-20","화":"2026-04-21","수":"2026-04-22","목":"2026-04-23","금":"2026-04-24"},"7":{"월":"2026-04-27","화":"2026-04-28","수":"2026-04-29","목":"2026-04-30","금":"2026-05-01"}};
+var wks = ["1","2","3","4","5","6","7"];
+var ed  = ["2026-03-25","2026-03-30","2026-04-09","2026-04-20","2026-04-27"];
+
+var merged = [{"week":"1","date":"2026-03-16","day":"월","period":1,"start":"8:30","end":"9:20","subject":"진급식","professor":"","is_exam":false},{"week":"1","date":"2026-03-17","day":"화","period":1,"start":"8:30","end":"10:20","subject":"의학생화학","professor":"김종석","is_exam":false},{"week":"1","date":"2026-03-17","day":"화","period":3,"start":"10:30","end":"12:20","subject":"인체미세구조와 기능","professor":"송창호","is_exam":false},{"week":"1","date":"2026-03-17","day":"화","period":5,"start":"13:30","end":"15:20","subject":"환자의사사회1","professor":"권근상","is_exam":false},{"week":"1","date":"2026-03-17","day":"화","period":7,"start":"15:30","end":"16:20","subject":"의료면담1","professor":"박태원","is_exam":false},{"week":"1","date":"2026-03-18","day":"수","period":1,"start":"8:30","end":"10:20","subject":"의학생화학","professor":"방인혁","is_exam":false},{"week":"1","date":"2026-03-18","day":"수","period":3,"start":"10:30","end":"12:20","subject":"인체미세구조와 기능","professor":"송창호","is_exam":false},{"week":"1","date":"2026-03-18","day":"수","period":5,"start":"13:30","end":"15:20","subject":"의학생화학","professor":"방인혁","is_exam":false},{"week":"1","date":"2026-03-18","day":"수","period":7,"start":"15:30","end":"17:20","subject":"문제바탕학습1","professor":"","is_exam":false},{"week":"2","date":"2026-03-23","day":"월","period":1,"start":"8:30","end":"10:20","subject":"의학생화학","professor":"방인혁","is_exam":false},{"week":"2","date":"2026-03-24","day":"화","period":1,"start":"8:30","end":"10:20","subject":"의학생화학","professor":"방인혁","is_exam":false},{"week":"2","date":"2026-03-25","day":"수","period":5,"start":"13:30","end":"15:20","subject":"의학생화학 중간 시험 (퀴즈)","professor":"방인혁","is_exam":true},{"week":"3","date":"2026-03-30","day":"월","period":1,"start":"8:30","end":"10:20","subject":"조직학 시험","professor":"S","is_exam":true},{"week":"3","date":"2026-03-31","day":"화","period":1,"start":"8:30","end":"10:20","subject":"의학생화학","professor":"문영재","is_exam":false},{"week":"4","date":"2026-04-09","day":"목","period":1,"start":"8:30","end":"10:20","subject":"의학생화학 기말 시험","professor":"방인혁","is_exam":true},{"week":"5","date":"2026-04-13","day":"월","period":1,"start":"8:30","end":"12:20","subject":"인체미세구조와 기능","professor":"김형태","is_exam":false},{"week":"6","date":"2026-04-20","day":"월","period":1,"start":"8:30","end":"10:20","subject":"조직학 시험","professor":"K,C,H","is_exam":true},{"week":"7","date":"2026-04-27","day":"월","period":1,"start":"8:30","end":"10:20","subject":"조직학 시험","professor":"Y","is_exam":true}];
+
+var fsubj = ["문제바탕학습1","실험및논문연구2","의료면담1","의학생화학","의학생화학 기말 시험","의학생화학 중간 시험 (퀴즈)","인체미세구조 실습","인체미세구조와 기능","조직학 시험","환자의사사회1"];
+var cmap  = {
+  "근로자의날":"#95A5A6","대체휴무":"#95A5A6","문제바탕학습1":"#2563EB",
+  "생애주기":"#D97706","시험":"#DC2626","실험및논문연구2":"#16A34A",
+  "어린이날":"#95A5A6","의료면담1":"#9333EA","의학생화학":"#0891B2",
+  "의학생화학 기말 시험":"#0891B2","의학생화학 중간 시험 (퀴즈)":"#0891B2",
+  "인체미세구조 실습":"#0D9488","인체미세구조와 기능":"#059669",
+  "인체반응 및 병태생리":"#B45309","인체질병형태학실습":"#7C3AED",
+  "조직학 시험":"#BE185D","지방선거":"#95A5A6","진급식":"#64748B","환자의사사회1":"#1D4ED8"
+};
+
+/* ══════════════════════════════════════════
+   공통 상수 & 유틸
+══════════════════════════════════════════ */
 var DAYS = ['월','화','수','목','금'];
 var WN   = ['일','월','화','수','목','금','토'];
 var ML   = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-var EVK  = ['진급식','근로자의날','대체휴무','어린이날','지방선거'];
+var EVK  = ['진급식','근로자의날','대체휴무','어린이날','지방선거','개교기념일'];
+/* 휴일 키워드 (색상 없이 텍스트만 표시) */
+var HOLIDAY_KW = ['근로자의날','대체휴무','어린이날','지방선거','개교기념일','공휴일','현충일','광복절','추석','설날','삼일절'];
 
 var ci=0, vw='weekly', cy, cm2;
-var fExam=false, fsubj2=[];
+var fExam=false, fsubj2=fsubj.slice();
+var pendingData=null; // 엑셀 업로드 대기 데이터
 
 function p2(n){return ('0'+n).slice(-2);}
 function today(){var d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
 function isEx(s){return s.indexOf('시험')>=0;}
 function isEv(s){return EVK.indexOf(s)>=0;}
-function wvals(w){var o=wdd[w];if(!o)return[];return Object.keys(o).map(function(k){return o[k];}).filter(Boolean).sort();}
-function gcol(s){
-  let hash = 0;
-  for(let i=0; i<s.length; i++) hash = s.charCodeAt(i) + ((hash << 5) - hash);
-  return palette[Math.abs(hash) % palette.length];
+function wvals(w){var o=wdd[w];if(!o)return[];return Object.keys(o).map(function(k){return o[k];}).filter(Boolean);}
+function gcol(s){return cmap[s]||'#8E8E93';}
+function isHoliday(s){
+  for(var i=0;i<HOLIDAY_KW.length;i++){if(s.indexOf(HOLIDAY_KW[i])>=0)return true;}
+  return false;
 }
+function fmtDate(ds){/* "2026-03-17" → "03.17" */if(!ds)return'';var p=ds.split('-');return p.length>=3?p[1]+'.'+p[2]:ds.slice(5).replace('-','.');}
 function exLabel(s){
   if(s.indexOf('중간 시험 (퀴즈)')>=0)return['중간 시험 (퀴즈)',s.replace('중간 시험 (퀴즈)','').trim()];
   if(s.indexOf('중간 시험')>=0)return['중간 시험',s.replace('중간 시험','').trim()];
@@ -218,277 +325,303 @@ function exLabel(s){
   return['시험',s.replace('시험','').trim()];
 }
 
-// CSV 파서
-function parseCSV(str) {
-  let arr = [], row = [], col = '', quote = false;
-  for (let c = 0; c < str.length; c++) {
-    let cc = str[c], nc = str[c+1];
-    if (cc === '"' && quote && nc === '"') { col += '"'; c++; continue; }
-    if (cc === '"') { quote = !quote; continue; }
-    if (cc === ',' && !quote) { row.push(col); col = ''; continue; }
-    if (cc === '\n' && !quote) {
-      if (col || row.length) { row.push(col); arr.push(row); }
-      row = []; col = ''; continue;
+/* ══════════════════════════════════════════
+   CSV 파서 (간단한 RFC4180 구현)
+══════════════════════════════════════════ */
+function parseCSV(text){
+  var rows=[];
+  var lines=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+  for(var i=0;i<lines.length;i++){
+    if(!lines[i].trim())continue;
+    var cols=[],cur='',inQ=false;
+    for(var j=0;j<lines[i].length;j++){
+      var ch=lines[i][j];
+      if(ch==='"'){
+        if(inQ&&lines[i][j+1]==='"'){cur+='"';j++;}
+        else inQ=!inQ;
+      }else if(ch===','&&!inQ){cols.push(cur);cur='';}
+      else cur+=ch;
     }
-    col += cc;
+    cols.push(cur);
+    rows.push(cols);
   }
-  if (col || row.length) { row.push(col); arr.push(row); }
-  return arr;
+  return rows;
 }
 
-// 데이터를 읽고 화면을 그리는 함수
-function generateDataFromCSV(csvText) {
-  let rows = parseCSV(csvText);
-  wdd = {}; merged = []; fsubj = []; ed = [];
-  let wkMap = {}; 
-  
-  rows.forEach(row => {
-    if(row.length < 13) return;
-    let wk = row[0].trim(), date = row[1].trim(), day = row[2].trim();
-    if(!wk || isNaN(wk)) return; 
-    
-    if(!wdd[wk]) wdd[wk] = {};
-    wdd[wk][day] = date;
-    if(!wkMap[wk]) wkMap[wk] = {};
-    if(!wkMap[wk][date]) wkMap[wk][date] = { day: day, periods: [] };
-
-    let hasExam = false;
-    for(let p=1; p<=10; p++) {
-      let cell = (row[p+2] || '').trim();
-      wkMap[wk][date].periods[p] = cell;
-      if(cell) {
-        let lines = cell.split('\n');
-        let subject = lines[0].trim(), prof = '';
-        let dashIdx = subject.lastIndexOf('-');
-        if(dashIdx > 0) {
-          prof = subject.substring(dashIdx+1).trim();
-          subject = subject.substring(0, dashIdx).trim();
-        }
-        
-        let isE = cell.includes('시험');
-        if(isE) hasExam = true;
-        
-        merged.push({week: wk, date: date, day: day, period: p, subject: subject, professor: prof, is_exam: isE});
-        if(!fsubj.includes(subject) && !isEv(subject)) fsubj.push(subject);
-      }
+function csvRowsToItems(rows){
+  if(rows.length<2)return null;
+  var hdr=rows[0].map(function(h){return h.trim().toLowerCase();});
+  var need=['week','date','day','period','start','end','subject','professor','is_exam'];
+  for(var i=0;i<need.length;i++){
+    if(hdr.indexOf(need[i])<0){
+      return{error:'필수 열 "'+need[i]+'"이 없습니다.'};
     }
-    if(hasExam && !ed.includes(date)) ed.push(date);
-  });
-
-  fsubj.sort();
-  fsubj2 = fsubj.slice();
-  wks = Object.keys(wdd).sort((a,b)=>parseInt(a)-parseInt(b));
-  
-  wh = {}; wl = {};
-  wks.forEach(w => {
-    let dates = Object.keys(wkMap[w]).sort();
-    let dateOf = {};
-    dates.forEach(d => { dateOf[wkMap[w][d].day] = d; });
-
-    let wSubj = [];
-    merged.filter(m => m.week === w).forEach(m => {
-      if(!wSubj.includes(m.subject)) wSubj.push(m.subject);
+  }
+  var items=[];
+  for(var r=1;r<rows.length;r++){
+    var row=rows[r];
+    if(row.every(function(c){return!c.trim();}))continue;
+    var obj={};
+    for(var c=0;c<hdr.length;c++){obj[hdr[c]]=(row[c]||'').trim();}
+    var examVal=obj['is_exam'].toLowerCase();
+    items.push({
+      week:obj['week'],
+      date:obj['date'],
+      day:obj['day'],
+      period:parseInt(obj['period'])||1,
+      start:obj['start'],
+      end:obj['end'],
+      subject:obj['subject'],
+      professor:obj['professor'],
+      is_exam:(examVal==='true'||examVal==='1'||examVal==='yes')
     });
-    wSubj.sort();
-    let lh = '';
-    wSubj.forEach(s => {
-      lh += `<div class="li"><span class="ld" style="background:${gcol(s)}"></span><span class="ln">${s}</span></div>`;
-    });
-    wl[w] = lh;
+  }
+  return items;
+}
 
-    let ths = DAYS.map(d => `<th class="th-d" data-day="${d}" data-date="${dateOf[d]||''}">${d}<br><span class="th-date">${(dateOf[d]||'').slice(5)}</span></th>`).join('');
-    let tb = `<table class="tt"><thead><tr><th class="th-t"></th>${ths}</tr></thead><tbody>`;
+/* ── 업로드된 데이터로 시간표 재구성 ── */
+function buildFromItems(items){
+  /* 1. 주차 목록 */
+  var weekSet={};
+  for(var i=0;i<items.length;i++)weekSet[items[i].week]=true;
+  var weeks=Object.keys(weekSet).sort(function(a,b){return parseInt(a)-parseInt(b);});
+  wks=weeks;
 
-    let skip = {월:0, 화:0, 수:0, 목:0, 금:0};
+  /* 2. 주차별 날짜 맵 */
+  wdd={};
+  for(var i=0;i<items.length;i++){
+    var it=items[i];
+    if(!wdd[it.week])wdd[it.week]={};
+    wdd[it.week][it.day]=it.date;
+  }
 
-    for(let p=1; p<=10; p++) {
-      if(p === 5) {
-        tb += `<tr class="lunchrow"><td class="td-t"><span style="font-size:12px">🍱</span></td><td colspan="5" class="td-lunch">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr>`;
+  /* 3. 색상 맵 (기존 cmap 유지, 새 과목엔 기본색) */
+  var palette=['#1ABC9C','#27AE60','#2980B9','#3498DB','#8E44AD','#D35400','#E8734A','#E74C3C','#16A085','#F39C12'];
+  var pIdx=0;
+  for(var i=0;i<items.length;i++){
+    var s=items[i].subject;
+    if(!cmap[s]){cmap[s]=palette[pIdx%palette.length];pIdx++;}
+  }
+
+  /* 4. 시험 날짜 목록 */
+  var edSet={};
+  for(var i=0;i<items.length;i++){if(items[i].is_exam)edSet[items[i].date]=true;}
+  ed=Object.keys(edSet);
+
+  /* 5. merged 교체 */
+  merged=items;
+
+  /* 6. fsubj 재구성 */
+  var sSet={};
+  for(var i=0;i<items.length;i++)sSet[items[i].subject]=true;
+  fsubj=Object.keys(sSet).sort();
+  fsubj2=fsubj.slice();
+
+  /* 7. 주간 HTML 재구성 */
+  wh={};
+  wl={};
+  for(var wi=0;wi<weeks.length;wi++){
+    var w=weeks[wi];
+    var weekItems=items.filter(function(it){return it.week===w;});
+    wh[w]=buildWeekTable(w,weekItems);
+    wl[w]=buildLegend(weekItems);
+  }
+}
+
+function buildWeekTable(w,items){
+  var dd=wdd[w]||{};
+  var PERIODS=[
+    {n:1,t:'8:30'},{n:2,t:'9:30'},{n:3,t:'10:30'},{n:4,t:'11:30'},
+    {n:5,t:'13:30'},{n:6,t:'14:30'},{n:7,t:'15:30'},{n:8,t:'16:30'},
+    {n:9,t:'17:30'},{n:10,t:'18:30'}
+  ];
+  var LUNCH_AFTER=4;
+
+  /* 셀 점유 맵: occupied[period][day] = true */
+  var occupied={};
+  PERIODS.forEach(function(p){occupied[p.n]={};});
+
+  /* rowspan 계산 */
+  var cells={};/* key="period_day" → {item, rowspan} */
+  for(var i=0;i<items.length;i++){
+    var it=items[i];
+    var startH=parseInt(it.start.split(':')[0]),startM=parseInt(it.start.split(':')[1]||0);
+    var endH=parseInt(it.end.split(':')[0]),endM=parseInt(it.end.split(':')[1]||0);
+    /* 시작 교시 */
+    var sp=null;
+    for(var pi=0;pi<PERIODS.length;pi++){
+      var ph=parseInt(PERIODS[pi].t.split(':')[0]),pm=parseInt(PERIODS[pi].t.split(':')[1]||0);
+      if(ph===startH&&(pm<=startM))sp=PERIODS[pi].n;
+      if(ph===startH&&pm===0&&startM>=30)sp=PERIODS[pi].n;
+      if(ph===startH)sp=PERIODS[pi].n;
+    }
+    /* 더 정확하게: 8:30→1, 9:30→2, ... */
+    var periodMap={'8':1,'9':2,'10':3,'11':4,'13':5,'14':6,'15':7,'16':8,'17':9,'18':10};
+    sp=periodMap[String(startH)]||1;
+
+    /* 종료 교시 */
+    var ep=periodMap[String(endH)]||sp;
+    /* 종료분이 20분 이하면 이전 교시 */
+    if(endM<=20&&ep>sp)ep=ep-1;
+
+    var rs=ep-sp+1;
+    if(rs<1)rs=1;
+    /* 점심 건너뛰기 조정 */
+    var lunchSkip=false;
+    if(sp<=LUNCH_AFTER&&ep>LUNCH_AFTER){lunchSkip=true;}
+
+    var key=sp+'_'+it.day;
+    cells[key]={item:it,rowspan:rs,lunchSkip:lunchSkip};
+    for(var r=sp;r<=ep;r++){
+      if(occupied[r])occupied[r][it.day]=true;
+    }
+  }
+
+  var html='<table class="tt"><thead><tr><th class="th-t"></th>';
+  DAYS.forEach(function(d){
+    var dt=dd[d]||'';
+    var datePart=dt?fmtDate(dt):'';
+    html+='<th class="th-d" data-day="'+d+'" data-date="'+dt+'">'+d+'<br><span class="th-date">'+datePart+'</span></th>';
+  });
+  html+='</tr></thead><tbody>';
+
+  for(var pi=0;pi<PERIODS.length;pi++){
+    var p=PERIODS[pi];
+    /* 점심 행 */
+    if(p.n===5){
+      html+='<tr class="lunchrow"><td class="td-t"><span style="font-size:12px">🍱</span></td>';
+      html+='<td colspan="5" class="td-lunch">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr>';
+    }
+    html+='<tr><td class="td-t"><span class="pn">'+p.n+'</span><span class="pt">'+p.t+'</span></td>';
+    DAYS.forEach(function(d){
+      if(occupied[p.n]&&occupied[p.n][d]){
+        /* 이 칸은 rowspan으로 덮여있는 칸 – 첫 번째 교시가 아닌 경우 skip */
+        var isStart=false;
+        for(var ck in cells){
+          var parts=ck.split('_');
+          if(parseInt(parts[0])===p.n&&parts[1]===d&&cells[ck])isStart=true;
+        }
+        if(!isStart)return;/* skip */
       }
-      let pTime = ['8:30','9:30','10:30','11:30','13:30','14:30','15:30','16:30','17:30','18:30'][p-1];
-      tb += `<tr><td class="td-t"><span class="pn">${p}</span><span class="pt">${pTime}</span></td>`;
-
-      DAYS.forEach(d => {
-        if(skip[d] > 0) { skip[d]--; return; }
-        
-        let date = dateOf[d];
-        let cellStr = date && wkMap[w][date].periods[p] ? wkMap[w][date].periods[p] : '';
-
-        if(!cellStr) {
-          tb += `<td class="td-c td-e" data-day="${d}"></td>`;
-        } else {
-          let rs = 1;
-          for(let np=p+1; np<=10; np++) {
-            if((wkMap[w][date].periods[np] || '') === cellStr) rs++;
-            else break;
-          }
-          skip[d] = rs - 1;
-
-          let lines = cellStr.split('\n');
-          let fLine = lines[0].trim(), prof = '';
-          let dIdx = fLine.lastIndexOf('-');
-          if(dIdx > 0) { prof = fLine.substring(dIdx+1).trim(); fLine = fLine.substring(0, dIdx).trim(); }
-          
-          let isE = cellStr.includes('시험');
-          let bg = gcol(fLine);
-          let eMap = {1:'9:20', 2:'10:20', 3:'11:20', 4:'12:20', 5:'14:20', 6:'15:20', 7:'16:20', 8:'17:20', 9:'18:20', 10:'19:20'};
-          let tRange = pTime + '~' + eMap[p+rs-1];
-
-          let inH = '';
-          let cardClass = 'card';
-          if(isE) {
-            cardClass += ' exam';
-            let ename = lines.length > 1 ? lines[1].trim() : fLine + ' 시험';
-            inH = `<div class="cn-exam-badge">‼️ ${ename}</div>`;
-            if(!ename.includes(fLine) && fLine) inH += `<div class="cn-subject">${fLine}</div>`;
-            if(prof) inH += `<div class="cn-professor">${prof}</div>`;
-            inH += `<div class="cn-time">${tRange}</div>`;
-          } else {
-            inH = `<div class="cn-subject">${fLine}</div>`;
-            if(prof) inH += `<div class="cn-professor">${prof}</div>`;
-            inH += `<div class="cn-time">${tRange}</div>`;
-          }
-          tb += `<td class="td-c" data-day="${d}" ${rs>1?'rowspan="'+rs+'"':''}><div class="${cardClass}" style="background:${bg}">${inH}</div></td>`;
+      var key=p.n+'_'+d;
+      if(cells[key]){
+        var cd=cells[key];
+        var it=cd.item;
+        var rs=cd.rowspan;
+        var bg=gcol(it.subject);
+        var rsAttr=rs>1?' rowspan="'+rs+'"':'';
+        var isHol=isHoliday(it.subject);
+        html+='<td class="td-c'+(isHol?' td-e':'')+'" data-day="'+d+'"'+rsAttr+'>';
+        if(isHol){
+          /* 휴일: 배경색 없이 텍스트만 */
+          html+='<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">';
+          html+='<div style="font-size:16px">🗓</div>';
+          html+='<div style="font-size:9.5px;font-weight:600;color:#8E8E93;text-align:center;word-break:keep-all;line-height:1.3">'+it.subject+'</div>';
+          html+='</div>';
+        }else{
+          html+='<div class="card" style="background:'+bg+'">';
+        if(isEx(it.subject)){
+          var lb=exLabel(it.subject);
+          html+='<div class="cn-s cn-exam">‼️ '+lb[0]+'</div>';
+          if(lb[1])html+='<div class="cn-name">'+lb[1]+'</div>';
+        }else{
+          html+='<div class="cn-s">'+it.subject+'</div>';
         }
-      });
-      tb += `</tr>`;
-    }
-    tb += `</tbody></table>`;
-    wh[w] = tb;
-  });
-
-  ci = 0; 
-  let t = today();
-  for(let i=0; i<wks.length; i++) {
-    let v = wvals(wks[i]);
-    if(v.length && t >= v[0] && t <= v[v.length-1]) { ci = i; break; }
+        if(it.professor)html+='<div class="cn-p">'+it.professor+'</div>';
+        html+='<div class="cn-t">'+it.start+'~'+it.end+'</div>';
+        html+='</div>';/* card close */
+        }/* end holiday else */
+        html+='</td>';
+      }else if(!occupied[p.n]||!occupied[p.n][d]){
+        html+='<td class="td-c td-e" data-day="'+d+'"></td>';
+      }
+    });
+    html+='</tr>';
   }
-  
-  document.getElementById('wnav').style.display = 'flex';
-  render(); 
-  alert("새로운 시간표가 성공적으로 적용되었습니다!");
+  html+='</tbody></table>';
+  return html;
 }
 
-function init(){
-  document.getElementById('pb').onclick=function(){if(ci>0){ci--;render();}};
-  document.getElementById('nb').onclick=function(){if(ci<wks.length-1){ci++;render();}};
-  document.getElementById('bn-w').onclick=function(){setView('weekly');};
-  document.getElementById('bn-l').onclick=function(){setView('list');};
-  document.getElementById('bn-f').onclick=function(){setView('filter');};
-  document.getElementById('cal-btn').onclick=function(){openCal();};
-  document.getElementById('cal-x').onclick=function(){closeCal();};
-  document.getElementById('ovl').onclick=function(e){if(e.target===document.getElementById('ovl'))closeCal();};
-  document.getElementById('cal-p').onclick=function(){cm2--;if(cm2<0){cm2=11;cy--;}renderCal();};
-  document.getElementById('cal-n').onclick=function(){cm2++;if(cm2>11){cm2=0;cy++;}renderCal();};
-  
-  // 엑셀(.xlsx) 및 CSV 통합 업로드 처리 이벤트
-  document.getElementById('csv-upload').addEventListener('change', function(e) {
-    let file = e.target.files[0];
-    if(!file) return;
-    
-    let ext = file.name.split('.').pop().toLowerCase();
-    
-    if (ext === 'csv') {
-      let reader = new FileReader();
-      reader.onload = function(evt) {
-        generateDataFromCSV(evt.target.result);
-        e.target.value = ''; 
-      };
-      reader.readAsText(file, 'UTF-8');
-    } else if (ext === 'xlsx' || ext === 'xls') {
-      let reader = new FileReader();
-      reader.onload = function(evt) {
-        try {
-          let data = new Uint8Array(evt.target.result);
-          let workbook = XLSX.read(data, {type: 'array'});
-          // 첫 번째 시트를 읽어옴
-          let firstSheetName = workbook.SheetNames[0];
-          let worksheet = workbook.Sheets[firstSheetName];
-          // 읽어온 시트를 CSV 텍스트로 변환하여 기존 로직 태우기
-          let csvText = XLSX.utils.sheet_to_csv(worksheet);
-          generateDataFromCSV(csvText);
-        } catch (error) {
-          alert("엑셀 파일을 읽는 중 오류가 발생했습니다. 파일 형식을 확인해주세요.");
-        }
-        e.target.value = ''; 
-      };
-      reader.readAsArrayBuffer(file);
-    }
-  });
-
-  let t = new Date(); cy = t.getFullYear(); cm2 = t.getMonth();
-  
-  drawCurrentTimeLine();
-  setInterval(drawCurrentTimeLine, 60000); 
-}
-
-function setView(v){
-  vw=v;
-  document.getElementById('bn-w').className='bn'+(v==='weekly'?' on':'');
-  document.getElementById('bn-l').className='bn'+(v==='list'?' on':'');
-  document.getElementById('bn-f').className='bn'+(v==='filter'?' on':'');
-  document.getElementById('wnav').style.display=(v==='weekly' && wks.length > 0)?'flex':'none';
-  render();
-}
-
-function updHdr(){
-  if(wks.length === 0) {
-    document.getElementById('wl').textContent = '데이터 없음';
-    document.getElementById('wr').textContent = '엑셀 파일을 업로드하세요';
-    document.getElementById('pb').disabled = true;
-    document.getElementById('nb').disabled = true;
-    document.getElementById('wnav').style.display = 'none';
-    return;
+function buildLegend(items){
+  var seen={};
+  var html='';
+  for(var i=0;i<items.length;i++){
+    var s=items[i].subject;
+    if(seen[s]||isHoliday(s)||isEv(s))continue;
+    seen[s]=true;
+    html+='<div class="li"><span class="ld" style="background:'+gcol(s)+'"></span><span class="ln">'+s+'</span></div>';
   }
-  var w=wks[ci];
-  document.getElementById('wl').textContent=w+'주차';
-  var v=wvals(w);
-  document.getElementById('wr').textContent=v.length>=2?v[0].slice(5)+' ~ '+v[v.length-1].slice(5):(v[0]||'').slice(5);
-  document.getElementById('pb').disabled=(ci===0);
-  document.getElementById('nb').disabled=(ci===wks.length-1);
+  return html;
 }
 
-function render(){
-  updHdr();
-  if(wks.length === 0) {
-    document.getElementById('main').innerHTML = '<div style="text-align:center; padding:40px; color: var(--app-text-secondary);">상단의 📂 아이콘을 눌러<br>엑셀(.xlsx) 또는 CSV 시간표를 업로드해주세요.</div>';
-    return;
+/* ══════════════════════════════════════════
+   엑셀 업로드 UI
+══════════════════════════════════════════ */
+function openXL(){document.getElementById('xl-ovl').classList.add('show');}
+function closeXL(){document.getElementById('xl-ovl').classList.remove('show');pendingData=null;document.getElementById('xl-status').textContent='';document.getElementById('xl-apply').disabled=true;}
+
+function handleFile(file){
+  if(!file)return;
+  var ext=file.name.split('.').pop().toLowerCase();
+  var status=document.getElementById('xl-status');
+  var applyBtn=document.getElementById('xl-apply');
+  pendingData=null;
+  applyBtn.disabled=true;
+
+  if(ext==='csv'){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      try{
+        var rows=parseCSV(e.target.result);
+        var result=csvRowsToItems(rows);
+        if(!result){status.className='xl-status err';status.textContent='파일이 비어있습니다.';return;}
+        if(result.error){status.className='xl-status err';status.textContent=result.error;return;}
+        pendingData=result;
+        status.className='xl-status ok';
+        status.textContent='✓ '+result.length+'개 수업 항목 인식됨';
+        applyBtn.disabled=false;
+      }catch(err){status.className='xl-status err';status.textContent='파싱 오류: '+err.message;}
+    };
+    reader.readAsText(file,'UTF-8');
+  }else if(ext==='xlsx'||ext==='xls'){
+    status.className='xl-status';
+    status.textContent='⚠️ XLSX는 CSV로 변환 후 업로드해주세요. (Google 스프레드시트 → 파일 → CSV 다운로드)';
+  }else{
+    status.className='xl-status err';
+    status.textContent='CSV 또는 XLSX 파일만 지원합니다.';
   }
-  if(vw==='weekly')renderW();
-  else if(vw==='list')renderL();
-  else renderF();
 }
 
-/* ── 주간 뷰 ── */
+/* ══════════════════════════════════════════
+   주간 뷰
+══════════════════════════════════════════ */
 function renderW(){
-  var w=wks[ci],t=today();
+  var w=wks[ci],t=today(),dd=wdd[w]||{};
   document.getElementById('main').innerHTML=
-    '<div class="sw"><div id="current-time-line"></div>'+(wh[w]||'')+'</div>'
-    +'<div class="legend"><div class="lg-title">과목 범례</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
-  
-  var dowNum = new Date().getDay();
-  if (dowNum >= 1 && dowNum <= 5) {
-    var dowStr = DAYS[dowNum - 1];
-    var th = document.querySelector(`.th-d[data-day="${dowStr}"]`);
-    if (th) th.classList.add('current-day');
+    '<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
+    +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
+  for(var i=0;i<DAYS.length;i++){
+    var d=DAYS[i];
+    if(dd[d]===t){
+      var els=document.querySelectorAll('[data-day="'+d+'"]');
+      for(var j=0;j<els.length;j++)els[j].classList.add('tc');
+    }
   }
-  
-  drawCurrentTimeLine(); 
 }
 
-/* ── 목록 뷰 ── */
+/* ══════════════════════════════════════════
+   목록 뷰
+══════════════════════════════════════════ */
 function lcardH(it){
-  var c=gcol(it.subject),ex='';
-  var cardClass = 'lcard';
-  var sh = '';
-  if(it.is_exam){
-    cardClass += ' exam';
+  var c=gcol(it.subject),sh='',ex='';
+  if(isEx(it.subject)){
     var lb=exLabel(it.subject),et=lb[0],ba=lb[1];
-    sh='<div class="cn-exam-badge">‼️ '+et+'</div>'+(ba?'<div style="font-size:13px;color:#555;margin-top:2px">'+ba+'</div>':'');
+    sh='<div class="lc-s" style="color:#C0392B">‼️ '+et+'</div>'+(ba?'<div style="font-size:12px;color:#555;margin-top:2px">'+ba+'</div>':'');
+    ex='border:2px solid '+c+';';
   }else{sh='<div class="lc-s">'+it.subject+'</div>';}
   var ph=it.professor?'<div class="lc-p">'+it.professor+'</div>':'';
-  return'<div class="'+cardClass+'"><div class="lc-bar" style="background:'+c+'"></div>'
-    +'<div class="lc-body">'+sh+ph+'<div class="lc-t">'+it.day+'요일 '+it.period+'교시</div></div></div>';
+  return'<div class="lcard" style="'+ex+'"><div class="lc-bar" style="background:'+c+'"></div>'
+    +'<div class="lc-body">'+sh+ph+'<div class="lc-t">'+it.day+'요일 '+it.start+'~'+it.end+'</div></div></div>';
 }
 function byDateH(items){
   var bd={};
@@ -497,7 +630,7 @@ function byDateH(items){
   for(var di=0;di<dates.length;di++){
     var dt=dates[di],d=new Date(dt),grp=bd[dt];
     var lbl=dt.slice(5)+' ('+WN[d.getDay()]+')';
-    var hx=false;for(var gi=0;gi<grp.length;gi++)if(grp[gi].is_exam){hx=true;break;}
+    var hx=false;for(var gi=0;gi<grp.length;gi++)if(isEx(grp[gi].subject)){hx=true;break;}
     h+='<div class="dg"><div class="dh">'+(hx?'‼️ ':'')+lbl+'</div>';
     grp.sort(function(a,b){return a.period-b.period;});
     for(var gi2=0;gi2<grp.length;gi2++)h+=lcardH(grp[gi2]);
@@ -509,7 +642,9 @@ function renderL(){
   document.getElementById('main').innerHTML='<div class="list-wrap">'+byDateH(merged)+'</div>';
 }
 
-/* ── 필터 뷰 ── */
+/* ══════════════════════════════════════════
+   필터 뷰
+══════════════════════════════════════════ */
 function renderF(){
   var eS=fsubj.filter(function(s){return isEx(s);});
   var nS=fsubj.filter(function(s){return!isEx(s)&&!isEv(s);});
@@ -558,19 +693,22 @@ function renderF(){
 }
 function renderFR(){
   var items=merged.slice();
-  if(fExam)items=items.filter(function(i){return i.is_exam;});
+  if(fExam)items=items.filter(function(i){return isEx(i.subject);});
   else items=items.filter(function(i){return fsubj2.indexOf(i.subject)>=0||isEv(i.subject);});
   var el=document.getElementById('fres');if(!el)return;
   if(!items.length){el.innerHTML='<div class="no-res">조건에 맞는 수업이 없습니다</div>';return;}
   el.innerHTML='<div class="list-wrap">'+byDateH(items)+'</div>';
 }
 
-/* ── 달력 ── */
+/* ══════════════════════════════════════════
+   캘린더 오버레이
+══════════════════════════════════════════ */
 function openCal(){
-  if(wks.length===0) return;
-  var nd=new Date();cy=nd.getFullYear();cm2=nd.getMonth();
-  renderCal();
-  document.getElementById('ovl').classList.add('show');
+  /* 현재 보고 있는 주차의 첫 날짜로 캘린더 이동 */
+  var v=wvals(wks[ci]).sort();
+  var ref=v.length?new Date(v[0]):new Date();
+  cy=ref.getFullYear();cm2=ref.getMonth();
+  renderCal();document.getElementById('ovl').classList.add('show');
 }
 function closeCal(){document.getElementById('ovl').classList.remove('show');}
 function renderCal(){
@@ -590,70 +728,121 @@ function renderCal(){
     g+='<div class="'+cls+'"'+oc+'><div class="cdn">'+day+'</div>'+dot+'</div>';
   }
   document.getElementById('cal-g').innerHTML=g;
-  if(ck){
-    var ckEls=document.querySelectorAll('.cday.ck');
-    for(var ci2=0;ci2<ckEls.length;ci2++){
-      ckEls[ci2].onclick=(function(el){
-        return function(){
-          var id=el.id;if(!id)return;
-          var ds2=id.replace('cd-','');
-          for(var ii=0;ii<wks.length;ii++){if(wvals(wks[ii]).indexOf(ds2)>=0){ci=ii;break;}}
-          closeCal();setView('weekly');render();
-        };
-      })(ckEls[ci2]);
-    }
+  var ckEls=document.querySelectorAll('.cday.ck');
+  for(var ci2=0;ci2<ckEls.length;ci2++){
+    ckEls[ci2].onclick=(function(el){
+      return function(){
+        var id=el.id;if(!id)return;
+        var ds2=id.replace('cd-','');
+        for(var ii=0;ii<wks.length;ii++){if(wvals(wks[ii]).indexOf(ds2)>=0){ci=ii;break;}}
+        closeCal();setView('weekly');render();
+      };
+    })(ckEls[ci2]);
   }
 }
 
-/* ── 현재 시간선 그리기 ── */
-function drawCurrentTimeLine() {
-  var lineEl = document.getElementById('current-time-line');
-  if (!lineEl || vw !== 'weekly' || wks.length === 0) {
-    if (lineEl) lineEl.style.display = 'none';
-    return;
-  }
-  
-  var now = new Date();
-  var hours = now.getHours();
-  var minutes = now.getMinutes();
-  
-  var startHour = 8;
-  var startMinute = 30;
-  var hourHeight = 100 / 11; 
-  
-  var totalMinutes = hours * 60 + minutes;
-  var totalStartMinutes = startHour * 60 + startMinute;
-  
-  if (totalMinutes < totalStartMinutes) {
-    lineEl.style.display = 'none';
-    return;
-  }
-  
-  var period = Math.floor((totalMinutes - totalStartMinutes) / 60) + 1;
-  var minuteInPeriod = (totalMinutes - totalStartMinutes) % 60;
-  
-  if (period >= 5) {
-    var lunchStart = 12 * 60 + 20;
-    if (totalMinutes < lunchStart) {
-      period = 4;
-      minuteInPeriod = (totalMinutes - (startHour * 60 + startMinute + 3 * 60));
-    } else if (totalMinutes < lunchStart + 70) {
-      period = 5;
-      minuteInPeriod = (totalMinutes - lunchStart) * (60 / 70); 
-    } else {
-      period = Math.floor((totalMinutes - (totalStartMinutes + 70)) / 60) + 2; 
-      minuteInPeriod = (totalMinutes - (totalStartMinutes + 70)) % 60;
+/* ══════════════════════════════════════════
+   헤더 & 렌더
+══════════════════════════════════════════ */
+function updHdr(){
+  var w=wks[ci];
+  document.getElementById('wl').textContent=w+'주차';
+  var v=wvals(w).sort();
+  document.getElementById('wr').textContent=v.length>=2?fmtDate(v[0])+' ~ '+fmtDate(v[v.length-1]):(v[0]?fmtDate(v[0]):'');
+  document.getElementById('pb').disabled=(ci===0);
+  document.getElementById('nb').disabled=(ci===wks.length-1);
+}
+
+function setView(v){
+  vw=v;
+  document.getElementById('bn-w').className='bn'+(v==='weekly'?' on':'');
+  document.getElementById('bn-l').className='bn'+(v==='list'?' on':'');
+  document.getElementById('bn-f').className='bn'+(v==='filter'?' on':'');
+  document.getElementById('wnav').style.display=(v==='weekly')?'flex':'none';
+  render();
+}
+
+function render(){
+  updHdr();
+  if(vw==='weekly')renderW();
+  else if(vw==='list')renderL();
+  else renderF();
+}
+
+/* ══════════════════════════════════════════
+   초기화
+══════════════════════════════════════════ */
+function init(){
+  /* wh 데이터 후처리: 날짜 하이픈→점, 휴일 카드→텍스트 전용, 색상 업데이트 */
+  var oldColors={
+    '#1ABC9C':'#0891B2','#27AE60':'#059669','#2980B9':'#1D4ED8',
+    '#3498DB':'#0D9488','#4A90D9':'#2563EB','#5CB85C':'#16A34A',
+    '#F39C12':'#9333EA','#E8734A':'#D97706','#D35400':'#B45309',
+    '#16A085':'#7C3AED','#E74C3C':'#DC2626'
+  };
+  for(var wk in wh){
+    /* 날짜 표기 변환: 03-17 → 03.17 */
+    wh[wk]=wh[wk].replace(/(\d{2})-(\d{2})/g,'$1.$2');
+    /* 색상 교체 */
+    for(var oc in oldColors){
+      wh[wk]=wh[wk].split('background:'+oc+'"').join('background:'+oldColors[oc]+'"');
+      wh[wk]=wh[wk].split('background:'+oc+';').join('background:'+oldColors[oc]+';');
     }
+    /* 휴일 카드 교체 */
+    wh[wk]=wh[wk].replace(/<td class="td-c"([^>]*)><div class="card" style="background:#95A5A6"><div class="cn-s">([^<]+)<\/div><div class="cn-t">([^<]+)<\/div><\/div><\/td>/g,
+      function(match,attrs,subj,time){
+        return '<td class="td-c td-e"'+attrs+'>'+
+          '<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">'+
+          '<div style="font-size:16px">🗓</div>'+
+          '<div style="font-size:9.5px;font-weight:600;color:#8E8E93;text-align:center;word-break:keep-all;line-height:1.3">'+subj+'</div>'+
+          '</div></td>';
+      });
   }
-  
-  if (period > 11) {
-    lineEl.style.display = 'none';
-    return;
+  var t=today();
+  for(var i=0;i<wks.length;i++){
+    var v=wvals(wks[i]).sort();
+    if(v.length&&t>=v[0]&&t<=v[v.length-1]){ci=i;break;}
   }
-  
-  var topPercent = (period - 1 + minuteInPeriod / 60) * hourHeight;
-  lineEl.style.top = `calc(40px + ${topPercent}%)`;
-  lineEl.style.display = 'block';
+  var nd=new Date();cy=nd.getFullYear();cm2=nd.getMonth();
+
+  document.getElementById('pb').onclick=function(){if(ci>0){ci--;render();}};
+  document.getElementById('nb').onclick=function(){if(ci<wks.length-1){ci++;render();}};
+  document.getElementById('bn-w').onclick=function(){setView('weekly');};
+  document.getElementById('bn-l').onclick=function(){setView('list');};
+  document.getElementById('bn-f').onclick=function(){setView('filter');};
+  document.getElementById('cal-btn').onclick=function(){openCal();};
+  document.getElementById('cal-x').onclick=function(){closeCal();};
+  document.getElementById('ovl').onclick=function(e){if(e.target===document.getElementById('ovl'))closeCal();};
+  document.getElementById('cal-p').onclick=function(){cm2--;if(cm2<0){cm2=11;cy--;}renderCal();};
+  document.getElementById('cal-n').onclick=function(){cm2++;if(cm2>11){cm2=0;cy++;}renderCal();};
+
+  /* 엑셀 업로드 */
+  document.getElementById('xl-btn-open').onclick=openXL;
+  document.getElementById('xl-x').onclick=closeXL;
+  document.getElementById('xl-ovl').onclick=function(e){if(e.target===document.getElementById('xl-ovl'))closeXL();};
+
+  var dropzone=document.getElementById('xl-drop');
+  var fileInput=document.getElementById('xl-file');
+  dropzone.onclick=function(){fileInput.click();};
+  fileInput.onchange=function(){if(fileInput.files[0])handleFile(fileInput.files[0]);};
+  dropzone.ondragover=function(e){e.preventDefault();dropzone.classList.add('drag');};
+  dropzone.ondragleave=function(){dropzone.classList.remove('drag');};
+  dropzone.ondrop=function(e){
+    e.preventDefault();dropzone.classList.remove('drag');
+    var f=e.dataTransfer&&e.dataTransfer.files[0];
+    if(f)handleFile(f);
+  };
+
+  document.getElementById('xl-apply').onclick=function(){
+    if(!pendingData)return;
+    buildFromItems(pendingData);
+    ci=0;
+    closeXL();
+    setView('weekly');
+    render();
+  };
+
+  render();
 }
 
 init();
