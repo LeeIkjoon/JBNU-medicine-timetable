@@ -395,8 +395,8 @@ function buildFromItems(items){
     wdd[it.week][it.day]=it.date;
   }
 
-  /* 3. 색상 맵 (기존 cmap 유지, 새 과목엔 기본색) */
-  var palette=['#1ABC9C','#27AE60','#2980B9','#3498DB','#8E44AD','#D35400','#E8734A','#E74C3C','#16A085','#F39C12'];
+  /* 3. 색상 맵 (기존 cmap 유지, 새 과목엔 구분되는 색) */
+  var palette=['#0891B2','#059669','#1D4ED8','#9333EA','#D97706','#16A34A','#DC2626','#0D9488','#7C3AED','#B45309','#BE185D','#2563EB'];
   var pIdx=0;
   for(var i=0;i<items.length;i++){
     var s=items[i].subject;
@@ -629,7 +629,7 @@ function byDateH(items){
   var dates=Object.keys(bd).sort(),h='';
   for(var di=0;di<dates.length;di++){
     var dt=dates[di],d=new Date(dt),grp=bd[dt];
-    var lbl=dt.slice(5)+' ('+WN[d.getDay()]+')';
+    var lbl=fmtDate(dt)+' ('+WN[d.getDay()]+')';
     var hx=false;for(var gi=0;gi<grp.length;gi++)if(isEx(grp[gi].subject)){hx=true;break;}
     h+='<div class="dg"><div class="dh">'+(hx?'‼️ ':'')+lbl+'</div>';
     grp.sort(function(a,b){return a.period-b.period;});
@@ -797,6 +797,14 @@ function init(){
           '<div style="font-size:9.5px;font-weight:600;color:#8E8E93;text-align:center;word-break:keep-all;line-height:1.3">'+subj+'</div>'+
           '</div></td>';
       });
+    /* wl(범례) 색상 교체 및 휴일 항목 제거 */
+    if(wl[wk]){
+      for(var oc2 in oldColors){
+        wl[wk]=wl[wk].split('background:'+oc2+'"').join('background:'+oldColors[oc2]+'"');
+      }
+      /* #95A5A6 (휴일/행사) 범례 항목 제거 */
+      wl[wk]=wl[wk].replace(/<div class="li"><span class="ld" style="background:#95A5A6"><\/span>[\s\S]*?<\/div>/g,'');
+    }
   }
   var t=today();
   for(var i=0;i<wks.length;i++){
