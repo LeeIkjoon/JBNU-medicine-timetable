@@ -117,7 +117,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .td-c[rowspan] .card{height:100%}
 
 .cn-s{
-  font-size:10.5px;font-weight:700;color:#fff;
+  font-size:10.5px;font-weight:700;color:#1e293b;
   line-height:1.3;
   word-break:keep-all;
   overflow:hidden;
@@ -125,14 +125,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   -webkit-line-clamp:3;
   -webkit-box-orient:vertical;
 }
-.cn-exam{font-size:11px;font-weight:800}
-.cn-name{font-size:10px;font-weight:600;color:rgba(255,255,255,.9);margin-top:1px;
+.cn-exam{font-size:11px;font-weight:800;color:#7f1d1d}
+.cn-name{font-size:10px;font-weight:600;color:rgba(30,41,59,.8);margin-top:1px;
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .cn-p{
-  font-size:9.5px;color:rgba(255,255,255,.85);margin-top:1px;
+  font-size:9.5px;color:rgba(30,41,59,.65);margin-top:1px;
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
 }
-.cn-t{font-size:8.5px;color:rgba(255,255,255,.7);margin-top:auto;padding-top:2px;white-space:nowrap}
+.cn-t{font-size:8.5px;color:rgba(30,41,59,.5);margin-top:auto;padding-top:2px;white-space:nowrap}
 
 /* 점심 행 */
 .lunchrow .td-t{border-top:1px dashed #C7C7CC;background:#EBEBEB;height:22px!important;padding:0}
@@ -295,9 +295,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
       <button class="xl-x" id="xl-x">✕</button>
     </div>
     <div class="xl-desc">
-      <b>첨부된 엑셀 파일 형식</b>을 그대로 업로드하면 자동으로 인식됩니다.<br>
+      <b>전북대 의대 시간표 엑셀 파일을 그대로 업로드</b>하면 자동으로 인식됩니다.<br>
       형식: <code>주차</code> <code>날짜</code> <code>요일</code> <code>1교시</code> … <code>10교시</code><br>
-      셀 내용: <code>과목명-교수명</code> 형태 · XLSX 첫 번째 시트 자동 읽기
+      셀 내용: <code>과목명-교수명</code> 형태 · 여러 시트가 있어도 시간표 시트 자동 감지
     </div>
     <div class="xl-dropzone" id="xl-drop">
       <input type="file" id="xl-file" accept=".csv,.xlsx,.xls">
@@ -326,25 +326,36 @@ var merged = [{"week": "1", "date": "2026-03-16", "day": "월", "period": 1, "st
 
 var fsubj = ["문제바탕학습1", "생애주기", "시험", "실험및논문연구2", "의료면담1", "의학생화학", "의학생화학 기말 시험", "의학생화학 중간 시험 (퀴즈)", "인체미세구조 실습", "인체미세구조와 기능", "인체반응 및 병태생리", "인체질병형태학실습", "조직학 시험", "환자의사사회1"];
 var cmap  = {
-  "근로자의날":"#9CA3AF",
-  "대체휴무":"#9CA3AF",
-  "진급식":"#9CA3AF",
-  "어린이날":"#9CA3AF",
-  "지방선거":"#9CA3AF",
-  "문제바탕학습1":"#8B5CF6",        /* 밝은 보라 */
-  "생애주기":"#D97706",             /* 밝은 황갈색 */
-  "시험":"#EF4444",                 /* 밝은 빨강 */
-  "실험및논문연구2":"#10B981",      /* 밝은 에메랄드 */
-  "의료면담1":"#F97316",            /* 밝은 주황 */
-  "의학생화학":"#14B8A6",           /* 밝은 청록 */
-  "의학생화학 기말 시험":"#14B8A6",
-  "의학생화학 중간 시험 (퀴즈)":"#14B8A6",
-  "인체미세구조 실습":"#84CC16",    /* 밝은 라임 */
-  "인체미세구조와 기능":"#22C55E",  /* 밝은 초록 */
-  "인체반응 및 병태생리":"#EC4899", /* 밝은 핑크 */
-  "인체질병형태학실습":"#F59E0B",   /* 밝은 앰버 */
-  "조직학 시험":"#F43F5E",          /* 밝은 로즈 */
-  "환자의사사회1":"#A78BFA"         /* 밝은 연보라 */
+  /* 휴일·행사: 연회색 */
+  "근로자의날":"#B0B8C8","대체휴무":"#B0B8C8","진급식":"#B0B8C8",
+  "어린이날":"#B0B8C8","지방선거":"#B0B8C8","대체휴일":"#B0B8C8",
+  /* 과목: 파스텔 팔레트 - 파란 계열 없음 */
+  "문제바탕학습1":"#A78BFA",   /* 라벤더 */
+  "문제바탕학습3":"#A78BFA",
+  "생애주기":"#FCD34D",        /* 파스텔 옐로 */
+  "시험":"#F87171",            /* 파스텔 레드 */
+  "실험및논문연구2":"#34D399", /* 파스텔 민트 */
+  "의료면담1":"#FDBA74",       /* 파스텔 피치 */
+  "의료면담3":"#FDBA74",
+  "의학생화학":"#5EEAD4",      /* 파스텔 티파니 */
+  "의학생화학 기말 시험":"#5EEAD4",
+  "의학생화학 중간 시험 (퀴즈)":"#5EEAD4",
+  "인체미세구조 실습":"#BEF264",/* 파스텔 라임 */
+  "인체미세구조와 기능":"#86EFAC",/* 파스텔 그린 */
+  "인체반응 및 병태생리":"#F9A8D4",/* 파스텔 핑크 */
+  "인체질병형태학실습":"#FDE68A", /* 파스텔 앰버 */
+  "조직학 시험":"#FDA4AF",     /* 파스텔 로즈 */
+  "환자의사사회1":"#C4B5FD",   /* 파스텔 퍼플 */
+  "환자의사사회3":"#C4B5FD",
+  /* 2학년 과목 */
+  "호흡기학":"#7DD3FC",        /* 파스텔 스카이 (하늘색 - 테마 파랑과 구분되는 연한 톤) */
+  "알레르기-면역학":"#F0ABFC", /* 파스텔 오키드 */
+  "혈액학":"#FCA5A5",          /* 파스텔 살몬 */
+  "근육골격계학":"#6EE7B7",    /* 파스텔 에메랄드 */
+  "임상의학입문":"#FCD34D",    /* 파스텔 옐로 */
+  "임상의학입문 2":"#FDE68A",
+  "모체-태아-주산기의학":"#FBCFE8",/* 파스텔 베이비핑크 */
+  "생식의학":"#DDD6FE",        /* 파스텔 바이올렛 */
 };
 
 /* ══════════════════════════════════════════
@@ -507,19 +518,32 @@ function parseNativeRows(rows){
 }
 
 function csvRowsToItems(rows){
-  /* native 형식 자동 감지 */
-  if(rows.length>=2){
-    var h=rows[0]||[];
-    var h0=String(h[0]||'').trim().toLowerCase();
-    var h1=String(h[1]||'').trim().toLowerCase();
-    var h2=String(h[2]||'').trim().toLowerCase();
-    /* 한국어 헤더 (주차/날짜/요일) 또는 첫 데이터행이 숫자+날짜 형태 */
-    if(h0==='주차'||(h0!=='week'&&(h1==='날짜'||h2==='요일'||h2==='월'||h2==='화'))){
-      var res=parseNativeRows(rows);
-      if(res.error)return res;
-      return res.items; /* buildFromItems에서 사용 */
-    }
+  /* ── native 형식 감지: 헤더 또는 데이터 행 특성으로 판단 ── */
+  function isNativeTimetable(rows){
+    if(!rows||rows.length<2)return false;
+    var r0=rows[0]||[], r1=rows[1]||[];
+    var h0=String(r0[0]||'').trim();
+    var h1=String(r0[1]||'').trim();
+    var h2=String(r0[2]||'').trim();
+    var DAYS=['월','화','수','목','금','토','일'];
+    /* 헤더 행: 주차 / 날짜 / 요일 */
+    if(h0==='주차')return true;
+    /* 헤더가 없고 데이터 행 바로 시작: 첫 셀 숫자, 세 번째 셀 요일 */
+    if(typeof r0[0]==='number'&&r0[0]>=1&&r0[0]<=50)return true;
+    /* 두 번째 행이 데이터 행 */
+    if(typeof r1[0]==='number'&&r1[0]>=1&&r1[0]<=50)return true;
+    /* 한국어 날짜/요일 패턴 */
+    if((h1==='날짜'||h1.indexOf('날짜')>=0)&&DAYS.indexOf(h2)>=0)return true;
+    if(DAYS.indexOf(String(r0[2]||'').trim())>=0&&!isNaN(r0[0]))return true;
+    return false;
   }
+
+  if(isNativeTimetable(rows)){
+    var res=parseNativeRows(rows);
+    if(res.error)return res;
+    return res.items;
+  }
+
   /* 기존 CSV 형식 (week,date,day,...) */
   if(rows.length<2)return null;
   var hdr=rows[0].map(function(h){return String(h).trim().toLowerCase();});
@@ -562,8 +586,8 @@ function buildFromItems(items,nativeWdd,nativeEd){
     }
   }
 
-  /* 3. 색상 맵 - 밝고 구분되는 팔레트 (파랑 없음) */
-  var palette=['#8B5CF6','#10B981','#F97316','#22C55E','#EC4899','#D97706','#F59E0B','#14B8A6','#84CC16','#F43F5E','#A78BFA','#EF4444'];
+  /* 3. 색상 맵 - 파스텔 팔레트 (파랑 없음) */
+  var palette=['#A78BFA','#34D399','#FDBA74','#86EFAC','#F9A8D4','#FCD34D','#FDE68A','#5EEAD4','#BEF264','#FDA4AF','#C4B5FD','#F87171','#7DD3FC','#F0ABFC','#FCA5A5','#6EE7B7','#FBCFE8','#DDD6FE'];
   var pIdx=0;
   for(var i=0;i<items.length;i++){
     var s=items[i].subject;
@@ -732,25 +756,61 @@ function handleFile(file){
       try{
         var data=new Uint8Array(e.target.result);
         var wb=XLSX.read(data,{type:'array',cellDates:false});
-        var ws=wb.Sheets[wb.SheetNames[0]];
-        /* raw 2D 배열로 변환 (날짜는 숫자 serial로 유지) */
-        var rawRows=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:''});
+
+        /* ── 시간표 시트 자동 감지 ──
+           우선순위:
+           1) 헤더 row[0][0] === '주차' 인 시트
+           2) row[1][0] 이 1~18 숫자이고 row[0][2]가 요일인 시트
+           3) 시트명에 '학년'/'시간표' 포함
+           4) 첫 번째 시트 (fallback)
+        */
+        var DAYS_KR=['월','화','수','목','금','토','일'];
+        var targetSheet=null, targetName=wb.SheetNames[0];
+        var fallbackSheet=wb.Sheets[wb.SheetNames[0]], fallbackName=wb.SheetNames[0];
+
+        for(var si=0;si<wb.SheetNames.length;si++){
+          var sname=wb.SheetNames[si];
+          var ws=wb.Sheets[sname];
+          /* 상위 3행만 빠르게 읽기 */
+          var peek=XLSX.utils.sheet_to_json(ws,{header:1,raw:true,defval:'',range:{s:{r:0,c:0},e:{r:2,c:5}}});
+          if(!peek||!peek.length)continue;
+          var p0=peek[0]||[], p1=peek[1]||[];
+          var c0=String(p0[0]||'').trim();
+          var c2=String(p0[2]||'').trim();
+          /* 조건 1: 헤더가 '주차' */
+          if(c0==='주차'){targetSheet=ws;targetName=sname;break;}
+          /* 조건 2: 2행 첫 셀이 1~18 정수이고 3열이 요일 */
+          var d2=String(p1[2]||'').trim();
+          if(typeof p1[0]==='number'&&p1[0]>=1&&p1[0]<=18&&DAYS_KR.indexOf(d2)>=0){
+            targetSheet=ws;targetName=sname;break;
+          }
+        }
+        /* 조건 3: 시트명 키워드 */
+        if(!targetSheet){
+          for(var si2=0;si2<wb.SheetNames.length;si2++){
+            var sn2=wb.SheetNames[si2];
+            if(sn2.indexOf('학년')>=0||sn2.indexOf('시간표')>=0){
+              targetSheet=wb.Sheets[sn2];targetName=sn2;break;
+            }
+          }
+        }
+        if(!targetSheet){targetSheet=fallbackSheet;targetName=fallbackName;}
+
+        var rawRows=XLSX.utils.sheet_to_json(targetSheet,{header:1,raw:true,defval:''});
         var result=csvRowsToItems(rawRows);
         if(!result){status.className='xl-status err';status.textContent='파일이 비어있습니다.';return;}
         if(result.error){status.className='xl-status err';status.textContent=result.error;return;}
-        /* native 파서는 items 배열 직접 반환 */
         var items=Array.isArray(result)?result:null;
         if(!items){status.className='xl-status err';status.textContent='파싱 오류';return;}
-        /* native 형식에서 wdd/ed도 재구성 */
+        /* native wdd/ed 재구성 */
         var nativeRes=parseNativeRows(rawRows);
         if(nativeRes&&nativeRes.wddLocal){
-          /* buildFromItems 전에 wdd/ed 미리 설정 */
           pendingData={items:items,nativeWdd:nativeRes.wddLocal,nativeEd:nativeRes.edLocal};
         }else{
           pendingData=items;
         }
         status.className='xl-status ok';
-        status.textContent='✓ '+items.length+'개 수업 항목 인식됨 ('+wb.SheetNames[0]+')';
+        status.textContent='✓ '+items.length+'개 수업 항목 인식됨 ('+targetName+')';
         applyBtn.disabled=false;
       }catch(err){status.className='xl-status err';status.textContent='XLSX 파싱 오류: '+err.message;}
     };
@@ -963,14 +1023,20 @@ function render(){
 function init(){
   /* wh 데이터 후처리: 날짜 하이픈→점, 색상 교체, td-e 통일, rowspan 제거 */
   var oldColors = {
-    /* 어두운 → 밝은 색상 매핑 */
-    '#6D28D9':'#8B5CF6','#A16207':'#D97706','#B91C1C':'#EF4444',
-    '#DC2626':'#EF4444','#065F46':'#10B981','#C2410C':'#F97316',
-    '#EA580C':'#F97316','#0F766E':'#14B8A6','#3F6212':'#84CC16',
-    '#4D7C0F':'#84CC16','#15803D':'#22C55E','#166534':'#22C55E',
-    '#86198F':'#EC4899','#9D174D':'#EC4899','#7C2D12':'#F59E0B',
-    '#9F1239':'#F43F5E','#92400E':'#A78BFA',
-    '#B45309':'#A78BFA','#7C3AED':'#8B5CF6','#9333EA':'#8B5CF6'
+    /* 이전 채도 높은 색 → 파스텔로 교체 */
+    '#8B5CF6':'#A78BFA','#D97706':'#FCD34D','#EF4444':'#F87171',
+    '#10B981':'#34D399','#F97316':'#FDBA74','#EA580C':'#FDBA74',
+    '#14B8A6':'#5EEAD4','#84CC16':'#BEF264','#22C55E':'#86EFAC',
+    '#EC4899':'#F9A8D4','#F59E0B':'#FDE68A','#F43F5E':'#FDA4AF',
+    '#A78BFA':'#C4B5FD',
+    /* 구버전 어두운 색들 */
+    '#6D28D9':'#A78BFA','#065F46':'#34D399','#C2410C':'#FDBA74',
+    '#15803D':'#86EFAC','#166534':'#86EFAC','#86198F':'#F9A8D4',
+    '#9D174D':'#F9A8D4','#7C2D12':'#FDE68A','#9F1239':'#FDA4AF',
+    '#92400E':'#C4B5FD','#B45309':'#C4B5FD','#7C3AED':'#A78BFA',
+    '#DC2626':'#F87171','#B91C1C':'#F87171','#0F766E':'#5EEAD4',
+    '#4D7C0F':'#BEF264','#3F6212':'#BEF264','#9CA3AF':'#B0B8C8',
+    '#6D28D9':'#A78BFA'
   };
   for(var wk in wh){
     /* 날짜 표기 변환: 03-17 → 03.17 */
