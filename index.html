@@ -134,11 +134,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .cn-exam{font-size:9px;font-weight:800;color:#be123c}
 .cn-name{font-size:8px;font-weight:600;color:rgba(30,41,59,.7);
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
-  flex-shrink:0;line-height:1.2;margin-top:1px}
+  flex-shrink:0;line-height:1.2;margin-top:3px}
 .cn-p{
   font-size:8px;color:rgba(30,41,59,.55);
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
-  flex-shrink:0;line-height:1.2;margin-top:1px;
+  flex-shrink:0;line-height:1.2;margin-top:3px;
 }
 .cn-t{display:none}
 
@@ -325,8 +325,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
     <div style="display:flex;align-items:center;gap:8px">
       <img src="data:image/png;base64,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" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.15);padding:1px" alt="JBNU">
       <div>
-        <div class="ht">2026-1학기 시간표</div>
-        <div class="hs" id="wr"></div><div class="hs" id="grade-lbl" style="color:rgba(255,255,255,0.9);font-size:10px;margin-top:1px"></div>
+        <div class="ht" id="hdr-title">2026-1학기</div>
+        <div class="hs" id="wr"></div>
+        <div class="hs" id="grade-lbl" style="color:rgba(255,255,255,0.85);font-size:10px;margin-top:1px"></div>
       </div>
     </div>
     <div class="hdr-right">
@@ -495,7 +496,7 @@ var pendingData=null; // 엑셀 업로드 대기 데이터
 
 function p2(n){return ('0'+n).slice(-2);}
 function today(){var d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
-function isEx(s){return s.indexOf('시험')>=0||s.indexOf('퀴즈')>=0;}
+function isEx(s){return s.indexOf('시험')>=0||s.indexOf('퀴즈')>=0||s.indexOf('고사')>=0||s.indexOf('examination')>=0||s.indexOf('exam')>=0||s.indexOf('quiz')>=0;}
 function isEv(s){return EVK.indexOf(s)>=0;}
 function wvals(w){var o=wdd[w];if(!o)return[];return Object.keys(o).map(function(k){return o[k];}).filter(Boolean);}
 function gcol(s){return cmap[s]||'#C4B5FD';}
@@ -505,21 +506,28 @@ function isHoliday(s){
 }
 function fmtDate(ds){/* "2026-03-17" → "03.17" */if(!ds)return'';var p=ds.split('-');return p.length>=3?p[1]+'.'+p[2]:ds.slice(5).replace('-','.');}
 function exLabel(s){
-  /* 시험 종류 앞 과목명 추출 */
-  var EXAM_TYPES=['중간 시험 (퀴즈)','기말 시험 (퀴즈)','중간 시험','기말 시험','퀴즈'];
+  var EXAM_TYPES=[
+    '중간 시험 (퀴즈)','기말 시험 (퀴즈)','중간 시험','기말 시험',
+    '중간고사','기말고사','중간평가','기말평가',
+    'Mid-term examination','Final examination','Mid-term exam','Final exam',
+    'mid-term examination','final examination','퀴즈','quiz'
+  ];
   for(var ti=0;ti<EXAM_TYPES.length;ti++){
-    if(s.indexOf(EXAM_TYPES[ti])>=0){
-      var subj=s.replace(EXAM_TYPES[ti],'').trim();
-      return[EXAM_TYPES[ti], subj];
+    var et=EXAM_TYPES[ti];
+    if(s.toLowerCase().indexOf(et.toLowerCase())>=0){
+      var subj=s.slice(0,s.toLowerCase().indexOf(et.toLowerCase())).trim()
+               .replace(/[\(\-\s]+$/,'').trim();
+      return[et, subj];
     }
   }
-  /* '조직학 시험', 'XX 시험' 형태 */
+  /* 'XX 시험', 'XX고사' 일반 패턴 */
   var si=s.lastIndexOf('시험');
-  if(si>=0){
-    var prefix=s.slice(0,si).trim();
-    if(prefix)return[prefix+' 시험',''];
-    return['시험',''];
-  }
+  if(si>=0){var pre=s.slice(0,si).trim();return[(pre?pre+' ':'')+'시험',''];}
+  var gi=s.lastIndexOf('고사');
+  if(gi>=0){var pre2=s.slice(0,gi).trim();return[(pre2?pre2+' ':'')+'고사',''];}
+  /* 영어 exam */
+  var li=s.toLowerCase().lastIndexOf('exam');
+  if(li>=0)return['시험',''];
   return[s,''];
 }
 
@@ -695,9 +703,16 @@ function csvRowsToItems(rows){
   function parseKeimyungRows(rows){
     var PERIOD_END={1:'9:20',2:'10:20',3:'11:20',4:'12:20',
       5:'14:20',6:'15:20',7:'16:20',8:'17:20',9:'18:20',10:'19:20'};
-    var DAYS_KR=['월','화','수','목','금'];
-    var EXAM_KW=['시험','고사','평가','TBL','PBL','퀴즈'];
+    var DEFAULT_STARTS={1:'8:30',2:'9:30',3:'10:30',4:'11:30',5:'13:30',6:'14:30',7:'15:30',8:'16:30'};
+    var EXAM_KW=['시험','고사','퀴즈','평가','examination','exam','quiz','TBL','PBL'];
+    var HOLIDAY_KW=['공휴일','휴일','휴업','삼일절','현충일','광복절','개천절','한글날',
+      '어린이날','근로자','부처님','대체휴일','선거','창립기념','개교기념','체육대회'];
     var items=[],wddLocal={},edLocal=[];
+
+    /* 공휴일: 날짜당 1번만 추가하기 위한 집합 */
+    var holidayAdded={};/* "date" → true */
+    /* 시험: 날짜+교시 단위로 중복 방지 */
+    var addedKeys={};/* "date_period" → true */
 
     for(var r=1;r<rows.length;r++){
       var row=rows[r];
@@ -706,68 +721,81 @@ function csvRowsToItems(rows){
       if(!wk||isNaN(parseInt(wk)))continue;
       wk=String(parseInt(wk));
 
-      /* 날짜: Excel serial 또는 문자열 */
+      /* 날짜 파싱 */
       var dateRaw=row[1];
       var dateStr='';
       if(typeof dateRaw==='number'){
         var d=new Date(Math.round((dateRaw-25569)*86400*1000));
         dateStr=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
-      }else if(dateRaw instanceof Date||String(dateRaw).match(/\d{4}/)){
+      }else if(dateRaw&&String(dateRaw).match(/\d{4}/)){
         var ds=String(dateRaw).replace(/[\/\.]/g,'-').trim().slice(0,10);
-        if(ds.match(/^\d{4}-\d{1,2}-\d{1,2}$/)){
-          var pp=ds.split('-');
-          dateStr=pp[0]+'-'+('0'+pp[1]).slice(-2)+'-'+('0'+pp[2]).slice(-2);
-        }
+        var pp=ds.split('-');
+        if(pp.length===3)dateStr=pp[0]+'-'+('0'+pp[1]).slice(-2)+'-'+('0'+pp[2]).slice(-2);
       }
       if(!dateStr)continue;
 
       /* 요일 계산 */
-      var dd=new Date(dateStr);
-      var dow=dd.getDay();/* 0=일 */
-      if(dow===0||dow===6)continue;/* 토/일 제외 */
+      var ddObj=new Date(dateStr);
+      var dow=ddObj.getDay();
+      if(dow===0||dow===6)continue;
       var day=['일','월','화','수','목','금','토'][dow];
 
       var period=parseInt(row[2])||0;
       if(period<1||period>10)continue;
 
       /* 시작 시간 */
-      var timeRaw=row[3];
-      var start='';
-      if(timeRaw instanceof Date||typeof timeRaw==='object'){
-        try{
-          var tStr=String(timeRaw);
-          var tm=tStr.match(/(\d{1,2}):(\d{2})/);
-          if(tm)start=tm[1]+':'+tm[2];
-        }catch(e){}
-      }else if(typeof timeRaw==='number'&&timeRaw<1){
-        /* Excel time fraction */
+      var timeRaw=row[3],start='';
+      if(typeof timeRaw==='number'&&timeRaw<1){
         var totalMin=Math.round(timeRaw*24*60);
-        var h2=Math.floor(totalMin/60),m2=totalMin%60;
-        start=h2+':'+('0'+m2).slice(-2);
-      }else if(typeof timeRaw==='string'){
-        var tm2=timeRaw.match(/(\d{1,2}):(\d{2})/);
-        if(tm2)start=tm2[1]+':'+tm2[2];
+        var hh=Math.floor(totalMin/60),mm=totalMin%60;
+        start=hh+':'+('0'+mm).slice(-2);
+      }else if(timeRaw){
+        var tm=String(timeRaw).match(/(\d{1,2}):(\d{2})/);
+        if(tm)start=tm[1]+':'+tm[2];
       }
-      if(!start){
-        /* 교시 → 시간 기본값 */
-        var defaultStarts={1:'8:30',2:'9:30',3:'10:30',4:'11:30',5:'13:30',6:'14:30',7:'15:30',8:'16:30'};
-        start=defaultStarts[period]||'8:30';
-      }
+      if(!start)start=DEFAULT_STARTS[period]||'8:30';
       var end=PERIOD_END[period]||'';
 
       var subj=String(row[4]||'').trim();
       var prof=String(row[5]||'').trim();
+      var topic=String(row[6]||'').trim();/* 수업주제 컬럼 */
       if(!subj)continue;
 
-      /* wdd */
+      /* wdd 저장 */
       if(!wddLocal[wk])wddLocal[wk]={};
       wddLocal[wk][day]=dateStr;
 
-      var examFlag=EXAM_KW.some(function(k){return subj.indexOf(k)>=0;});
+      /* ── 공휴일: 같은 날 1번만 ── */
+      var isHol=HOLIDAY_KW.some(function(k){return subj.indexOf(k)>=0;});
+      if(isHol){
+        if(holidayAdded[dateStr])continue;/* 이미 추가했으면 skip */
+        holidayAdded[dateStr]=true;
+        /* 공휴일은 1교시 자리에만 표시 */
+        items.push({week:wk,date:dateStr,day:day,period:1,
+          start:'8:30',end:'17:00',subject:subj,professor:'',is_exam:false,is_holiday:true});
+        continue;
+      }
+
+      /* 중복 교시 방지 */
+      var key=dateStr+'_'+period;
+      if(addedKeys[key])continue;
+      addedKeys[key]=true;
+
+      /* ── 시험: 교과목명 또는 수업주제에 시험 키워드 ── */
+      var examFlag=EXAM_KW.some(function(k){return subj.indexOf(k)>=0||topic.indexOf(k)>=0;});
+
+      /* 시험이면 과목명에 [시험] 표시 */
+      var displaySubj=subj;
+      if(examFlag&&topic&&topic!==subj){
+        /* 수업주제가 별도 시험명인 경우 과목명 뒤에 붙임 */
+        var shortTopic=topic.length<=8?topic:'시험';
+        displaySubj=subj+' ('+shortTopic+')';
+      }
+
       if(examFlag&&edLocal.indexOf(dateStr)<0)edLocal.push(dateStr);
 
       items.push({week:wk,date:dateStr,day:day,period:period,
-        start:start,end:end,subject:subj,professor:prof,is_exam:examFlag});
+        start:start,end:end,subject:displaySubj,professor:prof,is_exam:examFlag});
     }
     if(!items.length)return{error:'수업 데이터를 찾을 수 없습니다.'};
     return{items:items,wddLocal:wddLocal,edLocal:edLocal};
@@ -903,6 +931,15 @@ function buildWeekTable(w,items){
     grid[sp][it.day]=it;
   }
 
+  /* 요일별 공휴일 여부 미리 계산 */
+  var holidayByDay={};/* day → subject */
+  for(var hi=0;hi<items.length;hi++){
+    var hit=items[hi];
+    if(isHoliday(hit.subject)){
+      holidayByDay[hit.day]=hit.subject;
+    }
+  }
+
   /* HTML 생성 - rowspan 없이 교시별 독립 렌더 */
   var html='<table class="tt"><thead><tr><th class="th-t"></th>';
   DAYS.forEach(function(d){
@@ -924,32 +961,38 @@ function buildWeekTable(w,items){
     html+='<tr><td class="td-t"><span class="pn">'+pn+'</span><span class="pt">'+pt+'</span></td>';
 
     DAYS.forEach(function(d){
+      /* 공휴일인 날: 1교시에만 아이콘, 나머지는 빈 칸 */
+      if(holidayByDay[d]){
+        if(pn===1){
+          var holSubj=holidayByDay[d];
+          html+='<td class="td-c" data-day="'+d+'">';
+          html+='<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">';
+          html+='<div style="font-size:15px">🗓</div>';
+          html+='<div style="font-size:9px;font-weight:600;color:#9CA3AF;text-align:center;word-break:keep-all;line-height:1.3">'+holSubj+'</div>';
+          html+='</div></td>';
+        }else{
+          html+='<td class="td-c" data-day="'+d+'"></td>';
+        }
+        return;
+      }
+
       var it=grid[pn]&&grid[pn][d];
       if(!it){
         html+='<td class="td-c" data-day="'+d+'"></td>';
         return;
       }
       var bg=gcol(it.subject);
-      var isHol=isHoliday(it.subject);
-      if(isHol){
-        html+='<td class="td-c" data-day="'+d+'">';
-        html+='<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">';
-        html+='<div style="font-size:15px">🗓</div>';
-        html+='<div style="font-size:9px;font-weight:600;color:#9CA3AF;text-align:center;word-break:keep-all;line-height:1.3">'+it.subject+'</div>';
-        html+='</div></td>';
+      html+='<td class="td-c" data-day="'+d+'">';
+      html+='<div class="card" style="background:'+bg+'">';
+      if(isEx(it.subject)){
+        var lb=exLabel(it.subject);
+        html+='<div class="cn-s cn-exam">‼️ '+lb[0]+'</div>';
+        if(lb[1])html+='<div class="cn-name">'+lb[1]+'</div>';
       }else{
-        html+='<td class="td-c" data-day="'+d+'">';
-        html+='<div class="card" style="background:'+bg+'">';
-        if(isEx(it.subject)){
-          var lb=exLabel(it.subject);
-          html+='<div class="cn-s cn-exam">‼️ '+lb[0]+'</div>';
-          if(lb[1])html+='<div class="cn-name">'+lb[1]+'</div>';
-        }else{
-          html+='<div class="cn-s">'+it.subject+'</div>';
-        }
-        if(it.professor)html+='<div class="cn-p">'+it.professor+'</div>';
-        html+='</div></td>';
+        html+='<div class="cn-s">'+it.subject+'</div>';
       }
+      if(it.professor)html+='<div class="cn-p">'+it.professor+'</div>';
+      html+='</div></td>';
     });
 
     html+='</tr>';
@@ -1882,6 +1925,8 @@ function init(){
     savedGrade=grade;
     localStorage.setItem('user_grade',grade);
     document.getElementById('grade-lbl').textContent=grade;
+    var titleEl=document.getElementById('hdr-title');
+    if(titleEl)titleEl.textContent='2026-1학기';
     hideGradeScreen();
   }
 
@@ -1907,6 +1952,15 @@ function init(){
   if(savedTimetable&&savedTimetable.items&&savedTimetable.items.length){
     try{buildFromItems(savedTimetable.items,savedTimetable.wdd,savedTimetable.ed);}catch(e){}
   }
+
+  /* 오늘 날짜 주차로 자동 이동 */
+  (function(){
+    var t=today();
+    for(var i=0;i<wks.length;i++){
+      var v=wvals(wks[i]).sort();
+      if(v.length&&t>=v[0]&&t<=v[v.length-1]){ci=i;break;}
+    }
+  })();
 
   render();
 
