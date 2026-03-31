@@ -680,7 +680,100 @@ function parseNativeRows(rows){
 }
 
 function csvRowsToItems(rows){
-  /* ── native 형식 감지: 헤더 또는 데이터 행 특성으로 판단 ── */
+  /* ── 계명대 형식 감지: 헤더 = 주차/일자/교시/시작시간/교과목명/교수명 ── */
+  function isKeimyungFormat(rows){
+    if(!rows||rows.length<2)return false;
+    var h=rows[0]||[];
+    var h0=String(h[0]||'').trim();
+    var h1=String(h[1]||'').trim();
+    var h2=String(h[2]||'').trim();
+    var h4=String(h[4]||'').trim();
+    return h0==='주차'&&(h1==='일자'||h1==='날짜')&&h2==='교시'&&(h4==='교과목명'||h4==='과목명');
+  }
+
+  /* ── 계명대 파서: 행 하나 = 교시 하나 ── */
+  function parseKeimyungRows(rows){
+    var PERIOD_END={1:'9:20',2:'10:20',3:'11:20',4:'12:20',
+      5:'14:20',6:'15:20',7:'16:20',8:'17:20',9:'18:20',10:'19:20'};
+    var DAYS_KR=['월','화','수','목','금'];
+    var EXAM_KW=['시험','고사','평가','TBL','PBL','퀴즈'];
+    var items=[],wddLocal={},edLocal=[];
+
+    for(var r=1;r<rows.length;r++){
+      var row=rows[r];
+      if(!row||!row[0])continue;
+      var wk=String(row[0]).trim();
+      if(!wk||isNaN(parseInt(wk)))continue;
+      wk=String(parseInt(wk));
+
+      /* 날짜: Excel serial 또는 문자열 */
+      var dateRaw=row[1];
+      var dateStr='';
+      if(typeof dateRaw==='number'){
+        var d=new Date(Math.round((dateRaw-25569)*86400*1000));
+        dateStr=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+      }else if(dateRaw instanceof Date||String(dateRaw).match(/\d{4}/)){
+        var ds=String(dateRaw).replace(/[\/\.]/g,'-').trim().slice(0,10);
+        if(ds.match(/^\d{4}-\d{1,2}-\d{1,2}$/)){
+          var pp=ds.split('-');
+          dateStr=pp[0]+'-'+('0'+pp[1]).slice(-2)+'-'+('0'+pp[2]).slice(-2);
+        }
+      }
+      if(!dateStr)continue;
+
+      /* 요일 계산 */
+      var dd=new Date(dateStr);
+      var dow=dd.getDay();/* 0=일 */
+      if(dow===0||dow===6)continue;/* 토/일 제외 */
+      var day=['일','월','화','수','목','금','토'][dow];
+
+      var period=parseInt(row[2])||0;
+      if(period<1||period>10)continue;
+
+      /* 시작 시간 */
+      var timeRaw=row[3];
+      var start='';
+      if(timeRaw instanceof Date||typeof timeRaw==='object'){
+        try{
+          var tStr=String(timeRaw);
+          var tm=tStr.match(/(\d{1,2}):(\d{2})/);
+          if(tm)start=tm[1]+':'+tm[2];
+        }catch(e){}
+      }else if(typeof timeRaw==='number'&&timeRaw<1){
+        /* Excel time fraction */
+        var totalMin=Math.round(timeRaw*24*60);
+        var h2=Math.floor(totalMin/60),m2=totalMin%60;
+        start=h2+':'+('0'+m2).slice(-2);
+      }else if(typeof timeRaw==='string'){
+        var tm2=timeRaw.match(/(\d{1,2}):(\d{2})/);
+        if(tm2)start=tm2[1]+':'+tm2[2];
+      }
+      if(!start){
+        /* 교시 → 시간 기본값 */
+        var defaultStarts={1:'8:30',2:'9:30',3:'10:30',4:'11:30',5:'13:30',6:'14:30',7:'15:30',8:'16:30'};
+        start=defaultStarts[period]||'8:30';
+      }
+      var end=PERIOD_END[period]||'';
+
+      var subj=String(row[4]||'').trim();
+      var prof=String(row[5]||'').trim();
+      if(!subj)continue;
+
+      /* wdd */
+      if(!wddLocal[wk])wddLocal[wk]={};
+      wddLocal[wk][day]=dateStr;
+
+      var examFlag=EXAM_KW.some(function(k){return subj.indexOf(k)>=0;});
+      if(examFlag&&edLocal.indexOf(dateStr)<0)edLocal.push(dateStr);
+
+      items.push({week:wk,date:dateStr,day:day,period:period,
+        start:start,end:end,subject:subj,professor:prof,is_exam:examFlag});
+    }
+    if(!items.length)return{error:'수업 데이터를 찾을 수 없습니다.'};
+    return{items:items,wddLocal:wddLocal,edLocal:edLocal};
+  }
+
+  /* ── native 형식 감지: 전북대 형식 (주차/날짜/요일/1~10교시) ── */
   function isNativeTimetable(rows){
     if(!rows||rows.length<2)return false;
     var r0=rows[0]||[], r1=rows[1]||[];
@@ -688,22 +781,24 @@ function csvRowsToItems(rows){
     var h1=String(r0[1]||'').trim();
     var h2=String(r0[2]||'').trim();
     var DAYS=['월','화','수','목','금','토','일'];
-    /* 헤더 행: 주차 / 날짜 / 요일 */
-    if(h0==='주차')return true;
-    /* 헤더가 없고 데이터 행 바로 시작: 첫 셀 숫자, 세 번째 셀 요일 */
-    if(typeof r0[0]==='number'&&r0[0]>=1&&r0[0]<=50)return true;
-    /* 두 번째 행이 데이터 행 */
-    if(typeof r1[0]==='number'&&r1[0]>=1&&r1[0]<=50)return true;
-    /* 한국어 날짜/요일 패턴 */
-    if((h1==='날짜'||h1.indexOf('날짜')>=0)&&DAYS.indexOf(h2)>=0)return true;
-    if(DAYS.indexOf(String(r0[2]||'').trim())>=0&&!isNaN(r0[0]))return true;
+    if(h0==='주차'&&(h1==='날짜'||h1.indexOf('날짜')>=0))return true;
+    if(typeof r0[0]==='number'&&r0[0]>=1&&r0[0]<=50&&DAYS.indexOf(String(r0[2]||'').trim())>=0)return true;
+    if(typeof r1[0]==='number'&&r1[0]>=1&&r1[0]<=50&&DAYS.indexOf(String(r1[2]||'').trim())>=0)return true;
     return false;
   }
 
-  if(isNativeTimetable(rows)){
-    var res=parseNativeRows(rows);
+  /* 계명대 형식 우선 감지 */
+  if(isKeimyungFormat(rows)){
+    var res=parseKeimyungRows(rows);
     if(res.error)return res;
-    return res.items;
+    return res;/* {items, wddLocal, edLocal} — XLSX 핸들러에서 처리 */
+  }
+
+  /* 전북대 native 형식 */
+  if(isNativeTimetable(rows)){
+    var res2=parseNativeRows(rows);
+    if(res2.error)return res2;
+    return res2.items;
   }
 
   /* 기존 CSV 형식 (week,date,day,...) */
@@ -713,19 +808,19 @@ function csvRowsToItems(rows){
   for(var i=0;i<need.length;i++){
     if(hdr.indexOf(need[i])<0)return{error:'필수 열 "'+need[i]+'"이 없습니다.'};
   }
-  var items=[];
+  var items2=[];
   for(var r=1;r<rows.length;r++){
-    var row=rows[r];
-    if(row.every(function(c){return!String(c||'').trim();}))continue;
+    var row2=rows[r];
+    if(row2.every(function(c){return!String(c||'').trim();}))continue;
     var obj={};
-    for(var c=0;c<hdr.length;c++){obj[hdr[c]]=String(row[c]||'').trim();}
+    for(var c=0;c<hdr.length;c++){obj[hdr[c]]=String(row2[c]||'').trim();}
     var examVal=(obj['is_exam']||'').toLowerCase();
-    items.push({week:obj['week'],date:obj['date'],day:obj['day'],
+    items2.push({week:obj['week'],date:obj['date'],day:obj['day'],
       period:parseInt(obj['period'])||1,start:obj['start'],end:obj['end'],
       subject:obj['subject'],professor:obj['professor'],
       is_exam:(examVal==='true'||examVal==='1'||examVal==='yes')});
   }
-  return items;
+  return items2;
 }
 
 /* ── 업로드된 데이터로 시간표 재구성 ── */
@@ -962,15 +1057,25 @@ function handleFile(file){
         var result=csvRowsToItems(rawRows);
         if(!result){status.className='xl-status err';status.textContent='파일이 비어있습니다.';return;}
         if(result.error){status.className='xl-status err';status.textContent=result.error;return;}
-        var items=Array.isArray(result)?result:null;
-        if(!items){status.className='xl-status err';status.textContent='파싱 오류';return;}
-        /* native wdd/ed 재구성 */
-        var nativeRes=parseNativeRows(rawRows);
-        if(nativeRes&&nativeRes.wddLocal){
-          pendingData={items:items,nativeWdd:nativeRes.wddLocal,nativeEd:nativeRes.edLocal};
-        }else{
-          pendingData=items;
+
+        var items,nWdd,nEd;
+        if(Array.isArray(result)){
+          /* 전북대 native: items 배열 반환 → wdd/ed는 별도 parseNativeRows로 */
+          items=result;
+          var nRes=parseNativeRows(rawRows);
+          nWdd=(nRes&&nRes.wddLocal)||null;
+          nEd=(nRes&&nRes.edLocal)||null;
+        } else if(result.items){
+          /* 계명대 등 행기반 파서: {items, wddLocal, edLocal} 반환 */
+          items=result.items;
+          nWdd=result.wddLocal||null;
+          nEd=result.edLocal||null;
+        } else {
+          status.className='xl-status err';status.textContent='파싱 오류';return;
         }
+
+        if(!items||!items.length){status.className='xl-status err';status.textContent='수업 데이터를 찾을 수 없습니다.';return;}
+        pendingData={items:items,nativeWdd:nWdd,nativeEd:nEd};
         status.className='xl-status ok';
         status.textContent='✓ '+items.length+'개 수업 항목 인식됨 ('+targetName+')';
         applyBtn.disabled=false;
