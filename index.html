@@ -71,7 +71,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   padding:0 2px;
   text-align:center;
   vertical-align:middle;
-  height:58px;
+  height:56px;
 }
 .pn{display:block;font-size:10px;font-weight:700;color:#8E8E93;line-height:1.2}
 .pt{display:block;font-size:8px;color:#AEAEB2;margin-top:1px}
@@ -98,46 +98,49 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   border-left:1px solid #EFEFEF;
   padding:2px;
   vertical-align:top;
-  height:58px;
+  height:56px;
+  max-height:56px;
   overflow:hidden;
   background:#fff;
 }
 .td-e{background:#fff}
 
-/* 수업 카드 - 셀 58px 고정, 내용 잘림 없이 표시 */
+/* 수업 카드 */
 .card{
-  border-radius:7px;
-  padding:3px 4px 3px 6px;
-  height:54px;
-  max-height:54px;
+  border-radius:5px;
+  padding:3px 2px 2px 5px;
+  height:52px;
+  max-height:52px;
   display:flex;
   flex-direction:column;
-  justify-content:center;
   overflow:hidden;
-  border-left:3px solid rgba(0,0,0,0.10);
-  gap:1px;
+  border-left:3px solid rgba(0,0,0,0.12);
   box-sizing:border-box;
 }
 
-/* 과목명: 긴 이름은 폰트 자동 축소 후 최대 2줄 */
+/* 과목명: 2줄, break-all로 반드시 줄바꿈 */
 .cn-s{
-  font-size:10.5px;font-weight:700;color:#1e293b;
+  font-size:9px;
+  font-weight:700;
+  color:#1e293b;
   line-height:1.25;
-  word-break:keep-all;
+  word-break:break-all;
   overflow:hidden;
   display:-webkit-box;
   -webkit-line-clamp:2;
   -webkit-box-orient:vertical;
-  flex-shrink:1;
+  flex-shrink:0;
 }
-.cn-exam{font-size:10.5px;font-weight:800;color:#be123c}
-.cn-name{font-size:9px;font-weight:600;color:rgba(30,41,59,.7);
-  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex-shrink:0}
+.cn-exam{font-size:9px;font-weight:800;color:#be123c}
+.cn-name{font-size:8px;font-weight:600;color:rgba(30,41,59,.7);
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  flex-shrink:0;line-height:1.2;margin-top:1px}
 .cn-p{
-  font-size:9px;color:rgba(30,41,59,.55);
-  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex-shrink:0;
+  font-size:8px;color:rgba(30,41,59,.55);
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  flex-shrink:0;line-height:1.2;margin-top:1px;
 }
-.cn-t{display:none} /* 교시 열에서 시간 확인 가능하므로 숨김 */
+.cn-t{display:none}
 
 /* 점심 행 */
 .lunchrow .td-t{border-top:1px dashed #C7C7CC;background:#EBEBEB;height:22px!important;padding:0}
