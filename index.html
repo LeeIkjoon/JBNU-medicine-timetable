@@ -107,11 +107,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 /* 수업 카드 */
 .card{
   border-radius:7px;
-  padding:4px 5px;
+  padding:4px 5px 4px 7px;
   height:100%;
   display:flex;
   flex-direction:column;
   overflow:hidden;
+  border-left:3px solid rgba(0,0,0,0.10);
 }
 /* rowspan 적용 시 카드 높이 자동 */
 .td-c[rowspan] .card{height:100%}
@@ -125,14 +126,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   -webkit-line-clamp:3;
   -webkit-box-orient:vertical;
 }
-.cn-exam{font-size:11px;font-weight:800;color:#7f1d1d}
-.cn-name{font-size:10px;font-weight:600;color:rgba(30,41,59,.8);margin-top:1px;
+.cn-exam{font-size:11px;font-weight:800;color:#be123c}
+.cn-name{font-size:10px;font-weight:600;color:rgba(30,41,59,.7);margin-top:1px;
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .cn-p{
-  font-size:9.5px;color:rgba(30,41,59,.65);margin-top:1px;
+  font-size:9.5px;color:rgba(30,41,59,.55);margin-top:1px;
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
 }
-.cn-t{font-size:8.5px;color:rgba(30,41,59,.5);margin-top:auto;padding-top:2px;white-space:nowrap}
+.cn-t{font-size:8.5px;color:rgba(30,41,59,.4);margin-top:auto;padding-top:2px;white-space:nowrap}
 
 /* 점심 행 */
 .lunchrow .td-t{border-top:1px dashed #C7C7CC;background:#EBEBEB;height:22px!important;padding:0}
@@ -181,6 +182,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
 .ovl.show{opacity:1;pointer-events:all}
 .cal-sh{background:#fff;border-radius:20px 20px 0 0;width:100%;
+  min-height:52vh;max-height:80vh;overflow-y:auto;
   padding-bottom:env(safe-area-inset-bottom,16px);
   transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .ovl.show .cal-sh{transform:translateY(0)}
@@ -191,15 +193,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .cal-m{font-size:14px;font-weight:600}
 .cal-nb{background:#F2F2F7;border:none;border-radius:8px;width:28px;height:28px;
   font-size:16px;cursor:pointer;color:#007AFF;display:flex;align-items:center;justify-content:center}
-.cal-g{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 12px;gap:2px}
-.cal-dow{text-align:center;font-size:10px;font-weight:600;color:#8E8E93;padding:3px 0}
-.cday{text-align:center;padding:1px;cursor:default;-webkit-tap-highlight-color:transparent}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 16px;gap:0}
+.cal-dow{text-align:center;font-size:11px;font-weight:600;color:#8E8E93;padding:6px 0 8px}
+.cday{text-align:center;padding:3px 1px;cursor:default;-webkit-tap-highlight-color:transparent}
 .cday.ck{cursor:pointer}
-.cdn{font-size:13px;line-height:1;padding:5px 0 2px;border-radius:7px}
+.cdn{font-size:16px;font-weight:400;line-height:1;padding:8px 0 4px;border-radius:8px}
+.cday.ck .cdn{font-weight:500}
 .cday.iw .cdn{background:#EEF1FF;color:#3B5BDB;font-weight:700;border-radius:0}
-.cday.td2 .cdn{background:#007AFF!important;color:#fff!important;border-radius:7px!important}
-.cdot{height:5px;display:flex;justify-content:center;align-items:center;margin-top:1px}
-.dtr{width:4px;height:4px;border-radius:50%;background:#E74C3C;display:inline-block}
+.cday.td2 .cdn{background:#007AFF!important;color:#fff!important;border-radius:8px!important;font-weight:700!important}
+.cdot{height:6px;display:flex;justify-content:center;align-items:center;margin-top:2px}
+.dtr{width:5px;height:5px;border-radius:50%;background:#E74C3C;display:inline-block}
 
 /* ── EXCEL UPLOAD OVERLAY ── */
 .xl-ovl{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:600;
@@ -326,36 +329,38 @@ var merged = [{"week": "1", "date": "2026-03-16", "day": "월", "period": 1, "st
 
 var fsubj = ["문제바탕학습1", "생애주기", "시험", "실험및논문연구2", "의료면담1", "의학생화학", "의학생화학 기말 시험", "의학생화학 중간 시험 (퀴즈)", "인체미세구조 실습", "인체미세구조와 기능", "인체반응 및 병태생리", "인체질병형태학실습", "조직학 시험", "환자의사사회1"];
 var cmap  = {
-  /* 휴일·행사: 연회색 */
-  "근로자의날":"#B0B8C8","대체휴무":"#B0B8C8","진급식":"#B0B8C8",
-  "어린이날":"#B0B8C8","지방선거":"#B0B8C8","대체휴일":"#B0B8C8",
-  /* 과목: 파스텔 팔레트 - 파란 계열 없음 */
-  "문제바탕학습1":"#A78BFA",   /* 라벤더 */
-  "문제바탕학습3":"#A78BFA",
-  "생애주기":"#FCD34D",        /* 파스텔 옐로 */
-  "시험":"#F87171",            /* 파스텔 레드 */
-  "실험및논문연구2":"#34D399", /* 파스텔 민트 */
-  "의료면담1":"#FDBA74",       /* 파스텔 피치 */
-  "의료면담3":"#FDBA74",
-  "의학생화학":"#5EEAD4",      /* 파스텔 티파니 */
-  "의학생화학 기말 시험":"#5EEAD4",
-  "의학생화학 중간 시험 (퀴즈)":"#5EEAD4",
-  "인체미세구조 실습":"#BEF264",/* 파스텔 라임 */
-  "인체미세구조와 기능":"#86EFAC",/* 파스텔 그린 */
-  "인체반응 및 병태생리":"#F9A8D4",/* 파스텔 핑크 */
-  "인체질병형태학실습":"#FDE68A", /* 파스텔 앰버 */
-  "조직학 시험":"#FDA4AF",     /* 파스텔 로즈 */
-  "환자의사사회1":"#C4B5FD",   /* 파스텔 퍼플 */
-  "환자의사사회3":"#C4B5FD",
-  /* 2학년 과목 */
-  "호흡기학":"#7DD3FC",        /* 파스텔 스카이 (하늘색 - 테마 파랑과 구분되는 연한 톤) */
-  "알레르기-면역학":"#F0ABFC", /* 파스텔 오키드 */
-  "혈액학":"#FCA5A5",          /* 파스텔 살몬 */
-  "근육골격계학":"#6EE7B7",    /* 파스텔 에메랄드 */
-  "임상의학입문":"#FCD34D",    /* 파스텔 옐로 */
-  "임상의학입문 2":"#FDE68A",
-  "모체-태아-주산기의학":"#FBCFE8",/* 파스텔 베이비핑크 */
-  "생식의학":"#DDD6FE",        /* 파스텔 바이올렛 */
+  /* 휴일·행사 - 무채색 */
+  "근로자의날":"#F1F5F9","대체휴무":"#F1F5F9","진급식":"#F1F5F9",
+  "어린이날":"#F1F5F9","지방선거":"#F1F5F9","대체휴일":"#F1F5F9",
+
+  /* ── 1학년 과목 ── 색상환 12방향 균등 배치 */
+  "의학생화학":"#CFFAFE",            /* 청록 cyan        */
+  "인체미세구조와 기능":"#DCFCE7",   /* 초록 green       */
+  "인체미세구조 실습":"#D1FAE5",     /* 에메랄드          */
+  "인체반응 및 병태생리":"#FCE7F3",  /* 핑크 pink        */
+  "인체질병형태학실습":"#FEF3C7",    /* 앰버 amber       */
+  "문제바탕학습1":"#EDE9FE",         /* 바이올렛          */
+  "실험및논문연구2":"#CCFBF1",       /* 민트 teal        */
+  "의료면담1":"#FFEDD5",             /* 오렌지            */
+  "환자의사사회1":"#F0F9FF",         /* 스카이            */
+  "생애주기":"#FDF4FF",              /* 퓨샤 fuchsia     */
+  "조직학 시험":"#FFE4E6",           /* 로즈 rose        */
+  "의학생화학 기말 시험":"#FFE4E6",
+  "의학생화학 중간 시험 (퀴즈)":"#FFE4E6",
+  "시험":"#FFE4E6",
+
+  /* ── 2학년 과목 ── 1학년과 완전히 다른 색 배치 */
+  "호흡기학":"#DBEAFE",              /* 블루 blue        */
+  "알레르기-면역학":"#F3E8FF",       /* 퍼플 purple      */
+  "혈액학":"#FEE2E2",                /* 레드 red         */
+  "근육골격계학":"#ECFDF5",          /* 틸 (실습과 명도 다름) */
+  "임상의학입문":"#FEF9C3",          /* 옐로 yellow      */
+  "임상의학입문 2":"#FEFCE8",        /* 연옐로            */
+  "모체-태아-주산기의학":"#FDF2F8",  /* 연핑크            */
+  "생식의학":"#F0FDFA",              /* 연청록 (바이올렛과 구분) */
+  "문제바탕학습3":"#FFF7ED",         /* 피치 (문바1과 구분) */
+  "의료면담3":"#FEF2FF",             /* 연퓨샤 (의료면담1과 구분) */
+  "환자의사사회3":"#E0F2FE",         /* 라이트블루        */
 };
 
 /* ══════════════════════════════════════════
@@ -374,21 +379,32 @@ var pendingData=null; // 엑셀 업로드 대기 데이터
 
 function p2(n){return ('0'+n).slice(-2);}
 function today(){var d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
-function isEx(s){return s.indexOf('시험')>=0;}
+function isEx(s){return s.indexOf('시험')>=0||s.indexOf('퀴즈')>=0;}
 function isEv(s){return EVK.indexOf(s)>=0;}
 function wvals(w){var o=wdd[w];if(!o)return[];return Object.keys(o).map(function(k){return o[k];}).filter(Boolean);}
-function gcol(s){return cmap[s]||'#8E8E93';}
+function gcol(s){return cmap[s]||'#C4B5FD';}
 function isHoliday(s){
   for(var i=0;i<HOLIDAY_KW.length;i++){if(s.indexOf(HOLIDAY_KW[i])>=0)return true;}
   return false;
 }
 function fmtDate(ds){/* "2026-03-17" → "03.17" */if(!ds)return'';var p=ds.split('-');return p.length>=3?p[1]+'.'+p[2]:ds.slice(5).replace('-','.');}
 function exLabel(s){
-  if(s.indexOf('중간 시험 (퀴즈)')>=0)return['중간 시험 (퀴즈)',s.replace('중간 시험 (퀴즈)','').trim()];
-  if(s.indexOf('중간 시험')>=0)return['중간 시험',s.replace('중간 시험','').trim()];
-  if(s.indexOf('기말 시험')>=0)return['기말 시험',s.replace('기말 시험','').trim()];
-  if(s==='조직학 시험')return['조직학 시험',''];
-  return['시험',s.replace('시험','').trim()];
+  /* 시험 종류 앞 과목명 추출 */
+  var EXAM_TYPES=['중간 시험 (퀴즈)','기말 시험 (퀴즈)','중간 시험','기말 시험','퀴즈'];
+  for(var ti=0;ti<EXAM_TYPES.length;ti++){
+    if(s.indexOf(EXAM_TYPES[ti])>=0){
+      var subj=s.replace(EXAM_TYPES[ti],'').trim();
+      return[EXAM_TYPES[ti], subj];
+    }
+  }
+  /* '조직학 시험', 'XX 시험' 형태 */
+  var si=s.lastIndexOf('시험');
+  if(si>=0){
+    var prefix=s.slice(0,si).trim();
+    if(prefix)return[prefix+' 시험',''];
+    return['시험',''];
+  }
+  return[s,''];
 }
 
 /* ══════════════════════════════════════════
@@ -427,31 +443,61 @@ var KNOWN_SUBJ_SET={
 var KNOWN_SUBJ_LIST=Object.keys(KNOWN_SUBJ_SET);
 
 function parseNativeCell(val){
-  /* "과목명-교수명" 또는 "과목명\n추가정보" 형태 파싱 */
+  /* 엑셀 셀 파싱:
+     형태1: "과목명-교수명"          → subj=과목명, prof=교수명
+     형태2: "과목명\n세부-교수명"    → subj=과목명, prof=교수명  (임상의학입문\n1-1-정연준)
+     형태3: "과목명\n시험명-교수명"  → subj=과목명 시험명, prof=교수명
+     형태4: "시험" / "문제바탕학습1" → subj=그대로, prof=''
+  */
   if(!val&&val!==0)return null;
   var s=String(val).trim();
   if(!s||s===',')return null;
+
   var lines=s.split(/[\n\r]+/).map(function(l){return l.trim();}).filter(Boolean);
   var main=lines[0];
-  var extra=lines.slice(1).join(' ');
+  var extra=lines.length>1?lines.slice(1).join(' '):'';
+
   var subj=main,prof='';
-  if(main.indexOf('-')>=0){
-    var idx=main.lastIndexOf('-');
-    subj=main.slice(0,idx).trim();
-    prof=main.slice(idx+1).trim();
+
+  /* main에서 과목명-교수명 분리 */
+  var dashIdx=main.lastIndexOf('-');
+  if(dashIdx>0){
+    var beforeDash=main.slice(0,dashIdx).trim();
+    var afterDash=main.slice(dashIdx+1).trim();
+    /* afterDash가 한국어 이름(2~4글자)이면 교수명 */
+    if(afterDash.length>=2&&afterDash.length<=5&&/^[가-힣]+$/.test(afterDash)){
+      subj=beforeDash;
+      prof=afterDash;
+    }
+    /* afterDash가 영문 약자(S, K, C 등)이면 교수명 */
+    else if(/^[A-Z,\s]+$/.test(afterDash)){
+      subj=beforeDash;
+      prof=afterDash;
+    }
+    /* 그 외(숫자 포함 등)는 과목명의 일부 */
   }
-  if(extra)subj=subj+' '+extra;
-  /* 알려진 과목명으로 정규화 */
-  for(var ki=0;ki<KNOWN_SUBJ_LIST.length;ki++){
-    var ks=KNOWN_SUBJ_LIST[ki];
-    if(subj.indexOf(ks)===0&&subj!==ks){
-      var rem=subj.slice(ks.length).trim();
-      if(!rem||rem.charAt(0)==='-'){
-        if(!prof&&rem.charAt(0)==='-')prof=rem.slice(1).trim();
-        subj=ks;break;
+
+  /* extra(두 번째 줄) 처리 */
+  if(extra){
+    var eDash=extra.lastIndexOf('-');
+    if(eDash>0){
+      var eAfter=extra.slice(eDash+1).trim();
+      /* eAfter가 한국어 이름이면 교수명, 앞부분은 서브타입으로 버림(과목명에 합치지 않음) */
+      if(eAfter.length>=2&&eAfter.length<=5&&/^[가-힣]+$/.test(eAfter)){
+        if(!prof)prof=eAfter;
+        /* extra의 과목명 부분(세부번호 등)은 무시 - 과목명에 합치지 않음 */
+      } else {
+        /* 시험명 등 의미있는 텍스트면 과목명에 추가 */
+        var eBefore=extra.slice(0,eDash).trim();
+        if(eBefore&&!/^\d/.test(eBefore))subj=subj+' '+eBefore;
+        if(!prof&&eAfter)/^[가-힣]+$/.test(eAfter)?prof=eAfter:null;
       }
+    } else {
+      /* 대시 없는 두 번째 줄: 시험명 등 */
+      if(!/^\d/.test(extra))subj=subj+' '+extra;
     }
   }
+
   return{subj:subj,prof:prof};
 }
 
@@ -586,8 +632,8 @@ function buildFromItems(items,nativeWdd,nativeEd){
     }
   }
 
-  /* 3. 색상 맵 - 파스텔 팔레트 (파랑 없음) */
-  var palette=['#A78BFA','#34D399','#FDBA74','#86EFAC','#F9A8D4','#FCD34D','#FDE68A','#5EEAD4','#BEF264','#FDA4AF','#C4B5FD','#F87171','#7DD3FC','#F0ABFC','#FCA5A5','#6EE7B7','#FBCFE8','#DDD6FE'];
+  /* 3. 색상 맵 - 구별되는 초연한 파스텔 팔레트 */
+  var palette=['#CFFAFE','#DCFCE7','#D1FAE5','#FCE7F3','#FEF3C7','#EDE9FE','#FFEDD5','#DBEAFE','#FEF9C3','#FFE4E6','#F3E8FF','#FEE2E2','#E0F2FE','#FDF4FF','#D1FAE5','#FFF7ED','#F0F9FF','#EDE9FE'];
   var pIdx=0;
   for(var i=0;i<items.length;i++){
     var s=items[i].subject;
@@ -606,7 +652,7 @@ function buildFromItems(items,nativeWdd,nativeEd){
   /* 5. merged 교체 */
   merged=items;
 
-  /* 6. fsubj 재구성 */
+  /* 6. fsubj 재구성 - 과목명 기준으로 중복 제거 (교수명 다른 동일 과목 하나로) */
   var sSet={};
   for(var i=0;i<items.length;i++)sSet[items[i].subject]=true;
   fsubj=Object.keys(sSet).sort();
@@ -846,7 +892,7 @@ function lcardH(it){
   var c=gcol(it.subject),sh='',ex='';
   if(isEx(it.subject)){
     var lb=exLabel(it.subject),et=lb[0],ba=lb[1];
-    sh='<div class="lc-s" style="color:#C0392B">‼️ '+et+'</div>'+(ba?'<div style="font-size:12px;color:#555;margin-top:2px">'+ba+'</div>':'');
+    sh='<div class="lc-s" style="color:#7f1d1d;font-weight:700">‼️ '+et+'</div>'+(ba?'<div style="font-size:12px;color:#555;margin-top:2px">'+ba+'</div>':'');
     ex='border:2px solid '+c+';';
   }else{sh='<div class="lc-s">'+it.subject+'</div>';}
   var ph=it.professor?'<div class="lc-p">'+it.professor+'</div>':'';
@@ -881,16 +927,17 @@ function renderF(){
   var h='<div class="fw">';
   var eo=fExam;
   h+='<div class="fs"><div class="fs-ttl">빠른 필터</div><div class="chips">';
-  h+='<button class="chip" id="chip-exam" style="'+(eo?'background:#E74C3C;border-color:#E74C3C;color:#fff;font-weight:600':'border-color:#E74C3C;color:#E74C3C')+'">‼️ 시험만 보기</button>';
+  h+='<button class="chip" id="chip-exam" style="'+(eo?'background:#FCA5A5;border-color:#FCA5A5;color:#7f1d1d;font-weight:700':'border-color:#FCA5A5;color:#991b1b')+'">‼️ 시험만 보기</button>';
   var aon=!fExam&&fsubj2.length===fsubj.length;
-  h+='<button class="chip" id="chip-all" style="'+(aon?'background:#007AFF;border-color:#007AFF;color:#fff;font-weight:600':'')+'" >전체 선택</button>';
+  h+='<button class="chip" id="chip-all" style="'+(aon?'background:#BFDBFE;border-color:#3B82F6;color:#1e3a5f;font-weight:700':'')+'">전체 선택</button>';
   h+='<button class="chip" id="chip-clr">전체 해제</button>';
   h+='</div></div>';
   if(nS.length){
     h+='<div class="fs"><div class="fs-ttl">일반 과목</div><div class="chips">';
     for(var i=0;i<nS.length;i++){
       var s=nS[i],c=gcol(s),on2=!fExam&&fsubj2.indexOf(s)>=0;
-      h+='<button class="chip fchip" data-s="'+s+'" style="'+(on2?'background:'+c+';border-color:'+c+';color:#fff;font-weight:600':'border-color:'+c+';color:'+c)+'">'+s+'</button>';
+      /* 파스텔 배경에서 텍스트 가독성: 선택 시 어두운 글자 */
+      h+='<button class="chip fchip" data-s="'+s+'" style="'+(on2?'background:'+c+';border-color:'+c+';color:#1e293b;font-weight:700':'border-color:'+c+';color:#374151')+'">'+s+'</button>';
     }
     h+='</div></div>';
   }
@@ -899,7 +946,7 @@ function renderF(){
     for(var j=0;j<eS.length;j++){
       var se=eS[j],ce=gcol(se),oe=(fsubj2.indexOf(se)>=0&&!fExam)||fExam;
       var lb2=exLabel(se),et2=lb2[0],ba2=lb2[1];
-      h+='<button class="chip fchip" data-s="'+se+'" style="'+(oe?'background:'+ce+';border-color:'+ce+';color:#fff;font-weight:600':'border-color:'+ce+';color:'+ce)+'">‼️ '+et2+(ba2?' '+ba2:'')+'</button>';
+      h+='<button class="chip fchip" data-s="'+se+'" style="'+(oe?'background:'+ce+';border-color:'+ce+';color:#1e293b;font-weight:700':'border-color:'+ce+';color:#374151')+'">‼️ '+et2+(ba2?' '+ba2:'')+'</button>';
     }
     h+='</div></div>';
   }
@@ -1023,37 +1070,55 @@ function render(){
 function init(){
   /* wh 데이터 후처리: 날짜 하이픈→점, 색상 교체, td-e 통일, rowspan 제거 */
   var oldColors = {
-    /* 이전 채도 높은 색 → 파스텔로 교체 */
-    '#8B5CF6':'#A78BFA','#D97706':'#FCD34D','#EF4444':'#F87171',
-    '#10B981':'#34D399','#F97316':'#FDBA74','#EA580C':'#FDBA74',
-    '#14B8A6':'#5EEAD4','#84CC16':'#BEF264','#22C55E':'#86EFAC',
-    '#EC4899':'#F9A8D4','#F59E0B':'#FDE68A','#F43F5E':'#FDA4AF',
-    '#A78BFA':'#C4B5FD',
-    /* 구버전 어두운 색들 */
-    '#6D28D9':'#A78BFA','#065F46':'#34D399','#C2410C':'#FDBA74',
-    '#15803D':'#86EFAC','#166534':'#86EFAC','#86198F':'#F9A8D4',
-    '#9D174D':'#F9A8D4','#7C2D12':'#FDE68A','#9F1239':'#FDA4AF',
-    '#92400E':'#C4B5FD','#B45309':'#C4B5FD','#7C3AED':'#A78BFA',
-    '#DC2626':'#F87171','#B91C1C':'#F87171','#0F766E':'#5EEAD4',
-    '#4D7C0F':'#BEF264','#3F6212':'#BEF264','#9CA3AF':'#B0B8C8',
-    '#6D28D9':'#A78BFA'
+    /* 이전 초연한 파스텔 → 새 구별되는 색상으로 */
+    '#EDE9FE':'#EDE9FE','#FEF9C3':'#FEF9C3','#FFE4E6':'#FFE4E6',
+    '#DCFCE7':'#DCFCE7','#FFF7ED':'#FFF7ED','#CCFBF1':'#CFFAFE',
+    '#F0FDF4':'#D1FAE5','#ECFDF5':'#DCFCE7','#FDF2F8':'#FCE7F3',
+    '#FFFBEB':'#FEF3C7','#F5F3FF':'#EDE9FE','#EFF6FF':'#DBEAFE',
+    '#FAF5FF':'#F3E8FF','#FFF1F2':'#FEE2E2','#FEFCE8':'#FEF9C3',
+    '#E5E7EB':'#F1F5F9','#D1D5DB':'#F1F5F9','#B0B8C8':'#F1F5F9',
+    /* 구버전 채도 높은 색들 */
+    '#A78BFA':'#EDE9FE','#F87171':'#FFE4E6','#34D399':'#DCFCE7',
+    '#FDBA74':'#FFF7ED','#5EEAD4':'#CFFAFE','#BEF264':'#D1FAE5',
+    '#86EFAC':'#DCFCE7','#F9A8D4':'#FCE7F3','#FDA4AF':'#FFE4E6',
+    '#7DD3FC':'#DBEAFE','#F0ABFC':'#F3E8FF','#6EE7B7':'#D1FAE5',
+    '#C4B5FD':'#EDE9FE','#FCD34D':'#FEF9C3','#FDE68A':'#FEF3C7',
+    '#FCA5A5':'#FFE4E6','#A7F3D0':'#DCFCE7','#FED7AA':'#FFF7ED',
+    '#99F6E4':'#CFFAFE','#D9F99D':'#D1FAE5','#BBF7D0':'#DCFCE7',
+    '#FBCFE8':'#FCE7F3','#FEF08A':'#FEF9C3','#DDD6FE':'#EDE9FE',
+    '#BAE6FD':'#DBEAFE','#E9D5FF':'#F3E8FF','#FECACA':'#FEE2E2',
+    '#8B5CF6':'#EDE9FE','#D97706':'#FEF3C7','#EF4444':'#FFE4E6',
+    '#10B981':'#DCFCE7','#F97316':'#FFEDD5','#14B8A6':'#CFFAFE',
+    '#84CC16':'#D1FAE5','#22C55E':'#DCFCE7','#EC4899':'#FCE7F3',
+    '#F59E0B':'#FEF3C7','#F43F5E':'#FFE4E6',
+    '#6D28D9':'#EDE9FE','#065F46':'#DCFCE7','#C2410C':'#FFEDD5',
+    '#15803D':'#DCFCE7','#166534':'#DCFCE7','#86198F':'#FCE7F3',
+    '#9D174D':'#FCE7F3','#7C2D12':'#FEF3C7','#9F1239':'#FFE4E6',
+    '#92400E':'#EDE9FE','#B45309':'#EDE9FE','#7C3AED':'#EDE9FE',
+    '#DC2626':'#FFE4E6','#B91C1C':'#FFE4E6','#0F766E':'#CFFAFE',
+    '#4D7C0F':'#D1FAE5','#3F6212':'#D1FAE5','#9CA3AF':'#F1F5F9',
+    '#95A5A6':'#F1F5F9'
   };
   for(var wk in wh){
     /* 날짜 표기 변환: 03-17 → 03.17 */
     wh[wk]=wh[wk].replace(/(\d{2})-(\d{2})/g,'$1.$2');
-    /* 색상 교체 */
-    for(var oc in oldColors){
-      wh[wk]=wh[wk].split('background:'+oc+'"').join('background:'+oldColors[oc]+'"');
-    }
     /* rowspan 속성 제거 (병합 셀 해제) */
     wh[wk]=wh[wk].replace(/ rowspan="\d+"/g,'');
     /* td-c td-e → td-c (빈 셀 클래스 통일) */
     wh[wk]=wh[wk].split('class="td-c td-e"').join('class="td-c"');
-    /* 색상 교체 */
+    /* 색상 교체 (두 번 - 따옴표/세미콜론 모두) */
     for(var oc in oldColors){
       wh[wk]=wh[wk].split('background:'+oc+'"').join('background:'+oldColors[oc]+'"');
       wh[wk]=wh[wk].split('background:'+oc+';').join('background:'+oldColors[oc]+';');
     }
+    /* 시험 아이콘 통일 */
+    wh[wk]=wh[wk].split('⚠️').join('‼️');
+    wh[wk]=wh[wk].split('‼️').join('‼️');
+    /* 카드 텍스트 색 교체: 흰색→어두운 색 (파스텔 배경 가독성) */
+    wh[wk]=wh[wk].split('color:#fff"').join('color:#1e293b"');
+    wh[wk]=wh[wk].split('color:rgba(255,255,255,.9)').join('color:rgba(30,41,59,0.8)');
+    wh[wk]=wh[wk].split('color:rgba(255,255,255,.85)').join('color:rgba(30,41,59,0.65)');
+    wh[wk]=wh[wk].split('color:rgba(255,255,255,.7)').join('color:rgba(30,41,59,0.5)');
     /* 휴일 카드 교체 */
     wh[wk]=wh[wk].replace(/<td class="td-c"([^>]*)><div class="card" style="background:#95A5A6"><div class="cn-s">([^<]+)<\/div><div class="cn-t">([^<]+)<\/div><\/div><\/td>/g,
       function(match,attrs,subj,time){
