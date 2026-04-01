@@ -56,7 +56,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .icon-btn{background:rgba(255,255,255,0.2);border:none;font-size:18px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;-webkit-tap-highlight-color:transparent}
 
 /* ── MAIN ── */
-.main{padding:8px 6px;padding-bottom:calc(64px + env(safe-area-inset-bottom,20px))}
+.main{padding:8px 6px;padding-bottom:calc(80px + env(safe-area-inset-bottom,20px))}
 .sw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
 
 /* ── TABLE ── */
@@ -113,7 +113,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   max-height:48px;
   display:flex;
   flex-direction:column;
-  justify-content:flex-start;
+  justify-content:space-between;
   overflow:hidden;
   border-left:3px solid rgba(0,0,0,0.12);
   box-sizing:border-box;
@@ -140,7 +140,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   font-size:8.5px;color:rgba(30,41,59,.55);
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
   flex-shrink:0;line-height:1.2;
-  margin-top:6px;
+  margin-top:auto;
+  padding-top:1px;
 }
 .cn-t{display:none}
 
@@ -161,7 +162,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #E5E5EA;
   display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:100;
   padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);
-  box-shadow:0 -1px 0 rgba(0,0,0,0.08)}
+  box-shadow:0 -1px 0 rgba(0,0,0,0.08);
+  /* 높이 명시 */
+  min-height:calc(50px + env(safe-area-inset-bottom,0px))}
 .bn{flex:1;border:none;background:none;padding:7px 4px 5px;display:flex;flex-direction:column;
   align-items:center;gap:2px;font-size:10px;color:#8E8E93;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bn.on{color:#007AFF}
@@ -205,7 +208,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .gs-desc{font-size:11px;color:#94a3b8}
 
 /* ── PLANNER ── */
-.pl-wrap{padding:4px 0}
+.pl-wrap{padding:4px 0;padding-bottom:calc(80px + env(safe-area-inset-bottom,20px))}
 .pl-date{font-size:13px;font-weight:700;color:#3C3C43;padding:4px 2px 10px}
 .pl-input-row{display:flex;gap:8px;margin-bottom:12px}
 .pl-input{flex:1;border:1.5px solid #E5E5EA;border-radius:12px;padding:10px 14px;
@@ -232,7 +235,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .pl-stat-l{font-size:10px;color:#8E8E93;margin-top:2px}
 
 /* ── TIMER ── */
-.tm-wrap{padding:4px 0;display:flex;flex-direction:column;gap:10px}
+.tm-wrap{padding:4px 0;display:flex;flex-direction:column;gap:10px;padding-bottom:calc(80px + env(safe-area-inset-bottom,20px))}
 .tm-clock-card{background:#fff;border-radius:16px;padding:24px 16px;text-align:center}
 .tm-subject-select{width:100%;border:1.5px solid #E5E5EA;border-radius:10px;padding:9px 12px;
   font-size:13px;font-family:inherit;background:#fff;color:#1C1C1E;outline:none;margin-bottom:16px}
@@ -395,43 +398,71 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .admin-grade-tab.on{background:#007AFF;border-color:#007AFF;color:#fff;font-weight:600}
 
 /* ── DATE TODO PANEL ── */
-.dtodo-ovl{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:400;
-  opacity:0;pointer-events:none;transition:opacity .22s}
+.dtodo-ovl{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:400;
+  opacity:0;pointer-events:none;transition:opacity .22s;
+  display:flex;align-items:center;justify-content:center;padding:0 16px}
 .dtodo-ovl.show{opacity:1;pointer-events:all}
-.dtodo-sh{position:fixed;bottom:0;left:0;right:0;background:#fff;
-  border-radius:22px 22px 0 0;
-  padding:0 0 calc(16px + env(safe-area-inset-bottom,0px));
-  max-height:72vh;display:flex;flex-direction:column;
-  transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
-  z-index:401}
-.dtodo-ovl.show .dtodo-sh{transform:translateY(0)}
-.dtodo-handle{width:36px;height:4px;background:#D1D5DB;border-radius:2px;
-  margin:10px auto 0;flex-shrink:0}
-.dtodo-head{display:flex;align-items:center;justify-content:space-between;
-  padding:10px 16px 8px;flex-shrink:0}
-.dtodo-date{font-size:16px;font-weight:700;color:#1C1C1E}
-.dtodo-close{background:none;border:none;font-size:20px;cursor:pointer;
-  color:#8E8E93;padding:4px;-webkit-tap-highlight-color:transparent}
-.dtodo-body{flex:1;overflow-y:auto;padding:0 14px 8px}
-.dtodo-inp-row{display:flex;gap:8px;margin-bottom:12px}
-.dtodo-inp{flex:1;border:1.5px solid #E5E5EA;border-radius:10px;
-  padding:9px 12px;font-size:14px;font-family:inherit;outline:none}
-.dtodo-inp:focus{border-color:#007AFF}
-.dtodo-add{background:#007AFF;color:#fff;border:none;border-radius:10px;
-  padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer;
-  white-space:nowrap;-webkit-tap-highlight-color:transparent}
-.dtodo-empty{text-align:center;color:#C7C7CC;font-size:13px;padding:20px 0}
-.dtodo-item{display:flex;align-items:center;gap:10px;padding:10px 12px;
-  background:#F9F9FB;border-radius:12px;margin-bottom:8px}
-.dtodo-chk{width:22px;height:22px;border-radius:50%;border:2px solid #C7C7CC;
-  background:#fff;flex-shrink:0;cursor:pointer;display:flex;align-items:center;
-  justify-content:center;-webkit-tap-highlight-color:transparent}
+.dtodo-sh{background:#fff;border-radius:24px;width:100%;max-width:380px;
+  max-height:80vh;display:flex;flex-direction:column;
+  transform:scale(.94) translateY(16px);transition:transform .26s cubic-bezier(.34,1.56,.64,1),opacity .22s;
+  opacity:0;overflow:hidden;
+  box-shadow:0 12px 40px rgba(0,0,0,.16)}
+.dtodo-ovl.show .dtodo-sh{transform:scale(1) translateY(0);opacity:1}
+.dtodo-head{padding:20px 20px 4px;flex-shrink:0}
+.dtodo-date-big{font-size:20px;font-weight:800;color:#1C1C1E;margin-bottom:2px}
+.dtodo-ddday{font-size:13px;color:#8E8E93;font-weight:500;margin-bottom:0}
+.dtodo-close{position:absolute;top:16px;right:16px;background:#F2F2F7;border:none;
+  width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;color:#636366;
+  -webkit-tap-highlight-color:transparent}
+.dtodo-body{flex:1;overflow-y:auto;padding:12px 16px 4px}
+/* 할일 아이템 - 참고 사진 스타일 */
+.dtodo-item{border-radius:14px;padding:14px 14px 14px 16px;
+  margin-bottom:10px;display:flex;align-items:center;gap:12px;position:relative}
+.dtodo-item-0{background:#FFE4E8}
+.dtodo-item-1{background:#FFF9E6}
+.dtodo-item-2{background:#E8F4FF}
+.dtodo-item-3{background:#E8FFE8}
+.dtodo-item-4{background:#F3E8FF}
+.dtodo-item-done{opacity:.65}
+.dtodo-item-left{width:4px;height:100%;position:absolute;left:0;top:0;border-radius:14px 0 0 14px}
+.dtodo-item-lc-0{background:#FF6B87}
+.dtodo-item-lc-1{background:#FFB800}
+.dtodo-item-lc-2{background:#3B9EFF}
+.dtodo-item-lc-3{background:#3BD97B}
+.dtodo-item-lc-4{background:#A855F7}
+.dtodo-text-wrap{flex:1}
+.dtodo-text{font-size:14px;font-weight:600;color:#1C1C1E;line-height:1.4;word-break:keep-all}
+.dtodo-text.done{text-decoration:line-through;color:#9CA3AF}
+.dtodo-chk{width:26px;height:26px;border-radius:50%;
+  border:2px solid rgba(0,0,0,0.18);background:rgba(255,255,255,0.7);
+  flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;transition:all .15s}
 .dtodo-chk.done{background:#007AFF;border-color:#007AFF}
-.dtodo-chk.done::after{content:'✓';color:#fff;font-size:13px;font-weight:700}
-.dtodo-text{flex:1;font-size:14px;color:#1C1C1E;line-height:1.4}
-.dtodo-text.done{text-decoration:line-through;color:#8E8E93}
-.dtodo-del{background:none;border:none;font-size:18px;color:#C7C7CC;
-  cursor:pointer;padding:2px;-webkit-tap-highlight-color:transparent}
+.dtodo-chk.done::after{content:'✓';color:#fff;font-size:13px;font-weight:800}
+.dtodo-del-wrap{position:absolute;top:6px;right:6px}
+.dtodo-del{background:none;border:none;font-size:13px;color:rgba(0,0,0,.25);
+  cursor:pointer;padding:2px;line-height:1;-webkit-tap-highlight-color:transparent}
+/* 하단 추가 영역 */
+.dtodo-footer{padding:8px 16px calc(16px + env(safe-area-inset-bottom,0px));flex-shrink:0}
+.dtodo-add-card{background:#F2F2F7;border-radius:14px;padding:14px 16px;
+  cursor:pointer;display:flex;align-items:center;gap:8px;
+  border:none;width:100%;-webkit-tap-highlight-color:transparent;
+  transition:background .12s}
+.dtodo-add-card:active{background:#E5E5EA}
+.dtodo-add-plus{font-size:18px;color:#8E8E93}
+.dtodo-add-text{font-size:14px;color:#8E8E93;font-weight:500}
+/* 입력 모드 */
+.dtodo-inp-card{background:#F2F2F7;border-radius:14px;padding:10px 14px;
+  display:flex;align-items:center;gap:8px}
+.dtodo-inp{flex:1;background:none;border:none;font-size:14px;font-family:inherit;
+  outline:none;color:#1C1C1E}
+.dtodo-inp::placeholder{color:#C7C7CC}
+.dtodo-inp-ok{background:#007AFF;color:#fff;border:none;border-radius:10px;
+  padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;
+  white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.dtodo-empty-msg{text-align:center;color:#C7C7CC;font-size:13px;padding:16px 0 8px}
+/* 헤더 날짜 열에 할일 점 표시 */
 /* 헤더 날짜 열에 할일 점 표시 */
 .th-d .todo-dot{display:inline-block;width:5px;height:5px;background:#007AFF;
   border-radius:50%;margin-left:3px;vertical-align:middle}
@@ -2186,8 +2217,8 @@ function renderAdminContent(){
         '<div class="admin-login-title">시간표 관리자</div>'+
         '<div class="admin-login-sub">관리자만 시간표를 수정하고 배포할 수 있습니다</div>'+
         '<input class="admin-pw-input" type="password" id="admin-pw-inp" placeholder="비밀번호" '+
-          'onkeydown="if(event.key===\'Enter\')doAdminLogin()">'+
-        '<button class="admin-pw-btn" id="admin-login-btn">로그인</button>'+
+          'onkeydown="event.stopPropagation();if(event.key===\'Enter\')doAdminLogin();">'+
+        '<button class="admin-pw-btn" id="admin-login-btn" onclick="event.stopPropagation();doAdminLogin();">로그인</button>'+
         '<div class="admin-pw-err" id="admin-pw-err"></div>'+
       '</div>';
     /* 버튼 이벤트 바인딩 (동적 HTML 렌더 후) */
@@ -2353,165 +2384,179 @@ setTimeout(function(){
     fab.addEventListener('click',openAdmin);
   }
   var ovl=document.getElementById('admin-ovl');
+  var sh=document.getElementById('admin-sh');
   if(ovl)ovl.addEventListener('click',function(e){if(e.target===ovl)closeAdmin();});
+  if(sh)sh.addEventListener('click',function(e){e.stopPropagation();});
 
   /* 공유 시간표 초기 로딩 */
   setTimeout(loadSharedOnStart, 2000);
   /* 업데이트 주기 체크 */
   setInterval(checkSharedUpdate, 15000);
 }, 500);
-
-
 /* ══════════════════════════════════════════
    날짜별 할일 패널
 ══════════════════════════════════════════ */
-var dtodoDate = null; /* 현재 열린 날짜 (YYYY-MM-DD) */
+var dtodoDate=null;
+var dtodoInputMode=false;
+var DTODO_COLORS=['dtodo-item-0','dtodo-item-1','dtodo-item-2','dtodo-item-3','dtodo-item-4'];
+var DTODO_LCOLORS=['dtodo-item-lc-0','dtodo-item-lc-1','dtodo-item-lc-2','dtodo-item-lc-3','dtodo-item-lc-4'];
 
-function dtodoKey(d){ return 'dtodo_' + d; }
-function dtodoLoad(d){ try{ return JSON.parse(localStorage.getItem(dtodoKey(d))||'[]'); }catch(e){ return []; } }
-function dtodoSave(d,arr){ try{ localStorage.setItem(dtodoKey(d), JSON.stringify(arr)); }catch(e){} }
+function dtodoKey(d){return 'dtodo_'+d;}
+function dtodoLoad(d){try{return JSON.parse(localStorage.getItem(dtodoKey(d))||'[]');}catch(e){return[];}}
+function dtodoSave(d,arr){try{localStorage.setItem(dtodoKey(d),JSON.stringify(arr));}catch(e){}}
 
-function openDtodo(dateStr, labelStr){
-  dtodoDate = dateStr;
-  var ovl = document.getElementById('dtodo-ovl');
-  var lbl = document.getElementById('dtodo-date-lbl');
-  if(!ovl) return;
-  if(lbl) lbl.textContent = labelStr || dateStr;
-  ovl.className = 'dtodo-ovl show';
-  renderDtodoList();
-  /* 입력창 포커스 */
-  setTimeout(function(){
-    var inp = document.getElementById('dtodo-inp');
-    if(inp){ inp.value=''; }
-  }, 50);
+function dtodoDdDay(ds){
+  var t=new Date();t.setHours(0,0,0,0);
+  var s=new Date(ds);s.setHours(0,0,0,0);
+  var d=Math.round((s-t)/86400000);
+  if(d===0)return 'D-Day';
+  if(d>0)return 'D-'+d;
+  return 'D+'+Math.abs(d);
 }
 
+function openDtodo(ds,label){
+  dtodoDate=ds;dtodoInputMode=false;
+  var ovl=document.getElementById('dtodo-ovl');
+  var lbl=document.getElementById('dtodo-date-lbl');
+  var dd=document.getElementById('dtodo-ddday');
+  if(!ovl)return;
+  if(lbl)lbl.textContent=label||ds;
+  if(dd)dd.textContent=dtodoDdDay(ds);
+  ovl.className='dtodo-ovl show';
+  renderDtodoList();
+}
 function closeDtodo(){
-  var ovl = document.getElementById('dtodo-ovl');
-  if(ovl) ovl.className = 'dtodo-ovl';
-  dtodoDate = null;
-  /* 헤더 점 업데이트 */
+  var ovl=document.getElementById('dtodo-ovl');
+  if(ovl)ovl.className='dtodo-ovl';
+  dtodoDate=null;dtodoInputMode=false;
   updateTodoDots();
 }
 
 function renderDtodoList(){
-  if(!dtodoDate) return;
-  var arr = dtodoLoad(dtodoDate);
-  var cont = document.getElementById('dtodo-list');
-  if(!cont) return;
-  if(arr.length === 0){
-    cont.innerHTML = '<div class="dtodo-empty">할 일이 없습니다<br>위에서 추가해보세요 ✏️</div>';
-    return;
-  }
-  var h = '';
-  arr.forEach(function(item, i){
-    h += '<div class="dtodo-item">' +
-      '<div class="dtodo-chk' + (item.done?' done':'') + '" onclick="dtodoToggle('+i+')">' +
-      (item.done ? '' : '') + '</div>' +
-      '<span class="dtodo-text' + (item.done?' done':'') + '">' + item.text.replace(/</g,'&lt;') + '</span>' +
-      '<button class="dtodo-del" onclick="dtodoDel('+i+')" title="삭제">🗑</button>' +
+  if(!dtodoDate)return;
+  var arr=dtodoLoad(dtodoDate);
+  var body=document.getElementById('dtodo-list');
+  var foot=document.getElementById('dtodo-footer');
+  if(!body)return;
+  var h='';
+  if(arr.length===0){
+    h='<div class="dtodo-empty-msg">아직 할 일이 없어요 🙂</div>';
+  }else{
+    arr.forEach(function(item,i){
+      var ci=i%5;
+      var dc=item.done?' dtodo-item-done':'';
+      h+='<div class="dtodo-item '+DTODO_COLORS[ci]+dc+'">'+
+        '<div class="dtodo-item-left '+DTODO_LCOLORS[ci]+'"></div>'+
+        '<div class="dtodo-text-wrap">'+
+          '<div class="dtodo-text'+(item.done?' done':'')+'">'+item.text.replace(/</g,'&lt;')+'</div>'+
+        '</div>'+
+        '<div class="dtodo-chk'+(item.done?' done':'')+'" onclick="dtodoToggle('+i+')"></div>'+
+        '<div class="dtodo-del-wrap"><button class="dtodo-del" onclick="dtodoDel('+i+')">✕</button></div>'+
       '</div>';
-  });
-  cont.innerHTML = h;
+    });
+  }
+  body.innerHTML=h;
+  if(foot){
+    if(dtodoInputMode){
+      foot.innerHTML=
+        '<div class="dtodo-inp-card">'+
+          '<span class="dtodo-add-plus" style="color:#C7C7CC">＋</span>'+
+          '<input class="dtodo-inp" id="dtodo-inp" placeholder="할 일을 입력하세요" type="text">'+
+          '<button class="dtodo-inp-ok" id="dtodo-inp-ok">추가</button>'+
+        '</div>';
+      setTimeout(function(){
+        var inp=document.getElementById('dtodo-inp');
+        var ok=document.getElementById('dtodo-inp-ok');
+        if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')dtodoAdd();});}
+        if(ok)ok.addEventListener('click',dtodoAdd);
+      },60);
+    }else{
+      foot.innerHTML=
+        '<button class="dtodo-add-card" id="dtodo-add-card">'+
+          '<span class="dtodo-add-plus">＋</span>'+
+          '<span class="dtodo-add-text">할 일을 추가하세요</span>'+
+        '</button>';
+      setTimeout(function(){
+        var btn=document.getElementById('dtodo-add-card');
+        if(btn)btn.addEventListener('click',function(){dtodoInputMode=true;renderDtodoList();});
+      },30);
+    }
+  }
 }
 
 function dtodoAdd(){
-  if(!dtodoDate) return;
-  var inp = document.getElementById('dtodo-inp');
-  if(!inp) return;
-  var text = inp.value.trim();
-  if(!text) return;
-  var arr = dtodoLoad(dtodoDate);
-  arr.push({ text: text, done: false });
-  dtodoSave(dtodoDate, arr);
-  inp.value = '';
+  if(!dtodoDate)return;
+  var inp=document.getElementById('dtodo-inp');
+  if(!inp)return;
+  var text=inp.value.trim();
+  if(!text)return;
+  var arr=dtodoLoad(dtodoDate);
+  arr.push({text:text,done:false});
+  dtodoSave(dtodoDate,arr);
+  dtodoInputMode=false;
   renderDtodoList();
   updateTodoDots();
 }
-
 function dtodoToggle(i){
-  if(!dtodoDate) return;
-  var arr = dtodoLoad(dtodoDate);
-  if(arr[i]) arr[i].done = !arr[i].done;
-  dtodoSave(dtodoDate, arr);
+  if(!dtodoDate)return;
+  var arr=dtodoLoad(dtodoDate);
+  if(arr[i])arr[i].done=!arr[i].done;
+  dtodoSave(dtodoDate,arr);
   renderDtodoList();
 }
-
 function dtodoDel(i){
-  if(!dtodoDate) return;
-  var arr = dtodoLoad(dtodoDate);
-  arr.splice(i, 1);
-  dtodoSave(dtodoDate, arr);
+  if(!dtodoDate)return;
+  var arr=dtodoLoad(dtodoDate);
+  arr.splice(i,1);
+  dtodoSave(dtodoDate,arr);
   renderDtodoList();
   updateTodoDots();
 }
-
-/* 헤더 날짜 열에 할일 있으면 파란 점 표시 */
 function updateTodoDots(){
-  var ths = document.querySelectorAll('.th-d[data-date]');
-  ths.forEach(function(th){
-    var dt = th.getAttribute('data-date');
-    /* 기존 점 제거 */
-    var old = th.querySelector('.todo-dot');
-    if(old) old.remove();
-    var arr = dtodoLoad(dt);
-    if(arr.length > 0){
-      var dot = document.createElement('span');
-      dot.className = 'todo-dot';
+  document.querySelectorAll('.th-d[data-date]').forEach(function(th){
+    var dt=th.getAttribute('data-date');
+    var old=th.querySelector('.todo-dot');
+    if(old)old.remove();
+    if(dtodoLoad(dt).length>0){
+      var dot=document.createElement('span');
+      dot.className='todo-dot';
       th.appendChild(dot);
     }
   });
 }
-
-/* 주간뷰 렌더 후 헤더 클릭 이벤트 + 점 업데이트 */
-var _origRenderW;
 (function(){
-  /* renderW 이후 이벤트 바인딩 */
-  var CHECK_INTERVAL = setInterval(function(){
-    if(typeof renderW === 'function'){
-      clearInterval(CHECK_INTERVAL);
-      var orig = renderW;
-      renderW = function(){
-        orig.apply(this, arguments);
-        bindThClick();
-        updateTodoDots();
-      };
+  var CHECK=setInterval(function(){
+    if(typeof renderW==='function'){
+      clearInterval(CHECK);
+      var orig=renderW;
+      renderW=function(){orig.apply(this,arguments);bindThClick();updateTodoDots();};
     }
-  }, 100);
+  },100);
 })();
-
 function bindThClick(){
   setTimeout(function(){
-    var ths = document.querySelectorAll('.th-d[data-date]');
-    ths.forEach(function(th){
-      th.style.cursor = 'pointer';
-      th.removeEventListener('click', th._dtodoHandler);
-      var dt = th.getAttribute('data-date');
-      var day = th.getAttribute('data-day');
-      th._dtodoHandler = function(e){
+    document.querySelectorAll('.th-d[data-date]').forEach(function(th){
+      th.style.cursor='pointer';
+      th.removeEventListener('click',th._dtodoH);
+      var dt=th.getAttribute('data-date');
+      var day=th.getAttribute('data-day');
+      th._dtodoH=function(e){
         e.stopPropagation();
-        /* 날짜 문자열 예쁘게 */
-        var parts = dt.split('-');
-        var lbl = parts[1] + '/' + parts[2] + ' (' + day + ')';
-        openDtodo(dt, lbl);
+        var p=dt.split('-');
+        openDtodo(dt,parseInt(p[1])+'월 '+parseInt(p[2])+'일 ('+day+')');
       };
-      th.addEventListener('click', th._dtodoHandler);
+      th.addEventListener('click',th._dtodoH);
     });
-  }, 80);
+  },80);
 }
-
-/* 이벤트 바인딩 */
 setTimeout(function(){
-  var ovl = document.getElementById('dtodo-ovl');
-  var closeBtn = document.getElementById('dtodo-close');
-  var addBtn = document.getElementById('dtodo-add-btn');
-  var inp = document.getElementById('dtodo-inp');
-
-  if(ovl) ovl.addEventListener('click', function(e){ if(e.target===ovl) closeDtodo(); });
-  if(closeBtn) closeBtn.addEventListener('click', closeDtodo);
-  if(addBtn) addBtn.addEventListener('click', dtodoAdd);
-  if(inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') dtodoAdd(); });
-}, 600);
+  var ovl2=document.getElementById('dtodo-ovl');
+  var sh2=document.getElementById('dtodo-sh');
+  var cb=document.getElementById('dtodo-close');
+  if(ovl2)ovl2.addEventListener('click',function(e){if(e.target===ovl2)closeDtodo();});
+  if(sh2)sh2.addEventListener('click',function(e){e.stopPropagation();});
+  if(cb)cb.addEventListener('click',closeDtodo);
+},700);
 
 </script>
 
@@ -2528,20 +2573,21 @@ setTimeout(function(){
 
 <!-- 날짜별 할일 패널 -->
 <div class="dtodo-ovl" id="dtodo-ovl">
-  <div class="dtodo-sh" id="dtodo-sh">
-    <div class="dtodo-handle"></div>
+  <div class="dtodo-sh" id="dtodo-sh" style="position:relative">
+    <button class="dtodo-close" id="dtodo-close">✕</button>
     <div class="dtodo-head">
-      <span class="dtodo-date" id="dtodo-date-lbl"></span>
-      <button class="dtodo-close" id="dtodo-close">✕</button>
+      <div class="dtodo-date-big" id="dtodo-date-lbl"></div>
+      <div class="dtodo-ddday" id="dtodo-ddday"></div>
     </div>
-    <div class="dtodo-body">
-      <div class="dtodo-inp-row">
-        <input class="dtodo-inp" id="dtodo-inp" placeholder="할 일 추가..." type="text">
-        <button class="dtodo-add" id="dtodo-add-btn">추가</button>
-      </div>
-      <div id="dtodo-list"></div>
+    <div class="dtodo-body" id="dtodo-list"></div>
+    <div class="dtodo-footer" id="dtodo-footer">
+      <button class="dtodo-add-card" id="dtodo-add-card">
+        <span class="dtodo-add-plus">＋</span>
+        <span class="dtodo-add-text">할 일을 추가하세요</span>
+      </button>
     </div>
   </div>
 </div>
+
 </body>
 </html>
