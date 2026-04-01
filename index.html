@@ -2227,13 +2227,6 @@ function renderAdminContent(){
         '<button class="admin-pw-btn" id="admin-login-btn" onclick="event.stopPropagation();doAdminLogin();">로그인</button>'+
         '<div class="admin-pw-err" id="admin-pw-err"></div>'+
       '</div>';
-    /* 버튼 이벤트 바인딩 (동적 HTML 렌더 후) */
-    setTimeout(function(){
-      var btn=document.getElementById('admin-login-btn');
-      var inp=document.getElementById('admin-pw-inp');
-      if(btn)btn.addEventListener('click',doAdminLogin);
-      if(inp)inp.addEventListener('keydown',function(e){if(e.key==='Enter')doAdminLogin();});
-    },50);
     return;
   }
 
@@ -2300,12 +2293,21 @@ function renderAdminContent(){
 }
 
 function doAdminLogin(){
+  event && event.stopPropagation && event.stopPropagation();
   var pw=document.getElementById('admin-pw-inp');
   var err=document.getElementById('admin-pw-err');
-  if(!pw){console.log('pw input not found');return;}
-  var val=pw.value;
-  if(val===ADMIN_PW||val===String(ADMIN_PW)){isAdmin=true;openAdmin();}
-  else{if(err)err.textContent='비밀번호가 틀렸습니다 ('+val+' vs '+ADMIN_PW+')';pw.value='';}
+  if(!pw)return;
+  var val=pw.value.trim();
+  if(val===ADMIN_PW){
+    isAdmin=true;
+    var ovl=document.getElementById('admin-ovl');
+    if(ovl)ovl.className='admin-ovl show';
+    renderAdminContent();
+  } else {
+    if(err)err.textContent='비밀번호가 틀렸습니다';
+    pw.value='';
+    pw.focus();
+  }
 }
 
 function toggleAdminEdit(i){
@@ -2603,7 +2605,7 @@ setTimeout(function(){
 <div class="update-toast" id="update-toast">📢 시간표가 업데이트되었습니다!</div>
 <!-- 관리자 패널 -->
 <div class="admin-ovl" id="admin-ovl">
-  <div class="admin-sh">
+  <div class="admin-sh" id="admin-sh">
     <div id="admin-content"></div>
   </div>
 </div>
