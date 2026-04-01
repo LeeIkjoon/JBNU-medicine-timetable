@@ -56,7 +56,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .icon-btn{background:rgba(255,255,255,0.2);border:none;font-size:18px;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;-webkit-tap-highlight-color:transparent}
 
 /* ── MAIN ── */
-.main{padding:8px 6px;padding-bottom:90px}
+.main{padding:8px 6px;padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))}
 .sw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.08)}
 
 /* ── TABLE ── */
@@ -113,7 +113,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   max-height:48px;
   display:flex;
   flex-direction:column;
-  justify-content:space-between;
+  justify-content:flex-start;
   overflow:hidden;
   border-left:3px solid rgba(0,0,0,0.12);
   box-sizing:border-box;
@@ -140,9 +140,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   font-size:8px;color:rgba(30,41,59,.55);
   overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
   flex-shrink:0;line-height:1.2;
-  padding-top:2px;
-  border-top:1px solid rgba(0,0,0,0.08);
-  margin-top:auto;
+  margin-top:3px;
 }
 .cn-t{display:none}
 
@@ -267,7 +265,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
 .ovl.show{opacity:1;pointer-events:all}
 .cal-sh{background:#fff;border-radius:20px 20px 0 0;width:100%;
-  min-height:52vh;max-height:80vh;overflow-y:auto;
+  max-height:88vh;overflow-y:auto;
   padding-bottom:env(safe-area-inset-bottom,16px);
   transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
 .ovl.show .cal-sh{transform:translateY(0)}
@@ -278,14 +276,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .cal-m{font-size:14px;font-weight:600}
 .cal-nb{background:#F2F2F7;border:none;border-radius:8px;width:28px;height:28px;
   font-size:16px;cursor:pointer;color:#007AFF;display:flex;align-items:center;justify-content:center}
-.cal-g{display:grid;grid-template-columns:repeat(7,1fr);padding:0 10px 16px;gap:0}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);padding:0 8px 12px;gap:2px 0}
 .cal-dow{text-align:center;font-size:11px;font-weight:600;color:#8E8E93;padding:6px 0 8px}
 .cday{text-align:center;padding:3px 1px;cursor:default;-webkit-tap-highlight-color:transparent}
 .cday.ck{cursor:pointer}
-.cdn{font-size:16px;font-weight:400;line-height:1;padding:8px 0 4px;border-radius:8px}
+.cdn{font-size:14px;font-weight:400;line-height:1;
+  display:flex;align-items:center;justify-content:center;
+  width:32px;height:32px;border-radius:50%;margin:0 auto;
+  box-sizing:border-box;}
 .cday.ck .cdn{font-weight:500}
-.cday.iw .cdn{background:#EEF1FF;color:#3B5BDB;font-weight:700;border-radius:0}
-.cday.td2 .cdn{background:#007AFF!important;color:#fff!important;border-radius:8px!important;font-weight:700!important}
+.cday.iw .cdn{background:#EEF1FF;color:#3B5BDB;font-weight:700;border-radius:0!important;width:100%!important;height:32px!important}
+.cday.td2 .cdn{background:#007AFF!important;color:#fff!important;border-radius:50%!important;font-weight:700!important}
 .cdot{height:6px;display:flex;justify-content:center;align-items:center;margin-top:2px}
 .dtr{width:5px;height:5px;border-radius:50%;background:#E74C3C;display:inline-block}
 
@@ -320,6 +321,77 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .fmt-badge{display:inline-flex;align-items:center;gap:4px;background:#EEF1FF;
   color:#3B5BDB;border-radius:6px;padding:2px 7px;font-size:10px;font-weight:600;
   margin-left:6px;vertical-align:middle}
+
+/* ── ADMIN SYSTEM ── */
+.admin-fab{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom,0px));right:16px;
+  width:44px;height:44px;background:linear-gradient(135deg,#4F8EF7,#6C63FF);
+  border-radius:50%;border:none;color:#fff;font-size:20px;cursor:pointer;
+  box-shadow:0 4px 12px rgba(79,142,247,0.4);z-index:150;
+  display:none;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent}
+.admin-fab.show{display:flex}
+.admin-ovl{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;
+  display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
+.admin-ovl.show{opacity:1;pointer-events:all}
+.admin-sh{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:90vh;
+  overflow-y:auto;padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px));
+  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.admin-ovl.show .admin-sh{transform:translateY(0)}
+.admin-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.admin-ttl{font-size:17px;font-weight:700}
+.admin-x{background:none;border:none;font-size:22px;cursor:pointer;color:#636366;padding:4px}
+.admin-badge{background:#FF3B30;color:#fff;border-radius:10px;font-size:10px;
+  padding:1px 6px;font-weight:700;margin-left:6px}
+.admin-section{background:#F9F9FB;border-radius:12px;padding:12px;margin-bottom:12px}
+.admin-sec-ttl{font-size:12px;font-weight:700;color:#8E8E93;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.admin-item{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;
+  border:1.5px solid #E5E5EA;cursor:pointer;transition:border-color .15s}
+.admin-item:hover{border-color:#007AFF}
+.admin-item-row{display:flex;align-items:center;justify-content:space-between}
+.admin-item-subj{font-size:13px;font-weight:700;color:#1C1C1E}
+.admin-item-time{font-size:11px;color:#8E8E93;margin-top:2px}
+.admin-item-prof{font-size:11px;color:#636366;margin-top:1px}
+.admin-edit-form{display:none;margin-top:10px;padding-top:10px;border-top:1px solid #F2F2F7}
+.admin-item.editing .admin-edit-form{display:block}
+.admin-input{width:100%;border:1.5px solid #E5E5EA;border-radius:8px;padding:8px 10px;
+  font-size:13px;font-family:inherit;box-sizing:border-box;margin-bottom:6px;outline:none}
+.admin-input:focus{border-color:#007AFF}
+.admin-row{display:flex;gap:6px;margin-bottom:6px}
+.admin-select{flex:1;border:1.5px solid #E5E5EA;border-radius:8px;padding:8px 6px;
+  font-size:12px;font-family:inherit;background:#fff;outline:none}
+.admin-btn-row{display:flex;gap:6px;margin-top:4px}
+.admin-save-btn{flex:1;background:#007AFF;color:#fff;border:none;border-radius:8px;
+  padding:9px;font-size:13px;font-weight:600;cursor:pointer}
+.admin-del-btn{background:#FFE4E6;color:#be123c;border:none;border-radius:8px;
+  padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer}
+.admin-cancel-btn{background:#F2F2F7;color:#636366;border:none;border-radius:8px;
+  padding:9px 14px;font-size:13px;cursor:pointer}
+.admin-add-btn{width:100%;background:#F0F6FF;color:#007AFF;border:2px dashed #007AFF;
+  border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
+.admin-publish-btn{width:100%;background:linear-gradient(135deg,#4F8EF7,#6C63FF);
+  color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;
+  font-weight:700;cursor:pointer;margin-top:8px;box-shadow:0 3px 10px rgba(79,142,247,0.35)}
+.admin-login-wrap{text-align:center;padding:16px 0}
+.admin-login-title{font-size:16px;font-weight:700;margin-bottom:4px}
+.admin-login-sub{font-size:12px;color:#8E8E93;margin-bottom:16px}
+.admin-pw-input{width:100%;border:1.5px solid #E5E5EA;border-radius:10px;padding:12px;
+  font-size:15px;font-family:inherit;box-sizing:border-box;text-align:center;
+  letter-spacing:4px;outline:none;margin-bottom:10px}
+.admin-pw-input:focus{border-color:#007AFF}
+.admin-pw-btn{width:100%;background:#007AFF;color:#fff;border:none;border-radius:10px;
+  padding:13px;font-size:15px;font-weight:600;cursor:pointer}
+.admin-pw-err{color:#E74C3C;font-size:12px;margin-top:6px;min-height:16px}
+.update-toast{position:fixed;top:calc(80px + env(safe-area-inset-top,0px));left:50%;
+  transform:translateX(-50%) translateY(-20px);
+  background:linear-gradient(135deg,#4F8EF7,#6C63FF);color:#fff;
+  padding:10px 18px;border-radius:14px;font-size:13px;font-weight:600;
+  z-index:9999;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap;
+  box-shadow:0 4px 16px rgba(79,142,247,0.4)}
+.update-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.admin-grade-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.admin-grade-tab{padding:6px 12px;border-radius:18px;border:1.5px solid #E5E5EA;
+  font-size:12px;background:#fff;cursor:pointer;color:#636366}
+.admin-grade-tab.on{background:#007AFF;border-color:#007AFF;color:#fff;font-weight:600}
 </style>
 </head>
 <body>
@@ -393,6 +465,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   <button class="bn"    id="bn-p"><span class="bn-ic">✅</span>플래너</button>
   <button class="bn"    id="bn-t"><span class="bn-ic">⏱</span>타이머</button>
 </div>
+
+
+
+
 
 <!-- 날짜 선택 캘린더 -->
 <div class="ovl" id="ovl">
@@ -1520,6 +1596,7 @@ function setView(v){
 
 function render(){
   updHdr();
+  if(typeof updateAdminFab==='function')updateAdminFab();
   if(vw==='weekly')renderW();
   else if(vw==='list')renderL();
   else if(vw==='filter')renderF();
@@ -1982,6 +2059,273 @@ function init(){
 }
 
 init();
+
+
+/* ══════════════════════════════════════════
+   관리자 시스템 (공유 시간표)
+══════════════════════════════════════════ */
+var ADMIN_PW='1234';
+var SHARED_KEY='shared_timetable_v2';
+var NOTIF_KEY='shared_notif_v2';
+var isAdmin=false;
+
+function updateAdminFab(){
+  var fab=document.getElementById('admin-fab');
+  if(!fab)return;
+  fab.style.display=(wks&&wks.length>0)?'flex':'none';
+}
+
+function saveSharedTimetable(){
+  if(!window.storage)return;
+  var data={items:items,wdd:wdd,ed:ed,wks:wks,grade:savedGrade,ts:Date.now()};
+  var gk=savedGrade||'all';
+  window.storage.set(SHARED_KEY+'_'+gk,JSON.stringify(data),true).then(function(){
+    window.storage.set(NOTIF_KEY+'_'+gk,JSON.stringify({ts:Date.now(),grade:savedGrade}),true);
+  }).catch(function(e){console.log('storage err',e);});
+}
+
+function checkSharedUpdate(){
+  if(!window.storage||isAdmin||!savedGrade)return;
+  var gk=savedGrade||'all';
+  window.storage.get(NOTIF_KEY+'_'+gk,true).then(function(r){
+    if(!r)return;
+    try{
+      var notif=JSON.parse(r.value);
+      var last=parseInt(localStorage.getItem('last_chk_'+gk)||'0');
+      if(notif.ts>last+5000){
+        localStorage.setItem('last_chk_'+gk,notif.ts);
+        window.storage.get(SHARED_KEY+'_'+gk,true).then(function(r2){
+          if(!r2)return;
+          var d=JSON.parse(r2.value);
+          if(!d.items||!d.items.length)return;
+          buildFromItems(d.items,d.wdd,d.ed);
+          render();
+          var toast=document.getElementById('update-toast');
+          if(toast){toast.className='update-toast show';setTimeout(function(){toast.className='update-toast';},4000);}
+        }).catch(function(){});
+      }
+    }catch(e){}
+  }).catch(function(){});
+}
+
+function loadSharedOnStart(){
+  if(!window.storage||!savedGrade)return;
+  var gk=savedGrade||'all';
+  window.storage.get(SHARED_KEY+'_'+gk,true).then(function(r){
+    if(!r)return;
+    try{
+      var d=JSON.parse(r.value);
+      if(!d.items||!d.items.length)return;
+      /* 로컬보다 공유가 최신이면 */
+      var localSave=JSON.parse(localStorage.getItem('timetable_data')||'{}');
+      var localTs=localSave.ts||0;
+      if(d.ts>localTs){
+        buildFromItems(d.items,d.wdd,d.ed);
+        render();
+      }
+    }catch(e){}
+  }).catch(function(){});
+}
+
+function openAdmin(){
+  var ovl=document.getElementById('admin-ovl');
+  if(ovl)ovl.className='admin-ovl show';
+  renderAdminContent();
+}
+function closeAdmin(){
+  var ovl=document.getElementById('admin-ovl');
+  if(ovl)ovl.className='admin-ovl';
+}
+
+function renderAdminContent(){
+  var cont=document.getElementById('admin-content');
+  if(!cont)return;
+  if(!isAdmin){
+    cont.innerHTML=
+      '<div class="admin-hdr"><span class="admin-ttl">🔐 관리자 로그인</span>'+
+      '<button class="admin-x" onclick="closeAdmin()">✕</button></div>'+
+      '<div class="admin-login-wrap">'+
+        '<div class="admin-login-title">시간표 관리자</div>'+
+        '<div class="admin-login-sub">관리자만 시간표를 수정하고 배포할 수 있습니다</div>'+
+        '<input class="admin-pw-input" type="password" id="admin-pw-inp" placeholder="비밀번호" '+
+          'onkeydown="if(event.key===\'Enter\')doAdminLogin()">'+
+        '<button class="admin-pw-btn" onclick="doAdminLogin()">로그인</button>'+
+        '<div class="admin-pw-err" id="admin-pw-err"></div>'+
+      '</div>';
+    return;
+  }
+
+  var PERIOD_TIMES_L={1:'8:30',2:'9:30',3:'10:30',4:'11:30',5:'13:30',6:'14:30',7:'15:30',8:'16:30',9:'17:30',10:'18:30'};
+  var DAYS_L=['월','화','수','목','금'];
+  var wk=wks[ci];
+  var weekItems=[];
+  items.forEach(function(it,i){if(it.week===wk)weekItems.push({it:it,i:i});});
+  weekItems.sort(function(a,b){
+    var dd=DAYS_L.indexOf(a.it.day)-DAYS_L.indexOf(b.it.day);
+    return dd!==0?dd:(a.it.period||0)-(b.it.period||0);
+  });
+
+  var listH='';
+  weekItems.forEach(function(obj){
+    var it=obj.it,i=obj.i;
+    var timeStr=it.day+' '+it.period+'교시 ('+it.start+')';
+    var subjEsc=it.subject.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    var profEsc=(it.professor||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    listH+=
+      '<div class="admin-item" id="ai-'+i+'">'+
+        '<div class="admin-item-row">'+
+          '<div>'+
+            '<div class="admin-item-subj">'+it.subject+'</div>'+
+            '<div class="admin-item-time">'+timeStr+'</div>'+
+            (it.professor?'<div class="admin-item-prof">👤 '+it.professor+'</div>':'')+
+          '</div>'+
+          '<button onclick="toggleAdminEdit('+i+')" style="background:#F2F2F7;border:none;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;flex-shrink:0">수정</button>'+
+        '</div>'+
+        '<div class="admin-edit-form" id="aef-'+i+'">'+
+          '<input class="admin-input" id="aei-subj-'+i+'" value="'+subjEsc+'" placeholder="과목명">'+
+          '<input class="admin-input" id="aei-prof-'+i+'" value="'+profEsc+'" placeholder="교수명">'+
+          '<div class="admin-row">'+
+            '<select class="admin-select" id="aei-day-'+i+'">'+
+              DAYS_L.map(function(d){return '<option value="'+d+'"'+(d===it.day?' selected':'')+'>'+d+'요일</option>';}).join('')+
+            '</select>'+
+            '<select class="admin-select" id="aei-per-'+i+'">'+
+              [1,2,3,4,5,6,7,8,9,10].map(function(p){return '<option value="'+p+'"'+(p===it.period?' selected':'')+'>'+p+'교시</option>';}).join('')+
+            '</select>'+
+          '</div>'+
+          '<div class="admin-btn-row">'+
+            '<button class="admin-save-btn" onclick="saveAdminEdit('+i+')">저장</button>'+
+            '<button class="admin-del-btn" onclick="deleteAdminItem('+i+')">삭제</button>'+
+            '<button class="admin-cancel-btn" onclick="cancelAdminEdit('+i+')">취소</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+  });
+
+  cont.innerHTML=
+    '<div class="admin-hdr">'+
+      '<span class="admin-ttl">✏️ 시간표 편집 — '+wk+'주차</span>'+
+      '<button class="admin-x" onclick="closeAdmin()">✕</button>'+
+    '</div>'+
+    '<div class="admin-section">'+
+      '<div class="admin-sec-ttl">수업 목록 ('+weekItems.length+'개)</div>'+
+      listH+
+      '<button class="admin-add-btn" onclick="addAdminItem()">+ 수업 추가</button>'+
+    '</div>'+
+    '<button class="admin-publish-btn" onclick="publishTimetable()">📢 전체 배포 — 모든 사용자에게 적용</button>'+
+    '<div style="text-align:center;margin-top:10px">'+
+      '<button onclick="isAdmin=false;closeAdmin();" style="background:none;border:none;color:#8E8E93;font-size:12px;cursor:pointer">로그아웃</button>'+
+    '</div>';
+}
+
+function doAdminLogin(){
+  var pw=document.getElementById('admin-pw-inp');
+  var err=document.getElementById('admin-pw-err');
+  if(!pw)return;
+  if(pw.value===ADMIN_PW){isAdmin=true;renderAdminContent();}
+  else{if(err)err.textContent='비밀번호가 틀렸습니다';pw.value='';}
+}
+
+function toggleAdminEdit(i){
+  var form=document.getElementById('aef-'+i);
+  var item=document.getElementById('ai-'+i);
+  if(!form||!item)return;
+  var isOpen=item.classList.contains('editing');
+  document.querySelectorAll('.admin-item.editing').forEach(function(el){el.classList.remove('editing');});
+  if(!isOpen)item.classList.add('editing');
+}
+function cancelAdminEdit(i){var el=document.getElementById('ai-'+i);if(el)el.classList.remove('editing');}
+
+function saveAdminEdit(i){
+  var PT={1:['8:30','9:20'],2:['9:30','10:20'],3:['10:30','11:20'],4:['11:30','12:20'],
+    5:['13:30','14:20'],6:['14:30','15:20'],7:['15:30','16:20'],8:['16:30','17:20'],
+    9:['17:30','18:20'],10:['18:30','19:20']};
+  var s=document.getElementById('aei-subj-'+i);
+  var p=document.getElementById('aei-prof-'+i);
+  var d=document.getElementById('aei-day-'+i);
+  var pr=document.getElementById('aei-per-'+i);
+  if(!s)return;
+  items[i].subject=s.value.trim();
+  items[i].professor=p?p.value.trim():'';
+  var newDay=d?d.value:items[i].day;
+  var newPer=pr?parseInt(pr.value):items[i].period;
+  var wk=items[i].week;
+  if(newDay!==items[i].day&&wdd[wk]&&wdd[wk][newDay])items[i].date=wdd[wk][newDay];
+  items[i].day=newDay;
+  items[i].period=newPer;
+  var t=PT[newPer]||['8:30','9:20'];
+  items[i].start=t[0];items[i].end=t[1];
+  items[i].is_exam=isEx(items[i].subject);
+  rebuildWeekCache(wk);render();renderAdminContent();
+}
+
+function deleteAdminItem(i){
+  if(!confirm('이 수업을 삭제할까요?'))return;
+  var wk=items[i].week;
+  items.splice(i,1);
+  rebuildWeekCache(wk);render();renderAdminContent();
+}
+
+function addAdminItem(){
+  var wk=wks[ci];
+  var dd2=wdd[wk]||{};
+  var date=dd2['월']||Object.values(dd2)[0]||'';
+  items.push({week:wk,date:date,day:'월',period:1,start:'8:30',end:'9:20',subject:'새 수업',professor:'',is_exam:false});
+  var newI=items.length-1;
+  rebuildWeekCache(wk);render();renderAdminContent();
+  setTimeout(function(){toggleAdminEdit(newI);},100);
+}
+
+function rebuildWeekCache(wk){
+  var wi=items.filter(function(it){return it.week===wk;});
+  wh[wk]=buildWeekTable(wk,wi);
+  wl[wk]=buildLegend(wi);
+}
+
+function publishTimetable(){
+  if(!confirm('현재 시간표를 모든 사용자에게 배포하시겠습니까?\n\n배포하면 같은 학년의 모든 사용자에게 즉시 반영됩니다.'))return;
+  /* localStorage 업데이트 */
+  try{
+    var save={items:items,wdd:wdd,ed:ed,grade:savedGrade,ts:Date.now()};
+    localStorage.setItem('timetable_data',JSON.stringify(save));
+  }catch(e){}
+  saveSharedTimetable();
+  closeAdmin();
+  var toast=document.getElementById('update-toast');
+  if(toast){
+    toast.textContent='✅ 배포 완료! 모든 사용자에게 적용됩니다';
+    toast.className='update-toast show';
+    setTimeout(function(){toast.textContent='📢 시간표가 업데이트되었습니다!';toast.className='update-toast';},3500);
+  }
+}
+
+/* init 이후 실행 */
+setTimeout(function(){
+  /* FAB 이벤트 */
+  var fab=document.getElementById('admin-fab');
+  if(fab){
+    fab.style.display='none';
+    fab.addEventListener('click',openAdmin);
+  }
+  var ovl=document.getElementById('admin-ovl');
+  if(ovl)ovl.addEventListener('click',function(e){if(e.target===ovl)closeAdmin();});
+
+  /* 공유 시간표 초기 로딩 */
+  setTimeout(loadSharedOnStart, 2000);
+  /* 업데이트 주기 체크 */
+  setInterval(checkSharedUpdate, 15000);
+}, 500);
+
 </script>
+
+<!-- 관리자 FAB -->
+<button class="admin-fab" id="admin-fab" title="관리자 모드">✏️</button>
+<!-- 업데이트 토스트 -->
+<div class="update-toast" id="update-toast">📢 시간표가 업데이트되었습니다!</div>
+<!-- 관리자 패널 -->
+<div class="admin-ovl" id="admin-ovl">
+  <div class="admin-sh">
+    <div id="admin-content"></div>
+  </div>
+</div>
 </body>
 </html>
