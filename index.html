@@ -108,7 +108,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 /* 수업 카드 */
 .card{
   border-radius:5px;
-  padding:3px 2px 2px 5px;
+  padding:5px 3px 4px 5px;
   height:48px;
   max-height:48px;
   display:flex;
@@ -210,7 +210,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 /* ── PLANNER ── */
 .pl-wrap{
   padding:4px 0;
-  min-height:100%;
+  padding-bottom:calc(80px + env(safe-area-inset-bottom,20px));
+  min-height:calc(100dvh - 130px);
   box-sizing:border-box;
 }
 .pl-date{font-size:13px;font-weight:700;color:#3C3C43;padding:4px 2px 10px}
@@ -239,7 +240,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 .pl-stat-l{font-size:10px;color:#8E8E93;margin-top:2px}
 
 /* ── TIMER ── */
-.tm-wrap{padding:4px 0;display:flex;flex-direction:column;gap:10px;padding-bottom:calc(80px + env(safe-area-inset-bottom,20px))}
+.tm-wrap{
+  padding:4px 0;
+  display:flex;flex-direction:column;gap:10px;
+  padding-bottom:calc(80px + env(safe-area-inset-bottom,20px));
+  min-height:calc(100dvh - 130px);
+  box-sizing:border-box;
+}
 .tm-clock-card{background:#fff;border-radius:16px;padding:24px 16px;text-align:center}
 .tm-subject-select{width:100%;border:1.5px solid #E5E5EA;border-radius:10px;padding:9px 12px;
   font-size:13px;font-family:inherit;background:#fff;color:#1C1C1E;outline:none;margin-bottom:16px}
@@ -332,42 +339,54 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 
 /* ── ADMIN SYSTEM ── */
 .admin-fab{position:fixed;bottom:calc(70px + env(safe-area-inset-bottom,0px));right:16px;
-  width:44px;height:44px;background:linear-gradient(135deg,#4F8EF7,#6C63FF);
-  border-radius:50%;border:none;color:#fff;font-size:20px;cursor:pointer;
+  width:48px;height:48px;background:linear-gradient(135deg,#4F8EF7,#6C63FF);
+  border-radius:50%;border:none;color:#fff;font-size:22px;cursor:pointer;
   box-shadow:0 4px 12px rgba(79,142,247,0.4);z-index:150;
   display:none;align-items:center;justify-content:center;
   -webkit-tap-highlight-color:transparent}
-.admin-fab.show{display:flex}
-.admin-ovl{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:700;
-  display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
-.admin-ovl.show{opacity:1;pointer-events:all}
-.admin-sh{background:#fff;border-radius:20px 20px 0 0;width:100%;max-height:90vh;
-  overflow-y:auto;padding:20px 20px calc(24px + env(safe-area-inset-bottom,0px));
-  transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
-.admin-ovl.show .admin-sh{transform:translateY(0)}
-.admin-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
-.admin-ttl{font-size:17px;font-weight:700}
-.admin-x{background:none;border:none;font-size:22px;cursor:pointer;color:#636366;padding:4px}
-.admin-badge{background:#FF3B30;color:#fff;border-radius:10px;font-size:10px;
-  padding:1px 6px;font-weight:700;margin-left:6px}
-.admin-section{background:#F9F9FB;border-radius:12px;padding:12px;margin-bottom:12px}
-.admin-sec-ttl{font-size:12px;font-weight:700;color:#8E8E93;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
-.admin-item{background:#fff;border-radius:10px;padding:12px;margin-bottom:8px;
-  border:1.5px solid #E5E5EA;cursor:pointer;transition:border-color .15s}
-.admin-item:hover{border-color:#007AFF}
-.admin-item-row{display:flex;align-items:center;justify-content:space-between}
+.admin-panel{position:fixed;inset:0;background:#F2F2F7;z-index:800;
+  display:none;flex-direction:column;}
+.admin-panel.show{display:flex}
+.admin-panel-hdr{background:linear-gradient(135deg,#4F8EF7,#6C63FF);
+  padding:calc(16px + env(safe-area-inset-top,0px)) 16px 14px;
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.admin-panel-title{font-size:17px;font-weight:700;color:#fff}
+.admin-panel-close{background:rgba(255,255,255,0.25);border:none;border-radius:50%;
+  width:32px;height:32px;color:#fff;font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  -webkit-tap-highlight-color:transparent}
+.admin-panel-body{flex:1;overflow-y:auto;padding:16px;
+  padding-bottom:calc(20px + env(safe-area-inset-bottom,0px))}
+.admin-login-box{background:#fff;border-radius:16px;padding:28px 20px;
+  margin-top:8px;text-align:center}
+.admin-login-title{font-size:18px;font-weight:700;color:#1C1C1E;margin-bottom:6px}
+.admin-login-sub{font-size:13px;color:#8E8E93;margin-bottom:20px}
+.admin-pw-field{width:100%;border:1.5px solid #E5E5EA;border-radius:12px;
+  padding:14px;font-size:16px;font-family:inherit;box-sizing:border-box;
+  text-align:center;letter-spacing:6px;outline:none;margin-bottom:12px}
+.admin-pw-field:focus{border-color:#007AFF}
+.admin-login-btn{width:100%;background:#007AFF;color:#fff;border:none;
+  border-radius:12px;padding:14px;font-size:16px;font-weight:700;cursor:pointer;
+  -webkit-tap-highlight-color:transparent}
+.admin-err{color:#FF3B30;font-size:13px;margin-top:10px;min-height:18px}
+.admin-section{background:#fff;border-radius:16px;padding:16px;margin-bottom:12px}
+.admin-sec-ttl{font-size:12px;font-weight:700;color:#8E8E93;margin-bottom:10px;letter-spacing:.5px}
+.admin-item{border:1.5px solid #E5E5EA;border-radius:12px;padding:12px;margin-bottom:8px}
+.admin-item-row{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
 .admin-item-subj{font-size:13px;font-weight:700;color:#1C1C1E}
 .admin-item-time{font-size:11px;color:#8E8E93;margin-top:2px}
 .admin-item-prof{font-size:11px;color:#636366;margin-top:1px}
-.admin-edit-form{display:none;margin-top:10px;padding-top:10px;border-top:1px solid #F2F2F7}
+.admin-edit-btn{background:#F2F2F7;border:none;border-radius:8px;padding:6px 12px;
+  font-size:12px;cursor:pointer;flex-shrink:0}
+.admin-edit-form{display:none;margin-top:12px;padding-top:12px;border-top:1px solid #F2F2F7}
 .admin-item.editing .admin-edit-form{display:block}
-.admin-input{width:100%;border:1.5px solid #E5E5EA;border-radius:8px;padding:8px 10px;
-  font-size:13px;font-family:inherit;box-sizing:border-box;margin-bottom:6px;outline:none}
+.admin-input{width:100%;border:1.5px solid #E5E5EA;border-radius:8px;padding:9px 10px;
+  font-size:13px;font-family:inherit;box-sizing:border-box;margin-bottom:8px;outline:none}
 .admin-input:focus{border-color:#007AFF}
-.admin-row{display:flex;gap:6px;margin-bottom:6px}
+.admin-row{display:flex;gap:6px;margin-bottom:8px}
 .admin-select{flex:1;border:1.5px solid #E5E5EA;border-radius:8px;padding:8px 6px;
   font-size:12px;font-family:inherit;background:#fff;outline:none}
-.admin-btn-row{display:flex;gap:6px;margin-top:4px}
+.admin-btn-row{display:flex;gap:6px}
 .admin-save-btn{flex:1;background:#007AFF;color:#fff;border:none;border-radius:8px;
   padding:9px;font-size:13px;font-weight:600;cursor:pointer}
 .admin-del-btn{background:#FFE4E6;color:#be123c;border:none;border-radius:8px;
@@ -378,29 +397,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:4px}
 .admin-publish-btn{width:100%;background:linear-gradient(135deg,#4F8EF7,#6C63FF);
   color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;
-  font-weight:700;cursor:pointer;margin-top:8px;box-shadow:0 3px 10px rgba(79,142,247,0.35)}
-.admin-login-wrap{text-align:center;padding:16px 0}
-.admin-login-title{font-size:16px;font-weight:700;margin-bottom:4px}
-.admin-login-sub{font-size:12px;color:#8E8E93;margin-bottom:16px}
-.admin-pw-input{width:100%;border:1.5px solid #E5E5EA;border-radius:10px;padding:12px;
-  font-size:15px;font-family:inherit;box-sizing:border-box;text-align:center;
-  letter-spacing:4px;outline:none;margin-bottom:10px}
-.admin-pw-input:focus{border-color:#007AFF}
-.admin-pw-btn{width:100%;background:#007AFF;color:#fff;border:none;border-radius:10px;
-  padding:13px;font-size:15px;font-weight:600;cursor:pointer}
-.admin-pw-err{color:#E74C3C;font-size:12px;margin-top:6px;min-height:16px}
+  font-weight:700;cursor:pointer;margin-top:8px}
 .update-toast{position:fixed;top:calc(80px + env(safe-area-inset-top,0px));left:50%;
   transform:translateX(-50%) translateY(-20px);
   background:linear-gradient(135deg,#4F8EF7,#6C63FF);color:#fff;
   padding:10px 18px;border-radius:14px;font-size:13px;font-weight:600;
-  z-index:9999;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap;
-  box-shadow:0 4px 16px rgba(79,142,247,0.4)}
+  z-index:9999;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap}
 .update-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.admin-grade-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
-.admin-grade-tab{padding:6px 12px;border-radius:18px;border:1.5px solid #E5E5EA;
-  font-size:12px;background:#fff;cursor:pointer;color:#636366}
-.admin-grade-tab.on{background:#007AFF;border-color:#007AFF;color:#fff;font-weight:600}
-
+.admin-logout-btn{width:100%;background:none;border:none;color:#8E8E93;font-size:13px;cursor:pointer;margin-top:12px;padding:8px}
 /* ── DATE TODO PANEL ── */
 .dtodo-ovl{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:400;
   opacity:0;pointer-events:none;transition:opacity .22s;
@@ -421,15 +425,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   -webkit-tap-highlight-color:transparent}
 .dtodo-body{flex:1;overflow-y:auto;padding:12px 16px 4px}
 /* 할일 아이템 - 참고 사진 스타일 */
-.dtodo-item{border-radius:14px;padding:14px 14px 14px 20px;
-  margin-bottom:10px;display:flex;align-items:center;gap:10px;position:relative;min-height:56px}
+.dtodo-item{border-radius:14px;padding:12px 12px 12px 20px;
+  margin-bottom:10px;display:flex;align-items:center;gap:10px;position:relative;min-height:52px;overflow:hidden}
 .dtodo-item-0{background:#FFE4E8}
 .dtodo-item-1{background:#FFF9E6}
 .dtodo-item-2{background:#E8F4FF}
 .dtodo-item-3{background:#E8FFE8}
 .dtodo-item-4{background:#F3E8FF}
 .dtodo-item-done{opacity:.65}
-.dtodo-item-left{width:5px;position:absolute;left:0;top:0;bottom:0;border-radius:14px 0 0 14px}
+.dtodo-item-left{width:5px;position:absolute;left:0;top:0;bottom:0;border-radius:14px 0 0 14px;overflow:hidden}
 .dtodo-item-lc-0{background:#FF6B87}
 .dtodo-item-lc-1{background:#FFB800}
 .dtodo-item-lc-2{background:#3B9EFF}
@@ -646,6 +650,7 @@ var EVK  = ['진급식','근로자의날','대체휴무','어린이날','지방�
 var HOLIDAY_KW = ['근로자의날','대체휴무','어린이날','지방선거','개교기념일','공휴일','현충일','광복절','추석','설날','삼일절'];
 
 var ci=0, vw='weekly', cy, cm2;
+var savedGrade=''; /* 전역 - init()에서 설정됨 */
 var fExam=false, fsubj2=fsubj.slice();
 var pendingData=null; // 엑셀 업로드 대기 데이터
 
@@ -2071,7 +2076,7 @@ function init(){
   };
 
   /* ── 학년 선택 & localStorage 복원 ── */
-  var savedGrade=localStorage.getItem('user_grade')||'';
+  savedGrade=localStorage.getItem('user_grade')||''; /* 전역변수에 저장 */
   var savedTimetable=null;
   try{var _st=localStorage.getItem('timetable_data');if(_st)savedTimetable=JSON.parse(_st);}catch(e){}
 
@@ -2144,24 +2149,279 @@ var SHARED_KEY='shared_timetable_v2';
 var NOTIF_KEY='shared_notif_v2';
 var isAdmin=false;
 
+var PERIOD_INFO={
+  1:{label:'1교시',time:'08:30~09:20'},2:{label:'2교시',time:'09:30~10:20'},
+  3:{label:'3교시',time:'10:30~11:20'},4:{label:'4교시',time:'11:30~12:20'},
+  5:{label:'5교시',time:'13:30~14:20'},6:{label:'6교시',time:'14:30~15:20'},
+  7:{label:'7교시',time:'15:30~16:20'},8:{label:'8교시',time:'16:30~17:20'},
+  9:{label:'9교시',time:'17:30~18:20'},10:{label:'10교시',time:'18:30~19:20'}
+};
+var PERIOD_START={1:'8:30',2:'9:30',3:'10:30',4:'11:30',5:'13:30',6:'14:30',7:'15:30',8:'16:30',9:'17:30',10:'18:30'};
+var PERIOD_END  ={1:'9:20',2:'10:20',3:'11:20',4:'12:20',5:'14:20',6:'15:20',7:'16:20',8:'17:20',9:'18:20',10:'19:20'};
+
 function updateAdminFab(){
   var fab=document.getElementById('admin-fab');
-  if(!fab)return;
-  fab.style.display=(wks&&wks.length>0)?'flex':'none';
+  if(fab) fab.style.display=(wks&&wks.length>0)?'flex':'none';
+}
+function openAdminPanel(){
+  var panel=document.getElementById('admin-panel');
+  if(panel) panel.className='admin-panel show';
+  renderAdminBody();
+}
+function closeAdminPanel(){
+  var panel=document.getElementById('admin-panel');
+  if(panel) panel.className='admin-panel';
+}
+function escAdm(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function adminChangeWk(w){
+  ci=wks.indexOf(w);if(ci<0)ci=0;
+  render();renderAdminBody();
 }
 
-function saveSharedTimetable(){
-  if(!window.storage)return;
-  var data={items:items,wdd:wdd,ed:ed,wks:wks,grade:savedGrade,ts:Date.now()};
-  var gk=savedGrade||'all';
-  window.storage.set(SHARED_KEY+'_'+gk,JSON.stringify(data),true).then(function(){
-    window.storage.set(NOTIF_KEY+'_'+gk,JSON.stringify({ts:Date.now(),grade:savedGrade}),true);
-  }).catch(function(e){console.log('storage err',e);});
+/* ── 관리자 패널 렌더 ── */
+function renderAdminBody(){
+  var body=document.getElementById('admin-panel-body');
+  var titleEl=document.getElementById('admin-panel-title');
+  if(!body) return;
+
+  if(!isAdmin){
+    if(titleEl) titleEl.textContent='관리자 로그인';
+    body.innerHTML=
+      '<div class="admin-login-box">'+
+        '<div class="admin-login-title">시간표 관리자</div>'+
+        '<div class="admin-login-sub">관리자만 시간표를 수정·배포할 수 있습니다</div>'+
+        '<input class="admin-pw-field" id="adm-pw" type="password" placeholder="비밀번호">'+
+        '<button class="admin-login-btn" id="adm-login-btn">로그인</button>'+
+        '<div class="admin-err" id="adm-err"></div>'+
+      '</div>';
+    document.getElementById('adm-login-btn').onclick=doLogin;
+    document.getElementById('adm-pw').onkeydown=function(e){if(e.key==='Enter')doLogin();};
+    return;
+  }
+
+  if(titleEl) titleEl.textContent='✅ 관리자 편집 모드';
+
+  if(!merged||!merged.length){
+    body.innerHTML=
+      '<div style="text-align:center;padding:40px 20px">'+
+        '<div style="font-size:40px;margin-bottom:16px">⚠️</div>'+
+        '<div style="font-size:16px;font-weight:700;color:#1C1C1E;margin-bottom:8px">시간표 데이터가 없습니다</div>'+
+        '<div style="font-size:13px;color:#8E8E93;margin-bottom:20px">📂 엑셀 업로드가 필요합니다</div>'+
+        '<button onclick="closeAdminPanel();" style="background:#007AFF;color:#fff;border:none;border-radius:12px;padding:12px 24px;font-size:15px;font-weight:600;cursor:pointer">닫기</button>'+
+      '</div>';
+    return;
+  }
+
+  var DAYS=['월','화','수','목','금'];
+  var curWk=wks[ci]||wks[0]||'1';
+
+  /* 주차 탭 */
+  var tabsH='<div style="display:flex;gap:5px;flex-wrap:nowrap;overflow-x:auto;margin-bottom:14px;padding-bottom:4px;-webkit-overflow-scrolling:touch">';
+  wks.forEach(function(w){
+    var on=(w===curWk)?
+      'background:#007AFF;color:#fff;border-color:#007AFF;font-weight:700':
+      'background:#fff;color:#636366;border-color:#E5E5EA';
+    tabsH+='<button onclick="adminChangeWk(\''+w+'\')" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid;font-size:12px;cursor:pointer;'+on+'">'+w+'주차</button>';
+  });
+  tabsH+='</div>';
+
+  /* 현재 주차의 요일별 날짜 */
+  var curWdd=wdd[curWk]||{};
+
+  /* 주차 수업 목록 */
+  var weekData=merged.filter(function(it){return it.week===curWk;});
+  weekData.sort(function(a,b){
+    var dd2=DAYS.indexOf(a.day)-DAYS.indexOf(b.day);
+    return dd2!==0?dd2:(a.period||0)-(b.period||0);
+  });
+
+  var listH='';
+  weekData.forEach(function(it){
+    var ri=-1;
+    for(var j=0;j<merged.length;j++){if(merged[j]===it){ri=j;break;}}
+    var sEsc=(it.subject||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    var pEsc=(it.professor||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    var pInfo=PERIOD_INFO[it.period]||{label:it.period+'교시',time:''};
+    var examBadge=it.is_exam?'<span style="background:#FEE2E2;color:#BE123C;font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;margin-left:4px">시험</span>':'';
+
+    /* 날짜 선택 버튼 HTML */
+    var dayBtns='<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px">';
+    DAYS.forEach(function(d){
+      var dateLabel=curWdd[d]?curWdd[d].slice(5).replace('-','/'):'';
+      var on=(d===it.day)?
+        'background:#007AFF;color:#fff;border-color:#007AFF;':
+        'background:#F9FAFB;color:#374151;border-color:#E5E7EB;';
+      dayBtns+='<button onclick="admSetDay('+ri+',\''+d+'\')" '+
+        'style="flex:1;min-width:0;padding:8px 2px;border-radius:10px;border:1.5px solid;font-size:11px;font-weight:600;cursor:pointer;text-align:center;'+on+
+        'line-height:1.3">'+d+'<br><span style="font-size:10px;font-weight:400;opacity:.8">'+dateLabel+'</span></button>';
+    });
+    dayBtns+='</div>';
+
+    /* 교시 선택 버튼 HTML */
+    var perBtns='<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:10px">';
+    for(var p=1;p<=10;p++){
+      var pI=PERIOD_INFO[p];
+      var on2=(p===it.period)?
+        'background:#007AFF;color:#fff;border-color:#007AFF;':
+        'background:#F9FAFB;color:#374151;border-color:#E5E7EB;';
+      perBtns+='<button onclick="admSetPer('+ri+','+p+')" '+
+        'style="padding:6px 2px;border-radius:8px;border:1.5px solid;font-size:10px;font-weight:600;cursor:pointer;text-align:center;'+on2+
+        'line-height:1.3">'+p+'교시<br><span style="font-size:9px;font-weight:400;opacity:.8">'+pI.time+'</span></button>';
+    }
+    perBtns+='</div>';
+
+    listH+=
+      '<div class="admin-item" id="ai-'+ri+'" style="margin-bottom:10px">'+
+        '<div class="admin-item-row" onclick="toggleAEdit('+ri+')" style="cursor:pointer">'+
+          '<div style="flex:1;min-width:0">'+
+            '<div class="admin-item-subj">'+escAdm(it.subject||'')+''+examBadge+'</div>'+
+            '<div class="admin-item-time" style="margin-top:3px">'+
+              '<span style="background:#EFF6FF;color:#1D4ED8;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;margin-right:4px">'+it.day+'</span>'+
+              '<span style="font-size:11px;color:#6B7280">'+pInfo.label+' · '+pInfo.time+'</span>'+
+            '</div>'+
+            (it.professor?'<div style="font-size:11px;color:#9CA3AF;margin-top:2px">👤 '+escAdm(it.professor)+'</div>':'')+
+          '</div>'+
+          '<span style="font-size:18px;color:#9CA3AF;padding:4px" id="ai-arr-'+ri+'">›</span>'+
+        '</div>'+
+        '<div class="admin-edit-form" id="aef-'+ri+'">'+
+          '<div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:6px;letter-spacing:.3px">과목명</div>'+
+          '<input class="admin-input" id="aes-'+ri+'" value="'+sEsc+'" placeholder="과목명" style="margin-bottom:10px">'+
+          '<div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:6px;letter-spacing:.3px">교수명</div>'+
+          '<input class="admin-input" id="aep-'+ri+'" value="'+pEsc+'" placeholder="교수명 (없으면 빈칸)" style="margin-bottom:10px">'+
+          '<div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:6px;letter-spacing:.3px">요일 선택</div>'+
+          dayBtns+
+          '<div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:6px;letter-spacing:.3px">교시 선택</div>'+
+          perBtns+
+          '<div class="admin-btn-row">'+
+            '<button class="admin-save-btn" onclick="saveAEdit('+ri+')">💾 저장</button>'+
+            '<button class="admin-del-btn" onclick="delAItem('+ri+')">🗑 삭제</button>'+
+            '<button class="admin-cancel-btn" onclick="cancelAEdit('+ri+')">취소</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+  });
+
+  body.innerHTML=
+    tabsH+
+    '<div style="background:#fff;border-radius:16px;padding:14px;margin-bottom:12px">'+
+      '<div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:10px;letter-spacing:.5px">'+curWk+'주차 수업 ('+weekData.length+'개) — 항목 탭하여 편집</div>'+
+      (listH||'<div style="text-align:center;padding:20px;color:#C7C7CC;font-size:13px">이 주차에 수업이 없습니다</div>')+
+      '<button class="admin-add-btn" onclick="addAItem()" style="margin-top:8px">＋ 수업 추가</button>'+
+    '</div>'+
+    '<button class="admin-publish-btn" onclick="publishTT()">📢 전체 배포</button>'+
+    '<button style="width:100%;background:none;border:none;color:#8E8E93;font-size:13px;cursor:pointer;margin-top:12px;padding:8px" onclick="doLogout()">로그아웃</button>';
 }
 
+/* 요일/교시 버튼 클릭 즉시 업데이트 */
+function admSetDay(i,day){
+  if(i<0||i>=merged.length)return;
+  merged[i].day=day;
+  if(wdd[merged[i].week]&&wdd[merged[i].week][day])
+    merged[i].date=wdd[merged[i].week][day];
+  renderAdminBody();
+  setTimeout(function(){toggleAEdit(i);},30);
+}
+function admSetPer(i,p){
+  if(i<0||i>=merged.length)return;
+  merged[i].period=p;
+  merged[i].start=PERIOD_START[p]||'';
+  merged[i].end=PERIOD_END[p]||'';
+  renderAdminBody();
+  setTimeout(function(){toggleAEdit(i);},30);
+}
+
+function doLogin(){
+  var pw=document.getElementById('adm-pw');
+  var err=document.getElementById('adm-err');
+  if(!pw)return;
+  if(pw.value===ADMIN_PW){isAdmin=true;renderAdminBody();}
+  else{if(err)err.textContent='비밀번호가 틀렸습니다';if(pw){pw.value='';pw.focus();}}
+}
+function doLogout(){isAdmin=false;closeAdminPanel();}
+
+function toggleAEdit(i){
+  var item=document.getElementById('ai-'+i);
+  if(!item)return;
+  var isOpen=item.classList.contains('editing');
+  document.querySelectorAll('.admin-item.editing').forEach(function(el){
+    el.classList.remove('editing');
+    var arr=document.getElementById('ai-arr-'+el.id.slice(3));
+    if(arr)arr.textContent='›';
+  });
+  if(!isOpen){
+    item.classList.add('editing');
+    var arr2=document.getElementById('ai-arr-'+i);
+    if(arr2)arr2.textContent='⌄';
+    /* 스크롤 into view */
+    setTimeout(function(){item.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
+  }
+}
+function cancelAEdit(i){
+  var el=document.getElementById('ai-'+i);
+  if(el)el.classList.remove('editing');
+  var arr=document.getElementById('ai-arr-'+i);
+  if(arr)arr.textContent='›';
+}
+function saveAEdit(i){
+  if(i<0||i>=merged.length)return;
+  var s=document.getElementById('aes-'+i);
+  var p2=document.getElementById('aep-'+i);
+  if(!s)return;
+  merged[i].subject=s.value.trim()||merged[i].subject;
+  merged[i].professor=p2?p2.value.trim():'';
+  merged[i].is_exam=isEx(merged[i].subject);
+  buildFromItems(merged,wdd,ed);
+  render();
+  renderAdminBody();
+}
+function delAItem(i){
+  if(i<0||i>=merged.length)return;
+  if(!confirm('삭제할까요?'))return;
+  merged.splice(i,1);
+  buildFromItems(merged,wdd,ed);
+  render();
+  renderAdminBody();
+}
+function addAItem(){
+  var curWk2=wks[ci]||wks[0]||'1';
+  var dd2=wdd[curWk2]||{};
+  var keys=Object.keys(dd2);
+  var date=dd2['월']||dd2['화']||dd2['수']||(keys.length?dd2[keys[0]]:'');
+  merged.push({week:curWk2,date:date,day:'월',period:1,
+    start:'8:30',end:'9:20',subject:'새 수업',professor:'',is_exam:false});
+  buildFromItems(merged,wdd,ed);
+  render();
+  var newI=merged.length-1;
+  renderAdminBody();
+  setTimeout(function(){toggleAEdit(newI);},100);
+}
+function publishTT(){
+  if(!confirm('현재 시간표를 모든 사용자에게 배포할까요?'))return;
+  try{
+    localStorage.setItem('timetable_data',JSON.stringify({
+      items:merged,wdd:wdd,ed:ed,grade:savedGrade,ts:Date.now()
+    }));
+  }catch(e){}
+  if(window.storage&&savedGrade){
+    var gk=savedGrade;
+    var payload={items:merged,wdd:wdd,ed:ed,wks:wks,grade:savedGrade,ts:Date.now()};
+    window.storage.set(SHARED_KEY+'_'+gk,JSON.stringify(payload),true)
+      .then(function(){
+        window.storage.set(NOTIF_KEY+'_'+gk,JSON.stringify({ts:Date.now()}),true);
+      }).catch(function(){});
+  }
+  closeAdminPanel();
+  var toast=document.getElementById('update-toast');
+  if(toast){
+    toast.textContent='✅ 배포 완료!';toast.className='update-toast show';
+    setTimeout(function(){toast.textContent='📢 시간표가 업데이트되었습니다!';toast.className='update-toast';},3000);
+  }
+}
+/* ── 공유 업데이트 체크 ── */
 function checkSharedUpdate(){
-  if(!window.storage||isAdmin||!savedGrade)return;
-  var gk=savedGrade||'all';
+  if(!window.storage||isAdmin)return;
+  if(typeof savedGrade==='undefined'||!savedGrade)return;
+  var gk=savedGrade;
   window.storage.get(NOTIF_KEY+'_'+gk,true).then(function(r){
     if(!r)return;
     try{
@@ -2173,234 +2433,27 @@ function checkSharedUpdate(){
           if(!r2)return;
           var d=JSON.parse(r2.value);
           if(!d.items||!d.items.length)return;
-          buildFromItems(d.items,d.wdd,d.ed);
+          for(var j=0;j<d.items.length;j++)merged[j]=d.items[j];
+          merged.length=d.items.length;
+          buildFromItems(merged,d.wdd||wdd,d.ed||ed);
           render();
-          var toast=document.getElementById('update-toast');
-          if(toast){toast.className='update-toast show';setTimeout(function(){toast.className='update-toast';},4000);}
+          var t=document.getElementById('update-toast');
+          if(t){t.className='update-toast show';setTimeout(function(){t.className='update-toast';},4000);}
         }).catch(function(){});
       }
     }catch(e){}
   }).catch(function(){});
 }
-
-function loadSharedOnStart(){
-  if(!window.storage||!savedGrade)return;
-  var gk=savedGrade||'all';
-  window.storage.get(SHARED_KEY+'_'+gk,true).then(function(r){
-    if(!r)return;
-    try{
-      var d=JSON.parse(r.value);
-      if(!d.items||!d.items.length)return;
-      /* 로컬보다 공유가 최신이면 */
-      var localSave=JSON.parse(localStorage.getItem('timetable_data')||'{}');
-      var localTs=localSave.ts||0;
-      if(d.ts>localTs){
-        buildFromItems(d.items,d.wdd,d.ed);
-        render();
-      }
-    }catch(e){}
-  }).catch(function(){});
-}
-
-function openAdmin(){
-  var ovl=document.getElementById('admin-ovl');
-  if(ovl)ovl.className='admin-ovl show';
-  renderAdminContent();
-}
-function closeAdmin(){
-  var ovl=document.getElementById('admin-ovl');
-  if(ovl)ovl.className='admin-ovl';
-}
-
-function renderAdminContent(){
-  var cont=document.getElementById('admin-content');
-  if(!cont)return;
-  if(!isAdmin){
-    cont.innerHTML=
-      '<div class="admin-hdr"><span class="admin-ttl">🔐 관리자 로그인</span>'+
-      '<button class="admin-x" onclick="closeAdmin()">✕</button></div>'+
-      '<div class="admin-login-wrap">'+
-        '<div class="admin-login-title">시간표 관리자</div>'+
-        '<div class="admin-login-sub">관리자만 시간표를 수정하고 배포할 수 있습니다</div>'+
-        '<input class="admin-pw-input" type="password" id="admin-pw-inp" placeholder="비밀번호" '+
-          'onkeydown="event.stopPropagation();if(event.key===\'Enter\')doAdminLogin();">'+
-        '<button class="admin-pw-btn" id="admin-login-btn" onclick="event.stopPropagation();doAdminLogin();">로그인</button>'+
-        '<div class="admin-pw-err" id="admin-pw-err"></div>'+
-      '</div>';
-    return;
-  }
-
-  var PERIOD_TIMES_L={1:'8:30',2:'9:30',3:'10:30',4:'11:30',5:'13:30',6:'14:30',7:'15:30',8:'16:30',9:'17:30',10:'18:30'};
-  var DAYS_L=['월','화','수','목','금'];
-  var wk=wks[ci];
-  var weekItems=[];
-  items.forEach(function(it,i){if(it.week===wk)weekItems.push({it:it,i:i});});
-  weekItems.sort(function(a,b){
-    var dd=DAYS_L.indexOf(a.it.day)-DAYS_L.indexOf(b.it.day);
-    return dd!==0?dd:(a.it.period||0)-(b.it.period||0);
-  });
-
-  var listH='';
-  weekItems.forEach(function(obj){
-    var it=obj.it,i=obj.i;
-    var timeStr=it.day+' '+it.period+'교시 ('+it.start+')';
-    var subjEsc=it.subject.replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    var profEsc=(it.professor||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-    listH+=
-      '<div class="admin-item" id="ai-'+i+'">'+
-        '<div class="admin-item-row">'+
-          '<div>'+
-            '<div class="admin-item-subj">'+it.subject+'</div>'+
-            '<div class="admin-item-time">'+timeStr+'</div>'+
-            (it.professor?'<div class="admin-item-prof">👤 '+it.professor+'</div>':'')+
-          '</div>'+
-          '<button onclick="toggleAdminEdit('+i+')" style="background:#F2F2F7;border:none;border-radius:8px;padding:5px 10px;font-size:11px;cursor:pointer;flex-shrink:0">수정</button>'+
-        '</div>'+
-        '<div class="admin-edit-form" id="aef-'+i+'">'+
-          '<input class="admin-input" id="aei-subj-'+i+'" value="'+subjEsc+'" placeholder="과목명">'+
-          '<input class="admin-input" id="aei-prof-'+i+'" value="'+profEsc+'" placeholder="교수명">'+
-          '<div class="admin-row">'+
-            '<select class="admin-select" id="aei-day-'+i+'">'+
-              DAYS_L.map(function(d){return '<option value="'+d+'"'+(d===it.day?' selected':'')+'>'+d+'요일</option>';}).join('')+
-            '</select>'+
-            '<select class="admin-select" id="aei-per-'+i+'">'+
-              [1,2,3,4,5,6,7,8,9,10].map(function(p){return '<option value="'+p+'"'+(p===it.period?' selected':'')+'>'+p+'교시</option>';}).join('')+
-            '</select>'+
-          '</div>'+
-          '<div class="admin-btn-row">'+
-            '<button class="admin-save-btn" onclick="saveAdminEdit('+i+')">저장</button>'+
-            '<button class="admin-del-btn" onclick="deleteAdminItem('+i+')">삭제</button>'+
-            '<button class="admin-cancel-btn" onclick="cancelAdminEdit('+i+')">취소</button>'+
-          '</div>'+
-        '</div>'+
-      '</div>';
-  });
-
-  cont.innerHTML=
-    '<div class="admin-hdr">'+
-      '<span class="admin-ttl">✏️ 시간표 편집 — '+wk+'주차</span>'+
-      '<button class="admin-x" onclick="closeAdmin()">✕</button>'+
-    '</div>'+
-    '<div class="admin-section">'+
-      '<div class="admin-sec-ttl">수업 목록 ('+weekItems.length+'개)</div>'+
-      listH+
-      '<button class="admin-add-btn" onclick="addAdminItem()">+ 수업 추가</button>'+
-    '</div>'+
-    '<button class="admin-publish-btn" onclick="publishTimetable()">📢 전체 배포 — 모든 사용자에게 적용</button>'+
-    '<div style="text-align:center;margin-top:10px">'+
-      '<button onclick="isAdmin=false;closeAdmin();" style="background:none;border:none;color:#8E8E93;font-size:12px;cursor:pointer">로그아웃</button>'+
-    '</div>';
-}
-
-function doAdminLogin(){
-  event && event.stopPropagation && event.stopPropagation();
-  var pw=document.getElementById('admin-pw-inp');
-  var err=document.getElementById('admin-pw-err');
-  if(!pw)return;
-  var val=pw.value.trim();
-  if(val===ADMIN_PW){
-    isAdmin=true;
-    var ovl=document.getElementById('admin-ovl');
-    if(ovl)ovl.className='admin-ovl show';
-    renderAdminContent();
-  } else {
-    if(err)err.textContent='비밀번호가 틀렸습니다';
-    pw.value='';
-    pw.focus();
-  }
-}
-
-function toggleAdminEdit(i){
-  var form=document.getElementById('aef-'+i);
-  var item=document.getElementById('ai-'+i);
-  if(!form||!item)return;
-  var isOpen=item.classList.contains('editing');
-  document.querySelectorAll('.admin-item.editing').forEach(function(el){el.classList.remove('editing');});
-  if(!isOpen)item.classList.add('editing');
-}
-function cancelAdminEdit(i){var el=document.getElementById('ai-'+i);if(el)el.classList.remove('editing');}
-
-function saveAdminEdit(i){
-  var PT={1:['8:30','9:20'],2:['9:30','10:20'],3:['10:30','11:20'],4:['11:30','12:20'],
-    5:['13:30','14:20'],6:['14:30','15:20'],7:['15:30','16:20'],8:['16:30','17:20'],
-    9:['17:30','18:20'],10:['18:30','19:20']};
-  var s=document.getElementById('aei-subj-'+i);
-  var p=document.getElementById('aei-prof-'+i);
-  var d=document.getElementById('aei-day-'+i);
-  var pr=document.getElementById('aei-per-'+i);
-  if(!s)return;
-  items[i].subject=s.value.trim();
-  items[i].professor=p?p.value.trim():'';
-  var newDay=d?d.value:items[i].day;
-  var newPer=pr?parseInt(pr.value):items[i].period;
-  var wk=items[i].week;
-  if(newDay!==items[i].day&&wdd[wk]&&wdd[wk][newDay])items[i].date=wdd[wk][newDay];
-  items[i].day=newDay;
-  items[i].period=newPer;
-  var t=PT[newPer]||['8:30','9:20'];
-  items[i].start=t[0];items[i].end=t[1];
-  items[i].is_exam=isEx(items[i].subject);
-  rebuildWeekCache(wk);render();renderAdminContent();
-}
-
-function deleteAdminItem(i){
-  if(!confirm('이 수업을 삭제할까요?'))return;
-  var wk=items[i].week;
-  items.splice(i,1);
-  rebuildWeekCache(wk);render();renderAdminContent();
-}
-
-function addAdminItem(){
-  var wk=wks[ci];
-  var dd2=wdd[wk]||{};
-  var date=dd2['월']||Object.values(dd2)[0]||'';
-  items.push({week:wk,date:date,day:'월',period:1,start:'8:30',end:'9:20',subject:'새 수업',professor:'',is_exam:false});
-  var newI=items.length-1;
-  rebuildWeekCache(wk);render();renderAdminContent();
-  setTimeout(function(){toggleAdminEdit(newI);},100);
-}
-
-function rebuildWeekCache(wk){
-  var wi=items.filter(function(it){return it.week===wk;});
-  wh[wk]=buildWeekTable(wk,wi);
-  wl[wk]=buildLegend(wi);
-}
-
-function publishTimetable(){
-  if(!confirm('현재 시간표를 모든 사용자에게 배포하시겠습니까?\n\n배포하면 같은 학년의 모든 사용자에게 즉시 반영됩니다.'))return;
-  /* localStorage 업데이트 */
-  try{
-    var save={items:items,wdd:wdd,ed:ed,grade:savedGrade,ts:Date.now()};
-    localStorage.setItem('timetable_data',JSON.stringify(save));
-  }catch(e){}
-  saveSharedTimetable();
-  closeAdmin();
-  var toast=document.getElementById('update-toast');
-  if(toast){
-    toast.textContent='✅ 배포 완료! 모든 사용자에게 적용됩니다';
-    toast.className='update-toast show';
-    setTimeout(function(){toast.textContent='📢 시간표가 업데이트되었습니다!';toast.className='update-toast';},3500);
-  }
-}
-
-/* init 이후 실행 */
+/* ── 초기화 ── */
 setTimeout(function(){
-  /* FAB 이벤트 */
   var fab=document.getElementById('admin-fab');
-  if(fab){
-    fab.style.display='none';
-    fab.addEventListener('click',openAdmin);
-  }
-  var ovl=document.getElementById('admin-ovl');
-  var sh=document.getElementById('admin-sh');
-  if(ovl)ovl.addEventListener('click',function(e){if(e.target===ovl)closeAdmin();});
-  if(sh)sh.addEventListener('click',function(e){e.stopPropagation();});
+  if(fab){fab.style.display='none';fab.onclick=function(){openAdminPanel();};}
+  var cb=document.getElementById('admin-panel-close');
+  if(cb)cb.onclick=function(){closeAdminPanel();};
+  setInterval(checkSharedUpdate,15000);
+},500);
 
-  /* 공유 시간표 초기 로딩 */
-  setTimeout(loadSharedOnStart, 2000);
-  /* 업데이트 주기 체크 */
-  setInterval(checkSharedUpdate, 15000);
-}, 500);
+
 /* ══════════════════════════════════════════
    날짜별 할일 패널
 ══════════════════════════════════════════ */
@@ -2549,18 +2602,7 @@ function dtodoDel(i){
   updateTodoDots();
   if(vw==='planner')renderPlanner();
 }
-function updateTodoDots(){
-  document.querySelectorAll('.th-d[data-date]').forEach(function(th){
-    var dt=th.getAttribute('data-date');
-    var old=th.querySelector('.todo-dot');
-    if(old)old.remove();
-    if(dtodoLoad(dt).length>0){
-      var dot=document.createElement('span');
-      dot.className='todo-dot';
-      th.appendChild(dot);
-    }
-  });
-}
+function updateTodoDots(){/* 점 표시 비활성화 */}
 (function(){
   var CHECK=setInterval(function(){
     if(typeof renderW==='function'){
@@ -2603,11 +2645,13 @@ setTimeout(function(){
 <button class="admin-fab" id="admin-fab" title="관리자 모드">✏️</button>
 <!-- 업데이트 토스트 -->
 <div class="update-toast" id="update-toast">📢 시간표가 업데이트되었습니다!</div>
-<!-- 관리자 패널 -->
-<div class="admin-ovl" id="admin-ovl">
-  <div class="admin-sh" id="admin-sh">
-    <div id="admin-content"></div>
+<!-- 관리자 전체화면 패널 -->
+<div class="admin-panel" id="admin-panel">
+  <div class="admin-panel-hdr">
+    <span class="admin-panel-title" id="admin-panel-title">관리자</span>
+    <button class="admin-panel-close" id="admin-panel-close">✕</button>
   </div>
+  <div class="admin-panel-body" id="admin-panel-body"></div>
 </div>
 
 <!-- 날짜별 할일 패널 -->
