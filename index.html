@@ -549,17 +549,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyBZ6wJKM4sku2ag0Ac2idDgKnl85_Ctuc4",
-  authDomain: "jbnu-med-timetable.firebaseapp.com",
-  databaseURL: "https://jbnu-med-timetable-default-rtdb.firebaseio.com",
-  projectId: "jbnu-med-timetable",
-  storageBucket: "jbnu-med-timetable.firebasestorage.app",
-  messagingSenderId: "679126215673",
-  appId: "1:679126215673:web:2ab9ba2f5170b43d61eb28"
-};
-firebase.initializeApp(firebaseConfig);
-var fbDb = firebase.database();
+var fbDb = null;
+try {
+  var _fbCfg = {
+    apiKey: "AIzaSyBZ6wJKM4sku2ag0Ac2idDgKnl85_Ctuc4",
+    authDomain: "jbnu-med-timetable.firebaseapp.com",
+    databaseURL: "https://jbnu-med-timetable-default-rtdb.firebaseio.com",
+    projectId: "jbnu-med-timetable",
+    storageBucket: "jbnu-med-timetable.firebasestorage.app",
+    messagingSenderId: "679126215673",
+    appId: "1:679126215673:web:2ab9ba2f5170b43d61eb28"
+  };
+  firebase.initializeApp(_fbCfg);
+  fbDb = firebase.database();
+} catch(e) {
+  console.warn('Firebase 초기화 실패:', e.message);
+}
 </script>
 </head>
 <body>
@@ -622,7 +627,6 @@ var fbDb = firebase.database();
 
 <div class="bnav">
   <button class="bn on" id="bn-w"><span class="bn-ic">📅</span>주간</button>
-  <button class="bn"    id="bn-l"><span class="bn-ic">📋</span>목록</button>
   <button class="bn"    id="bn-f"><span class="bn-ic">🔍</span>필터</button>
   <button class="bn"    id="bn-t"><span class="bn-ic">⏱</span>타이머</button>
 </div>
@@ -1824,7 +1828,6 @@ function goTodayWeek(){
 function setView(v){
   vw=v;
   document.getElementById('bn-w').className='bn'+(v==='weekly'?' on':'');
-  document.getElementById('bn-l').className='bn'+(v==='list'?' on':'');
   document.getElementById('bn-f').className='bn'+(v==='filter'?' on':'');
 
   document.getElementById('bn-t').className='bn'+(v==='timer'?' on':'');
@@ -2190,7 +2193,6 @@ function init(){
   document.getElementById('pb').onclick=function(){if(ci>0){ci--;render();}};
   document.getElementById('nb').onclick=function(){if(ci<wks.length-1){ci++;render();}};
   document.getElementById('bn-w').onclick=function(){goTodayWeek();setView('weekly');};
-  document.getElementById('bn-l').onclick=function(){setView('list');};
   document.getElementById('bn-f').onclick=function(){setView('filter');};
 
   document.getElementById('bn-t').onclick=function(){setView('timer');};
@@ -2809,15 +2811,11 @@ function buildAdminTable(w, items, srcArr){
         for(var j=0;j<srcArr.length;j++){if(srcArr[j]===it2){ri=j;break;}}
         var bg=gcol(it2.subject||'');
         h+='<td class="td-c adm-cell" data-day="'+d+'" data-ri="'+ri+'" style="cursor:pointer;position:relative;">';
-        var isExamCell=it2.is_exam===true;
+        var isExamCell=(it2.is_exam===true||it2.is_exam==='true');
         var cellBg=gcol(it2.subject||'');
-        var examStyle=isExamCell?'outline:2px solid #EF4444;outline-offset:-2px;':'';
+        var examStyle=isExamCell?'box-shadow:inset 0 0 0 2.5px #EF4444;':'';
         h+='<div class="card adm-card" style="background:'+cellBg+';cursor:pointer;'+examStyle+'">';
-        if(isExamCell){
-          h+='<div class="cn-s">‼️ '+escAdm(it2.subject||'')+'</div>';
-        }else{
-          h+='<div class="cn-s">'+escAdm(it2.subject||'')+'</div>';
-        }
+        h+='<div class="cn-s">'+(isExamCell?'‼️ ':'')+escAdm(it2.subject||'')+'</div>';
         if(it2.professor) h+='<div class="cn-p">'+escAdm(it2.professor)+'</div>';
         h+='<div style="position:absolute;top:2px;right:2px;font-size:10px;color:rgba(0,0,0,.25)">✎</div>';
         h+='</div></td>';
@@ -2892,7 +2890,7 @@ function doPublish(){
     _subjColorMap=null;
   }
   try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:wdd,ed:ed,grade:savedGrade,ts:Date.now()}));}catch(e){}
-  if(window.fbDb&&savedGrade){
+  if(fbDb&&savedGrade){
     var ref=fbRef(savedGrade);
     if(ref){
       ref.set({items:merged,wdd:wdd,ed:ed,wks:wks,grade:savedGrade,ts:Date.now()})
@@ -3005,35 +3003,43 @@ function fbGradeKey(grade){
   return m[grade]||grade.replace(/\s/g,'_');
 }
 function fbRef(grade){
-  if(!window.fbDb||!grade) return null;
+  if(!fbDb||!grade) return null;
   return fbDb.ref('timetable/'+fbGradeKey(grade));
 }
 
 /* Firebase 데이터를 받아서 시간표에 적용 */
 function applyFirebaseData(data){
   if(!data||!data.items||!data.items.length) return;
-  /* 현재 로컬 ts보다 새 데이터일 때만 적용 */
-  var localTs=0;
-  try{
-    var local=JSON.parse(localStorage.getItem(ttKey())||'{}');
-    localTs=local.ts||0;
-  }catch(e){}
-  if(data.ts && data.ts <= localTs) return;
+  /* Firebase가 항상 최신 - 로컬 캐시와 비교 없이 바로 적용 */
+  var prevTs=0;
+  try{ prevTs=(JSON.parse(localStorage.getItem(ttKey())||'{}').ts)||0; }catch(e){}
+  var newTs=data.ts||0;
+  /* 완전히 같은 데이터면 skip (불필요한 re-render 방지) */
+  if(newTs && newTs===prevTs) return;
 
   merged.length=0;
   data.items.forEach(function(it){merged.push(it);});
-  if(data.wdd) Object.keys(data.wdd).forEach(function(wk){wdd[wk]=data.wdd[wk];});
-  if(data.ed)  {ed.length=0; data.ed.forEach(function(d){ed.push(d);});}
-  buildFromItems(merged, wdd, ed);
+  if(data.wdd){
+    Object.keys(wdd).forEach(function(k){delete wdd[k];});
+    Object.keys(data.wdd).forEach(function(wk){wdd[wk]=data.wdd[wk];});
+  }
+  if(data.wks&&data.wks.length){
+    wks.length=0;
+    data.wks.forEach(function(w){wks.push(w);});
+  }
+  if(data.ed){ed.length=0;data.ed.forEach(function(d){ed.push(d);});}
+  buildFromItems(merged,wdd,ed);
   _subjColorMap=null;
-  try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:wdd,ed:ed,grade:savedGrade,ts:data.ts||Date.now()}));}catch(e){}
+  try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:wdd,ed:ed,grade:savedGrade,ts:newTs||Date.now()}));}catch(e){}
   render();
-  /* 업데이트 토스트 */
-  var toast=document.getElementById('update-toast');
-  if(toast){
-    toast.textContent='📢 시간표가 업데이트되었습니다!';
-    toast.className='update-toast show';
-    setTimeout(function(){toast.className='update-toast';},3500);
+  /* 초기 로드가 아닌 실시간 업데이트일 때만 토스트 */
+  if(prevTs>0 && newTs!==prevTs){
+    var toast=document.getElementById('update-toast');
+    if(toast){
+      toast.textContent='📢 시간표가 업데이트되었습니다!';
+      toast.className='update-toast show';
+      setTimeout(function(){toast.className='update-toast';},3500);
+    }
   }
 }
 
@@ -3048,19 +3054,27 @@ function loadFromFirebase(){
 
 /* 실시간 리스너 (비관리자용) */
 var _fbListener=null;
+var _fbListenerGrade=null;
 function startFirebaseListener(){
-  if(_fbListener) return;
+  if(_fbListener&&_fbListenerGrade===savedGrade) return;
+  stopFirebaseListener();
   var ref=fbRef(savedGrade);
   if(!ref) return;
+  _fbListenerGrade=savedGrade;
   _fbListener=ref.on('value',function(snap){
     if(isAdmin) return; /* 관리자 편집 중엔 수신 무시 */
     applyFirebaseData(snap.val());
+  },function(err){
+    console.warn('Firebase 리스너 오류:',err);
   });
 }
 function stopFirebaseListener(){
-  var ref=fbRef(savedGrade);
-  if(ref&&_fbListener) ref.off('value',_fbListener);
+  if(_fbListenerGrade&&_fbListener){
+    var ref=fbRef(_fbListenerGrade);
+    if(ref) ref.off('value',_fbListener);
+  }
   _fbListener=null;
+  _fbListenerGrade=null;
 }
 function initFirebaseListener(){
   startFirebaseListener();
