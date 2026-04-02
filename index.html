@@ -1669,21 +1669,33 @@ function renderL(){
    필터 뷰
 ══════════════════════════════════════════ */
 function renderF(){
-  var eS=fsubj.filter(function(s){return isEx(s);});
-  var nS=fsubj.filter(function(s){return!isEx(s)&&!isEv(s);});
+  /* merged에서 직접 과목 목록 추출 - 항상 현재 시간표 기준 */
+  var subjSet={};
+  for(var mi=0;mi<merged.length;mi++){
+    var s0=merged[mi].subject;
+    if(s0&&!isEv(s0)) subjSet[s0]=true;
+  }
+  var allSubj=Object.keys(subjSet).sort(function(a,b){return a.localeCompare(b,'ko');});
+  /* fsubj2 초기화: 아직 설정 안 됐거나 현재 과목과 동기화 */
+  if(fsubj2.length===0 || fsubj2.some(function(s){return subjSet[s]===undefined;})){
+    fsubj2=allSubj.slice();
+  }
+
+  var eS=allSubj.filter(function(s){return isEx(s);});
+  var nS=allSubj.filter(function(s){return!isEx(s);});
+
   var h='<div class="fw">';
-  var eo=fExam;
   h+='<div class="fs"><div class="fs-ttl">빠른 필터</div><div class="chips">';
-  h+='<button class="chip" id="chip-exam" style="'+(eo?'background:#FCA5A5;border-color:#FCA5A5;color:#7f1d1d;font-weight:700':'border-color:#FCA5A5;color:#991b1b')+'">‼️ 시험만 보기</button>';
-  var aon=!fExam&&fsubj2.length===fsubj.length;
+  h+='<button class="chip" id="chip-exam" style="'+(fExam?'background:#FCA5A5;border-color:#FCA5A5;color:#7f1d1d;font-weight:700':'border-color:#FCA5A5;color:#991b1b')+'">‼️ 시험만 보기</button>';
+  var aon=!fExam&&fsubj2.length===allSubj.length;
   h+='<button class="chip" id="chip-all" style="'+(aon?'background:#BFDBFE;border-color:#3B82F6;color:#1e3a5f;font-weight:700':'')+'">전체 선택</button>';
   h+='<button class="chip" id="chip-clr">전체 해제</button>';
   h+='</div></div>';
+
   if(nS.length){
     h+='<div class="fs"><div class="fs-ttl">일반 과목</div><div class="chips">';
     for(var i=0;i<nS.length;i++){
       var s=nS[i],c=gcol(s),on2=!fExam&&fsubj2.indexOf(s)>=0;
-      /* 파스텔 배경에서 텍스트 가독성: 선택 시 어두운 글자 */
       h+='<button class="chip fchip" data-s="'+s+'" style="'+(on2?'background:'+c+';border-color:'+c+';color:#1e293b;font-weight:700':'border-color:'+c+';color:#374151')+'">'+s+'</button>';
     }
     h+='</div></div>';
@@ -1691,7 +1703,7 @@ function renderF(){
   if(eS.length){
     h+='<div class="fs"><div class="fs-ttl">‼️ 시험</div><div class="chips">';
     for(var j=0;j<eS.length;j++){
-      var se=eS[j],ce=gcol(se),oe=(fsubj2.indexOf(se)>=0&&!fExam)||fExam;
+      var se=eS[j],ce=gcol(se),oe=(!fExam&&fsubj2.indexOf(se)>=0)||fExam;
       var lb2=exLabel(se),et2=lb2[0],ba2=lb2[1];
       h+='<button class="chip fchip" data-s="'+se+'" style="'+(oe?'background:'+ce+';border-color:'+ce+';color:#1e293b;font-weight:700':'border-color:'+ce+';color:#374151')+'">‼️ '+et2+(ba2?' '+ba2:'')+'</button>';
     }
@@ -1700,8 +1712,12 @@ function renderF(){
   h+='<div id="fres"></div></div>';
   document.getElementById('main').innerHTML=h;
 
-  document.getElementById('chip-exam').onclick=function(){fExam=!fExam;fsubj2=fExam?fsubj.filter(function(s){return isEx(s);}):fsubj.slice();renderF();};
-  document.getElementById('chip-all').onclick=function(){fExam=false;fsubj2=fsubj.slice();renderF();};
+  document.getElementById('chip-exam').onclick=function(){
+    fExam=!fExam;
+    fsubj2=fExam?allSubj.filter(function(s){return isEx(s);}):allSubj.slice();
+    renderF();
+  };
+  document.getElementById('chip-all').onclick=function(){fExam=false;fsubj2=allSubj.slice();renderF();};
   document.getElementById('chip-clr').onclick=function(){fExam=false;fsubj2=[];renderF();};
   var chips=document.querySelectorAll('.fchip');
   for(var k=0;k<chips.length;k++){
@@ -1717,8 +1733,11 @@ function renderF(){
 }
 function renderFR(){
   var items=merged.slice();
-  if(fExam)items=items.filter(function(i){return isEx(i.subject);});
-  else items=items.filter(function(i){return fsubj2.indexOf(i.subject)>=0||isEv(i.subject);});
+  if(fExam){
+    items=items.filter(function(i){return isEx(i.subject);});
+  }else{
+    items=items.filter(function(i){return fsubj2.indexOf(i.subject)>=0;});
+  }
   var el=document.getElementById('fres');if(!el)return;
   if(!items.length){el.innerHTML='<div class="no-res">조건에 맞는 수업이 없습니다</div>';return;}
   el.innerHTML='<div class="list-wrap">'+byDateH(items)+'</div>';
@@ -2257,6 +2276,7 @@ function init(){
     render();
     /* 3) Firebase에서 최신 시간표 로드 */
     setTimeout(function(){
+      stopFirebaseListener(); /* 이전 학년 리스너 해제 */
       loadFromFirebase();
       initFirebaseListener();
     }, 300);
@@ -2437,6 +2457,17 @@ function renderAdminEditModal(){
     '<div style="background:#fff;border-radius:14px;padding:14px 16px;">'+
       '<div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:8px;">교수명</div>'+
       '<input id="adm-prof" value="'+escAdm(it.professor||'')+'" placeholder="교수명 (없으면 빈칸)" style="width:100%;border:none;outline:none;font-size:15px;color:#1C1C1E;background:none;box-sizing:border-box;">'+
+    '</div>'+
+    '<div style="background:#fff;border-radius:14px;padding:14px 16px;">'+
+      '<label style="display:flex;align-items:center;gap:12px;cursor:pointer;">'+
+        '<div id="adm-exam-box" style="width:24px;height:24px;border-radius:6px;border:2px solid '+(it.is_exam?'#EF4444':'#D1D5DB')+';background:'+(it.is_exam?'#EF4444':'#fff')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;">'+
+          (it.is_exam?'<span style="color:#fff;font-size:14px;font-weight:800;">✓</span>':'')+
+        '</div>'+
+        '<div>'+
+          '<div style="font-size:14px;font-weight:600;color:#1C1C1E;">시험</div>'+
+          '<div style="font-size:11px;color:#8E8E93;margin-top:1px;">체크하면 ‼️ 표시 + 빨간 테두리 강조</div>'+
+        '</div>'+
+      '</label>'+
     '</div>';
   box.appendChild(formDiv);
 
@@ -2585,6 +2616,16 @@ function renderAdminEditModal(){
       if(dot) dot.style.background=gcol(v);
       if(cur) cur.textContent=v||'과목 선택';
     };
+
+    /* ── 시험 체크박스 클릭 ── */
+    var examBox=document.getElementById('adm-exam-box');
+    if(examBox) examBox.parentNode.onclick=function(){
+      admSrc()[ri].is_exam=!admSrc()[ri].is_exam;
+      var chk=admSrc()[ri].is_exam;
+      examBox.style.border='2px solid '+(chk?'#EF4444':'#D1D5DB');
+      examBox.style.background=chk?'#EF4444':'#fff';
+      examBox.innerHTML=chk?'<span style="color:#fff;font-size:14px;font-weight:800;">✓</span>':'';
+    };
   },30);
 
   /* ── 저장 버튼 ── */
@@ -2594,24 +2635,42 @@ function renderAdminEditModal(){
     var subj=sel?sel.value.trim():'';
     if(subj) admSrc()[ri].subject=subj;
     if(prof) admSrc()[ri].professor=prof.value.trim();
-    admSrc()[ri].is_exam=isEx(admSrc()[ri].subject);
+    /* is_exam은 체크박스에서 이미 실시간 반영됨 - 별도 처리 불필요 */
     _subjColorMap=null;
     admCloseModal();
     renderAdminBody();
   };
 
   /* ── 삭제 버튼 ── */
-  delB.onclick=function(){
-    /* confirm()은 PWA/일부 브라우저에서 차단됨 → admShowConfirm 사용 */
-    var capturedRi=ri; /* 클로저로 인덱스 캡처 */
-    admShowConfirm('이 수업을 삭제할까요?', function(){
+  delB.onclick=function(e){
+    e.stopPropagation();
+    var capturedRi=ri;
+    /* 인라인 확인 UI - edit modal 위에 직접 띄움 */
+    var confirmDiv=document.createElement('div');
+    confirmDiv.style.cssText='position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:10;display:flex;align-items:center;justify-content:center;padding:20px;border-radius:22px 22px 0 0;';
+    var confirmBox=document.createElement('div');
+    confirmBox.style.cssText='background:#fff;border-radius:16px;padding:24px 20px;width:100%;max-width:280px;text-align:center;';
+    confirmBox.innerHTML='<div style="font-size:15px;font-weight:600;color:#1C1C1E;margin-bottom:20px;line-height:1.5">이 수업을 삭제할까요?</div>'+
+      '<div style="display:flex;gap:10px;">'+
+        '<button id="del-cancel" style="flex:1;padding:12px;border-radius:12px;border:1.5px solid #E5E5EA;background:#fff;font-size:15px;cursor:pointer;">취소</button>'+
+        '<button id="del-ok" style="flex:1;padding:12px;border-radius:12px;border:none;background:#FF3B30;color:#fff;font-size:15px;font-weight:700;cursor:pointer;">삭제</button>'+
+      '</div>';
+    confirmDiv.appendChild(confirmBox);
+    box.appendChild(confirmDiv);
+    confirmDiv.querySelector('#del-cancel').onclick=function(e2){
+      e2.stopPropagation();
+      box.removeChild(confirmDiv);
+    };
+    confirmDiv.querySelector('#del-ok').onclick=function(e2){
+      e2.stopPropagation();
+      /* 모달 닫기 */
+      if(modal.parentNode) modal.parentNode.removeChild(modal);
+      admEditIdx=-1;
+      /* 삭제 */
       var src=admSrc();
-      if(capturedRi>=0 && capturedRi<src.length){
-        src.splice(capturedRi,1);
-      }
-      admCloseModal();
+      if(capturedRi>=0&&capturedRi<src.length) src.splice(capturedRi,1);
       renderAdminBody();
-    }, '삭제', '#FF3B30');
+    };
   };
 }
 
@@ -2750,10 +2809,17 @@ function buildAdminTable(w, items, srcArr){
         for(var j=0;j<srcArr.length;j++){if(srcArr[j]===it2){ri=j;break;}}
         var bg=gcol(it2.subject||'');
         h+='<td class="td-c adm-cell" data-day="'+d+'" data-ri="'+ri+'" style="cursor:pointer;position:relative;">';
-        h+='<div class="card adm-card" style="background:'+bg+';cursor:pointer;">';
-        h+='<div class="cn-s">'+escAdm(it2.subject||'')+'</div>';
+        var isExamCell=it2.is_exam===true;
+        var cellBg=gcol(it2.subject||'');
+        var examStyle=isExamCell?'outline:2px solid #EF4444;outline-offset:-2px;':'';
+        h+='<div class="card adm-card" style="background:'+cellBg+';cursor:pointer;'+examStyle+'">';
+        if(isExamCell){
+          h+='<div class="cn-s">‼️ '+escAdm(it2.subject||'')+'</div>';
+        }else{
+          h+='<div class="cn-s">'+escAdm(it2.subject||'')+'</div>';
+        }
         if(it2.professor) h+='<div class="cn-p">'+escAdm(it2.professor)+'</div>';
-        h+='<div style="position:absolute;top:2px;right:2px;font-size:10px;color:rgba(255,255,255,.7)">✎</div>';
+        h+='<div style="position:absolute;top:2px;right:2px;font-size:10px;color:rgba(0,0,0,.25)">✎</div>';
         h+='</div></td>';
       } else {
         h+='<td class="td-c adm-empty" data-day="'+d+'" data-period="'+pn+'" style="cursor:pointer;">';
@@ -2932,6 +2998,73 @@ function admOpenUpload(){
 
 /* ── Firebase 실시간 수신 ── */
 function checkSharedUpdate(){}  /* Firebase listener로 대체 */
+
+/* ── Firebase 헬퍼 ── */
+function fbGradeKey(grade){
+  var m={'의학과 1학년':'med1','의학과 2학년':'med2','의예과 2학년':'premed2'};
+  return m[grade]||grade.replace(/\s/g,'_');
+}
+function fbRef(grade){
+  if(!window.fbDb||!grade) return null;
+  return fbDb.ref('timetable/'+fbGradeKey(grade));
+}
+
+/* Firebase 데이터를 받아서 시간표에 적용 */
+function applyFirebaseData(data){
+  if(!data||!data.items||!data.items.length) return;
+  /* 현재 로컬 ts보다 새 데이터일 때만 적용 */
+  var localTs=0;
+  try{
+    var local=JSON.parse(localStorage.getItem(ttKey())||'{}');
+    localTs=local.ts||0;
+  }catch(e){}
+  if(data.ts && data.ts <= localTs) return;
+
+  merged.length=0;
+  data.items.forEach(function(it){merged.push(it);});
+  if(data.wdd) Object.keys(data.wdd).forEach(function(wk){wdd[wk]=data.wdd[wk];});
+  if(data.ed)  {ed.length=0; data.ed.forEach(function(d){ed.push(d);});}
+  buildFromItems(merged, wdd, ed);
+  _subjColorMap=null;
+  try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:wdd,ed:ed,grade:savedGrade,ts:data.ts||Date.now()}));}catch(e){}
+  render();
+  /* 업데이트 토스트 */
+  var toast=document.getElementById('update-toast');
+  if(toast){
+    toast.textContent='📢 시간표가 업데이트되었습니다!';
+    toast.className='update-toast show';
+    setTimeout(function(){toast.className='update-toast';},3500);
+  }
+}
+
+/* 최초 1회 로드 */
+function loadFromFirebase(){
+  var ref=fbRef(savedGrade);
+  if(!ref) return;
+  ref.once('value').then(function(snap){
+    applyFirebaseData(snap.val());
+  }).catch(function(e){console.warn('Firebase load:',e);});
+}
+
+/* 실시간 리스너 (비관리자용) */
+var _fbListener=null;
+function startFirebaseListener(){
+  if(_fbListener) return;
+  var ref=fbRef(savedGrade);
+  if(!ref) return;
+  _fbListener=ref.on('value',function(snap){
+    if(isAdmin) return; /* 관리자 편집 중엔 수신 무시 */
+    applyFirebaseData(snap.val());
+  });
+}
+function stopFirebaseListener(){
+  var ref=fbRef(savedGrade);
+  if(ref&&_fbListener) ref.off('value',_fbListener);
+  _fbListener=null;
+}
+function initFirebaseListener(){
+  startFirebaseListener();
+}
 
 /* ── 초기화 ── */
 setTimeout(function(){
