@@ -79,13 +79,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
 /* 요일 헤더 – 채색 */
 .th-d{
   font-size:13px;font-weight:700;text-align:center;
-  padding:8px 2px 7px;
+  padding:4px 2px 3px;
   background:#5B8AF0;
   color:#fff;
   border-bottom:2px solid #5B8AF0;
   border-left:1px solid rgba(255,255,255,0.15);
 }
-.th-date{font-size:9px;font-weight:400;color:rgba(255,255,255,0.75);display:block;margin-top:2px}
+.th-date{font-size:9px;font-weight:400;color:rgba(255,255,255,0.75);display:block;margin-top:1px}
 
 /* 오늘 요일 강조 */
 .th-d.tc{background:#6C63FF;border-bottom:2px solid #6C63FF}
@@ -1228,9 +1228,12 @@ function buildWeekTable(w,items){
         return;
       }
       var bg=gcol(it.subject);
+      var itIsExam=(it.is_exam===true||it.is_exam==='true');
       html+='<td class="td-c" data-day="'+d+'">';
-      html+='<div class="card" style="background:'+bg+'">';
-      if(isEx(it.subject)){
+      html+='<div class="card" style="background:'+bg+';'+(itIsExam?'box-shadow:inset 0 0 0 2.5px #EF4444;':'')+'">';
+      if(itIsExam){
+        html+='<div class="cn-s cn-exam">‼️ '+it.subject+'</div>';
+      }else if(isEx(it.subject)){
         var lb=exLabel(it.subject);
         html+='<div class="cn-s cn-exam">‼️ '+lb[0]+'</div>';
         if(lb[1])html+='<div class="cn-name">'+lb[1]+'</div>';
@@ -1599,13 +1602,15 @@ function renderW(){
 ══════════════════════════════════════════ */
 function lcardH(it){
   var c=gcol(it.subject),sh='',ex='';
-  if(isEx(it.subject)){
+  var itIsExam=(it.is_exam===true||it.is_exam==='true')||isEx(it.subject);
+  if(itIsExam){
     var lb=exLabel(it.subject),et=lb[0],ba=lb[1];
-    sh='<div class="lc-s" style="color:#7f1d1d;font-weight:700">‼️ '+et+'</div>'+(ba?'<div style="font-size:12px;color:#555;margin-top:2px">'+ba+'</div>':'');
+    var dispName=(et&&et!==it.subject)?et:it.subject;
+    sh='<div class="lc-s" style="color:#7f1d1d;font-weight:700">‼️ '+dispName+'</div>'+(ba?'<div style="font-size:12px;color:#555;margin-top:2px">'+ba+'</div>':'');
     ex='border:2px solid '+c+';';
   }else{sh='<div class="lc-s">'+it.subject+'</div>';}
   var ph=it.professor?'<div class="lc-p">'+it.professor+'</div>':'';
-  return'<div class="lcard'+(ex?' exam-card':'')+'" style="'+ex+'"><div class="lc-bar" style="background:'+c+'"></div>'
+  return'<div class="lcard'+(itIsExam?' exam-card':'')+'" style="'+ex+'"><div class="lc-bar" style="background:'+c+'"></div>'
     +'<div class="lc-body">'+sh+ph+'<div class="lc-t">'+it.day+'요일 '+it.start+'~'+it.end+'</div></div></div>';
 }
 function byDateH(items){
