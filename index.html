@@ -472,6 +472,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;ba
   z-index:9999;opacity:0;pointer-events:none;transition:all .3s;white-space:nowrap}
 .update-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .admin-logout-btn{width:100%;background:none;border:none;color:#8E8E93;font-size:13px;cursor:pointer;margin-top:12px;padding:8px}
+/* ── 변경내역 알림 배너 ── */
+.changelog-banner{position:fixed;top:calc(56px + env(safe-area-inset-top,0px));left:0;right:0;
+  background:linear-gradient(135deg,#F59E0B,#F97316);color:#fff;
+  padding:10px 16px;z-index:500;display:flex;align-items:center;gap:8px;
+  cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.15);
+  animation:slideDown .35s ease;}
+@keyframes slideDown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
+.changelog-banner-icon{font-size:16px;flex-shrink:0}
+.changelog-banner-text{flex:1;font-size:12px;font-weight:600;line-height:1.3}
+.changelog-banner-arrow{font-size:12px;opacity:.8}
+/* ── 변경내역 모달 ── */
+.changelog-modal-ovl{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9990;
+  display:flex;align-items:flex-end;justify-content:center;padding:0 0 env(safe-area-inset-bottom,0px)}
+.changelog-modal{background:#fff;border-radius:20px 20px 0 0;width:100%;max-width:480px;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));
+  max-height:70vh;overflow-y:auto;}
+.changelog-modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.changelog-modal-title{font-size:16px;font-weight:700;color:#1C1C1E}
+.changelog-modal-close{background:#F2F2F7;border:none;border-radius:50%;width:28px;height:28px;
+  font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.changelog-item{background:#FFF7ED;border-left:3px solid #F97316;border-radius:0 8px 8px 0;
+  padding:10px 12px;margin-bottom:8px}
+.changelog-item-date{font-size:10px;color:#92400E;font-weight:600;margin-bottom:3px}
+.changelog-item-msg{font-size:13px;color:#1C1C1E;line-height:1.4}
+/* ── 배포 메모 입력 ── */
+.admin-changelog-input{width:100%;border:1.5px solid #E5E5EA;border-radius:10px;
+  padding:10px 12px;font-size:13px;font-family:inherit;resize:none;
+  margin-bottom:10px;box-sizing:border-box;}
+.admin-changelog-input:focus{outline:none;border-color:#007AFF;}
 /* ── DATE TODO PANEL ── */
 .dtodo-ovl{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:400;
   opacity:0;pointer-events:none;transition:opacity .22s;
@@ -2248,7 +2277,13 @@ function init(){
   /* ── 학년 선택 & localStorage 복원 ── */
   savedGrade=localStorage.getItem('user_grade')||''; /* 전역변수에 저장 */
   var savedTimetable=null;
-  try{var _st=localStorage.getItem('timetable_data');if(_st)savedTimetable=JSON.parse(_st);}catch(e){}
+  /* 저장된 학년이 있으면 해당 학년의 시간표 키로 로드 */
+  try{
+    var _stKey=savedGrade?('timetable_data_'+savedGrade):'timetable_data';
+    var _st=localStorage.getItem(_stKey);
+    if(!_st&&savedGrade) _st=localStorage.getItem('timetable_data'); /* 폴백 */
+    if(_st) savedTimetable=JSON.parse(_st);
+  }catch(e){}
 
   function showGradeScreen(){document.getElementById('gs-screen').style.display='flex';}
   function hideGradeScreen(){document.getElementById('gs-screen').style.display='none';}
@@ -2314,10 +2349,26 @@ function init(){
 
   /* 오늘 날짜 주차로 자동 이동 */
   (function(){
-    var t=today();
+    var now=new Date();
+    var dow=now.getDay(); /* 0=일,6=토 */
+    var t;
+    if(dow===6||dow===0){
+      /* 토/일 → 다음주 월요일 날짜 계산 */
+      var diff=dow===6?2:1; /* 토→+2일, 일→+1일 */
+      var nextMon=new Date(now.getTime()+diff*24*60*60*1000);
+      t=nextMon.getFullYear()+'-'+p2(nextMon.getMonth()+1)+'-'+p2(nextMon.getDate());
+    } else {
+      t=today();
+    }
     for(var i=0;i<wks.length;i++){
       var v=wvals(wks[i]).sort();
       if(v.length&&t>=v[0]&&t<=v[v.length-1]){ci=i;break;}
+    }
+    /* 해당 날짜가 시간표 범위를 벗어나면 마지막 주로 */
+    if(ci===0){
+      /* 범위 전이면 0, 범위 후이면 마지막 주 */
+      var lastV=wvals(wks[wks.length-1]).sort();
+      if(t>lastV[lastV.length-1]) ci=wks.length-1;
     }
   })();
 
@@ -2884,9 +2935,45 @@ function doLogout(){ isAdmin=false; _workingMerged=null; closeAdminPanel(); }
 
 /* ── 배포 ── */
 function publishTT(){
-  admShowConfirm('📢 시간표를 모든 사용자에게 배포할까요?',function(){doPublish();},'배포','#007AFF');
+  /* 변경 메모 입력 확인 다이얼로그 */
+  var overlay=document.createElement('div');
+  overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
+  overlay.onclick=function(e){e.stopPropagation();};
+  var box=document.createElement('div');
+  box.style.cssText='background:#fff;border-radius:18px;padding:24px 20px;width:100%;max-width:320px;';
+  box.onclick=function(e){e.stopPropagation();};
+  var title=document.createElement('div');
+  title.style.cssText='font-size:16px;font-weight:700;color:#1C1C1E;margin-bottom:6px;';
+  title.textContent='📢 시간표 배포';
+  var sub=document.createElement('div');
+  sub.style.cssText='font-size:12px;color:#8E8E93;margin-bottom:12px;';
+  sub.textContent='어떤 사항이 변경되었는지 입력하세요. (선택)';
+  var textarea=document.createElement('textarea');
+  textarea.className='admin-changelog-input';
+  textarea.placeholder='예) 4월 7일 의료면담 교수님 변경 (정재희→정영철)';
+  textarea.rows=3;
+  var btnRow=document.createElement('div');
+  btnRow.style.cssText='display:flex;gap:10px;';
+  var cancelBtn=document.createElement('button');
+  cancelBtn.style.cssText='flex:1;padding:12px;border-radius:12px;border:1.5px solid #E5E5EA;background:#fff;font-size:14px;cursor:pointer;';
+  cancelBtn.textContent='취소';
+  cancelBtn.onclick=function(e){e.stopPropagation();if(overlay.parentNode)overlay.parentNode.removeChild(overlay);};
+  var okBtn=document.createElement('button');
+  okBtn.style.cssText='flex:1;padding:12px;border-radius:12px;border:none;background:#007AFF;color:#fff;font-size:14px;font-weight:700;cursor:pointer;';
+  okBtn.textContent='배포';
+  okBtn.onclick=function(e){
+    e.stopPropagation();
+    var memo=textarea.value.trim();
+    if(overlay.parentNode)overlay.parentNode.removeChild(overlay);
+    doPublish(memo);
+  };
+  btnRow.appendChild(cancelBtn);btnRow.appendChild(okBtn);
+  box.appendChild(title);box.appendChild(sub);box.appendChild(textarea);box.appendChild(btnRow);
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+  setTimeout(function(){textarea.focus();},100);
 }
-function doPublish(){
+function doPublish(memo){
   if(_workingMerged){
     merged.length=0;
     _workingMerged.forEach(function(it){merged.push(it);});
@@ -2894,11 +2981,24 @@ function doPublish(){
     _workingMerged=null;
     _subjColorMap=null;
   }
+  /* 변경 내역 저장 */
+  var changelogEntry=null;
+  if(memo){
+    changelogEntry={ts:Date.now(),msg:memo,grade:savedGrade};
+    try{
+      var logs=JSON.parse(localStorage.getItem('changelog_'+fbGradeKey(savedGrade))||'[]');
+      logs.unshift(changelogEntry);
+      if(logs.length>20)logs=logs.slice(0,20);
+      localStorage.setItem('changelog_'+fbGradeKey(savedGrade),JSON.stringify(logs));
+    }catch(e){}
+  }
   try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:wdd,ed:ed,grade:savedGrade,ts:Date.now()}));}catch(e){}
   if(fbDb&&savedGrade){
     var ref=fbRef(savedGrade);
     if(ref){
-      ref.set({items:merged,wdd:wdd,ed:ed,wks:wks,grade:savedGrade,ts:Date.now()})
+      var payload={items:merged,wdd:wdd,ed:ed,wks:wks,grade:savedGrade,ts:Date.now()};
+      if(changelogEntry) payload.changelog=changelogEntry;
+      ref.set(payload)
         .then(function(){console.log('Firebase 배포 완료');})
         .catch(function(e){console.error('Firebase 배포 실패:',e);});
     }
@@ -2910,7 +3010,7 @@ function doPublish(){
   render();
   var toast=document.getElementById('update-toast');
   if(toast){
-    toast.textContent='✅ 시간표 배포 완료!';
+    toast.textContent='✅ 시간표 배포 완료!'+(memo?' ('+memo.substring(0,20)+(memo.length>20?'..':'')+')':'');
     toast.className='update-toast show';
     setTimeout(function(){toast.textContent='📢 시간표가 업데이트되었습니다!';toast.className='update-toast';},3500);
   }
@@ -3022,6 +3122,21 @@ function applyFirebaseData(data){
   /* 완전히 같은 데이터면 skip (불필요한 re-render 방지) */
   if(newTs && newTs===prevTs) return;
 
+  /* 변경 내역 저장 (비관리자에게 나중에 표시) */
+  var isUpdate=prevTs>0 && newTs && newTs!==prevTs;
+  var changelogEntry=data.changelog||null;
+  if(changelogEntry && isUpdate && !isAdmin){
+    try{
+      var logs=JSON.parse(localStorage.getItem('changelog_'+fbGradeKey(savedGrade))||'[]');
+      /* 동일 타임스탬프 중복 방지 */
+      if(!logs.some(function(l){return l.ts===changelogEntry.ts;})){
+        logs.unshift(changelogEntry);
+        if(logs.length>20)logs=logs.slice(0,20);
+        localStorage.setItem('changelog_'+fbGradeKey(savedGrade),JSON.stringify(logs));
+      }
+    }catch(e){}
+  }
+
   merged.length=0;
   data.items.forEach(function(it){merged.push(it);});
   if(data.wdd){
@@ -3037,15 +3152,95 @@ function applyFirebaseData(data){
   _subjColorMap=null;
   try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:wdd,ed:ed,grade:savedGrade,ts:newTs||Date.now()}));}catch(e){}
   render();
-  /* 초기 로드가 아닌 실시간 업데이트일 때만 토스트 */
-  if(prevTs>0 && newTs!==prevTs){
-    var toast=document.getElementById('update-toast');
-    if(toast){
-      toast.textContent='📢 시간표가 업데이트되었습니다!';
-      toast.className='update-toast show';
-      setTimeout(function(){toast.className='update-toast';},3500);
+  /* 초기 로드가 아닌 실시간 업데이트일 때만 알림 */
+  if(isUpdate && !isAdmin){
+    if(changelogEntry && changelogEntry.msg){
+      showChangelogBanner(changelogEntry);
+    } else {
+      var toast=document.getElementById('update-toast');
+      if(toast){
+        toast.textContent='📢 시간표가 업데이트되었습니다!';
+        toast.className='update-toast show';
+        setTimeout(function(){toast.className='update-toast';},3500);
+      }
     }
+  } else if(!isUpdate && !isAdmin && prevTs===0){
+    /* 앱 첫 접속 시 미확인 변경 내역 있으면 배너 표시 */
+    showUnreadChangelogBanner();
   }
+}
+
+/* 변경 내역 배너 표시 */
+function showChangelogBanner(entry){
+  removeChangelogBanner();
+  var banner=document.createElement('div');
+  banner.id='changelog-banner';
+  banner.className='changelog-banner';
+  banner.innerHTML='<span class="changelog-banner-icon">🔔</span>'+
+    '<span class="changelog-banner-text">시간표 변경: '+escHtml(entry.msg.substring(0,50))+(entry.msg.length>50?'..':'')+' <span style="opacity:.7;font-size:11px;">탭하여 내역 보기</span></span>'+
+    '<span class="changelog-banner-arrow">›</span>';
+  banner.onclick=function(){openChangelogModal();};
+  document.body.appendChild(banner);
+  /* 읽음 처리용 마지막 확인 ts 저장 */
+  try{localStorage.setItem('changelog_seen_'+fbGradeKey(savedGrade), entry.ts+'');}catch(e){}
+}
+
+/* 미확인 내역 배너 (앱 접속 시) */
+function showUnreadChangelogBanner(){
+  try{
+    var logs=JSON.parse(localStorage.getItem('changelog_'+fbGradeKey(savedGrade))||'[]');
+    if(!logs.length) return;
+    var lastSeen=parseInt(localStorage.getItem('changelog_seen_'+fbGradeKey(savedGrade))||'0');
+    var unread=logs.filter(function(l){return l.ts>lastSeen;});
+    if(!unread.length) return;
+    removeChangelogBanner();
+    var banner=document.createElement('div');
+    banner.id='changelog-banner';
+    banner.className='changelog-banner';
+    banner.innerHTML='<span class="changelog-banner-icon">🔔</span>'+
+      '<span class="changelog-banner-text">미확인 시간표 변경 '+unread.length+'건 <span style="opacity:.7;font-size:11px;">탭하여 내역 보기</span></span>'+
+      '<span class="changelog-banner-arrow">›</span>';
+    banner.onclick=function(){openChangelogModal();};
+    document.body.appendChild(banner);
+  }catch(e){}
+}
+
+function removeChangelogBanner(){
+  var old=document.getElementById('changelog-banner');
+  if(old&&old.parentNode)old.parentNode.removeChild(old);
+}
+
+function escHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+/* 변경 내역 모달 */
+function openChangelogModal(){
+  removeChangelogBanner();
+  try{
+    var logs=JSON.parse(localStorage.getItem('changelog_'+fbGradeKey(savedGrade))||'[]');
+    /* 읽음 처리 */
+    if(logs.length) localStorage.setItem('changelog_seen_'+fbGradeKey(savedGrade), logs[0].ts+'');
+    var ovl=document.createElement('div');
+    ovl.className='changelog-modal-ovl';
+    ovl.onclick=function(e){if(e.target===ovl&&ovl.parentNode)ovl.parentNode.removeChild(ovl);};
+    var modal=document.createElement('div');
+    modal.className='changelog-modal';
+    var hdr='<div class="changelog-modal-hdr"><div class="changelog-modal-title">📋 시간표 변경 내역</div>'+
+      '<button class="changelog-modal-close" onclick="this.closest(\'.changelog-modal-ovl\').remove()">✕</button></div>';
+    var body='';
+    if(!logs.length){
+      body='<div style="color:#8E8E93;font-size:13px;text-align:center;padding:20px 0;">변경 내역이 없습니다.</div>';
+    } else {
+      logs.forEach(function(entry){
+        var d=new Date(entry.ts);
+        var ds=d.getFullYear()+'.'+(d.getMonth()+1)+'.'+(d.getDate())+' '+p2(d.getHours())+':'+p2(d.getMinutes());
+        body+='<div class="changelog-item"><div class="changelog-item-date">'+ds+'</div>'+
+          '<div class="changelog-item-msg">'+escHtml(entry.msg)+'</div></div>';
+      });
+    }
+    modal.innerHTML=hdr+body;
+    ovl.appendChild(modal);
+    document.body.appendChild(ovl);
+  }catch(e){}
 }
 
 /* 최초 1회 로드 */
