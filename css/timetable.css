@@ -1,0 +1,103 @@
+/* ── TABLE ── */
+.tt{width:100%;min-width:320px;border-collapse:collapse;table-layout:fixed}
+
+/* 교시 열 */
+.th-t{width:36px;background:var(--brand-header);border-bottom:2px solid var(--brand-header);padding:0}
+.td-t{
+  width:36px;
+  background:var(--surface);
+  border-top:1px solid var(--border-soft);
+  padding:0 2px;
+  text-align:center;
+  vertical-align:middle;
+  height:52px;
+}
+.pn{display:block;font-size:var(--font-2xs);font-weight:var(--weight-bold);color:var(--text-soft);line-height:1.2}
+.pt{display:block;font-size:8px;color:var(--text-fade);margin-top:1px;font-variant-numeric:tabular-nums}
+
+/* 요일 헤더 – 채색 */
+.th-d{
+  font-size:var(--font-md);font-weight:var(--weight-bold);text-align:center;
+  padding:var(--space-1) 2px 3px;
+  background:var(--brand-header);
+  color:var(--text-onbrand);
+  border-bottom:2px solid var(--brand-header);
+  border-left:1px solid var(--border-onbrand);
+}
+.th-date{font-size:9px;font-weight:var(--weight-medium);color:rgba(255,255,255,0.78);display:block;margin-top:1px;font-variant-numeric:tabular-nums}
+
+/* 오늘 요일 강조 */
+.th-d.tc{background:var(--brand-2);border-bottom:2px solid var(--brand-2)}
+.th-d.tc .th-date{color:rgba(255,255,255,0.92)}
+.td-c.tc{background:var(--tint-brand)}
+
+/* 일반 셀 - 빈 셀은 살짝 가라앉히고, 채워진 셀은 살짝 들어올림 */
+.td-c{
+  border-top:1px solid var(--border-soft);
+  border-left:1px solid var(--border-soft);
+  padding:3px;
+  vertical-align:top;
+  height:52px;
+  max-height:52px;
+  overflow:hidden;
+  background:var(--surface);
+}
+.td-e{background:var(--surface)}
+
+/* 수업 카드 — Toss 풍 둥근 라운드 + 미세 elevation, 노션 풍 정돈된 텍스트 위계 */
+.card{
+  border-radius:9px;
+  padding:5px 6px;
+  height:46px;
+  max-height:46px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,0.04), 0 1px 0 rgba(0,0,0,0.02);
+  box-sizing:border-box;
+  transition:transform var(--duration-fast) var(--ease);
+}
+.card:active{transform:scale(.97)}
+
+/* 과목명: 2줄, break-all로 반드시 줄바꿈 */
+.cn-s{
+  font-size:var(--font-xs);
+  font-weight:var(--weight-bold);
+  color:var(--text-on-pastel);
+  line-height:1.2;
+  word-break:break-all;
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  flex-shrink:0;
+  letter-spacing:-0.1px;
+}
+.cn-exam{font-size:var(--font-2xs);font-weight:var(--weight-heavy);color:var(--danger-strong);letter-spacing:-0.1px}
+.cn-name{font-size:9px;font-weight:var(--weight-semi);color:var(--text-on-pastel-soft);
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  flex-shrink:0;line-height:1.2;margin-top:1px}
+.cn-p{
+  font-size:9px;color:var(--text-on-pastel-faint);
+  overflow:hidden;white-space:nowrap;text-overflow:ellipsis;
+  flex-shrink:0;line-height:1.2;
+  margin-top:auto;
+  padding-top:1px;
+  font-weight:var(--weight-medium);
+}
+.cn-t{display:none}
+
+/* 점심 행 — 차분한 회색, 정돈된 점선 */
+.lunchrow .td-t{border-top:1px dashed var(--border-strong);background:var(--surface-2);height:22px!important;padding:0}
+.td-lunch{text-align:center;font-size:9.5px;color:var(--text-soft);padding:2px var(--space-1);
+  border-top:1px dashed var(--border-strong);border-left:1px solid var(--border-soft);background:var(--surface-2);height:22px;
+  font-weight:var(--weight-medium);letter-spacing:0.2px}
+
+/* ── LEGEND ── */
+.legend{margin-top:var(--space-2);background:var(--surface);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);box-shadow:var(--shadow-xs)}
+.lg-title{font-size:var(--font-xs);font-weight:var(--weight-bold);color:var(--text-soft);margin-bottom:var(--space-2);letter-spacing:0.3px;text-transform:uppercase}
+.lg-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px var(--space-3)}
+.li{display:flex;align-items:flex-start;gap:6px}
+.ld{width:10px;height:10px;border-radius:3px;flex-shrink:0;margin-top:2px;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06)}
+.ln{font-size:var(--font-xs);color:var(--text-secondary);line-height:1.4;word-break:keep-all}

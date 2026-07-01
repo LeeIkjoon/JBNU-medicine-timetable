@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+<title>JBNU Timetable — Preview</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',sans-serif;
+    background:#0e0e10;color:#fafafa;
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;
+    padding:20px 16px 64px;
+  }
+  h1{font-size:13px;font-weight:600;letter-spacing:0.8px;text-transform:uppercase;color:#a3a3a3;margin-bottom:4px}
+  .sub{font-size:11px;color:#737373;margin-bottom:16px}
+  .controls{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;justify-content:center}
+  .btn{
+    background:#1f1f23;border:1px solid #2e2e33;color:#e5e5e5;
+    font-size:12px;font-weight:600;
+    padding:7px 12px;border-radius:8px;cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .btn:hover{background:#2a2a30;border-color:#3a3a42}
+  .stage{display:flex;gap:48px;flex-wrap:wrap;justify-content:center;align-items:flex-start}
+  .col{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .col-label{
+    font-size:11px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
+    color:#d4d4d4;padding:5px 14px;border-radius:9999px;
+    background:#1f1f23;border:1px solid #2e2e33;
+  }
+  .col-label.dark{background:#000;border-color:#2e2e33;color:#fafafa}
+
+  /* ── iPhone 15 frame ──────────────────────────────────────
+     Display 393x852, titanium frame ~10px, screen radius 47px.
+     Frame is the device chrome (not the iOS UI). Status bar +
+     home indicator live INSIDE .screen so they sit on top of
+     the app content (matching real iOS PWA behavior with
+     apple-mobile-web-app-status-bar-style:black-translucent).
+  ───────────────────────────────────────────────────────── */
+  .phone{
+    width:413px;height:872px;
+    background:linear-gradient(180deg,#2a2a2e 0%,#1c1c20 100%);
+    border-radius:58px;
+    padding:10px;
+    box-shadow:
+      0 32px 80px rgba(0,0,0,0.6),
+      0 0 0 1.5px #000,
+      inset 0 1px 0 rgba(255,255,255,0.08);
+    position:relative;
+  }
+  .screen{
+    width:100%;height:100%;
+    border-radius:48px;
+    overflow:hidden;
+    background:#000;
+    position:relative;
+    isolation:isolate;
+  }
+  iframe{
+    width:100%;height:100%;
+    border:none;display:block;background:transparent;
+    /* iframe content sees a 393x852 viewport — same as real iPhone 15 */
+  }
+  /* ── iOS chrome layered ON TOP of the iframe ── */
+  /* Status bar — 시간 / Dynamic Island / 신호·와이파이·배터리 */
+  .status-bar{
+    position:absolute;top:0;left:0;right:0;height:54px;z-index:10;
+    display:flex;align-items:flex-start;justify-content:space-between;
+    padding:18px 32px 0;
+    pointer-events:none;
+    font-size:15px;font-weight:600;letter-spacing:-0.2px;
+    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  }
+  .status-bar.on-light{color:#fff}   /* 헤더가 항상 브랜드 그라디언트이므로 라이트도 white */
+  .status-bar.on-dark{color:#fff}
+  .sb-time{min-width:54px;text-align:center;line-height:1}
+  .sb-icons{display:flex;align-items:center;gap:5px;line-height:1;font-size:13px}
+  .island{
+    position:absolute;top:11px;left:50%;transform:translateX(-50%);
+    width:124px;height:37px;background:#000;border-radius:9999px;z-index:11;
+    pointer-events:none;
+  }
+  /* Home indicator — 하단 가운데 알약 */
+  .home-ind{
+    position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+    width:134px;height:5px;background:rgba(255,255,255,0.85);border-radius:9999px;
+    z-index:10;pointer-events:none;mix-blend-mode:difference;
+  }
+
+  /* 좁은 윈도우: 1:1 유지하고 세로로 쌓기 — 스케일링 X */
+  @media (max-width: 920px){
+    .stage{flex-direction:column;gap:32px}
+  }
+
+  /* 정말 좁은 폰 윈도우: 살짝만 축소 */
+  @media (max-width: 460px){
+    .phone{transform:scale(.82);transform-origin:top center;margin-bottom:-160px}
+    .stage{gap:0}
+  }
+</style>
+</head>
+<body>
+  <h1>JBNU Timetable — Preview</h1>
+  <div class="sub">iPhone 15 · 393×852 · CSS pixel 1:1</div>
+
+  <div class="controls">
+    <button class="btn" onclick="reload()">↻ 새로고침</button>
+    <button class="btn" onclick="navTo('weekly')">주간</button>
+    <button class="btn" onclick="navTo('filter')">필터</button>
+    <button class="btn" onclick="navTo('timer')">타이머</button>
+  </div>
+
+  <div class="stage">
+    <div class="col">
+      <span class="col-label">Light</span>
+      <div class="phone">
+        <div class="screen">
+          <iframe id="if-light" title="Light mode"></iframe>
+          <div class="status-bar on-light">
+            <span class="sb-time" id="t-light"></span>
+            <span class="sb-icons">●●●● <span style="margin-left:6px">􀙇</span> <span style="margin-left:6px">100%</span></span>
+          </div>
+          <div class="island"></div>
+          <div class="home-ind"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <span class="col-label dark">Dark</span>
+      <div class="phone">
+        <div class="screen">
+          <iframe id="if-dark" title="Dark mode"></iframe>
+          <div class="status-bar on-dark">
+            <span class="sb-time" id="t-dark"></span>
+            <span class="sb-icons">●●●● <span style="margin-left:6px">􀙇</span> <span style="margin-left:6px">100%</span></span>
+          </div>
+          <div class="island"></div>
+          <div class="home-ind"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  /* iframe URL은 항상 cache-bust해서 최신 CSS/JS 강제 로드 */
+  function reload(){
+    var v = '&_=' + Date.now();
+    document.getElementById('if-light').src = 'index.html?theme=light' + v;
+    document.getElementById('if-dark').src  = 'index.html?theme=dark'  + v;
+  }
+  function navTo(view){
+    [document.getElementById('if-light'), document.getElementById('if-dark')].forEach(function(f){
+      try{ var w=f.contentWindow; if(w && typeof w.setView==='function') w.setView(view); }catch(e){}
+    });
+  }
+  /* 상태바 시계 */
+  function tickClock(){
+    var d=new Date();
+    var hh=d.getHours(), mm=('0'+d.getMinutes()).slice(-2);
+    var t=hh+':'+mm;
+    document.getElementById('t-light').textContent=t;
+    document.getElementById('t-dark').textContent=t;
+  }
+  tickClock();
+  setInterval(tickClock, 30000);
+  reload();
+</script>
+</body>
+</html>

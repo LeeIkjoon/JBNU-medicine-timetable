@@ -1,0 +1,16 @@
+{
+  "name": "2026-1학기 시간표",
+  "short_name": "시간표",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#4F8EF7",
+  "theme_color": "#4F8EF7",
+  "start_url": ".",
+  "icons": [
+    {
+      "src": "icons/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
