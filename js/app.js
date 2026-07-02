@@ -29,7 +29,10 @@ function applyTheme(t){
 function updThemeBtn(){
   var b=document.getElementById('theme-btn');if(!b)return;
   var t=getTheme();
-  b.textContent=t==='dark'?'🌙':t==='light'?'☀️':'🌓';
+  var sun='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.3M12 19.2v2.3M4.4 4.4l1.6 1.6M18 18l1.6 1.6M2.5 12h2.3M19.2 12h2.3M4.4 19.6l1.6-1.6M18 6l1.6-1.6"/></svg>';
+  var moon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.3A8 8 0 1 1 9.7 4a6.4 6.4 0 0 0 10.3 10.3z"/></svg>';
+  var auto='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M12 3.6a8.4 8.4 0 0 1 0 16.8z" fill="currentColor" stroke="none"/></svg>';
+  b.innerHTML=t==='dark'?moon:t==='light'?sun:auto;
 }
 function cycleTheme(){
   var t=getTheme(); /* null(시스템) → 라이트 → 다크 → 시스템 */

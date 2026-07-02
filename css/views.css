@@ -81,8 +81,17 @@
 .fs{background:var(--surface);border-radius:var(--radius-md);padding:var(--space-3);margin-bottom:var(--space-2)}
 .fs-ttl{font-size:var(--font-sm);font-weight:var(--weight-bold);margin-bottom:9px}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
-.chip{padding:5px 11px;border-radius:18px;font-size:var(--font-xs);border:1.5px solid var(--border);
-  background:var(--surface);cursor:pointer;color:var(--text-muted);-webkit-tap-highlight-color:transparent}
+.chip{padding:6px 12px;border-radius:var(--radius-pill);font-size:var(--font-xs);border:1.5px solid var(--border);
+  background:var(--surface);cursor:pointer;color:var(--text-muted);-webkit-tap-highlight-color:transparent;
+  transition:transform var(--duration-fast) var(--ease)}
+.chip:active{transform:scale(.94)}
+/* 과목 칩 — 선택/해제 (선택 시 배경=과목색은 인라인, 텍스트만 토큰으로 다크 대응) */
+.fchip.on{color:var(--text-on-pastel);font-weight:var(--weight-bold)}
+.fchip.off{color:var(--text-secondary)}
+/* 시험만/전체 칩 — 시맨틱 토큰 */
+.chip-exam{border-color:var(--danger-strong);color:var(--danger)}
+.chip-exam.on{background:var(--danger-bg);border-color:var(--danger-strong);color:var(--danger-strong);font-weight:var(--weight-bold)}
+.chip-all.on{background:var(--tint-brand);border-color:var(--brand-1);color:var(--brand-1);font-weight:var(--weight-bold)}
 .no-res{text-align:center;padding:36px;color:var(--text-soft);font-size:var(--font-md)}
 
 /* ── PLANNER ── */

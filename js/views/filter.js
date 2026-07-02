@@ -96,9 +96,9 @@ function renderF(){
 
   var h='<div class="fw">';
   h+='<div class="fs"><div class="fs-ttl">빠른 필터</div><div class="chips">';
-  h+='<button class="chip" id="chip-exam" style="'+(fExam?'background:#FCA5A5;border-color:#FCA5A5;color:#7f1d1d;font-weight:700':'border-color:#FCA5A5;color:#991b1b')+'">‼️ 시험만 보기</button>';
+  h+='<button class="chip chip-exam'+(fExam?' on':'')+'" id="chip-exam">시험만 보기</button>';
   var aon=!fExam&&fsubj2.length===allSubj.length;
-  h+='<button class="chip" id="chip-all" style="'+(aon?'background:#BFDBFE;border-color:#3B82F6;color:#1e3a5f;font-weight:700':'')+'">전체 선택</button>';
+  h+='<button class="chip chip-all'+(aon?' on':'')+'" id="chip-all">전체 선택</button>';
   h+='<button class="chip" id="chip-clr">전체 해제</button>';
   h+='</div></div>';
 
@@ -106,16 +106,16 @@ function renderF(){
     h+='<div class="fs"><div class="fs-ttl">일반 과목</div><div class="chips">';
     for(var i=0;i<nS.length;i++){
       var s=nS[i],c=gcol(s),on2=!fExam&&fsubj2.indexOf(s)>=0;
-      h+='<button class="chip fchip" data-s="'+s+'" style="'+(on2?'background:'+c+';border-color:'+c+';color:#1e293b;font-weight:700':'border-color:'+c+';color:#374151')+'">'+s+'</button>';
+      h+='<button class="chip fchip '+(on2?'on':'off')+'" data-s="'+s+'" style="border-color:'+c+';'+(on2?'background:'+c+';':'')+'">'+s+'</button>';
     }
     h+='</div></div>';
   }
   if(eS.length){
-    h+='<div class="fs"><div class="fs-ttl">‼️ 시험</div><div class="chips">';
+    h+='<div class="fs"><div class="fs-ttl">시험</div><div class="chips">';
     for(var j=0;j<eS.length;j++){
       var se=eS[j],ce=gcol(se),oe=(!fExam&&fsubj2.indexOf(se)>=0)||fExam;
       var lb2=exLabel(se),et2=lb2[0],ba2=lb2[1];
-      h+='<button class="chip fchip" data-s="'+se+'" style="'+(oe?'background:'+ce+';border-color:'+ce+';color:#1e293b;font-weight:700':'border-color:'+ce+';color:#374151')+'">‼️ '+et2+(ba2?' '+ba2:'')+'</button>';
+      h+='<button class="chip fchip '+(oe?'on':'off')+'" data-s="'+se+'" style="border-color:'+ce+';'+(oe?'background:'+ce+';':'')+'">'+et2+(ba2?' '+ba2:'')+'</button>';
     }
     h+='</div></div>';
   }
