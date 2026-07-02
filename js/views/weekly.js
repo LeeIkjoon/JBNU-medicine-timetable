@@ -76,10 +76,10 @@ function buildWeekTable(w,items){
       html+='<td class="td-c" data-day="'+d+'">';
       html+='<div class="card" style="background:'+bg+';'+(itIsExam?'box-shadow:inset 0 0 0 2.5px #EF4444;':'')+'">';
       if(itIsExam){
-        html+='<div class="cn-s cn-exam">‼️ '+it.subject+'</div>';
+        html+='<div class="cn-s cn-exam">'+it.subject+'</div>';
       }else if(isEx(it.subject)){
         var lb=exLabel(it.subject);
-        html+='<div class="cn-s cn-exam">‼️ '+lb[0]+'</div>';
+        html+='<div class="cn-s cn-exam">'+lb[0]+'</div>';
         if(lb[1])html+='<div class="cn-name">'+lb[1]+'</div>';
       }else{
         html+='<div class="cn-s">'+it.subject+'</div>';

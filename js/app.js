@@ -111,9 +111,9 @@ function init(){
       wh[wk]=wh[wk].split('background:'+oc+'"').join('background:'+oldColors[oc]+'"');
       wh[wk]=wh[wk].split('background:'+oc+';').join('background:'+oldColors[oc]+';');
     }
-    /* 시험 아이콘 통일 */
-    wh[wk]=wh[wk].split('⚠️').join('‼️');
-    wh[wk]=wh[wk].split('‼️').join('‼️');
+    /* 시험 아이콘 제거 — 시험은 cn-exam(빨강 굵은 글씨)+빨강 테두리로 표시, 이모지 중복 제거 */
+    wh[wk]=wh[wk].split('⚠️ ').join('').split('⚠️').join('');
+    wh[wk]=wh[wk].split('‼️ ').join('').split('‼️').join('');
     /* 카드 텍스트 색 교체: 흰색→어두운 색 (파스텔 배경 가독성) */
     wh[wk]=wh[wk].split('color:#fff"').join('color:#1e293b"');
     wh[wk]=wh[wk].split('color:rgba(255,255,255,.9)').join('color:rgba(30,41,59,0.8)');

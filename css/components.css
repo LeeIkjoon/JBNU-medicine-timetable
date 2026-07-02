@@ -45,6 +45,7 @@
 .xl-dropzone:hover,.xl-dropzone.drag{border-color:var(--accent);background:var(--tint-accent)}
 .xl-dropzone input{display:none}
 .xl-di{font-size:30px;margin-bottom:var(--space-2)}
+.xl-di svg{width:32px;height:32px;color:var(--text-soft);display:block;margin:0 auto}
 .xl-dt{font-size:var(--font-md);font-weight:var(--weight-semi);color:var(--text);margin-bottom:var(--space-1)}
 .xl-ds{font-size:var(--font-xs);color:var(--text-soft)}
 .xl-status{font-size:var(--font-sm);color:var(--text-muted);min-height:18px;text-align:center}
@@ -66,6 +67,7 @@
   box-shadow:var(--shadow-brand);z-index:150;
   display:none;align-items:center;justify-content:center;
   -webkit-tap-highlight-color:transparent}
+.admin-fab svg{width:22px;height:22px;display:block}
 .admin-panel{position:fixed;inset:0;background:var(--bg);z-index:800;
   display:none;flex-direction:column;}
 .admin-panel.show{display:flex}
@@ -191,8 +193,8 @@
 .dtodo-item-lc-3{background:#3BD97B}
 .dtodo-item-lc-4{background:#A855F7}
 .dtodo-text-wrap{flex:1}
-.dtodo-text{font-size:var(--font-base);font-weight:var(--weight-semi);color:var(--text);line-height:1.4;word-break:keep-all}
-.dtodo-text.done{text-decoration:line-through;color:var(--text-fade)}
+.dtodo-text{font-size:var(--font-base);font-weight:var(--weight-semi);color:var(--text-on-pastel);line-height:1.4;word-break:keep-all}
+.dtodo-text.done{text-decoration:line-through;color:var(--text-on-pastel-soft)}
 .dtodo-chk{width:26px;height:26px;border-radius:50%;
   border:2px solid rgba(0,0,0,0.18);background:rgba(255,255,255,0.7);
   flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;

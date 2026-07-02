@@ -45,5 +45,6 @@
   transition:transform var(--duration-fast),box-shadow var(--duration-fast);-webkit-tap-highlight-color:transparent}
 .gs-card:active{transform:scale(.96)}
 .gs-ic{font-size:34px;display:block;margin-bottom:var(--space-2)}
+.gs-ic svg{width:32px;height:32px;display:block;margin:0 auto}
 .gs-name{font-size:var(--font-base);font-weight:var(--weight-bold);color:var(--text-strong);margin-bottom:2px}
 .gs-desc{font-size:var(--font-xs);color:var(--text-soft)}

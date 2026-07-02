@@ -7,7 +7,7 @@ function lcardH(it){
   if(itIsExam){
     var lb=exLabel(it.subject),et=lb[0],ba=lb[1];
     var dispName=(et&&et!==it.subject)?et:it.subject;
-    sh='<div class="lc-s" style="color:#7f1d1d;font-weight:700">‼️ '+dispName+'</div>'+(ba?'<div style="font-size:12px;color:#555;margin-top:2px">'+ba+'</div>':'');
+    sh='<div class="lc-s" style="color:var(--danger-strong);font-weight:700">'+dispName+'</div>'+(ba?'<div style="font-size:12px;color:var(--text-muted);margin-top:2px">'+ba+'</div>':'');
     ex='border:2px solid '+c+';';
   }else{sh='<div class="lc-s">'+it.subject+'</div>';}
   var ph=it.professor?'<div class="lc-p">'+it.professor+'</div>':'';
@@ -32,7 +32,7 @@ function byDateH(items){
     var todayCls=isToday?' today':'';
     h+='<tr class="xl-date-row'+todayCls+'"><td colspan="5">'+lbl+
       (isToday?'<span class="xl-today-badge">오늘</span>':'')+
-      (hx?'<span class="exam-flag">‼ 시험</span>':'')+
+      (hx?'<span class="exam-flag">시험</span>':'')+
     '</td></tr>';
     grp.sort(function(a,b){return a.period-b.period;});
 
@@ -56,7 +56,7 @@ function byDateH(items){
       var c=gcol(it2.subject);
       var isE=isEx(it2.subject);
       var lb=isE?exLabel(it2.subject):null;
-      var subjTxt=isE?'‼ '+(lb?lb[0]:it2.subject):it2.subject;
+      var subjTxt=isE?(lb?lb[0]:it2.subject):it2.subject;
       var perTxt=it2.period===it2.endPeriod?it2.period+'교시':it2.period+'~'+it2.endPeriod+'교시';
       var timeTxt=it2.start+'~'+it2.end;
       h+='<tr class="xl-row'+(isE?' exam-row':'')+'">'+
