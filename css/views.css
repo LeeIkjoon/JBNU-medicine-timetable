@@ -134,20 +134,51 @@
   min-height:calc(100dvh - 130px);
   box-sizing:border-box;
 }
-.tm-clock-card{background:var(--surface);border-radius:var(--radius-lg);padding:var(--space-6) var(--space-4);text-align:center}
-.tm-subject-select{width:100%;border:1.5px solid var(--border);border-radius:10px;padding:9px var(--space-3);
-  font-size:var(--font-md);font-family:inherit;background:var(--surface);color:var(--text);outline:none;margin-bottom:var(--space-4)}
-.tm-display{font-size:var(--font-display);font-weight:200;color:var(--text);letter-spacing:2px;font-variant-numeric:tabular-nums;
-  font-family:-apple-system,BlinkMacSystemFont,monospace}
-.tm-display.running{color:var(--brand-header)}
-.tm-btns{display:flex;gap:var(--space-2);justify-content:center;margin-top:var(--space-4)}
-.tm-btn{border:none;border-radius:var(--radius-md);padding:var(--space-3) var(--space-6);font-size:var(--font-lg);font-weight:var(--weight-semi);
-  cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity var(--duration-fast)}
-.tm-btn:active{opacity:.7}
-.tm-btn-start{background:var(--brand-gradient);color:var(--text-onbrand);flex:1}
+.tm-clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);
+  padding:var(--space-5) var(--space-4) var(--space-5);text-align:center;
+  transition:background var(--duration) var(--ease),box-shadow var(--duration) var(--ease),border-color var(--duration) var(--ease)}
+
+/* 과목 선택 (대기 상태) — 알약형 커스텀 셀렉트 */
+.tm-subj-wrap{position:relative;margin-bottom:var(--space-5)}
+.tm-subject-select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-pill);
+  padding:11px var(--space-6) 11px var(--space-5);
+  font-size:var(--font-base);font-weight:var(--weight-medium);font-family:inherit;
+  background:var(--surface);color:var(--text);outline:none;cursor:pointer;text-align:center;
+  -webkit-appearance:none;appearance:none;transition:border-color var(--duration-fast)}
+.tm-subject-select:focus{border-color:var(--brand-1)}
+.tm-subj-chev{position:absolute;right:16px;top:50%;transform:translateY(-50%);
+  width:16px;height:16px;color:var(--text-soft);pointer-events:none}
+
+/* 라이브 헤더 (집중 중 / 일시정지) */
+.tm-live-head{display:inline-flex;align-items:center;gap:7px;margin-bottom:var(--space-4);
+  font-size:var(--font-md);font-weight:var(--weight-bold)}
+.tm-live-head.running{color:var(--brand-1)}
+.tm-live-head.paused{color:var(--warning-2)}
+.tm-live-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0}
+.tm-live-head.running .tm-live-dot{animation:tmPulse 1.5s var(--ease) infinite}
+@keyframes tmPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+
+/* 시간 표시 */
+.tm-display{font-size:60px;font-weight:var(--weight-regular);color:var(--text-strong);
+  letter-spacing:1px;line-height:1.05;font-variant-numeric:tabular-nums;
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',system-ui,monospace}
+.tm-display.running{color:var(--brand-1)}
+.tm-display.paused{color:var(--text-muted)}
+
+/* 버튼 — 알약형 + 아이콘 */
+.tm-btns{display:flex;gap:var(--space-2);justify-content:center;margin-top:var(--space-5)}
+.tm-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  border:none;border-radius:var(--radius-pill);padding:14px var(--space-5);
+  font-size:var(--font-lg);font-weight:var(--weight-bold);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform var(--duration-fast) var(--ease),opacity var(--duration-fast)}
+.tm-btn:active{transform:scale(.96);opacity:.9}
+.tm-ic{width:18px;height:18px;flex-shrink:0}
+.tm-btn-start{background:var(--brand-gradient);color:var(--text-onbrand);flex:1;box-shadow:var(--shadow-brand)}
 .tm-btn-pause{background:var(--warning-bg);color:var(--warning-text);flex:1}
-.tm-btn-stop{background:var(--danger-bg);color:var(--danger-strong)}
-.tm-btn-reset{background:var(--surface-muted);color:var(--text-muted)}
+.tm-btn-stop{background:var(--danger-bg);color:var(--danger-strong);flex:1}
+.tm-btn-reset{background:var(--surface-muted);color:var(--text-muted);padding:14px;flex:0 0 auto}
+.tm-btn-reset .tm-ic{width:19px;height:19px}
 .tm-today-card{background:var(--surface);border-radius:var(--radius-lg);padding:var(--space-4)}
 .tm-today-ttl{font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-soft);margin-bottom:10px}
 .tm-today-total{font-size:var(--font-3xl);font-weight:var(--weight-bold);color:var(--text);margin-bottom:var(--space-3)}
@@ -259,11 +290,9 @@
 .dash-celebrate-msg{margin-top:var(--space-2);font-size:var(--font-lg);font-weight:var(--weight-bold);color:var(--text-strong);white-space:nowrap}
 
 /* ── 타이머 폴리시 ── */
-.tm-clock-card.running{box-shadow:0 0 0 1.5px var(--brand-1),var(--shadow-sm)}
-.tm-subject-select:disabled{opacity:.6}
-.tm-state-badge{display:inline-block;margin-top:var(--space-2);font-size:var(--font-sm);font-weight:var(--weight-semi);padding:4px 12px;border-radius:var(--radius-pill)}
-.tm-state-badge.running{color:var(--brand-1);background:var(--tint-brand)}
-.tm-state-badge.paused{color:var(--warning-text);background:var(--warning-bg)}
+.tm-clock-card.running{background:var(--tint-brand);border-color:transparent;
+  box-shadow:0 0 0 1.5px var(--brand-1),0 10px 30px -6px rgba(79,142,247,0.35)}
+.tm-clock-card.paused{border-color:var(--warning-2);box-shadow:0 0 0 1px var(--warning-2)}
 .tm-goal{margin-bottom:var(--space-3)}
 .tm-goal-bar-wrap{height:8px;background:var(--surface-muted);border-radius:4px;overflow:hidden}
 .tm-goal-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--brand-1),var(--brand-2));transition:width .4s}

@@ -37,8 +37,16 @@ function tmActiveRestore(){
 
 function tmFmt(ms){
   var s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sc=s%60;
-  return p2(h)+':'+p2(m)+':'+p2(sc);
+  return (h>0?h+':'+p2(m):p2(m))+':'+p2(sc); /* <1h → MM:SS, 이상 → H:MM:SS */
 }
+/* 타이머 버튼용 SVG 아이콘 */
+var TM_IC={
+  play:'<svg class="tm-ic" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.2v13.6a1 1 0 0 0 1.5.86l11-6.8a1 1 0 0 0 0-1.72l-11-6.8A1 1 0 0 0 8 5.2z"/></svg>',
+  pause:'<svg class="tm-ic" viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="3.6" height="14" rx="1.3"/><rect x="13.9" y="5" width="3.6" height="14" rx="1.3"/></svg>',
+  stop:'<svg class="tm-ic" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>',
+  save:'<svg class="tm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.2 4.2L19 6.8"/></svg>',
+  reset:'<svg class="tm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 8.5V4.2M4.5 8.5H8.8M4.6 8.4a8 8 0 1 1-1.4 5"/></svg>'
+};
 function tmFmtShort(ms){
   var s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60);
   if(h>0)return m>0?h+'시간 '+m+'분':h+'시간';
@@ -119,27 +127,38 @@ function tmCardHtml(){
   subjects.sort();
   var running=tmState==='running',paused=tmState==='paused';
 
-  var h='<div class="tm-clock-card'+(running?' running':'')+'">';
-  h+='<select class="tm-subject-select" id="tm-subj">';
-  h+='<option value="">과목 선택...</option>';
-  for(var si=0;si<subjects.length;si++){
-    var sel=(tmSubject===subjects[si])?' selected':'';
-    h+='<option value="'+escHtml(subjects[si])+'"'+sel+'>'+escHtml(subjects[si])+'</option>';
+  var active=running||paused;
+  var h='<div class="tm-clock-card'+(running?' running':paused?' paused':'')+'">';
+  if(active){
+    /* 실행/일시정지: 과목 라이브 헤더 */
+    h+='<div class="tm-live-head'+(running?' running':' paused')+'">';
+    h+='<span class="tm-live-dot"></span>';
+    h+='<span class="tm-live-txt">'+(running?'집중 중':'일시정지')+(tmSubject?' · '+escHtml(tmSubject):'')+'</span>';
+    h+='</div>';
+  } else {
+    /* 대기: 과목 선택 */
+    h+='<div class="tm-subj-wrap">';
+    h+='<select class="tm-subject-select" id="tm-subj">';
+    h+='<option value="">과목 선택</option>';
+    for(var si=0;si<subjects.length;si++){
+      var sel=(tmSubject===subjects[si])?' selected':'';
+      h+='<option value="'+escHtml(subjects[si])+'"'+sel+'>'+escHtml(subjects[si])+'</option>';
+    }
+    h+='</select>';
+    h+='<svg class="tm-subj-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+    h+='</div>';
   }
-  h+='</select>';
-  if(running)h+='<div class="tm-state-badge running">● 집중 중'+(tmSubject?' · '+escHtml(tmSubject):'')+'</div>';
-  else if(paused)h+='<div class="tm-state-badge paused">⏸ 일시정지'+(tmSubject?' · '+escHtml(tmSubject):'')+'</div>';
-  h+='<div class="tm-display'+(running?' running':'')+'" id="tm-disp">'+tmFmt(tmElapsed())+'</div>';
+  h+='<div class="tm-display'+(running?' running':paused?' paused':'')+'" id="tm-disp">'+tmFmt(tmElapsed())+'</div>';
   h+='<div class="tm-btns">';
   if(tmState==='idle'){
-    h+='<button class="tm-btn tm-btn-start" id="tm-start">▶ 공부 시작</button>';
+    h+='<button class="tm-btn tm-btn-start" id="tm-start">'+TM_IC.play+'공부 시작</button>';
   } else if(running){
-    h+='<button class="tm-btn tm-btn-pause" id="tm-pause">⏸ 일시정지</button>';
-    h+='<button class="tm-btn tm-btn-stop" id="tm-stop">⏹ 종료</button>';
+    h+='<button class="tm-btn tm-btn-pause" id="tm-pause">'+TM_IC.pause+'일시정지</button>';
+    h+='<button class="tm-btn tm-btn-stop" id="tm-stop">'+TM_IC.stop+'종료</button>';
   } else {
-    h+='<button class="tm-btn tm-btn-start" id="tm-start">▶ 재개</button>';
-    h+='<button class="tm-btn tm-btn-stop" id="tm-stop">⏹ 기록저장</button>';
-    h+='<button class="tm-btn tm-btn-reset" id="tm-reset">↺</button>';
+    h+='<button class="tm-btn tm-btn-start" id="tm-start">'+TM_IC.play+'재개</button>';
+    h+='<button class="tm-btn tm-btn-stop" id="tm-stop">'+TM_IC.save+'기록 저장</button>';
+    h+='<button class="tm-btn tm-btn-reset" id="tm-reset" title="초기화">'+TM_IC.reset+'</button>';
   }
   h+='</div></div>';
   return h;
