@@ -104,6 +104,61 @@ function dashUpcomingExams(){
   return out;
 }
 
+/* 본 시험 (오늘 이전, 날짜+과목 중복 제거, 최근 순) */
+function dashPastExams(){
+  var todayK=dashYmd(new Date()),seen={},out=[];
+  var rows=merged.filter(function(m){return m.is_exam&&m.date<todayK;})
+    .sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0;});
+  for(var i=0;i<rows.length;i++){
+    var k=rows[i].date+'|'+rows[i].subject;
+    if(seen[k])continue;seen[k]=true;
+    out.push({date:rows[i].date,subject:rows[i].subject});
+  }
+  return out;
+}
+
+/* 시험 카드 펼침 상태 + 토글 (전역 — 인라인 onclick에서 호출) */
+var dashUpcOpen=false,dashPastOpen=false;
+function dashToggleExam(which){
+  if(which==='upc')dashUpcOpen=!dashUpcOpen;
+  else dashPastOpen=!dashPastOpen;
+  renderDashboard();
+}
+/* MM/DD 라벨 */
+function dashMd(dateStr){return dateStr.slice(5).replace('-','/');}
+/* 시험 카드 HTML — title/개수/리스트(기본 4개)+더보기 */
+function dashExamCard(title,items,opts){
+  var LIM=4,open=opts.open,past=opts.past;
+  var h='<div class="dash-card">';
+  h+='<div class="dash-card-ttl">'+title+'<span class="dash-card-count'+(past?' past':'')+'">'+items.length+'</span></div>';
+  if(!items.length){
+    h+='<div class="dash-exam-empty">'+opts.empty+'</div></div>';
+    return h;
+  }
+  var show=open?items.length:Math.min(items.length,LIM);
+  h+='<div class="dash-exam-list">';
+  for(var i=0;i<show;i++){
+    var ex=items[i];
+    h+='<div class="dash-exam-item'+(past?' past':'')+'">';
+    if(past){
+      h+='<span class="dash-exam-done">✓</span>';
+    }else{
+      var ddClass=ex.dday<=3?' urgent':ex.dday<=7?' soon':'';
+      h+='<span class="dash-exam-dday'+ddClass+'">'+(ex.dday===0?'D-DAY':'D-'+ex.dday)+'</span>';
+    }
+    h+='<span class="dash-exam-subj">'+escHtml(ex.subject)+'</span>';
+    h+='<span class="dash-exam-date">'+dashMd(ex.date)+'</span>';
+    h+='</div>';
+  }
+  h+='</div>';
+  if(items.length>LIM){
+    var rest=items.length-LIM;
+    h+='<button class="dash-exam-more" onclick="dashToggleExam(\''+opts.toggleKey+'\')">'+(open?'접기':'+'+rest+'개 더보기')+'</button>';
+  }
+  h+='</div>';
+  return h;
+}
+
 /* 이번 주 과목별 공부시간 */
 function dashWeekBySubject(){
   var now=new Date(),dow=now.getDay();
@@ -181,7 +236,7 @@ function renderDashboard(){
   /* 라이브 공부 타이머 (홈에 통합) */
   if(typeof tmCardHtml==='function')h+=tmCardHtml();
 
-  /* 스트릭 + 누적 */
+  /* 연속 공부 + 이번 주 */
   h+='<div class="dash-stat-grid">';
   h+='<div class="dash-stat">';
   h+='<div class="dash-stat-n">'+streak+'<span class="dash-stat-unit">일</span></div>';
@@ -191,33 +246,12 @@ function renderDashboard(){
   h+='<div class="dash-stat-n">'+tmFmtShort(dashWeekTotal()*1000)+'</div>';
   h+='<div class="dash-stat-l">이번 주</div>';
   h+='</div>';
-  h+='<div class="dash-stat">';
-  h+='<div class="dash-stat-n">'+tmFmtShort(dashMonthTotal()*1000)+'</div>';
-  h+='<div class="dash-stat-l">이번 달</div>';
-  h+='</div>';
-  h+='<div class="dash-stat">';
-  h+='<div class="dash-stat-n">'+tmFmtShort(dashTotalAll()*1000)+'</div>';
-  h+='<div class="dash-stat-l">전체 누적</div>';
-  h+='</div>';
   h+='</div>';
 
-  /* 시험 D-day */
-  var exams=dashUpcomingExams();
-  if(exams.length){
-    h+='<div class="dash-card">';
-    h+='<div class="dash-card-ttl">다가오는 시험</div>';
-    h+='<div class="dash-exam-list">';
-    for(var i=0;i<Math.min(exams.length,4);i++){
-      var ex=exams[i];
-      var ddClass=ex.dday<=3?' urgent':ex.dday<=7?' soon':'';
-      h+='<div class="dash-exam-item">';
-      h+='<span class="dash-exam-dday'+ddClass+'">'+(ex.dday===0?'D-DAY':'D-'+ex.dday)+'</span>';
-      h+='<span class="dash-exam-subj">'+escHtml(ex.subject)+'</span>';
-      h+='<span class="dash-exam-date">'+ex.date.slice(5).replace('-','/')+'</span>';
-      h+='</div>';
-    }
-    h+='</div></div>';
-  }
+  /* 시험 — 남은 시험 + 본 시험 */
+  var upcExams=dashUpcomingExams(),pastExams=dashPastExams();
+  h+=dashExamCard('남은 시험',upcExams,{open:dashUpcOpen,toggleKey:'upc',past:false,empty:'예정된 시험이 없어요'});
+  h+=dashExamCard('본 시험',pastExams,{open:dashPastOpen,toggleKey:'past',past:true,empty:'아직 본 시험이 없어요'});
 
   /* 주간 그래프 */
   var weekData=[],now=new Date(),dow=now.getDay();
@@ -241,38 +275,6 @@ function renderDashboard(){
     h+='</div>';
   }
   h+='</div></div>';
-
-  /* 공부 잔디 (최근 14주) */
-  var HMW=14,cells=dashHeatmap(HMW);
-  h+='<div class="dash-card">';
-  h+='<div class="dash-card-ttl">학습 기록 <span class="dash-hm-cap">최근 '+HMW+'주</span></div>';
-  h+='<div class="dash-hm-grid">';
-  for(var ci2=0;ci2<cells.length;ci2++){
-    var c=cells[ci2];
-    if(c.level<0){h+='<div class="dash-hm-cell empty"></div>';continue;}
-    h+='<div class="dash-hm-cell lvl'+c.level+(c.isToday?' today':'')+'" title="'+c.date+' · '+tmFmtShort(c.secs*1000)+'"></div>';
-  }
-  h+='</div>';
-  h+='<div class="dash-hm-legend"><span>적음</span><i class="dash-hm-cell lvl0"></i><i class="dash-hm-cell lvl1"></i><i class="dash-hm-cell lvl2"></i><i class="dash-hm-cell lvl3"></i><i class="dash-hm-cell lvl4"></i><span>많음</span></div>';
-  h+='</div>';
-
-  /* 과목별 비중 (이번 주) */
-  var bySubj=dashWeekBySubject();
-  if(bySubj.length){
-    var maxS=bySubj[0].secs;
-    h+='<div class="dash-card">';
-    h+='<div class="dash-card-ttl">이번 주 과목별</div>';
-    h+='<div class="dash-subj-list">';
-    for(var si=0;si<Math.min(bySubj.length,6);si++){
-      var bs=bySubj[si],sp=maxS>0?Math.round(bs.secs/maxS*100):0;
-      h+='<div class="dash-subj-item">';
-      h+='<span class="dash-subj-name">'+escHtml(bs.subject)+'</span>';
-      h+='<div class="dash-subj-bar-wrap"><div class="dash-subj-bar" style="width:'+sp+'%"></div></div>';
-      h+='<span class="dash-subj-time">'+tmFmtShort(bs.secs*1000)+'</span>';
-      h+='</div>';
-    }
-    h+='</div></div>';
-  }
 
   h+='</div>';
   document.getElementById('main').innerHTML=h;
