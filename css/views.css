@@ -135,11 +135,11 @@
   box-sizing:border-box;
 }
 .tm-clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);
-  padding:var(--space-5) var(--space-4) var(--space-5);text-align:center;
+  padding:var(--space-4) var(--space-4);text-align:center;
   transition:background var(--duration) var(--ease),box-shadow var(--duration) var(--ease),border-color var(--duration) var(--ease)}
 
 /* 과목 선택 (대기 상태) — 알약형 커스텀 셀렉트 */
-.tm-subj-wrap{position:relative;margin-bottom:var(--space-5)}
+.tm-subj-wrap{position:relative;margin-bottom:var(--space-3)}
 .tm-subject-select{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-pill);
   padding:11px var(--space-6) 11px var(--space-5);
   font-size:var(--font-base);font-weight:var(--weight-medium);font-family:inherit;
@@ -159,16 +159,16 @@
 @keyframes tmPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
 
 /* 시간 표시 */
-.tm-display{font-size:60px;font-weight:var(--weight-regular);color:var(--text-strong);
+.tm-display{font-size:50px;font-weight:var(--weight-regular);color:var(--text-strong);
   letter-spacing:1px;line-height:1.05;font-variant-numeric:tabular-nums;
   font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display',system-ui,monospace}
 .tm-display.running{color:var(--brand-1)}
 .tm-display.paused{color:var(--text-muted)}
 
 /* 버튼 — 알약형 + 아이콘 */
-.tm-btns{display:flex;gap:var(--space-2);justify-content:center;margin-top:var(--space-5)}
+.tm-btns{display:flex;gap:var(--space-2);justify-content:center;margin-top:var(--space-3)}
 .tm-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
-  border:none;border-radius:var(--radius-pill);padding:14px var(--space-5);
+  border:none;border-radius:var(--radius-pill);padding:12px var(--space-5);
   font-size:var(--font-lg);font-weight:var(--weight-bold);
   cursor:pointer;-webkit-tap-highlight-color:transparent;
   transition:transform var(--duration-fast) var(--ease),opacity var(--duration-fast)}
@@ -196,7 +196,7 @@
 .tm-wbar-lbl{font-size:9px;color:var(--text-soft)}
 
 /* ── DASHBOARD (홈) ── */
-.dash-wrap{display:flex;flex-direction:column;gap:var(--space-4);padding:var(--space-3) 0 80px}
+.dash-wrap{display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-3) 0 80px}
 
 .dash-greet{padding:var(--space-1) var(--space-1) 0}
 .dash-greet-top{font-size:var(--font-sm);color:var(--text-soft);font-weight:var(--weight-medium)}
