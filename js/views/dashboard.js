@@ -91,10 +91,40 @@ function dashDday(dateStr){
   var d=new Date(+p[0],+p[1]-1,+p[2]);
   return Math.round((d-t)/86400000);
 }
+/* ── 학년별 고정 시험표 (시간표 업로드와 무관하게 시험 카드에 사용) ──
+   해당 학년 스케줄이 있으면 그걸 쓰고, 없으면 시간표(merged)의 is_exam 항목 사용 */
+var EXAM_SCHEDULE={
+  '의학과 1학년':[
+    ['2026-03-30','조직학 총론'],
+    ['2026-04-09','생화학 1차'],
+    ['2026-04-14','생화학 2차'],
+    ['2026-04-20','조직학 각론'],
+    ['2026-04-27','조직학 각론'],
+    ['2026-05-06','생리학 1차'],
+    ['2026-05-06','조직학 땡시'],
+    ['2026-05-08','생리학 2차'],
+    ['2026-05-12','PDS1'],
+    ['2026-06-01','면역학'],
+    ['2026-06-08','약리학 1차'],
+    ['2026-06-15','약리학 2차'],
+    ['2026-06-23','병리학'],
+    ['2026-06-23','유전학'],
+    ['2026-07-08','생애주기 기초'],
+    ['2026-07-09','생애주기 임상'],
+    ['2026-07-09','의료면담1'],
+    ['2026-07-10','병리학 실습']
+  ]
+};
+function dashExamSource(){
+  var sched=EXAM_SCHEDULE[savedGrade];
+  if(sched)return sched.map(function(e){return {date:e[0],subject:e[1],is_exam:true};});
+  return merged.filter(function(m){return m.is_exam;});
+}
+
 /* 다가오는 시험 (오늘 이후, 날짜+과목 중복 제거, 가까운 순) */
 function dashUpcomingExams(){
   var todayK=dashYmd(new Date()),seen={},out=[];
-  var rows=merged.filter(function(m){return m.is_exam&&m.date>=todayK;})
+  var rows=dashExamSource().filter(function(m){return m.date>=todayK;})
     .sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:0;});
   for(var i=0;i<rows.length;i++){
     var k=rows[i].date+'|'+rows[i].subject;
@@ -107,7 +137,7 @@ function dashUpcomingExams(){
 /* 본 시험 (오늘 이전, 날짜+과목 중복 제거, 최근 순) */
 function dashPastExams(){
   var todayK=dashYmd(new Date()),seen={},out=[];
-  var rows=merged.filter(function(m){return m.is_exam&&m.date<todayK;})
+  var rows=dashExamSource().filter(function(m){return m.date<todayK;})
     .sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:0;});
   for(var i=0;i<rows.length;i++){
     var k=rows[i].date+'|'+rows[i].subject;
@@ -248,10 +278,12 @@ function renderDashboard(){
   h+='</div>';
   h+='</div>';
 
-  /* 시험 — 남은 시험 + 본 시험 */
+  /* 시험 — 남은 시험 + 본 시험 (한 줄에 나란히) */
   var upcExams=dashUpcomingExams(),pastExams=dashPastExams();
+  h+='<div class="dash-exam-row">';
   h+=dashExamCard('남은 시험',upcExams,{open:dashUpcOpen,toggleKey:'upc',past:false,empty:'예정된 시험이 없어요'});
   h+=dashExamCard('본 시험',pastExams,{open:dashPastOpen,toggleKey:'past',past:true,empty:'아직 본 시험이 없어요'});
+  h+='</div>';
 
   /* 주간 그래프 */
   var weekData=[],now=new Date(),dow=now.getDay();
