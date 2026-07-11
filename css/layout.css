@@ -14,7 +14,7 @@
 .icon-btn-txt{font-size:13px;font-weight:var(--weight-bold);width:auto;padding:0 10px}
 
 /* ── MAIN ── */
-.main{padding:var(--space-2) 6px;padding-bottom:calc(80px + env(safe-area-inset-bottom,20px));min-height:calc(100dvh - 130px);box-sizing:border-box;}
+.main{padding:var(--space-1) 4px;padding-bottom:calc(80px + env(safe-area-inset-bottom,20px));min-height:calc(100dvh - 130px);box-sizing:border-box;}
 .sw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-md);background:var(--surface);box-shadow:var(--shadow-sm)}
 
 /* ── BOTTOM NAV ── */

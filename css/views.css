@@ -196,7 +196,7 @@
 .tm-wbar-lbl{font-size:9px;color:var(--text-soft)}
 
 /* ── DASHBOARD (홈) ── */
-.dash-wrap{display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-3) 0 80px}
+.dash-wrap{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-1) 0 80px}
 
 .dash-greet{padding:var(--space-1) var(--space-1) 0}
 .dash-greet-top{font-size:var(--font-sm);color:var(--text-soft);font-weight:var(--weight-medium)}
