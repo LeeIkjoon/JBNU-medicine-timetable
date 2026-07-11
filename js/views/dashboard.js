@@ -156,6 +156,13 @@ function dashToggleExam(which){
 }
 /* MM/DD 라벨 */
 function dashMd(dateStr){return dateStr.slice(5).replace('-','/');}
+/* 과목명 → 이모지 */
+function dashExamEmoji(subj){
+  var map=[['조직','🔬'],['생화학','🧪'],['생리','🫀'],['면역','🦠'],['약리','💊'],
+    ['병리','🧫'],['유전','🧬'],['생애주기','👶'],['의료면담','🩺'],['PDS','🧩']];
+  for(var i=0;i<map.length;i++)if(subj.indexOf(map[i][0])>=0)return map[i][1];
+  return '📘';
+}
 /* 시험 카드 HTML — title/개수/리스트(기본 4개)+더보기 */
 function dashExamCard(title,items,opts){
   var LIM=4,open=opts.open,past=opts.past;
@@ -170,12 +177,11 @@ function dashExamCard(title,items,opts){
   for(var i=0;i<show;i++){
     var ex=items[i];
     h+='<div class="dash-exam-item'+(past?' past':'')+'">';
-    if(past){
-      h+='<span class="dash-exam-done">✓</span>';
-    }else{
+    if(!past){
       var ddClass=ex.dday<=3?' urgent':ex.dday<=7?' soon':'';
       h+='<span class="dash-exam-dday'+ddClass+'">'+(ex.dday===0?'D-DAY':'D-'+ex.dday)+'</span>';
     }
+    h+='<span class="dash-exam-emoji">'+dashExamEmoji(ex.subject)+'</span>';
     h+='<span class="dash-exam-subj">'+escHtml(ex.subject)+'</span>';
     h+='<span class="dash-exam-date">'+dashMd(ex.date)+'</span>';
     h+='</div>';
@@ -281,8 +287,8 @@ function renderDashboard(){
   /* 시험 — 남은 시험 + 본 시험 (한 줄에 나란히) */
   var upcExams=dashUpcomingExams(),pastExams=dashPastExams();
   h+='<div class="dash-exam-row">';
-  h+=dashExamCard('남은 시험',upcExams,{open:dashUpcOpen,toggleKey:'upc',past:false,empty:'예정된 시험이 없어요'});
   h+=dashExamCard('본 시험',pastExams,{open:dashPastOpen,toggleKey:'past',past:true,empty:'아직 본 시험이 없어요'});
+  h+=dashExamCard('남은 시험',upcExams,{open:dashUpcOpen,toggleKey:'upc',past:false,empty:'예정된 시험이 없어요'});
   h+='</div>';
 
   /* 주간 그래프 */
