@@ -410,4 +410,19 @@ function renderDashboard(){
   if(typeof tmBind==='function')tmBind(); /* 통합 타이머 카드 이벤트 */
   rankBind();
   syncBind();
+
+  /* 뷰 진입 시에만 링이 차오르는 애니메이션 */
+  var mainEl=document.getElementById('main');
+  if(mainEl&&mainEl.classList.contains('anim')){
+    var fg=mainEl.querySelector('.dash-ring-fg');
+    if(fg){
+      var tgt=fg.getAttribute('stroke-dashoffset');
+      var full=fg.getAttribute('stroke-dasharray');
+      fg.style.transition='none';
+      fg.setAttribute('stroke-dashoffset',full);
+      void fg.getBoundingClientRect();
+      fg.style.transition='stroke-dashoffset .9s cubic-bezier(0.22,1,0.36,1)';
+      fg.setAttribute('stroke-dashoffset',tgt);
+    }
+  }
 }

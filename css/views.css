@@ -406,3 +406,38 @@
 .sync-head .dash-card-ttl{margin-bottom:0}
 .sync-code.sm{font-size:var(--font-md);letter-spacing:1px}
 .sync-body{margin-top:var(--space-3);border-top:1px solid var(--border-faint);padding-top:var(--space-3)}
+
+/* ══════════════════════════════════════════
+   마이크로 인터랙션 (토스 톤)
+══════════════════════════════════════════ */
+@media (prefers-reduced-motion: no-preference){
+  /* 뷰 진입 — 스태거 등장 (.anim은 진입 직후 0.5초만 유지) */
+  @keyframes viewIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .main.anim>*{animation:viewIn .3s var(--ease) both}
+  .main.anim .dash-wrap>*,.main.anim .fw>*,.main.anim .list-wrap>*{animation:viewIn .32s var(--ease) both}
+  .main.anim .dash-wrap>*:nth-child(2),.main.anim .fw>*:nth-child(2){animation-delay:.04s}
+  .main.anim .dash-wrap>*:nth-child(3),.main.anim .fw>*:nth-child(3){animation-delay:.08s}
+  .main.anim .dash-wrap>*:nth-child(4),.main.anim .fw>*:nth-child(4){animation-delay:.12s}
+  .main.anim .dash-wrap>*:nth-child(5),.main.anim .fw>*:nth-child(5){animation-delay:.16s}
+  .main.anim .dash-wrap>*:nth-child(6),.main.anim .fw>*:nth-child(6){animation-delay:.2s}
+  .main.anim .dash-wrap>*:nth-child(7),.main.anim .fw>*:nth-child(7){animation-delay:.24s}
+  .main.anim .dash-wrap>*:nth-child(n+8),.main.anim .fw>*:nth-child(n+8){animation-delay:.28s}
+
+  /* 주간 그래프 — 바가 아래에서 차오름 */
+  @keyframes barUp{from{transform:scaleY(0)}}
+  .main.anim .dash-wbar{transform-origin:bottom;animation:barUp .55s var(--ease) both;animation-delay:.15s}
+
+  /* 시수 바 — 좌에서 차오름 */
+  @keyframes barIn{from{transform:scaleX(0)}}
+  .hrs-bar{transform-origin:left;animation:barIn .5s var(--ease) both}
+}
+
+/* 프레스 피드백 — 토스식 꾹 눌림 */
+.tm-btn,.memo-add-btn,.dash-exam-more,.sec-chip,.fseg-btn,.dash-goal-btn,
+.pl-add,.dtodo-add-card{transition:transform var(--duration-fast) var(--ease)}
+.tm-btn:active,.memo-add-btn:active,.dash-exam-more:active,.sec-chip:active,
+.fseg-btn:active,.dash-goal-btn:active,.pl-add:active,.dtodo-add-card:active{transform:scale(.95)}
+.hrs-head,.sync-head{transition:opacity var(--duration-fast)}
+.hrs-head:active,.sync-head:active{opacity:.55}
+.dash-stat,.dash-exam-item,.rank-row{transition:transform var(--duration-fast) var(--ease)}
+.dash-exam-item:active{transform:scale(.98)}

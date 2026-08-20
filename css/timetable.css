@@ -118,3 +118,7 @@
   background:var(--surface-muted);color:var(--text-soft)}
 .th-todo svg{width:9px;height:9px;display:block}
 .th-todo.has{background:var(--accent);color:#fff;font-size:9px;font-weight:800;line-height:1}
+
+/* 날짜 헤더 프레스 피드백 */
+.th-d{transition:background var(--duration-fast)}
+.th-d:active{background:var(--tint-accent)}

@@ -44,8 +44,19 @@ function cycleTheme(){
   var t=getTheme(); /* null(시스템) → 라이트 → 다크 → 시스템 */
   applyTheme(t==='light'?'dark':t==='dark'?null:'light');
 }
+/* 뷰 진입 애니메이션 — 잠깐 .anim을 켜서 새로 그려지는 요소만 등장 모션 */
+var _animT=null;
+function animMain(){
+  var m=document.getElementById('main');if(!m)return;
+  m.classList.remove('anim');
+  void m.offsetWidth;
+  m.classList.add('anim');
+  if(_animT)clearTimeout(_animT);
+  _animT=setTimeout(function(){m.classList.remove('anim');},500);
+}
 function setView(v){
   vw=v;
+  animMain();
   document.getElementById('bn-d').className='bn'+(v==='dashboard'?' on':'');
   document.getElementById('bn-w').className='bn'+(v==='weekly'?' on':'');
   document.getElementById('bn-f').className='bn'+(v==='filter'?' on':'');
@@ -147,8 +158,8 @@ function init(){
   goTodayWeek();
   var nd=new Date();cy=nd.getFullYear();cm2=nd.getMonth();
 
-  document.getElementById('pb').onclick=function(){if(ci>0){ci--;render();}};
-  document.getElementById('nb').onclick=function(){if(ci<wks.length-1){ci++;render();}};
+  document.getElementById('pb').onclick=function(){if(ci>0){ci--;animMain();render();}};
+  document.getElementById('nb').onclick=function(){if(ci<wks.length-1){ci++;animMain();render();}};
   document.getElementById('bn-d').onclick=function(){setView('dashboard');};
   document.getElementById('bn-w').onclick=function(){goTodayWeek();setView('weekly');};
   document.getElementById('bn-f').onclick=function(){setView('filter');};

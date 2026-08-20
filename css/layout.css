@@ -67,3 +67,11 @@
 
 /* 헤더 좌측 학년 타이틀 (토스식 볼드) */
 .ht2{font-size:var(--font-xl);font-weight:var(--weight-heavy);color:var(--text-strong);letter-spacing:-0.02em;white-space:nowrap}
+
+/* 프레스 피드백 — 헤더·네비 */
+.icon-btn,.nb{transition:transform var(--duration-fast) var(--ease),background var(--duration-fast)}
+.icon-btn:active,.nb:active{transform:scale(.9)}
+.bn-ic{transition:transform var(--duration-fast) var(--ease),background var(--duration-fast) var(--ease)}
+.bn:active .bn-ic{transform:scale(.85)}
+.gs-card{transition:transform var(--duration-fast) var(--ease),box-shadow var(--duration-fast)}
+.gs-card:active{transform:scale(.96)}
