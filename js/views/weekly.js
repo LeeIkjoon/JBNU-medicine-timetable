@@ -139,17 +139,20 @@ function bindSecBar(){
     };
   }
 }
-/* 할 일 버튼 — 헤더와 시간표 사이, 오늘 날짜의 할 일 시트를 염 */
+/* 할 일 바 — 헤더와 시간표 사이, 현재 주차의 날짜별 투두 진입 */
 function wkTodoHtml(){
-  var n=0;
-  try{n=dtodoLoad(today()).length;}catch(e){}
+  var dd=wdd[wks[ci]]||{},t=today();
   var IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 6l1.2 1.2L7.5 4.9M4 11.5l1.2 1.2 2.3-2.3M4 17l1.2 1.2 2.3-2.3"/></svg>';
-  return '<button class="wk-todo" id="wk-todo">'
-    +'<span class="wk-todo-ic">'+IC+'</span>'
-    +'<span class="wk-todo-txt">오늘 할 일</span>'
-    +'<span class="wk-todo-n'+(n?' has':'')+'" id="wk-todo-n">'+(n||'')+'</span>'
-    +'<span class="wk-todo-arrow">›</span>'
-    +'</button>';
+  var h='<div class="wk-todo"><span class="wk-todo-ic">'+IC+'</span><span class="wk-todo-txt">할 일</span><div class="wk-days">';
+  for(var i=0;i<DAYS.length;i++){
+    var d=DAYS[i],dt=dd[d]||'';
+    if(!dt)continue;
+    var n=0;try{n=dtodoLoad(dt).length;}catch(e){}
+    h+='<button class="wk-day'+(dt===t?' today':'')+'" data-date="'+dt+'" data-day="'+d+'">'
+      +d+'<span class="wk-day-n'+(n?' has':'')+'">'+(n||'')+'</span></button>';
+  }
+  h+='</div></div>';
+  return h;
 }
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
@@ -159,13 +162,13 @@ function renderW(){
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
   bindSecBar();
-  var wt=document.getElementById('wk-todo');
-  if(wt)wt.onclick=function(){
-    var ds=today(),p=ds.split('-');
-    var WKN=['일','월','화','수','목','금','토'];
-    var dow=WKN[new Date(+p[0],+p[1]-1,+p[2]).getDay()];
-    openDtodo(ds,parseInt(p[1])+'월 '+parseInt(p[2])+'일 ('+dow+')');
-  };
+  var wds=document.querySelectorAll('.wk-day');
+  for(var wi=0;wi<wds.length;wi++){
+    wds[wi].onclick=function(){
+      var ds=this.getAttribute('data-date'),d=this.getAttribute('data-day'),p=ds.split('-');
+      openDtodo(ds,parseInt(p[1])+'월 '+parseInt(p[2])+'일 ('+d+')');
+    };
+  }
   for(var i=0;i<DAYS.length;i++){
     var d=DAYS[i];
     if(dd[d]===t){

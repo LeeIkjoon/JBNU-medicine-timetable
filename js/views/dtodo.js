@@ -50,7 +50,7 @@ function renderDtodoList(){
     arr.forEach(function(item,i){
       var ci=i%5;
       var dc=item.done?' dtodo-item-done':'';
-      h+='<div class="dtodo-item '+DTODO_COLORS[ci]+dc+'">'+
+      h+='<div class="dtodo-item '+DTODO_COLORS[ci]+dc+'" data-i="'+i+'">'+
         '<div class="dtodo-item-left '+DTODO_LCOLORS[ci]+'"></div>'+
         '<div class="dtodo-text-wrap">'+
           '<div class="dtodo-text'+(item.done?' done':'')+'">'+item.text.replace(/</g,'&lt;')+'</div>'+
@@ -107,23 +107,37 @@ function dtodoToggle(i){
   var arr=dtodoLoad(dtodoDate);
   if(arr[i])arr[i].done=!arr[i].done;
   dtodoSave(dtodoDate,arr);
-  renderDtodoList();
+  /* 재렌더 없이 해당 아이템만 상태 전환 → 밑줄이 그어지는 애니메이션 */
+  var el=document.querySelector('.dtodo-item[data-i="'+i+'"]');
+  if(el&&arr[i]){
+    el.classList.toggle('dtodo-item-done',arr[i].done);
+    var tx=el.querySelector('.dtodo-text');if(tx)tx.classList.toggle('done',arr[i].done);
+    var ck=el.querySelector('.dtodo-chk');if(ck)ck.classList.toggle('done',arr[i].done);
+  }else renderDtodoList();
 }
 function dtodoDel(i){
   if(!dtodoDate)return;
-  var arr=dtodoLoad(dtodoDate);
-  arr.splice(i,1);
-  dtodoSave(dtodoDate,arr);
-  renderDtodoList();
-  updateTodoDots();
+  var el=document.querySelector('.dtodo-item[data-i="'+i+'"]');
+  var fin=function(){
+    var arr=dtodoLoad(dtodoDate);
+    arr.splice(i,1);
+    dtodoSave(dtodoDate,arr);
+    renderDtodoList();
+    updateTodoDots();
+  };
+  if(el){el.classList.add('removing');setTimeout(fin,260);}
+  else fin();
 }
 function updateTodoDots(){
-  /* '오늘 할 일' 버튼 배지 갱신 */
-  var el=document.getElementById('wk-todo-n');
-  if(!el)return;
-  var n=dtodoLoad(today()).length;
-  el.className='wk-todo-n'+(n?' has':'');
-  el.textContent=n||'';
+  /* 할 일 바의 날짜별 배지 갱신 */
+  document.querySelectorAll('.wk-day').forEach(function(b){
+    var dt=b.getAttribute('data-date');
+    var el=b.querySelector('.wk-day-n');
+    if(!dt||!el)return;
+    var n=dtodoLoad(dt).length;
+    el.className='wk-day-n'+(n?' has':'');
+    el.textContent=n||'';
+  });
 }
 (function(){
   var CHECK=setInterval(function(){

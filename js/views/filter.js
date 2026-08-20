@@ -158,7 +158,8 @@ function renderF(){
   var subjSet={};
   for(var mi=0;mi<merged.length;mi++){
     var s0=merged[mi].subject;
-    if(s0&&!isEv(s0)&&!isHoliday(s0)) subjSet[s0]=true;
+    /* 시험 항목은 원 과목 칩에 귀속 (별도 칩 없음) */
+    if(s0&&!isEv(s0)&&!isHoliday(s0)&&!isEx(s0)) subjSet[s0]=true;
   }
   var allSubj=Object.keys(subjSet).sort(function(a,b){return a.localeCompare(b,'ko');});
   /* fsubj2 동기화: 사라진 과목만 제거. 빈 목록은 '전체 해제' 상태로 존중
@@ -168,8 +169,7 @@ function renderF(){
     fsubj2=allSubj.slice();
   }
 
-  var eS=allSubj.filter(function(s){return isEx(s);});
-  var nS=allSubj.filter(function(s){return!isEx(s);});
+  var nS=allSubj;
 
   var h='<div class="fw">';
   h+='<div class="fseg">'
@@ -197,15 +197,6 @@ function renderF(){
     for(var i=0;i<nS.length;i++){
       var s=nS[i],c=gcol(s),on2=!fExam&&fsubj2.indexOf(s)>=0;
       h+='<button class="chip fchip '+(on2?'on':'off')+'" data-s="'+s+'" style="border-color:'+c+';'+(on2?'background:'+c+';':'')+'">'+s+'</button>';
-    }
-    h+='</div></div>';
-  }
-  if(eS.length){
-    h+='<div class="fs"><div class="fs-ttl">시험</div><div class="chips">';
-    for(var j=0;j<eS.length;j++){
-      var se=eS[j],ce=gcol(se),oe=(!fExam&&fsubj2.indexOf(se)>=0)||fExam;
-      var lb2=exLabel(se),et2=lb2[0],ba2=lb2[1];
-      h+='<button class="chip fchip '+(oe?'on':'off')+'" data-s="'+se+'" style="border-color:'+ce+';'+(oe?'background:'+ce+';':'')+'">'+et2+(ba2?' '+ba2:'')+'</button>';
     }
     h+='</div></div>';
   }
@@ -239,9 +230,15 @@ function bindFSeg(){
 function renderFR(){
   var items=secFilter(merged).slice();
   if(fExam){
-    items=items.filter(function(i){return isEx(i.subject);});
+    items=items.filter(function(i){return isEx(i.subject)||i.is_exam===true||i.is_exam==='true';});
   }else{
-    items=items.filter(function(i){return fsubj2.indexOf(i.subject)>=0;});
+    /* 시험 항목은 원 과목이 선택돼 있으면 함께 표시 */
+    items=items.filter(function(i){
+      var s=i.subject;
+      if(fsubj2.indexOf(s)>=0)return true;
+      if(isEx(s)){var b=examBase(s);return b&&fsubj2.indexOf(b)>=0;}
+      return false;
+    });
   }
   var el=document.getElementById('fres');if(!el)return;
   if(!items.length){el.innerHTML='<div class="no-res">조건에 맞는 수업이 없습니다</div>';return;}

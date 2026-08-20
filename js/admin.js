@@ -54,17 +54,17 @@ function renderAdminEditModal(){
   document.body.appendChild(modal);
 
   var box=document.createElement('div');
-  box.style.cssText='background:#F2F2F7;border-radius:22px 22px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));';
+  box.style.cssText='background:var(--surface-muted);border-radius:22px 22px 0 0;width:100%;max-width:480px;max-height:88vh;overflow-y:auto;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));';
   box.onclick=function(e){ e.stopPropagation(); };
 
   /* 헤더 */
   var hdr=document.createElement('div');
-  hdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:16px 18px 14px;border-bottom:1px solid #E5E5EA;background:#fff;border-radius:22px 22px 0 0;position:sticky;top:0;z-index:1;';
+  hdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:16px 18px 14px;border-bottom:1px solid var(--border);background:var(--surface);border-radius:22px 22px 0 0;position:sticky;top:0;z-index:1;';
   var closeBtn=document.createElement('button');
-  closeBtn.style.cssText='background:#F2F2F7;border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;';
+  closeBtn.style.cssText='background:var(--surface-muted);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;cursor:pointer;';
   closeBtn.textContent='✕';
   closeBtn.onclick=function(){ admCloseModal(); };
-  hdr.innerHTML='<div style="font-size:16px;font-weight:700;color:#1C1C1E">수업 편집</div>';
+  hdr.innerHTML='<div style="font-size:16px;font-weight:700;color:var(--text)">수업 편집</div>';
   hdr.appendChild(closeBtn);
   box.appendChild(hdr);
 
@@ -81,26 +81,26 @@ function renderAdminEditModal(){
   var formDiv=document.createElement('div');
   formDiv.style.cssText='padding:16px;display:flex;flex-direction:column;gap:12px;';
   formDiv.innerHTML=
-    '<div style="background:#fff;border-radius:14px;padding:14px 16px;">'+
-      '<div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:8px;">과목명 선택</div>'+
+    '<div style="background:var(--surface);border-radius:14px;padding:14px 16px;">'+
+      '<div style="font-size:11px;font-weight:700;color:var(--text-soft);margin-bottom:8px;">과목명 선택</div>'+
       '<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">'+
         '<div id="adm-dot" style="width:14px;height:14px;border-radius:50%;background:'+gcol(it.subject||'')+';flex-shrink:0;"></div>'+
-        '<div id="adm-cur" style="font-size:14px;font-weight:700;color:#1C1C1E;">'+escAdm(it.subject||'과목 선택')+'</div>'+
+        '<div id="adm-cur" style="font-size:14px;font-weight:700;color:var(--text);">'+escAdm(it.subject||'과목 선택')+'</div>'+
       '</div>'+
-      '<select id="adm-sel" style="width:100%;border:1.5px solid #E5E5EA;border-radius:10px;padding:10px;font-size:14px;font-family:inherit;background:#F9FAFB;box-sizing:border-box;">'+subjOpts+'</select>'+
+      '<select id="adm-sel" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-size:14px;font-family:inherit;background:var(--surface-2);box-sizing:border-box;">'+subjOpts+'</select>'+
     '</div>'+
-    '<div style="background:#fff;border-radius:14px;padding:14px 16px;">'+
-      '<div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:8px;">교수명</div>'+
-      '<input id="adm-prof" value="'+escAdm(it.professor||'')+'" placeholder="교수명 (없으면 빈칸)" style="width:100%;border:none;outline:none;font-size:15px;color:#1C1C1E;background:none;box-sizing:border-box;">'+
+    '<div style="background:var(--surface);border-radius:14px;padding:14px 16px;">'+
+      '<div style="font-size:11px;font-weight:700;color:var(--text-soft);margin-bottom:8px;">교수명</div>'+
+      '<input id="adm-prof" value="'+escAdm(it.professor||'')+'" placeholder="교수명 (없으면 빈칸)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:none;box-sizing:border-box;">'+
     '</div>'+
-    '<div style="background:#fff;border-radius:14px;padding:14px 16px;">'+
+    '<div style="background:var(--surface);border-radius:14px;padding:14px 16px;">'+
       '<label style="display:flex;align-items:center;gap:12px;cursor:pointer;">'+
-        '<div id="adm-exam-box" style="width:24px;height:24px;border-radius:6px;border:2px solid '+(it.is_exam?'#EF4444':'#D1D5DB')+';background:'+(it.is_exam?'#EF4444':'#fff')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;">'+
+        '<div id="adm-exam-box" style="width:24px;height:24px;border-radius:6px;border:2px solid '+(it.is_exam?'#EF4444':'var(--border-strong)')+';background:'+(it.is_exam?'#EF4444':'var(--surface)')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;">'+
           (it.is_exam?'<span style="color:#fff;font-size:14px;font-weight:800;">✓</span>':'')+
         '</div>'+
         '<div>'+
-          '<div style="font-size:14px;font-weight:600;color:#1C1C1E;">시험</div>'+
-          '<div style="font-size:11px;color:#8E8E93;margin-top:1px;">체크하면 ‼️ 표시 + 빨간 테두리 강조</div>'+
+          '<div style="font-size:14px;font-weight:600;color:var(--text);">시험</div>'+
+          '<div style="font-size:11px;color:var(--text-soft);margin-top:1px;">체크하면 ‼️ 표시 + 빨간 테두리 강조</div>'+
         '</div>'+
       '</label>'+
     '</div>';
@@ -109,10 +109,10 @@ function renderAdminEditModal(){
   /* 날짜 선택 - 캘린더 */
   var dateDiv=document.createElement('div');
   dateDiv.style.cssText='margin:0 16px 12px;';
-  dateDiv.innerHTML='<div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:8px;">날짜 선택</div>';
+  dateDiv.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--text-soft);margin-bottom:8px;">날짜 선택</div>';
 
   var calCard=document.createElement('div');
-  calCard.style.cssText='background:#fff;border-radius:14px;overflow:hidden;';
+  calCard.style.cssText='background:var(--surface);border-radius:14px;overflow:hidden;';
 
   var initDate=it.date?new Date(it.date):new Date();
   var calY=initDate.getFullYear(), calM=initDate.getMonth();
@@ -120,12 +120,12 @@ function renderAdminEditModal(){
   var calHdr=document.createElement('div');
   calHdr.style.cssText='display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #F3F4F6;';
   var prevB=document.createElement('button');
-  prevB.style.cssText='background:#F2F2F7;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;';
+  prevB.style.cssText='background:var(--surface-muted);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;';
   prevB.innerHTML='&#8249;';
   var calTit=document.createElement('div');
-  calTit.style.cssText='font-size:15px;font-weight:700;color:#1C1C1E;';
+  calTit.style.cssText='font-size:15px;font-weight:700;color:var(--text);';
   var nextB=document.createElement('button');
-  nextB.style.cssText='background:#F2F2F7;border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;';
+  nextB.style.cssText='background:var(--surface-muted);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;cursor:pointer;';
   nextB.innerHTML='&#8250;';
   calHdr.appendChild(prevB); calHdr.appendChild(calTit); calHdr.appendChild(nextB);
 
@@ -138,9 +138,9 @@ function renderAdminEditModal(){
   /* 교시 선택 */
   var perDiv=document.createElement('div');
   perDiv.style.cssText='margin:0 16px 12px;';
-  perDiv.innerHTML='<div style="font-size:11px;font-weight:700;color:#8E8E93;margin-bottom:8px;">교시 선택</div>';
+  perDiv.innerHTML='<div style="font-size:11px;font-weight:700;color:var(--text-soft);margin-bottom:8px;">교시 선택</div>';
   var perCard=document.createElement('div');
-  perCard.style.cssText='background:#fff;border-radius:14px;overflow:hidden;';
+  perCard.style.cssText='background:var(--surface);border-radius:14px;overflow:hidden;';
   perDiv.appendChild(perCard);
   box.appendChild(perDiv);
 
@@ -187,7 +187,7 @@ function renderAdminEditModal(){
       var c2=document.createElement('div');
       c2.style.cssText='text-align:center;padding:7px 2px;border-radius:10px;font-size:14px;margin:1px;cursor:'+(isV?'pointer':'default')+';';
       if(isSel) c2.style.cssText+='background:#007AFF;color:#fff;font-weight:700;';
-      else if(isV) c2.style.cssText+='color:#1C1C1E;font-weight:500;';
+      else if(isV) c2.style.cssText+='color:var(--text);font-weight:500;';
       else c2.style.cssText+='color:#D1D5DB;';
       c2.textContent=d2;
       if(isV)(function(dateStr){
@@ -284,10 +284,10 @@ function renderAdminEditModal(){
     var confirmDiv=document.createElement('div');
     confirmDiv.style.cssText='position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:10;display:flex;align-items:center;justify-content:center;padding:20px;border-radius:22px 22px 0 0;';
     var confirmBox=document.createElement('div');
-    confirmBox.style.cssText='background:#fff;border-radius:16px;padding:24px 20px;width:100%;max-width:280px;text-align:center;';
-    confirmBox.innerHTML='<div style="font-size:15px;font-weight:600;color:#1C1C1E;margin-bottom:20px;line-height:1.5">이 수업을 삭제할까요?</div>'+
+    confirmBox.style.cssText='background:var(--surface);border-radius:16px;padding:24px 20px;width:100%;max-width:280px;text-align:center;';
+    confirmBox.innerHTML='<div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:20px;line-height:1.5">이 수업을 삭제할까요?</div>'+
       '<div style="display:flex;gap:10px;">'+
-        '<button id="del-cancel" style="flex:1;padding:12px;border-radius:12px;border:1.5px solid #E5E5EA;background:#fff;font-size:15px;cursor:pointer;">취소</button>'+
+        '<button id="del-cancel" style="flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);font-size:15px;cursor:pointer;">취소</button>'+
         '<button id="del-ok" style="flex:1;padding:12px;border-radius:12px;border:none;background:#FF3B30;color:#fff;font-size:15px;font-weight:700;cursor:pointer;">삭제</button>'+
       '</div>';
     confirmDiv.appendChild(confirmBox);
@@ -358,10 +358,10 @@ function renderAdminBody(){
     body.innerHTML=
       '<div style="text-align:center;padding:40px 20px">'+
         '<div style="font-size:40px;margin-bottom:16px">⚠️</div>'+
-        '<div style="font-size:16px;font-weight:700;color:#1C1C1E;margin-bottom:8px">시간표 데이터가 없습니다</div>'+
-        '<div style="font-size:13px;color:#8E8E93;margin-bottom:16px">엑셀 파일을 업로드하여 시간표를 등록하세요</div>'+
+        '<div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:8px">시간표 데이터가 없습니다</div>'+
+        '<div style="font-size:13px;color:var(--text-soft);margin-bottom:16px">엑셀 파일을 업로드하여 시간표를 등록하세요</div>'+
         '<button onclick="admOpenUpload();" style="width:100%;background:#059669;color:#fff;border:none;border-radius:12px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:10px">📂 엑셀/PDF 업로드</button>'+
-        '<button onclick="closeAdminPanel();" style="width:100%;background:#F2F2F7;color:#636366;border:none;border-radius:12px;padding:12px;font-size:14px;cursor:pointer">닫기</button>'+
+        '<button onclick="closeAdminPanel();" style="width:100%;background:var(--surface-muted);color:#636366;border:none;border-radius:12px;padding:12px;font-size:14px;cursor:pointer">닫기</button>'+
       '</div>';
     return;
   }
@@ -371,7 +371,7 @@ function renderAdminBody(){
   /* 주차 탭 */
   var tabsH='<div style="display:flex;gap:5px;flex-wrap:nowrap;overflow-x:auto;padding:12px 16px 8px;-webkit-overflow-scrolling:touch">';
   wks.forEach(function(w){
-    var on=(w===curWk)?'background:#007AFF;color:#fff;border-color:#007AFF;font-weight:700':'background:#fff;color:#636366;border-color:#E5E5EA';
+    var on=(w===curWk)?'background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700':'background:var(--surface);color:var(--text-muted);border-color:var(--border)';
     tabsH+='<button onclick="adminChangeWk(\''+w+'\')" style="flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid;font-size:12px;cursor:pointer;'+on+'">'+w+'주차</button>';
   });
   tabsH+='</div>';
@@ -387,7 +387,7 @@ function renderAdminBody(){
   body.appendChild(tabsDiv.firstChild);
 
   var hint=document.createElement('div');
-  hint.style.cssText='font-size:12px;color:#8E8E93;padding:4px 16px 10px;text-align:center;';
+  hint.style.cssText='font-size:12px;color:var(--text-soft);padding:4px 16px 10px;text-align:center;';
   hint.textContent='수업 블럭을 탭하여 편집 · 빈 칸 탭하여 수업 추가';
   body.appendChild(hint);
 
@@ -403,7 +403,7 @@ function renderAdminBody(){
     '<button class="admin-add-btn" onclick="addAItem()">＋ 수업 추가</button>'+
     '<button onclick="admOpenUpload()" style="width:100%;background:#F0FDF4;color:#059669;border:2px solid #059669;border-radius:12px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;">📂 엑셀/PDF 업로드</button>'+
     '<button class="admin-publish-btn" onclick="publishTT()">📢 전체 배포</button>'+
-    '<button style="background:none;border:none;color:#8E8E93;font-size:13px;cursor:pointer;padding:8px;" onclick="doLogout()">로그아웃</button>';
+    '<button style="background:none;border:none;color:var(--text-soft);font-size:13px;cursor:pointer;padding:8px;" onclick="doLogout()">로그아웃</button>';
   body.appendChild(btns);
 
   setTimeout(function(){bindAdminTableClicks(curWk);},30);
@@ -517,13 +517,13 @@ function publishTT(){
   overlay.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;';
   overlay.onclick=function(e){e.stopPropagation();};
   var box=document.createElement('div');
-  box.style.cssText='background:#fff;border-radius:18px;padding:24px 20px;width:100%;max-width:320px;';
+  box.style.cssText='background:var(--surface);border-radius:18px;padding:24px 20px;width:100%;max-width:320px;';
   box.onclick=function(e){e.stopPropagation();};
   var title=document.createElement('div');
-  title.style.cssText='font-size:16px;font-weight:700;color:#1C1C1E;margin-bottom:6px;';
+  title.style.cssText='font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;';
   title.textContent='📢 시간표 배포';
   var sub=document.createElement('div');
-  sub.style.cssText='font-size:12px;color:#8E8E93;margin-bottom:12px;';
+  sub.style.cssText='font-size:12px;color:var(--text-soft);margin-bottom:12px;';
   sub.textContent='어떤 사항이 변경되었는지 입력하세요. (선택)';
   var textarea=document.createElement('textarea');
   textarea.className='admin-changelog-input';
@@ -532,7 +532,7 @@ function publishTT(){
   var btnRow=document.createElement('div');
   btnRow.style.cssText='display:flex;gap:10px;';
   var cancelBtn=document.createElement('button');
-  cancelBtn.style.cssText='flex:1;padding:12px;border-radius:12px;border:1.5px solid #E5E5EA;background:#fff;font-size:14px;cursor:pointer;';
+  cancelBtn.style.cssText='flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);font-size:14px;cursor:pointer;';
   cancelBtn.textContent='취소';
   cancelBtn.onclick=function(e){e.stopPropagation();if(overlay.parentNode)overlay.parentNode.removeChild(overlay);};
   var okBtn=document.createElement('button');
@@ -600,18 +600,18 @@ function admShowConfirm(msg,onOk,okLabel,okColor){
   overlay.onclick=function(e){e.stopPropagation();};
 
   var box=document.createElement('div');
-  box.style.cssText='background:#fff;border-radius:18px;padding:24px 20px;width:100%;max-width:320px;text-align:center;';
+  box.style.cssText='background:var(--surface);border-radius:18px;padding:24px 20px;width:100%;max-width:320px;text-align:center;';
   box.onclick=function(e){e.stopPropagation();};
 
   var msgDiv=document.createElement('div');
-  msgDiv.style.cssText='font-size:16px;font-weight:600;color:#1C1C1E;margin-bottom:20px;line-height:1.5;';
+  msgDiv.style.cssText='font-size:16px;font-weight:600;color:var(--text);margin-bottom:20px;line-height:1.5;';
   msgDiv.textContent=msg;
 
   var btnRow=document.createElement('div');
   btnRow.style.cssText='display:flex;gap:10px;';
 
   var cancelBtn=document.createElement('button');
-  cancelBtn.style.cssText='flex:1;padding:12px;border-radius:12px;border:1.5px solid #E5E5EA;background:#fff;font-size:15px;cursor:pointer;';
+  cancelBtn.style.cssText='flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--border);background:var(--surface);font-size:15px;cursor:pointer;';
   cancelBtn.textContent='취소';
   cancelBtn.onclick=function(e){
     e.stopPropagation();

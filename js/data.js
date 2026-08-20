@@ -154,11 +154,12 @@ var GRADE_SUBJECTS={
   '의예과 2학년':[]
 };
 function getUniqueSubjects(){
-  /* 현재 시간표(merged) 기준 — 학기 바뀌어도 하드코딩 목록에 안 묶이게 */
+  /* 현재 시간표(merged) 기준 — 학기 바뀌어도 하드코딩 목록에 안 묶이게.
+     '~시험' 항목 제외: 시험은 과목 선택 + 시험 체크로 추가 */
   var set={};
   for(var i=0;i<merged.length;i++){
     var s=merged[i].subject;
-    if(s&&!isEv(s)&&!isHoliday(s))set[s]=true;
+    if(s&&!isEv(s)&&!isHoliday(s)&&!isEx(s))set[s]=true;
   }
   var list=Object.keys(set);
   if(list.length)return list.sort(function(a,b){return a.localeCompare(b,'ko');});
