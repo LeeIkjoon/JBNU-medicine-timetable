@@ -20,7 +20,6 @@ function dtodoDdDay(ds){
 }
 
 function openDtodo(ds,label){
-  if(typeof dtodoTipDismiss==='function')dtodoTipDismiss(); /* 기능을 발견했으니 안내 종료 */
   dtodoDate=ds;dtodoInputMode=false;
   var ovl=document.getElementById('dtodo-ovl');
   var lbl=document.getElementById('dtodo-date-lbl');
@@ -119,7 +118,16 @@ function dtodoDel(i){
   updateTodoDots();
 }
 function updateTodoDots(){
-  /* 날짜 점 표시 비활성화 */
+  /* 날짜 헤더의 할일 배지 갱신 (wh 캐시와 무관하게 DOM 직접 갱신) */
+  var IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 6l1.2 1.2L7.5 4.9M4 11.5l1.2 1.2 2.3-2.3M4 17l1.2 1.2 2.3-2.3"/></svg>';
+  document.querySelectorAll('.th-d[data-date]').forEach(function(th){
+    var dt=th.getAttribute('data-date');
+    var el=th.querySelector('.th-todo');
+    if(!dt||!el)return;
+    var n=dtodoLoad(dt).length;
+    el.className='th-todo'+(n?' has':'');
+    el.innerHTML=n?String(n):IC;
+  });
 }
 (function(){
   var CHECK=setInterval(function(){

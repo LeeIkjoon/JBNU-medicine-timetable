@@ -80,6 +80,7 @@ function renderL(){
    (시험 배점이 교수별 시수에 비례하므로 비율 표시)
 ══════════════════════════════════════════ */
 var fView='hours';      /* 'hours' | 'sched' — 시수가 기본 */
+var fCleared=false;     /* 전체 해제 상태 (빈 선택을 전체선택으로 되돌리지 않게) */
 var fHoursOpen={};      /* 과목명 → 펼침 여부 */
 
 function hoursData(){
@@ -160,8 +161,10 @@ function renderF(){
     if(s0&&!isEv(s0)&&!isHoliday(s0)) subjSet[s0]=true;
   }
   var allSubj=Object.keys(subjSet).sort(function(a,b){return a.localeCompare(b,'ko');});
-  /* fsubj2 초기화: 아직 설정 안 됐거나 현재 과목과 동기화 */
-  if(fsubj2.length===0 || fsubj2.some(function(s){return subjSet[s]===undefined;})){
+  /* fsubj2 동기화: 사라진 과목만 제거. 빈 목록은 '전체 해제' 상태로 존중
+     (최초 진입 등 미설정 상태에서만 전체 선택) */
+  fsubj2=fsubj2.filter(function(s){return subjSet[s]!==undefined;});
+  if(fsubj2.length===0 && !fCleared){
     fsubj2=allSubj.slice();
   }
 
@@ -215,8 +218,8 @@ function renderF(){
     fsubj2=fExam?allSubj.filter(function(s){return isEx(s);}):allSubj.slice();
     renderF();
   };
-  document.getElementById('chip-all').onclick=function(){fExam=false;fsubj2=allSubj.slice();renderF();};
-  document.getElementById('chip-clr').onclick=function(){fExam=false;fsubj2=[];renderF();};
+  document.getElementById('chip-all').onclick=function(){fExam=false;fCleared=false;fsubj2=allSubj.slice();renderF();};
+  document.getElementById('chip-clr').onclick=function(){fExam=false;fCleared=true;fsubj2=[];renderF();};
   var chips=document.querySelectorAll('.fchip');
   for(var k=0;k<chips.length;k++){
     chips[k].onclick=function(){

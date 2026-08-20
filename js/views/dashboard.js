@@ -252,27 +252,36 @@ function rankBind(){
   });
 }
 
-/* ── 백업 카드 ── */
-var syncRestoreOpen=false;
+/* ── 백업 카드 (컴팩트 — 탭하면 펼침) ── */
+var syncOpen=false,syncRestoreOpen=false;
 function syncCardHtml(){
   var h='<div class="dash-card">';
-  h+='<div class="dash-card-ttl">백업</div>';
-  h+='<div class="sync-row"><span class="sync-code-lbl">내 코드</span><span class="sync-code">'+syncUid()+'</span>'
-    +'<span class="sync-status-txt" id="sync-status">'+syncStatusText()+'</span></div>';
-  h+='<div class="sync-desc">공부기록·플래너·할 일이 이 코드로 자동 백업돼요. 새 기기에서 코드를 입력하면 그대로 복원됩니다.</div>';
-  if(syncRestoreOpen){
-    h+='<div class="memo-add-row">'
-      +'<input class="memo-input" id="sync-code-input" placeholder="코드 8자리" maxlength="8" style="text-transform:uppercase">'
-      +'<button class="memo-add-btn" id="sync-restore-btn">가져오기</button>'
-      +'</div>';
-    h+='<div class="sync-warn" id="sync-restore-msg">가져오면 현재 기기의 기록을 덮어씁니다</div>';
-  }else{
-    h+='<button class="dash-exam-more" id="sync-restore-open">다른 기기에서 가져오기</button>';
+  h+='<button class="sync-head" id="sync-head">'
+    +'<span class="dash-card-ttl">백업</span>'
+    +'<span class="sync-code sm">'+syncUid()+'</span>'
+    +'<span class="sync-status-txt" id="sync-status">'+syncStatusText()+'</span>'
+    +'<span class="hrs-arrow'+(syncOpen?' open':'')+'">›</span>'
+    +'</button>';
+  if(syncOpen){
+    h+='<div class="sync-body">';
+    h+='<div class="sync-desc">공부기록·플래너·할 일이 이 코드로 자동 백업돼요. 새 기기에서 코드를 입력하면 그대로 복원됩니다.</div>';
+    if(syncRestoreOpen){
+      h+='<div class="memo-add-row">'
+        +'<input class="memo-input" id="sync-code-input" placeholder="코드 8자리" maxlength="8" style="text-transform:uppercase">'
+        +'<button class="memo-add-btn" id="sync-restore-btn">가져오기</button>'
+        +'</div>';
+      h+='<div class="sync-warn" id="sync-restore-msg">가져오면 현재 기기의 기록을 덮어씁니다</div>';
+    }else{
+      h+='<button class="dash-exam-more" id="sync-restore-open">다른 기기에서 가져오기</button>';
+    }
+    h+='</div>';
   }
   h+='</div>';
   return h;
 }
 function syncBind(){
+  var hd=document.getElementById('sync-head');
+  if(hd)hd.onclick=function(){syncOpen=!syncOpen;if(!syncOpen)syncRestoreOpen=false;renderDashboard();};
   var op=document.getElementById('sync-restore-open');
   if(op)op.onclick=function(){syncRestoreOpen=true;renderDashboard();};
   var btn=document.getElementById('sync-restore-btn');

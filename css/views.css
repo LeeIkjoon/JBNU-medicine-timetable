@@ -78,7 +78,7 @@
 
 /* ── FILTER ── */
 .fw{padding:var(--space-1) 0 calc(80px + env(safe-area-inset-bottom,0px));min-height:calc(100dvh - 190px);box-sizing:border-box}
-.fs{background:var(--surface);border-radius:var(--radius-md);padding:var(--space-3);margin-bottom:var(--space-2)}
+.fs{background:var(--surface);border:none;border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-2);box-shadow:var(--shadow-xs)}
 .fs-ttl{font-size:var(--font-sm);font-weight:var(--weight-bold);margin-bottom:9px}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
 .chip{padding:6px 12px;border-radius:var(--radius-pill);font-size:var(--font-xs);border:1.5px solid var(--border);
@@ -134,7 +134,7 @@
   min-height:calc(100dvh - 130px);
   box-sizing:border-box;
 }
-.tm-clock-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);
+.tm-clock-card{background:var(--surface);border:none;border-radius:var(--radius-xl);
   padding:var(--space-4) var(--space-4);text-align:center;
   transition:background var(--duration) var(--ease),box-shadow var(--duration) var(--ease),border-color var(--duration) var(--ease)}
 
@@ -200,10 +200,10 @@
 
 .dash-greet{padding:var(--space-1) var(--space-1) 0}
 .dash-greet-top{font-size:var(--font-sm);color:var(--text-soft);font-weight:var(--weight-medium)}
-.dash-greet-msg{font-size:var(--font-2xl);font-weight:var(--weight-bold);color:var(--text-strong);margin-top:2px}
+.dash-greet-msg{font-size:var(--font-2xl);font-weight:var(--weight-heavy);letter-spacing:-0.02em;color:var(--text-strong);margin-top:2px}
 
 /* 메인 링 카드 */
-.dash-ring-card{background:var(--surface);border-radius:var(--radius-xl);padding:var(--space-5) var(--space-4);display:flex;flex-direction:column;align-items:center;border:1px solid var(--border);box-shadow:var(--shadow-xs)}
+.dash-ring-card{background:var(--surface);border-radius:var(--radius-xl);padding:var(--space-5) var(--space-4);display:flex;flex-direction:column;align-items:center;border:none;box-shadow:var(--shadow-xs)}
 .dash-ring-box{position:relative;width:180px;height:180px}
 .dash-ring{width:100%;height:100%;transform:rotate(-90deg)}
 .dash-ring-bg{fill:none;stroke:var(--surface-muted);stroke-width:10}
@@ -224,13 +224,13 @@
 
 /* 스탯 그리드 */
 .dash-stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--space-2)}
-.dash-stat{background:var(--surface);border-radius:var(--radius-lg);padding:var(--space-3);text-align:center;border:1px solid var(--border)}
+.dash-stat{background:var(--surface);border-radius:var(--radius-lg);padding:var(--space-3);text-align:center;border:none;box-shadow:var(--shadow-xs)}
 .dash-stat-n{font-size:var(--font-2xl);font-weight:var(--weight-bold);color:var(--text-strong);line-height:1.1}
 .dash-stat-unit{font-size:var(--font-md);font-weight:var(--weight-medium);color:var(--text-soft);margin-left:1px}
 .dash-stat-l{font-size:var(--font-xs);color:var(--text-soft);margin-top:4px}
 
 /* 카드 공통 */
-.dash-card{background:var(--surface);border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);border:1px solid var(--border)}
+.dash-card{background:var(--surface);border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);border:none;box-shadow:var(--shadow-xs)}
 .dash-card-ttl{font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-soft);letter-spacing:.01em;margin-bottom:var(--space-3)}
 
 /* 시험 D-day */
@@ -323,15 +323,15 @@
 .dash-cta.active{background:var(--tint-brand);color:var(--brand-1)}
 
 /* ── 필터: 일정/시수 세그먼트 토글 ── */
-.fseg{display:flex;gap:3px;background:var(--surface);border-radius:var(--radius-md);padding:3px;margin-bottom:var(--space-2)}
+.fseg{display:flex;gap:3px;background:var(--surface-muted);border-radius:var(--radius-md);padding:3px;margin-bottom:var(--space-2)}
 .fseg-btn{flex:1;border:none;background:none;padding:9px 0;border-radius:10px;
   font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-soft);cursor:pointer;
   transition:background .15s,color .15s}
-.fseg-btn.on{background:var(--tint-accent);color:var(--accent)}
+.fseg-btn.on{background:var(--surface);color:var(--text-strong);box-shadow:var(--shadow-sm)}
 
 /* ── 시수 뷰 ── */
 .hrs-note{font-size:var(--font-xs);color:var(--text-soft);margin:2px 4px 10px;line-height:1.5}
-.hrs-card{background:var(--surface);border-radius:var(--radius-md);margin-bottom:var(--space-2);overflow:hidden}
+.hrs-card{background:var(--surface);border:none;border-radius:var(--radius-lg);margin-bottom:var(--space-2);overflow:hidden;box-shadow:var(--shadow-xs)}
 .hrs-head{display:flex;align-items:center;gap:9px;width:100%;border:none;background:none;
   padding:13px 14px;cursor:pointer;text-align:left;font-family:inherit}
 .hrs-dot{width:10px;height:10px;border-radius:50%;flex:none}
@@ -399,10 +399,10 @@
 .dash-ring-card.tm-run{box-shadow:0 0 0 1.5px var(--brand-1),var(--shadow-xs)}
 .dash-ring-card.tm-pause{box-shadow:0 0 0 1.5px var(--warning-2),var(--shadow-xs)}
 
-/* ── 날짜 할일 안내 팁 ── */
-.dtodo-tip{display:flex;align-items:center;gap:8px;background:var(--tint-brand);
-  border-radius:var(--radius-md);padding:9px 12px;margin-bottom:var(--space-2);
-  font-size:var(--font-sm);color:var(--brand-1)}
-.dtodo-tip span{flex:1;line-height:1.4}
-.dtodo-tip-x{border:none;background:none;color:var(--brand-1);font-weight:var(--weight-bold);
-  font-size:var(--font-sm);cursor:pointer;padding:2px 6px;flex:none}
+
+/* ── 백업 카드 (컴팩트) ── */
+.sync-head{display:flex;align-items:center;gap:8px;width:100%;border:none;background:none;
+  padding:0;cursor:pointer;text-align:left;font-family:inherit}
+.sync-head .dash-card-ttl{margin-bottom:0}
+.sync-code.sm{font-size:var(--font-md);letter-spacing:1px}
+.sync-body{margin-top:var(--space-3);border-top:1px solid var(--border-faint);padding-top:var(--space-3)}

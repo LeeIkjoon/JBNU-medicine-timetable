@@ -5,23 +5,23 @@
 
 :root {
   /* Brand ─────────────────────────────────── */
-  --brand-1: #4F8EF7;
-  --brand-2: #6C63FF;
+  --brand-1: #3182F6;
+  --brand-2: #4E97FF;
   --brand-gradient: linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
-  --brand-header: #5B8AF0;       /* 주간 그리드 헤더 (브랜드보다 살짝 차분) */
-  --header-bg: #5B8AF0;          /* 앱 헤더 배경 — 그라디언트 대신 차분한 단색 */
-  --accent: #007AFF;             /* iOS 시스템 블루 — 토글/포커스/뱃지 */
+  --brand-header: #3182F6;       /* 토스 블루 */
+  --header-bg: #ffffff;          /* 토스 스타일 화이트 헤더 */
+  --accent: #3182F6;             /* 토스 블루 — 토글/포커스/뱃지 */
 
   /* Surface (배경 / 표면) ─────────────────── */
-  --bg: #F2F2F7;                 /* page background */
+  --bg: #F2F4F6;                 /* 토스 그레이 배경 */
   --surface: #ffffff;             /* 카드/테이블/패널 */
   --surface-2: #F9FAFB;          /* 보조 표면 (date row, info box) */
   --surface-sunken: #EBEBEB;     /* 점심 row */
   --surface-muted: #F3F4F6;      /* 리셋/타이머 배경 */
   --overlay: rgba(0, 0, 0, 0.45);
   --overlay-light: rgba(0, 0, 0, 0.25);
-  --tint-brand: #EEF2FF;         /* today 칼럼 하이라이트 */
-  --tint-accent: #F0F6FF;        /* hover/active */
+  --tint-brand: #EAF2FE;         /* today 칼럼 하이라이트 */
+  --tint-accent: #EAF2FE;        /* hover/active */
   --tint-info: #EEF1FF;          /* fmt-badge */
   --tint-exam: #FFF5F5;          /* exam row */
   --tint-warm: #FFF7ED;          /* changelog item bg */
@@ -74,8 +74,8 @@
   --radius-xs: 4px;
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  --radius-lg: 18px;
+  --radius-xl: 22px;
   --radius-2xl: 24px;
   --radius-pill: 9999px;
 
@@ -105,7 +105,7 @@
   --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
   --shadow-xl: 0 12px 40px rgba(0, 0, 0, 0.16);
   --shadow-header: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-brand: 0 4px 12px rgba(79, 142, 247, 0.4);
+  --shadow-brand: 0 4px 12px rgba(49, 130, 246, 0.35);
   --shadow-toast: 0 4px 16px rgba(0, 0, 0, 0.3);
 
   /* Animation ─────────────────────────────── */
@@ -126,7 +126,7 @@
 /* Dark value definitions — applied via two selectors below. */
 :root[data-theme="dark"] {
   --bg: #000000;
-  --header-bg: #24324F;
+  --header-bg: #1C1C1E;
   --surface: #1C1C1E;
   --surface-2: #2C2C2E;
   --surface-sunken: #0A0A0A;
@@ -165,7 +165,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #000000;
-    --header-bg: #24324F;
+    --header-bg: #1C1C1E;
     --surface: #1C1C1E;
     --surface-2: #2C2C2E;
     --surface-sunken: #0A0A0A;

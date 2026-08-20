@@ -2,7 +2,7 @@
 .tt{width:100%;min-width:320px;border-collapse:collapse;table-layout:fixed}
 
 /* 교시 열 */
-.th-t{width:36px;background:var(--brand-header);border-bottom:2px solid var(--brand-header);padding:0}
+.th-t{width:36px;background:var(--surface);border-bottom:1px solid var(--border);padding:0}
 .td-t{
   width:36px;
   background:var(--surface);
@@ -19,16 +19,16 @@
 .th-d{
   font-size:var(--font-md);font-weight:var(--weight-bold);text-align:center;
   padding:var(--space-1) 2px 3px;
-  background:var(--brand-header);
-  color:var(--text-onbrand);
-  border-bottom:2px solid var(--brand-header);
-  border-left:1px solid var(--border-onbrand);
+  background:var(--surface);
+  color:var(--text-secondary);
+  border-bottom:1px solid var(--border);
+  border-left:1px solid var(--border-soft);
 }
-.th-date{font-size:9px;font-weight:var(--weight-medium);color:rgba(255,255,255,0.78);display:block;margin-top:1px;font-variant-numeric:tabular-nums}
+.th-date{font-size:9px;font-weight:var(--weight-medium);color:var(--text-soft);display:block;margin-top:1px;font-variant-numeric:tabular-nums}
 
 /* 오늘 요일 강조 */
-.th-d.tc{background:var(--brand-2);border-bottom:2px solid var(--brand-2)}
-.th-d.tc .th-date{color:rgba(255,255,255,0.92)}
+.th-d.tc{background:var(--tint-accent);color:var(--accent);border-bottom:2px solid var(--accent)}
+.th-d.tc .th-date{color:var(--accent)}
 .td-c.tc{background:var(--tint-brand)}
 
 /* 일반 셀 - 빈 셀은 살짝 가라앉히고, 채워진 셀은 살짝 들어올림 */
@@ -111,3 +111,10 @@
 .sec-chip{border:1px solid var(--border);background:none;border-radius:var(--radius-pill);
   padding:5px 12px;font-size:var(--font-sm);font-weight:var(--weight-semi);color:var(--text-muted);cursor:pointer}
 .sec-chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+
+/* ── 날짜 헤더 할일 어포던스 ── */
+.th-todo{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
+  margin-left:3px;width:14px;height:13px;border-radius:4px;
+  background:var(--surface-muted);color:var(--text-soft)}
+.th-todo svg{width:9px;height:9px;display:block}
+.th-todo.has{background:var(--accent);color:#fff;font-size:9px;font-weight:800;line-height:1}

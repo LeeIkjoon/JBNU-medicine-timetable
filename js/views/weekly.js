@@ -33,9 +33,17 @@ function buildWeekTable(w,items){
 
   /* HTML 생성 - rowspan 없이 교시별 독립 렌더 */
   var html='<table class="tt"><thead><tr><th class="th-t"></th>';
+  var TODO_IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 6l1.2 1.2L7.5 4.9M4 11.5l1.2 1.2 2.3-2.3M4 17l1.2 1.2 2.3-2.3"/></svg>';
   DAYS.forEach(function(d){
     var dt=dd[d]||'';
-    html+='<th class="th-d" data-day="'+d+'" data-date="'+dt+'">'+d+'<br><span class="th-date">'+(dt?fmtDate(dt):'')+'</span></th>';
+    /* 날짜 옆 할일 어포던스: 기본은 체크리스트 아이콘, 할일 있으면 개수 배지 */
+    var todoH='';
+    if(dt){
+      var tn=0;
+      if(typeof dtodoLoad==='function'){try{tn=dtodoLoad(dt).length;}catch(e){}}
+      todoH='<span class="th-todo'+(tn?' has':'')+'">'+(tn?tn:TODO_IC)+'</span>';
+    }
+    html+='<th class="th-d" data-day="'+d+'" data-date="'+dt+'">'+d+'<br><span class="th-date">'+(dt?fmtDate(dt):'')+'</span>'+todoH+'</th>';
   });
   html+='</tr></thead><tbody>';
 
@@ -139,29 +147,13 @@ function bindSecBar(){
     };
   }
 }
-/* 날짜 탭 → 할일 기능 안내 (1회) */
-function dtodoTipHtml(){
-  try{if(localStorage.getItem('dtodo_tip_seen'))return'';}catch(e){}
-  if(!merged.length)return'';
-  return '<div class="dtodo-tip" id="dtodo-tip">'
-    +'<span>시간표 위쪽의 날짜를 누르면 그날의 할 일을 적을 수 있어요</span>'
-    +'<button class="dtodo-tip-x" id="dtodo-tip-x">확인</button></div>';
-}
-function dtodoTipDismiss(){
-  try{localStorage.setItem('dtodo_tip_seen','1');}catch(e){}
-  var el=document.getElementById('dtodo-tip');
-  if(el&&el.parentNode)el.parentNode.removeChild(el);
-}
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
   document.getElementById('main').innerHTML=
     secBarHtml()
-    +dtodoTipHtml()
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
   bindSecBar();
-  var tipX=document.getElementById('dtodo-tip-x');
-  if(tipX)tipX.onclick=dtodoTipDismiss;
   for(var i=0;i<DAYS.length;i++){
     var d=DAYS[i];
     if(dd[d]===t){
