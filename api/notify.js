@@ -27,6 +27,7 @@ module.exports = async (req, res) => {
   const today = kst.toISOString().slice(0, 10);
 
   const subs = (await fetch(`${DB}/push.json`).then(r => r.json())) || {};
+  if (subs.error) return res.status(500).json({ error: 'db: ' + subs.error });
   const ttCache = {};
   const results = [];
 
