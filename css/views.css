@@ -340,10 +340,56 @@
 .hrs-total{font-size:var(--font-md);font-weight:var(--weight-semi);color:var(--text-muted);flex:none}
 .hrs-arrow{flex:none;font-size:var(--font-lg);color:var(--text-fade);transform:rotate(90deg);transition:transform .2s}
 .hrs-arrow.open{transform:rotate(-90deg)}
-.hrs-body{padding:2px 14px 13px;border-top:1px solid var(--border-faint)}
-.hrs-row{margin-top:10px}
+.hrs-body{padding:2px 14px 13px;border-top:1px solid var(--border-faint);
+  display:grid;grid-template-columns:1fr 1fr;column-gap:16px}
+.hrs-row{margin-top:10px;min-width:0}
 .hrs-row-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px}
 .hrs-prof{font-size:var(--font-md);font-weight:var(--weight-medium);color:var(--text)}
 .hrs-meta{font-size:var(--font-sm);color:var(--text-soft)}
 .hrs-track{height:7px;background:var(--surface-muted);border-radius:4px;overflow:hidden}
 .hrs-bar{height:100%;border-radius:4px;min-width:2px}
+
+/* ── 메모 카드 ── */
+.memo-list{margin-bottom:2px}
+.memo-item{display:flex;align-items:baseline;gap:8px;padding:7px 0;border-bottom:1px solid var(--border-faint)}
+.memo-item:last-child{border-bottom:none}
+.memo-text{flex:1;min-width:0;font-size:var(--font-md);color:var(--text);word-break:break-all;line-height:1.45}
+.memo-date{font-size:var(--font-2xs);color:var(--text-fade);flex:none}
+.memo-del{border:none;background:none;color:var(--text-fade);font-size:12px;cursor:pointer;padding:2px 4px;flex:none}
+.memo-add-row{display:flex;gap:6px;margin-top:8px}
+.memo-input{flex:1;min-width:0;border:1px solid var(--border);border-radius:10px;padding:8px 11px;
+  font-size:var(--font-md);background:var(--surface);color:var(--text);outline:none;font-family:inherit}
+.memo-input:focus{border-color:var(--accent)}
+.memo-add-btn{border:none;background:var(--accent);color:#fff;border-radius:10px;padding:8px 14px;
+  font-size:var(--font-md);font-weight:var(--weight-bold);cursor:pointer;flex:none}
+
+/* ── 학년 랭킹 카드 ── */
+.rank-caption{font-size:var(--font-2xs);font-weight:var(--weight-regular);color:var(--text-soft);margin-left:6px}
+.rank-join-txt{font-size:var(--font-md);color:var(--text-muted);line-height:1.5;margin-bottom:2px}
+.rank-loading{font-size:var(--font-md);color:var(--text-fade);padding:4px 0}
+.rank-row{display:flex;align-items:baseline;gap:10px;padding:6px 0}
+.rank-row.me{background:var(--tint-accent);border-radius:8px;padding-left:8px;padding-right:8px;margin:0 -8px}
+.rank-row.gap{margin-top:6px}
+.rank-n{width:16px;text-align:center;font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-soft);flex:none}
+.rank-nick{flex:1;min-width:0;font-size:var(--font-md);font-weight:var(--weight-medium);color:var(--text);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-secs{font-size:var(--font-md);font-weight:var(--weight-semi);color:var(--text-muted);flex:none}
+
+/* ── 백업 카드 ── */
+.sync-row{display:flex;align-items:baseline;gap:8px}
+.sync-code-lbl{font-size:var(--font-sm);color:var(--text-soft);flex:none}
+.sync-code{font-size:var(--font-lg);font-weight:var(--weight-bold);letter-spacing:2px;color:var(--text-strong)}
+.sync-status-txt{margin-left:auto;font-size:var(--font-2xs);color:var(--text-fade)}
+.sync-desc{font-size:var(--font-sm);color:var(--text-soft);line-height:1.5;margin-top:6px}
+.sync-warn{font-size:var(--font-2xs);color:var(--warning-text);margin-top:6px}
+
+/* ── 알림 카드 ── */
+.push-row{display:flex;align-items:center;gap:12px}
+.push-row>div:first-child{flex:1;min-width:0}
+.push-ttl{font-size:var(--font-md);font-weight:var(--weight-semi);color:var(--text)}
+.push-toggle{width:48px;height:29px;border-radius:15px;border:none;background:var(--border-strong);
+  position:relative;cursor:pointer;flex:none;transition:background .2s;-webkit-tap-highlight-color:transparent}
+.push-toggle.on{background:var(--success)}
+.push-knob{position:absolute;top:2.5px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;
+  box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
+.push-toggle.on .push-knob{transform:translateX(18px)}

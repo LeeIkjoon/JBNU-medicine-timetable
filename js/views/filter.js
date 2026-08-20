@@ -79,7 +79,7 @@ function renderL(){
    시수 뷰 — 과목별·교수별 수업 시수
    (시험 배점이 교수별 시수에 비례하므로 비율 표시)
 ══════════════════════════════════════════ */
-var fView='sched';      /* 'sched' | 'hours' */
+var fView='hours';      /* 'hours' | 'sched' — 시수가 기본 */
 var fHoursOpen={};      /* 과목명 → 펼침 여부 */
 
 function hoursData(){
@@ -170,8 +170,8 @@ function renderF(){
 
   var h='<div class="fw">';
   h+='<div class="fseg">'
-    +'<button class="fseg-btn'+(fView==='sched'?' on':'')+'" id="fseg-sched">수업 일정</button>'
     +'<button class="fseg-btn'+(fView==='hours'?' on':'')+'" id="fseg-hours">수업 시수</button>'
+    +'<button class="fseg-btn'+(fView==='sched'?' on':'')+'" id="fseg-sched">수업 일정</button>'
     +'</div>';
 
   if(fView==='hours'){

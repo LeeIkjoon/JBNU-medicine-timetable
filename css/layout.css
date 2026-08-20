@@ -48,3 +48,6 @@
 .gs-ic svg{width:32px;height:32px;display:block;margin:0 auto}
 .gs-name{font-size:var(--font-base);font-weight:var(--weight-bold);color:var(--text-strong);margin-bottom:2px}
 .gs-desc{font-size:var(--font-xs);color:var(--text-soft)}
+
+/* 분반 선택 화면 — 현재 선택 강조 */
+.sec-card.sel{border-color:var(--accent);box-shadow:0 0 0 1.5px var(--accent)}

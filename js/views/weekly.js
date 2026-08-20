@@ -112,10 +112,10 @@ function buildLegend(items){
 /* ══════════════════════════════════════════
    주간 뷰
 ══════════════════════════════════════════ */
-/* 분반 선택 바 — 규칙이 있고 현재 시간표에 해당 과목이 있을 때만 */
+/* 분반 선택 바 — 미선택 상태의 안내용 (선택은 학년 화면에서, 선택 후엔 숨김) */
 function secBarHtml(){
   var r=secRule();
-  if(!r)return'';
+  if(!r||secSel())return'';
   var has=false;
   for(var i=0;i<merged.length;i++){if(merged[i].subject===r.subject){has=true;break;}}
   if(!has)return'';

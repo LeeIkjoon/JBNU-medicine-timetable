@@ -66,9 +66,19 @@ function buildFromItems(items,nativeWdd,nativeEd){
   /* 3. 색상 맵 - 구별되는 초연한 파스텔 팔레트 */
   var palette=['#CFFAFE','#DCFCE7','#D1FAE5','#FCE7F3','#FEF3C7','#EDE9FE','#FFEDD5','#DBEAFE','#FEF9C3','#FFE4E6','#F3E8FF','#FEE2E2','#E0F2FE','#FDF4FF','#D1FAE5','#FFF7ED','#F0F9FF','#EDE9FE'];
   var pIdx=0;
+  /* 1차: 일반 과목 색 배정 */
   for(var i=0;i<items.length;i++){
     var s=items[i].subject;
-    if(!cmap[s]){cmap[s]=palette[pIdx%palette.length];pIdx++;}
+    if(!cmap[s]&&!isEx(s)){cmap[s]=palette[pIdx%palette.length];pIdx++;}
+  }
+  /* 2차: 시험 과목은 원 과목 색을 그대로 사용 (빨간 테두리로만 구분) */
+  for(var i=0;i<items.length;i++){
+    var s=items[i].subject;
+    if(!cmap[s]){
+      var base=examBase(s);
+      if(base&&cmap[base])cmap[s]=cmap[base];
+      else{cmap[s]=palette[pIdx%palette.length];pIdx++;}
+    }
   }
 
   /* 4. 시험 날짜 목록 */
@@ -144,6 +154,14 @@ var GRADE_SUBJECTS={
   '의예과 2학년':[]
 };
 function getUniqueSubjects(){
+  /* 현재 시간표(merged) 기준 — 학기 바뀌어도 하드코딩 목록에 안 묶이게 */
+  var set={};
+  for(var i=0;i<merged.length;i++){
+    var s=merged[i].subject;
+    if(s&&!isEv(s)&&!isHoliday(s))set[s]=true;
+  }
+  var list=Object.keys(set);
+  if(list.length)return list.sort(function(a,b){return a.localeCompare(b,'ko');});
   var fixed=GRADE_SUBJECTS[savedGrade||''];
   if(fixed&&fixed.length>0) return fixed;
   if(!_subjColorMap) buildSubjColorMap();

@@ -4,6 +4,11 @@ function isEx(s){return s.indexOf('시험')>=0||s.indexOf('퀴즈')>=0||s.indexO
 function isEv(s){return EVK.indexOf(s)>=0;}
 function wvals(w){var o=wdd[w];if(!o)return[];return Object.keys(o).map(function(k){return o[k];}).filter(Boolean);}
 function gcol(s){return cmap[s]||'#C4B5FD';}
+/* 시험 과목명에서 원 과목명 추출: '감염학 시험' → '감염학' */
+function examBase(s){
+  var b=s.replace(/\s*(중간|기말|1차|2차)?\s*(시험|고사|퀴즈|땡시)\s*(\(퀴즈\))?\s*$/,'').trim();
+  return b&&b!==s?b:'';
+}
 function isHoliday(s){
   for(var i=0;i<HOLIDAY_KW.length;i++){if(s.indexOf(HOLIDAY_KW[i])>=0)return true;}
   return false;

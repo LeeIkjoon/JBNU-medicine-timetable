@@ -194,6 +194,99 @@ function dashGreeting(todaySecs,goalSec){
   return {greet:greet,msg:msg};
 }
 
+/* ── 학년 랭킹 카드 ── */
+function rankCardHtml(){
+  var h='<div class="dash-card">';
+  h+='<div class="dash-card-ttl">학년 랭킹<span class="rank-caption">이번 주 공부시간</span></div>';
+  if(!rankNick()){
+    h+='<div class="rank-join-txt">닉네임을 정하면 우리 학년 랭킹에 참여할 수 있어요</div>';
+    h+='<div class="memo-add-row">'
+      +'<input class="memo-input" id="rank-nick-input" placeholder="닉네임 (8자 이내)" maxlength="8">'
+      +'<button class="memo-add-btn" id="rank-join-btn">참여</button>'
+      +'</div>';
+  }else{
+    h+='<div id="rank-body" class="rank-body"><div class="rank-loading">불러오는 중…</div></div>';
+  }
+  h+='</div>';
+  return h;
+}
+function rankBind(){
+  var btn=document.getElementById('rank-join-btn');
+  if(btn){
+    btn.onclick=function(){
+      var v=(document.getElementById('rank-nick-input').value||'').trim();
+      if(!v)return;
+      try{localStorage.setItem('rank_nick',v);}catch(e){}
+      _rankLastPush=0;
+      renderDashboard();
+    };
+    return;
+  }
+  if(!rankNick())return;
+  rankPush();
+  rankFetch(function(rows){
+    var el=document.getElementById('rank-body');
+    if(!el)return;
+    if(!rows){el.innerHTML='<div class="rank-loading">불러올 수 없어요</div>';return;}
+    var me=syncUid(),h='',myIdx=-1;
+    for(var i=0;i<rows.length;i++)if(rows[i].uid===me){myIdx=i;break;}
+    var show=rows.slice(0,5);
+    if(!show.length){el.innerHTML='<div class="rank-loading">아직 이번 주 기록이 없어요</div>';return;}
+    for(var j=0;j<show.length;j++){
+      var r=show[j],mine=r.uid===me;
+      h+='<div class="rank-row'+(mine?' me':'')+'">'
+        +'<span class="rank-n">'+(j+1)+'</span>'
+        +'<span class="rank-nick">'+escHtml(r.nick)+(mine?' (나)':'')+'</span>'
+        +'<span class="rank-secs">'+tmFmtShort(r.secs*1000)+'</span>'
+        +'</div>';
+    }
+    if(myIdx>=5){
+      var r2=rows[myIdx];
+      h+='<div class="rank-row me gap">'
+        +'<span class="rank-n">'+(myIdx+1)+'</span>'
+        +'<span class="rank-nick">'+escHtml(r2.nick)+' (나)</span>'
+        +'<span class="rank-secs">'+tmFmtShort(r2.secs*1000)+'</span>'
+        +'</div>';
+    }
+    el.innerHTML=h;
+  });
+}
+
+/* ── 백업 카드 ── */
+var syncRestoreOpen=false;
+function syncCardHtml(){
+  var h='<div class="dash-card">';
+  h+='<div class="dash-card-ttl">백업</div>';
+  h+='<div class="sync-row"><span class="sync-code-lbl">내 코드</span><span class="sync-code">'+syncUid()+'</span>'
+    +'<span class="sync-status-txt" id="sync-status">'+syncStatusText()+'</span></div>';
+  h+='<div class="sync-desc">공부기록·플래너·메모가 이 코드로 자동 백업돼요. 새 기기에서 코드를 입력하면 그대로 복원됩니다.</div>';
+  if(syncRestoreOpen){
+    h+='<div class="memo-add-row">'
+      +'<input class="memo-input" id="sync-code-input" placeholder="코드 8자리" maxlength="8" style="text-transform:uppercase">'
+      +'<button class="memo-add-btn" id="sync-restore-btn">가져오기</button>'
+      +'</div>';
+    h+='<div class="sync-warn" id="sync-restore-msg">가져오면 현재 기기의 기록을 덮어씁니다</div>';
+  }else{
+    h+='<button class="dash-exam-more" id="sync-restore-open">다른 기기에서 가져오기</button>';
+  }
+  h+='</div>';
+  return h;
+}
+function syncBind(){
+  var op=document.getElementById('sync-restore-open');
+  if(op)op.onclick=function(){syncRestoreOpen=true;renderDashboard();};
+  var btn=document.getElementById('sync-restore-btn');
+  if(btn)btn.onclick=function(){
+    var v=document.getElementById('sync-code-input').value;
+    var msg=document.getElementById('sync-restore-msg');
+    syncRestore(v,function(err){
+      if(err){if(msg)msg.textContent=err;return;}
+      if(msg)msg.textContent='복원 완료 — 새로고침합니다';
+      setTimeout(function(){location.reload();},700);
+    });
+  };
+}
+
 function renderDashboard(){
   var todayKey=dashYmd(new Date());
   var todaySecs=dashDayTotal(todayKey);
@@ -291,6 +384,12 @@ function renderDashboard(){
   }
   h+='</div></div>';
 
+  /* 알림 · 학년 랭킹 · 메모 · 백업 */
+  if(typeof pushCardHtml==='function')h+=pushCardHtml();
+  h+=rankCardHtml();
+  if(typeof memoCardHtml==='function')h+=memoCardHtml();
+  h+=syncCardHtml();
+
   h+='</div>';
   document.getElementById('main').innerHTML=h;
 
@@ -298,4 +397,8 @@ function renderDashboard(){
   document.getElementById('dash-goal-minus').onclick=function(){dashSetGoal(dashGoalMin()-30);renderDashboard();};
   document.getElementById('dash-goal-plus').onclick=function(){dashSetGoal(dashGoalMin()+30);renderDashboard();};
   if(typeof tmBind==='function')tmBind(); /* 통합 타이머 카드 이벤트 */
+  if(typeof pushBind==='function')pushBind();
+  rankBind();
+  if(typeof memoBind==='function')memoBind();
+  syncBind();
 }

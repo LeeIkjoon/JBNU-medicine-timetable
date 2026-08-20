@@ -66,6 +66,7 @@ function applyFirebaseData(data){
   buildFromItems(merged,wdd,ed);
   _subjColorMap=null;
   try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:wdd,ed:ed,grade:savedGrade,ts:newTs||Date.now()}));}catch(e){}
+  goTodayWeek(); /* 새 학기 데이터로 바뀌면 주차 인덱스 재계산 */
   render();
   /* 초기 로드가 아닌 실시간 업데이트일 때만 알림 */
   if(isUpdate && !isAdmin){

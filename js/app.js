@@ -17,11 +17,19 @@ function updHdr(){
 }
 
 function goTodayWeek(){
-  var t=today();
+  /* 토/일이면 다음 주 월요일 기준 → 주말엔 다음 주 시간표 */
+  var now=new Date(),dow=now.getDay(),t;
+  if(dow===6||dow===0){
+    var nm=new Date(now.getTime()+(dow===6?2:1)*86400000);
+    t=nm.getFullYear()+'-'+p2(nm.getMonth()+1)+'-'+p2(nm.getDate());
+  }else t=today();
   for(var i=0;i<wks.length;i++){
     var v=wvals(wks[i]).sort();
-    if(v.length&&t>=v[0]&&t<=v[v.length-1]){ci=i;break;}
+    if(!v.length)continue;
+    if(t>=v[0]&&t<=v[v.length-1]){ci=i;return;}
+    if(t<v[0]){ci=i;return;} /* 주 사이 공백·개강 전 → 다가오는 주 */
   }
+  if(wks.length)ci=wks.length-1; /* 종강 후 → 마지막 주 */
 }
 
 /* ── 테마 토글 (시스템 ↔ 라이트 ↔ 다크) ── */
@@ -58,6 +66,7 @@ function setView(v){
 }
 
 function render(){
+  if(ci<0||ci>=wks.length)goTodayWeek(); /* 주차 구성 변경 후 인덱스 안전장치 */
   updHdr();
   if(typeof updateAdminFab==='function')updateAdminFab();
   if(vw==='dashboard')renderDashboard();
@@ -143,11 +152,7 @@ function init(){
       wl[wk]=wl[wk].replace(/<div class="li"><span class="ld" style="background:#95A5A6"><\/span>[\s\S]*?<\/div>/g,'');
     }
   }
-  var t=today();
-  for(var i=0;i<wks.length;i++){
-    var v=wvals(wks[i]).sort();
-    if(v.length&&t>=v[0]&&t<=v[v.length-1]){ci=i;break;}
-  }
+  goTodayWeek();
   var nd=new Date();cy=nd.getFullYear();cm2=nd.getMonth();
 
   document.getElementById('pb').onclick=function(){if(ci>0){ci--;render();}};
@@ -213,6 +218,32 @@ function init(){
 
   function showGradeScreen(){document.getElementById('gs-screen').style.display='flex';}
   function hideGradeScreen(){document.getElementById('gs-screen').style.display='none';}
+
+  /* 분반 선택 화면 (학년 선택 직후, gs-screen과 동일한 룩) */
+  function showSectionScreen(){
+    var r=secRule();if(!r)return;
+    var sc=document.getElementById('sec-screen');
+    var grid=document.getElementById('sec-grid');
+    document.getElementById('sec-title').textContent=r.label+' 선택';
+    var cur=secSel(),h='';
+    for(var i=0;i<r.days.length;i++){
+      var d=r.days[i];
+      h+='<div class="gs-card sec-card'+(cur===d?' sel':'')+'" data-sec="'+d+'">'
+        +'<div class="gs-name">'+d+'반</div>'
+        +'<div class="gs-desc">'+d+'요일 실습</div></div>';
+    }
+    grid.innerHTML=h;
+    var cards=grid.querySelectorAll('.sec-card');
+    for(var j=0;j<cards.length;j++){
+      cards[j].onclick=function(){
+        secSet(this.getAttribute('data-sec'));
+        sc.style.display='none';
+        buildFromItems(merged,wdd,ed);
+        render();
+      };
+    }
+    sc.style.display='flex';
+  }
   function applyGrade(grade){
     /* 학년이 바뀌면 관리자 인증 초기화 */
     if(grade !== savedGrade && isAdmin){
@@ -222,9 +253,8 @@ function init(){
     savedGrade=grade;
     localStorage.setItem('user_grade',grade);
     document.getElementById('grade-lbl').textContent=grade;
-    var titleEl=document.getElementById('hdr-title');
-    if(titleEl)titleEl.textContent='2026-1학기';
     hideGradeScreen();
+    if(secRule())showSectionScreen(); /* 분반 있는 학년은 이어서 분반 선택 */
 
     /* ── 학년별 시간표로 초기화 ── */
     /* 1) merged 초기화 */
@@ -238,9 +268,10 @@ function init(){
       if(s) saved=JSON.parse(s);
     }catch(e){}
     if(saved&&saved.items&&saved.items.length){
+      /* buildFromItems가 merged를 saved.items로 교체함 — 별도 push 시 중복 */
       buildFromItems(saved.items, saved.wdd||{}, saved.ed||[]);
-      saved.items.forEach(function(it){merged.push(it);});
     }
+    goTodayWeek(); /* 학년(=주차 구성) 변경 → 주차 인덱스 재계산 */
     render();
     /* 3) Firebase에서 최신 시간표 로드 */
     setTimeout(function(){
@@ -273,30 +304,8 @@ function init(){
     try{buildFromItems(savedTimetable.items,savedTimetable.wdd,savedTimetable.ed);}catch(e){}
   }
 
-  /* 오늘 날짜 주차로 자동 이동 */
-  (function(){
-    var now=new Date();
-    var dow=now.getDay(); /* 0=일,6=토 */
-    var t;
-    if(dow===6||dow===0){
-      /* 토/일 → 다음주 월요일 날짜 계산 */
-      var diff=dow===6?2:1; /* 토→+2일, 일→+1일 */
-      var nextMon=new Date(now.getTime()+diff*24*60*60*1000);
-      t=nextMon.getFullYear()+'-'+p2(nextMon.getMonth()+1)+'-'+p2(nextMon.getDate());
-    } else {
-      t=today();
-    }
-    for(var i=0;i<wks.length;i++){
-      var v=wvals(wks[i]).sort();
-      if(v.length&&t>=v[0]&&t<=v[v.length-1]){ci=i;break;}
-    }
-    /* 해당 날짜가 시간표 범위를 벗어나면 마지막 주로 */
-    if(ci===0){
-      /* 범위 전이면 0, 범위 후이면 마지막 주 */
-      var lastV=wvals(wks[wks.length-1]).sort();
-      if(t>lastV[lastV.length-1]) ci=wks.length-1;
-    }
-  })();
+  /* 오늘 날짜 주차로 자동 이동 (주말이면 다음 주) */
+  goTodayWeek();
 
   setView(vw); /* 초기 뷰 렌더 + 하단 네비/주차 네비 동기화 */
 
