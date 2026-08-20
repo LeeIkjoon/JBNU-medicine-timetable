@@ -3,6 +3,12 @@
 ══════════════════════════════════════════ */
 function updHdr(){
   var w=wks[ci];
+  /* 학기 라벨 — 시간표 첫 날짜 기준 (8월 이후 개강 = 2학기) */
+  var v0=wvals(wks[0]).sort()[0];
+  if(v0){
+    var yy=v0.slice(0,4),mm=parseInt(v0.slice(5,7),10);
+    document.getElementById('hdr-title').textContent=yy+'-'+(mm>=8?'2':'1')+'학기';
+  }
   document.getElementById('wl').textContent=w+'주차';
   var v=wvals(w).sort();
   document.getElementById('wr').textContent=v.length>=2?fmtDate(v[0])+' ~ '+fmtDate(v[v.length-1]):(v[0]?fmtDate(v[0]):'');

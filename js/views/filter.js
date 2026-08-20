@@ -72,7 +72,81 @@ function byDateH(items){
   return h;
 }
 function renderL(){
-  document.getElementById('main').innerHTML='<div class="list-wrap">'+byDateH(merged)+'</div>';
+  document.getElementById('main').innerHTML='<div class="list-wrap">'+byDateH(secFilter(merged))+'</div>';
+}
+
+/* ══════════════════════════════════════════
+   시수 뷰 — 과목별·교수별 수업 시수
+   (시험 배점이 교수별 시수에 비례하므로 비율 표시)
+══════════════════════════════════════════ */
+var fView='sched';      /* 'sched' | 'hours' */
+var fHoursOpen={};      /* 과목명 → 펼침 여부 */
+
+function hoursData(){
+  var subj={};
+  var src=secFilter(merged);
+  for(var i=0;i<src.length;i++){
+    var it=src[i],s=it.subject;
+    if(!s||isEv(s)||isHoliday(s))continue;
+    if((it.is_exam===true||it.is_exam==='true')||isEx(s))continue;
+    /* 끝 괄호 분파 통합: '인체육안구조(일반해부)'+'(신경해부)' → '인체육안구조'
+       (배점은 과목 단위 시수 기준이므로 합산해서 표시) */
+    s=s.replace(/\s*\([^)]*\)\s*$/,'')||s;
+    var p=(it.professor||'').trim()||'미정';
+    if(!subj[s])subj[s]={total:0,prof:{},rep:it.subject}; /* rep: 색상용 원본 과목명 */
+    subj[s].total++;
+    subj[s].prof[p]=(subj[s].prof[p]||0)+1;
+  }
+  return Object.keys(subj).map(function(s){
+    var profs=Object.keys(subj[s].prof).map(function(p){
+      return {name:p,hours:subj[s].prof[p]};
+    }).sort(function(a,b){return b.hours-a.hours||a.name.localeCompare(b.name,'ko');});
+    return {subject:s,rep:subj[s].rep,total:subj[s].total,profs:profs};
+  }).sort(function(a,b){return b.total-a.total||a.subject.localeCompare(b.subject,'ko');});
+}
+
+function renderHours(){
+  var data=hoursData();
+  var h='';
+  if(!data.length){
+    h+='<div class="no-res">수업 데이터가 없습니다</div>';
+  }else{
+    h+='<div class="hrs-note">1교시 = 1시간 · 시험·행사 제외 · 시험 배점은 교수님별 시수에 비례</div>';
+    for(var i=0;i<data.length;i++){
+      var d=data[i],c=gcol(cmap[d.subject]?d.subject:d.rep),open=!!fHoursOpen[d.subject];
+      h+='<div class="hrs-card">';
+      h+='<button class="hrs-head" data-i="'+i+'">';
+      h+='<span class="hrs-dot" style="background:'+c+'"></span>';
+      h+='<span class="hrs-subj">'+escHtml(d.subject)+'</span>';
+      h+='<span class="hrs-total">'+d.total+'시간</span>';
+      h+='<span class="hrs-arrow'+(open?' open':'')+'">›</span>';
+      h+='</button>';
+      if(open){
+        h+='<div class="hrs-body">';
+        for(var j=0;j<d.profs.length;j++){
+          var pr=d.profs[j];
+          var pct=d.total>0?Math.round(pr.hours/d.total*100):0;
+          h+='<div class="hrs-row">';
+          h+='<div class="hrs-row-top"><span class="hrs-prof">'+escHtml(pr.name)+'</span>'
+            +'<span class="hrs-meta">'+pr.hours+'시간 · '+pct+'%</span></div>';
+          h+='<div class="hrs-track"><div class="hrs-bar" style="width:'+pct+'%;background:'+c+'"></div></div>';
+          h+='</div>';
+        }
+        h+='</div>';
+      }
+      h+='</div>';
+    }
+  }
+  var el=document.getElementById('fres');if(!el)return;
+  el.innerHTML=h;
+  var heads=el.querySelectorAll('.hrs-head');
+  for(var k=0;k<heads.length;k++){
+    heads[k].onclick=function(){
+      var s=data[parseInt(this.getAttribute('data-i'),10)].subject;
+      fHoursOpen[s]=!fHoursOpen[s];
+      renderF();
+    };
+  }
 }
 
 /* ══════════════════════════════════════════
@@ -83,7 +157,7 @@ function renderF(){
   var subjSet={};
   for(var mi=0;mi<merged.length;mi++){
     var s0=merged[mi].subject;
-    if(s0&&!isEv(s0)) subjSet[s0]=true;
+    if(s0&&!isEv(s0)&&!isHoliday(s0)) subjSet[s0]=true;
   }
   var allSubj=Object.keys(subjSet).sort(function(a,b){return a.localeCompare(b,'ko');});
   /* fsubj2 초기화: 아직 설정 안 됐거나 현재 과목과 동기화 */
@@ -95,6 +169,19 @@ function renderF(){
   var nS=allSubj.filter(function(s){return!isEx(s);});
 
   var h='<div class="fw">';
+  h+='<div class="fseg">'
+    +'<button class="fseg-btn'+(fView==='sched'?' on':'')+'" id="fseg-sched">수업 일정</button>'
+    +'<button class="fseg-btn'+(fView==='hours'?' on':'')+'" id="fseg-hours">수업 시수</button>'
+    +'</div>';
+
+  if(fView==='hours'){
+    h+='<div id="fres"></div></div>';
+    document.getElementById('main').innerHTML=h;
+    bindFSeg();
+    renderHours();
+    return;
+  }
+
   h+='<div class="fs"><div class="fs-ttl">빠른 필터</div><div class="chips">';
   h+='<button class="chip chip-exam'+(fExam?' on':'')+'" id="chip-exam">시험만 보기</button>';
   var aon=!fExam&&fsubj2.length===allSubj.length;
@@ -121,6 +208,7 @@ function renderF(){
   }
   h+='<div id="fres"></div></div>';
   document.getElementById('main').innerHTML=h;
+  bindFSeg();
 
   document.getElementById('chip-exam').onclick=function(){
     fExam=!fExam;
@@ -141,8 +229,12 @@ function renderF(){
   }
   renderFR();
 }
+function bindFSeg(){
+  document.getElementById('fseg-sched').onclick=function(){if(fView!=='sched'){fView='sched';renderF();}};
+  document.getElementById('fseg-hours').onclick=function(){if(fView!=='hours'){fView='hours';renderF();}};
+}
 function renderFR(){
-  var items=merged.slice();
+  var items=secFilter(merged).slice();
   if(fExam){
     items=items.filter(function(i){return isEx(i.subject);});
   }else{

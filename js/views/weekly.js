@@ -1,4 +1,5 @@
 function buildWeekTable(w,items){
+  items=secFilter(items); /* 분반: 선택한 요일의 분반 수업만 */
   var dd=wdd[w]||{};
   var PERIODS=[
     {n:1,t:'8:30'},{n:2,t:'9:30'},{n:3,t:'10:30'},{n:4,t:'11:30'},
@@ -95,6 +96,7 @@ function buildWeekTable(w,items){
 }
 
 function buildLegend(items){
+  items=secFilter(items);
   var seen={};
   var html='';
   for(var i=0;i<items.length;i++){
@@ -110,11 +112,40 @@ function buildLegend(items){
 /* ══════════════════════════════════════════
    주간 뷰
 ══════════════════════════════════════════ */
+/* 분반 선택 바 — 규칙이 있고 현재 시간표에 해당 과목이 있을 때만 */
+function secBarHtml(){
+  var r=secRule();
+  if(!r)return'';
+  var has=false;
+  for(var i=0;i<merged.length;i++){if(merged[i].subject===r.subject){has=true;break;}}
+  if(!has)return'';
+  var sel=secSel();
+  var h='<div class="sec-bar'+(sel?'':' need')+'">';
+  h+='<span class="sec-lbl">'+escHtml(r.label)+(sel?'':' 선택')+'</span>';
+  for(var j=0;j<r.days.length;j++){
+    var d=r.days[j];
+    h+='<button class="sec-chip'+(sel===d?' on':'')+'" data-sec="'+d+'">'+d+'반</button>';
+  }
+  h+='</div>';
+  return h;
+}
+function bindSecBar(){
+  var chips=document.querySelectorAll('.sec-chip');
+  for(var i=0;i<chips.length;i++){
+    chips[i].onclick=function(){
+      secSet(this.getAttribute('data-sec'));
+      buildFromItems(merged,wdd,ed);
+      render();
+    };
+  }
+}
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
   document.getElementById('main').innerHTML=
-    '<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
+    secBarHtml()
+    +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
+  bindSecBar();
   for(var i=0;i<DAYS.length;i++){
     var d=DAYS[i];
     if(dd[d]===t){

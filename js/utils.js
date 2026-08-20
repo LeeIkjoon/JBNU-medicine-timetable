@@ -38,5 +38,17 @@ function exLabel(s){
 /* 학년별 localStorage 키 */
 function ttKey(){return 'timetable_data_'+(savedGrade||'default');}
 
+/* ── 분반 (SECTION_RULES 기반) ── */
+function secRule(){return (typeof SECTION_RULES!=='undefined'&&SECTION_RULES[savedGrade])||null;}
+function secKey(){return 'section_'+(savedGrade||'default');}
+function secSel(){try{return localStorage.getItem(secKey());}catch(e){return null;}}
+function secSet(d){try{localStorage.setItem(secKey(),d);}catch(e){}}
+/* 선택된 분반 요일 외의 분반 과목 수업 제거. 규칙 없거나 미선택이면 그대로 */
+function secFilter(items){
+  var r=secRule();if(!r)return items;
+  var sel=secSel();if(!sel||r.days.indexOf(sel)<0)return items;
+  return items.filter(function(it){return it.subject!==r.subject||it.day===sel;});
+}
+
 /* null-safe HTML escape (원본의 두 escHtml 선언 중 살아 있던 버전) */
 function escHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
