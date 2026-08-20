@@ -165,7 +165,7 @@
 .dtodo-ovl.show{opacity:1;pointer-events:all}
 .dtodo-sh{background:var(--surface);border-radius:var(--radius-2xl);width:100%;max-width:380px;
   max-height:80vh;display:flex;flex-direction:column;
-  transform:scale(.94) translateY(16px);transition:transform .26s var(--ease-bounce),opacity .22s;
+  transform:scale(.88) translateY(52px);transition:transform .48s var(--ease-bounce),opacity .2s;
   opacity:0;overflow:hidden;
   box-shadow:var(--shadow-xl)}
 .dtodo-ovl.show .dtodo-sh{transform:scale(1) translateY(0);opacity:1}

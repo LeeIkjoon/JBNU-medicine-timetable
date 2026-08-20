@@ -61,7 +61,7 @@
 
 /* 하단 네비 — iOS 블러 (미지원 시 불투명 유지) */
 @supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
-  .bnav{background:color-mix(in srgb,var(--surface) 82%,transparent);
+  .bnav{background:color-mix(in srgb,var(--surface) 94%,transparent);
     -webkit-backdrop-filter:saturate(180%) blur(16px);backdrop-filter:saturate(180%) blur(16px)}
 }
 
