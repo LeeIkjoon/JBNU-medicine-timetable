@@ -20,6 +20,7 @@ function dtodoDdDay(ds){
 }
 
 function openDtodo(ds,label){
+  if(typeof dtodoTipDismiss==='function')dtodoTipDismiss(); /* 기능을 발견했으니 안내 종료 */
   dtodoDate=ds;dtodoInputMode=false;
   var ovl=document.getElementById('dtodo-ovl');
   var lbl=document.getElementById('dtodo-date-lbl');

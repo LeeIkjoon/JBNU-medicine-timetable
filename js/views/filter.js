@@ -230,8 +230,8 @@ function renderF(){
   renderFR();
 }
 function bindFSeg(){
-  document.getElementById('fseg-sched').onclick=function(){if(fView!=='sched'){fView='sched';renderF();}};
-  document.getElementById('fseg-hours').onclick=function(){if(fView!=='hours'){fView='hours';renderF();}};
+  document.getElementById('fseg-sched').onclick=function(){if(fView!=='sched'){fView='sched';window.scrollTo(0,0);renderF();}};
+  document.getElementById('fseg-hours').onclick=function(){if(fView!=='hours'){fView='hours';window.scrollTo(0,0);renderF();}};
 }
 function renderFR(){
   var items=secFilter(merged).slice();

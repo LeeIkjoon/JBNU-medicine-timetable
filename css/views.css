@@ -77,7 +77,7 @@
 }
 
 /* ── FILTER ── */
-.fw{padding:var(--space-1) 0}
+.fw{padding:var(--space-1) 0 calc(80px + env(safe-area-inset-bottom,0px));min-height:calc(100dvh - 190px);box-sizing:border-box}
 .fs{background:var(--surface);border-radius:var(--radius-md);padding:var(--space-3);margin-bottom:var(--space-2)}
 .fs-ttl{font-size:var(--font-sm);font-weight:var(--weight-bold);margin-bottom:9px}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
@@ -383,13 +383,26 @@
 .sync-desc{font-size:var(--font-sm);color:var(--text-soft);line-height:1.5;margin-top:6px}
 .sync-warn{font-size:var(--font-2xs);color:var(--warning-text);margin-top:6px}
 
-/* ── 알림 카드 ── */
-.push-row{display:flex;align-items:center;gap:12px}
-.push-row>div:first-child{flex:1;min-width:0}
-.push-ttl{font-size:var(--font-md);font-weight:var(--weight-semi);color:var(--text)}
-.push-toggle{width:48px;height:29px;border-radius:15px;border:none;background:var(--border-strong);
-  position:relative;cursor:pointer;flex:none;transition:background .2s;-webkit-tap-highlight-color:transparent}
-.push-toggle.on{background:var(--success)}
-.push-knob{position:absolute;top:2.5px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;
-  box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s}
-.push-toggle.on .push-knob{transform:translateX(18px)}
+
+/* ── 링+타이머 통합 카드 ── */
+.dash-combo{display:flex;align-items:center;gap:14px;width:100%}
+.dash-combo .dash-ring-box{width:118px;height:118px;flex:none}
+.dash-combo .dash-ring-time{font-size:var(--font-xl)}
+.dash-combo .dash-ring-sub{font-size:var(--font-2xs);margin-top:2px}
+.dash-combo-right{flex:1;min-width:0;text-align:center}
+.dash-combo-right .tm-display{font-size:32px}
+.dash-combo-right .tm-subj-wrap{margin-bottom:8px}
+.dash-combo-right .tm-subject-select{padding:8px 28px 8px 14px;font-size:var(--font-sm)}
+.dash-combo-right .tm-subj-chev{right:12px;width:14px;height:14px}
+.dash-combo-right .tm-btns{margin-top:8px;flex-wrap:wrap}
+.dash-combo-right .tm-live-head{margin-bottom:6px;font-size:var(--font-sm)}
+.dash-ring-card.tm-run{box-shadow:0 0 0 1.5px var(--brand-1),var(--shadow-xs)}
+.dash-ring-card.tm-pause{box-shadow:0 0 0 1.5px var(--warning-2),var(--shadow-xs)}
+
+/* ── 날짜 할일 안내 팁 ── */
+.dtodo-tip{display:flex;align-items:center;gap:8px;background:var(--tint-brand);
+  border-radius:var(--radius-md);padding:9px 12px;margin-bottom:var(--space-2);
+  font-size:var(--font-sm);color:var(--brand-1)}
+.dtodo-tip span{flex:1;line-height:1.4}
+.dtodo-tip-x{border:none;background:none;color:var(--brand-1);font-weight:var(--weight-bold);
+  font-size:var(--font-sm);cursor:pointer;padding:2px 6px;flex:none}

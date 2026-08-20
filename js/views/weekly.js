@@ -139,13 +139,29 @@ function bindSecBar(){
     };
   }
 }
+/* 날짜 탭 → 할일 기능 안내 (1회) */
+function dtodoTipHtml(){
+  try{if(localStorage.getItem('dtodo_tip_seen'))return'';}catch(e){}
+  if(!merged.length)return'';
+  return '<div class="dtodo-tip" id="dtodo-tip">'
+    +'<span>시간표 위쪽의 날짜를 누르면 그날의 할 일을 적을 수 있어요</span>'
+    +'<button class="dtodo-tip-x" id="dtodo-tip-x">확인</button></div>';
+}
+function dtodoTipDismiss(){
+  try{localStorage.setItem('dtodo_tip_seen','1');}catch(e){}
+  var el=document.getElementById('dtodo-tip');
+  if(el&&el.parentNode)el.parentNode.removeChild(el);
+}
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
   document.getElementById('main').innerHTML=
     secBarHtml()
+    +dtodoTipHtml()
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
   bindSecBar();
+  var tipX=document.getElementById('dtodo-tip-x');
+  if(tipX)tipX.onclick=dtodoTipDismiss;
   for(var i=0;i<DAYS.length;i++){
     var d=DAYS[i];
     if(dd[d]===t){

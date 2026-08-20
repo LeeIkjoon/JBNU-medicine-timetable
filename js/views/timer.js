@@ -119,6 +119,10 @@ function tmRenderHost(){
 
 /* 타이머 카드 HTML — 홈(renderDashboard)에서 삽입해 사용 */
 function tmCardHtml(){
+  var running=tmState==='running',paused=tmState==='paused';
+  return '<div class="tm-clock-card'+(running?' running':paused?' paused':'')+'">'+tmInnerHtml()+'</div>';
+}
+function tmInnerHtml(){
   var subjects=[],seen2={};
   for(var i=0;i<fsubj.length;i++){
     var s=fsubj[i];
@@ -128,7 +132,7 @@ function tmCardHtml(){
   var running=tmState==='running',paused=tmState==='paused';
 
   var active=running||paused;
-  var h='<div class="tm-clock-card'+(running?' running':paused?' paused':'')+'">';
+  var h='';
   if(active){
     /* 실행/일시정지: 과목 라이브 헤더 */
     h+='<div class="tm-live-head'+(running?' running':' paused')+'">';
@@ -160,7 +164,7 @@ function tmCardHtml(){
     h+='<button class="tm-btn tm-btn-stop" id="tm-stop">'+TM_IC.save+'기록 저장</button>';
     h+='<button class="tm-btn tm-btn-reset" id="tm-reset" title="초기화">'+TM_IC.reset+'</button>';
   }
-  h+='</div></div>';
+  h+='</div>';
   return h;
 }
 

@@ -259,7 +259,7 @@ function syncCardHtml(){
   h+='<div class="dash-card-ttl">백업</div>';
   h+='<div class="sync-row"><span class="sync-code-lbl">내 코드</span><span class="sync-code">'+syncUid()+'</span>'
     +'<span class="sync-status-txt" id="sync-status">'+syncStatusText()+'</span></div>';
-  h+='<div class="sync-desc">공부기록·플래너·메모가 이 코드로 자동 백업돼요. 새 기기에서 코드를 입력하면 그대로 복원됩니다.</div>';
+  h+='<div class="sync-desc">공부기록·플래너·할 일이 이 코드로 자동 백업돼요. 새 기기에서 코드를 입력하면 그대로 복원됩니다.</div>';
   if(syncRestoreOpen){
     h+='<div class="memo-add-row">'
       +'<input class="memo-input" id="sync-code-input" placeholder="코드 8자리" maxlength="8" style="text-transform:uppercase">'
@@ -313,8 +313,11 @@ function renderDashboard(){
   h+='<div class="dash-greet-msg">'+g.msg+'</div>';
   h+='</div>';
 
-  /* 메인 링 — 오늘 공부시간 vs 목표 */
-  h+='<div class="dash-ring-card'+(achieved?' achieved':'')+'">';
+  /* 메인 카드 — 오늘 공부시간 링 + 타이머 통합 */
+  var tmRunning=(typeof tmState!=='undefined')&&tmState==='running';
+  var tmPaused=(typeof tmState!=='undefined')&&tmState==='paused';
+  h+='<div class="dash-ring-card'+(achieved?' achieved':'')+(tmRunning?' tm-run':'')+(tmPaused?' tm-pause':'')+'">';
+  h+='<div class="dash-combo">';
   h+='<div class="dash-ring-box">';
   h+='<svg class="dash-ring" viewBox="0 0 120 120">';
   h+='<defs><linearGradient id="dashGrad" x1="0" y1="0" x2="1" y2="1">';
@@ -328,7 +331,11 @@ function renderDashboard(){
   if(achieved)h+='<div class="dash-ring-sub achieved">목표 달성</div>';
   else h+='<div class="dash-ring-sub">목표 '+goalLabel+' · '+pctLabel+'%</div>';
   h+='</div>';
-  h+='</div>';
+  h+='</div>'; /* close ring-box */
+
+  /* 우측: 라이브 공부 타이머 */
+  h+='<div class="dash-combo-right">'+(typeof tmInnerHtml==='function'?tmInnerHtml():'')+'</div>';
+  h+='</div>'; /* close combo */
 
   /* 목표 조절 */
   h+='<div class="dash-goal-row">';
@@ -338,9 +345,6 @@ function renderDashboard(){
   h+='</div>';
 
   h+='</div>'; /* close ring card */
-
-  /* 라이브 공부 타이머 (홈에 통합) */
-  if(typeof tmCardHtml==='function')h+=tmCardHtml();
 
   /* 연속 공부 + 이번 주 */
   h+='<div class="dash-stat-grid">';
@@ -384,10 +388,8 @@ function renderDashboard(){
   }
   h+='</div></div>';
 
-  /* 알림 · 학년 랭킹 · 메모 · 백업 */
-  if(typeof pushCardHtml==='function')h+=pushCardHtml();
+  /* 학년 랭킹 · 백업 */
   h+=rankCardHtml();
-  if(typeof memoCardHtml==='function')h+=memoCardHtml();
   h+=syncCardHtml();
 
   h+='</div>';
@@ -397,8 +399,6 @@ function renderDashboard(){
   document.getElementById('dash-goal-minus').onclick=function(){dashSetGoal(dashGoalMin()-30);renderDashboard();};
   document.getElementById('dash-goal-plus').onclick=function(){dashSetGoal(dashGoalMin()+30);renderDashboard();};
   if(typeof tmBind==='function')tmBind(); /* 통합 타이머 카드 이벤트 */
-  if(typeof pushBind==='function')pushBind();
   rankBind();
-  if(typeof memoBind==='function')memoBind();
   syncBind();
 }

@@ -1,10 +1,10 @@
 /* ══════════════════════════════════════════
    백업·동기화 + 학년 랭킹 (Firebase users/, study/)
-   - 공부기록·플래너·할일·메모를 users/<코드>에 자동 백업 (디바운스)
+   - 공부기록·플래너·할일을 users/<코드>에 자동 백업 (디바운스)
    - 복원: 다른 기기에서 코드 입력 → localStorage 덮어쓰기 → 리로드
    - 랭킹: 닉네임 설정 시 study/<gradeKey>/<코드>에 주간 공부시간 공유
 ══════════════════════════════════════════ */
-var SYNC_KEYS=['tm_logs','pl_todos','study_goal_min','memos','rank_nick'];
+var SYNC_KEYS=['tm_logs','pl_todos','study_goal_min','rank_nick'];
 var SYNC_PREFIX=['dtodo_'];
 
 function syncUid(){

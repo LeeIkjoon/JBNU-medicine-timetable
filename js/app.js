@@ -3,15 +3,7 @@
 ══════════════════════════════════════════ */
 function updHdr(){
   var w=wks[ci];
-  /* 학기 라벨 — 시간표 첫 날짜 기준 (8월 이후 개강 = 2학기) */
-  var v0=wvals(wks[0]).sort()[0];
-  if(v0){
-    var yy=v0.slice(0,4),mm=parseInt(v0.slice(5,7),10);
-    document.getElementById('hdr-title').textContent=yy+'-'+(mm>=8?'2':'1')+'학기';
-  }
   document.getElementById('wl').textContent=w+'주차';
-  var v=wvals(w).sort();
-  document.getElementById('wr').textContent=v.length>=2?fmtDate(v[0])+' ~ '+fmtDate(v[v.length-1]):(v[0]?fmtDate(v[0]):'');
   document.getElementById('pb').disabled=(ci===0);
   document.getElementById('nb').disabled=(ci===wks.length-1);
 }
@@ -252,7 +244,7 @@ function init(){
     }
     savedGrade=grade;
     localStorage.setItem('user_grade',grade);
-    document.getElementById('grade-lbl').textContent=grade;
+    var gl=document.getElementById('grade-lbl');if(gl)gl.textContent=grade;
     hideGradeScreen();
     if(secRule())showSectionScreen(); /* 분반 있는 학년은 이어서 분반 선택 */
 
@@ -294,7 +286,7 @@ function init(){
 
   /* 저장된 학년 복원 */
   if(savedGrade){
-    document.getElementById('grade-lbl').textContent=savedGrade;
+    var gl0=document.getElementById('grade-lbl');if(gl0)gl0.textContent=savedGrade;
   } else {
     showGradeScreen();
   }

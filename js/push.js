@@ -68,34 +68,35 @@ function pushMetaUpdate(){
   fbDb.ref('push/'+syncUid()).update({grade:savedGrade||'',sec:secSel()||''}).catch(function(){});
 }
 
-function pushCardHtml(){
-  var h='<div class="dash-card"><div class="dash-card-ttl">알림</div>';
-  var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
-  if(!pushSupported()||(isIOS&&!pushStandalone())){
-    h+='<div class="sync-desc">'+(isIOS
-      ?'홈 화면에 추가한 앱에서 알림을 켤 수 있어요 (공유 → 홈 화면에 추가)'
-      :'이 브라우저는 알림을 지원하지 않아요')+'</div></div>';
-    return h;
-  }
-  h+='<div class="push-row">'
-    +'<div><div class="push-ttl">아침 수업 알림</div>'
-    +'<div class="sync-desc" style="margin-top:2px">매일 아침 7시 반쯤 오늘 수업·시험을 알려드려요</div></div>'
-    +'<button class="push-toggle'+(pushEnabled()?' on':'')+'" id="push-toggle"><span class="push-knob"></span></button>'
-    +'</div>';
-  h+='<div class="sync-warn" id="push-msg" style="display:none"></div>';
-  h+='</div>';
-  return h;
-}
-function pushBind(){
-  pushMetaUpdate();
-  var t=document.getElementById('push-toggle');
+/* ── 헤더 벨 버튼 ── */
+function pushToast(msg){
+  var t=document.getElementById('update-toast');
   if(!t)return;
-  t.onclick=function(){
-    var msg=document.getElementById('push-msg');
-    var done=function(err){
-      if(err&&msg){msg.textContent=err;msg.style.display='block';}
-      renderDashboard();
-    };
-    if(pushEnabled())pushDisable(done);else pushEnable(done);
-  };
+  t.textContent=msg;
+  t.className='update-toast show';
+  setTimeout(function(){t.className='update-toast';},3000);
 }
+function pushBtnUpdate(){
+  var b=document.getElementById('push-btn');if(!b)return;
+  b.classList.toggle('on',pushEnabled());
+}
+(function(){
+  var b=document.getElementById('push-btn');if(!b)return;
+  pushBtnUpdate();
+  pushMetaUpdate();
+  b.onclick=function(){
+    var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    if(!pushSupported()||(isIOS&&!pushStandalone())){
+      pushToast(isIOS?'홈 화면에 추가한 앱에서 알림을 켤 수 있어요':'이 브라우저는 알림을 지원하지 않아요');
+      return;
+    }
+    if(pushEnabled()){
+      pushDisable(function(){pushBtnUpdate();pushToast('아침 수업 알림을 껐어요');});
+    }else{
+      pushEnable(function(err){
+        pushBtnUpdate();
+        pushToast(err||'매일 아침 오늘 수업·시험을 알려드릴게요');
+      });
+    }
+  };
+})();

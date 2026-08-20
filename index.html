@@ -18,10 +18,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="css/tokens.css?v=20260820a">
 <link rel="stylesheet" href="css/base.css?v=20260820a">
-<link rel="stylesheet" href="css/layout.css?v=20260820c">
+<link rel="stylesheet" href="css/layout.css?v=20260820d">
 <link rel="stylesheet" href="css/timetable.css?v=20260820a">
 <link rel="stylesheet" href="css/components.css?v=20260820a">
-<link rel="stylesheet" href="css/views.css?v=20260820c">
+<link rel="stylesheet" href="css/views.css?v=20260820d">
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -33,14 +33,9 @@
   <div class="hdr-top">
     <div style="display:flex;align-items:center;gap:8px">
       <img src="data:image/png;base64,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" style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.15);padding:1px" alt="JBNU">
-      <div>
-        <div class="ht" id="hdr-title">2026-1학기</div>
-        <div class="hs" id="wr"></div>
-        <div class="hs" id="grade-lbl" style="color:rgba(255,255,255,0.85);font-size:10px;margin-top:1px"></div>
-      </div>
     </div>
     <div class="hdr-right">
-      <button class="icon-btn icon-btn-txt" id="grade-btn" title="학년 변경">학년</button><button class="icon-btn" id="theme-btn" title="테마 (시스템/라이트/다크)"></button><button class="icon-btn" id="cal-btn" title="날짜 선택"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg></button>
+      <button class="icon-btn icon-btn-txt" id="grade-btn" title="학년 변경">학년</button><button class="icon-btn" id="push-btn" title="아침 수업 알림"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.4a6 6 0 1 0-12 0c0 6.3-2.4 8.1-2.4 8.1h16.8S18 14.7 18 8.4z"/><path d="M13.9 20a2.2 2.2 0 0 1-3.8 0"/></svg><span class="push-dot" id="push-dot"></span></button><button class="icon-btn" id="theme-btn" title="테마 (시스템/라이트/다크)"></button><button class="icon-btn" id="cal-btn" title="날짜 선택"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 9.5h17M8 3v4M16 3v4"/></svg></button>
       <div class="wnav" id="wnav">
         <button class="nb" id="pb">‹</button>
         <span class="wl" id="wl"></span>
@@ -152,18 +147,17 @@
 <script src="js/parsers/xlsx.js?v=20260820a"></script>
 <script src="js/parsers/pdf.js?v=20260820a"></script>
 <script src="js/upload.js?v=20260820a"></script>
-<script src="js/views/weekly.js?v=20260820c"></script>
-<script src="js/views/filter.js?v=20260820b"></script>
+<script src="js/views/weekly.js?v=20260820d"></script>
+<script src="js/views/filter.js?v=20260820d"></script>
 <script src="js/views/calendar.js?v=20260820a"></script>
 <script src="js/views/planner.js?v=20260820a"></script>
-<script src="js/views/timer.js?v=20260820a"></script>
-<script src="js/views/dashboard.js?v=20260820c"></script>
-<script src="js/views/memo.js?v=20260820b"></script>
-<script src="js/views/dtodo.js?v=20260820a"></script>
+<script src="js/views/timer.js?v=20260820d"></script>
+<script src="js/views/dashboard.js?v=20260820d"></script>
+<script src="js/views/dtodo.js?v=20260820d"></script>
 <script src="js/admin.js?v=20260820a"></script>
-<script src="js/sync.js?v=20260820b"></script>
-<script src="js/push.js?v=20260820c"></script>
-<script src="js/app.js?v=20260820c"></script>
+<script src="js/sync.js?v=20260820d"></script>
+<script src="js/push.js?v=20260820d"></script>
+<script src="js/app.js?v=20260820d"></script>
 
 <!-- 관리자 FAB -->
 <button class="admin-fab" id="admin-fab" title="관리자 모드"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2 2 0 0 0-2.8-2.8L5 17.2z"/><path d="M13.5 6.7l3.8 3.8"/></svg></button>
