@@ -118,30 +118,21 @@
 .th-d:active{background:var(--tint-accent)}
 
 /* ── 할 일 버튼 (헤더와 시간표 사이) ── */
-.wk-todo{display:flex;align-items:center;gap:8px;width:100%;border:none;cursor:pointer;
-  background:var(--surface);border-radius:var(--radius-lg);padding:11px 14px;
-  margin:6px 0 8px;box-shadow:var(--shadow-xs);font-family:inherit;text-align:left;
-  transition:transform var(--duration-fast) var(--ease)}
-.wk-todo:active{transform:scale(.98)}
-.wk-todo-ic{display:flex;align-items:center;justify-content:center;width:26px;height:26px;
-  border-radius:8px;background:var(--tint-accent);color:var(--accent);flex:none}
-.wk-todo-ic svg{width:14px;height:14px}
-.wk-todo-txt{flex:1;font-size:var(--font-md);font-weight:var(--weight-bold);color:var(--text-strong)}
-.wk-todo-n{min-width:20px;height:20px;border-radius:10px;background:var(--accent);color:#fff;
-  font-size:var(--font-xs);font-weight:var(--weight-bold);display:none;
-  align-items:center;justify-content:center;padding:0 6px;flex:none}
-.wk-todo-n.has{display:inline-flex}
-.wk-todo-arrow{color:var(--text-fade);font-size:var(--font-lg);flex:none}
+.wk-todo{display:flex;align-items:stretch;width:100%;
+  background:var(--surface);border-radius:var(--radius-lg);padding:6px 3px 6px 0;
+  margin:6px 0 8px;box-shadow:var(--shadow-xs)}
 
-/* ── 할 일 바 — 날짜별 진입 ── */
-.wk-todo .wk-days{display:flex;gap:5px;flex:1;justify-content:flex-end}
+/* ── 할 일 바 — 시간표 컬럼과 정렬된 날짜별 칩 ── */
+.wk-todo-sp{width:36px;flex:none;display:flex;align-items:center;justify-content:center;color:var(--text-fade)}
+.wk-todo-sp svg{width:13px;height:13px}
 .wk-day{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;
-  border:none;background:var(--surface-muted);border-radius:10px;padding:5px 0 3px;width:40px;
+  border:none;background:var(--surface-muted);border-radius:10px;padding:5px 0 3px;
+  flex:1;min-width:0;margin:0 3px;
   font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-secondary);cursor:pointer;
   font-family:inherit;transition:transform var(--duration-fast) var(--ease),background var(--duration-fast)}
-.wk-day:active{transform:scale(.92)}
+.wk-day:active{transform:scale(.94)}
 .wk-day.today{background:var(--tint-accent);color:var(--accent)}
+.wk-day.off{background:none;cursor:default;pointer-events:none}
 .wk-day-n{min-width:14px;height:14px;border-radius:7px;font-size:9px;font-weight:800;
   display:flex;align-items:center;justify-content:center;color:transparent}
 .wk-day-n.has{background:var(--accent);color:#fff;padding:0 4px}
-.wk-todo .wk-todo-txt{flex:none}

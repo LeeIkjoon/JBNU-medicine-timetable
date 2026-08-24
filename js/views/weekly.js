@@ -139,19 +139,19 @@ function bindSecBar(){
     };
   }
 }
-/* 할 일 바 — 헤더와 시간표 사이, 현재 주차의 날짜별 투두 진입 */
+/* 할 일 바 — 시간표 요일 컬럼과 같은 위치에 날짜별 칩 정렬 */
 function wkTodoHtml(){
   var dd=wdd[wks[ci]]||{},t=today();
   var IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 6l1.2 1.2L7.5 4.9M4 11.5l1.2 1.2 2.3-2.3M4 17l1.2 1.2 2.3-2.3"/></svg>';
-  var h='<div class="wk-todo"><span class="wk-todo-ic">'+IC+'</span><span class="wk-todo-txt">할 일</span><div class="wk-days">';
+  var h='<div class="wk-todo"><span class="wk-todo-sp">'+IC+'</span>';
   for(var i=0;i<DAYS.length;i++){
     var d=DAYS[i],dt=dd[d]||'';
-    if(!dt)continue;
+    if(!dt){h+='<span class="wk-day off"></span>';continue;}
     var n=0;try{n=dtodoLoad(dt).length;}catch(e){}
     h+='<button class="wk-day'+(dt===t?' today':'')+'" data-date="'+dt+'" data-day="'+d+'">'
       +d+'<span class="wk-day-n'+(n?' has':'')+'">'+(n||'')+'</span></button>';
   }
-  h+='</div></div>';
+  h+='</div>';
   return h;
 }
 function renderW(){
