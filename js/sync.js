@@ -1,10 +1,9 @@
 /* ══════════════════════════════════════════
-   백업·동기화 + 학년 랭킹 (Firebase users/, study/)
+   백업·동기화 (Firebase users/)
    - 공부기록·플래너·할일을 users/<코드>에 자동 백업 (디바운스)
    - 복원: 다른 기기에서 코드 입력 → localStorage 덮어쓰기 → 리로드
-   - 랭킹: 닉네임 설정 시 study/<gradeKey>/<코드>에 주간 공부시간 공유
 ══════════════════════════════════════════ */
-var SYNC_KEYS=['tm_logs','pl_todos','study_goal_min','rank_nick'];
+var SYNC_KEYS=['tm_logs','pl_todos','study_goal_min'];
 var SYNC_PREFIX=['dtodo_'];
 
 function syncUid(){
@@ -72,31 +71,3 @@ function syncRestore(code,cb){
   }).catch(function(){cb('불러오기에 실패했습니다');});
 }
 
-/* ── 학년 랭킹 ── */
-function rankNick(){try{return localStorage.getItem('rank_nick')||'';}catch(e){return'';}}
-function rankWeekKey(){
-  var d=new Date();d.setDate(d.getDate()-d.getDay()); /* 이번 주 일요일 */
-  return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
-}
-var _rankLastPush=0;
-function rankPush(){
-  if(!fbDb||!savedGrade||!rankNick())return;
-  var now=Date.now();
-  if(now-_rankLastPush<60000)return; /* 1분 스로틀 */
-  _rankLastPush=now;
-  fbDb.ref('study/'+fbGradeKey(savedGrade)+'/'+syncUid()).set({
-    nick:rankNick(),week:rankWeekKey(),secs:dashWeekTotal(),ts:now
-  }).catch(function(){});
-}
-function rankFetch(cb){
-  if(!fbDb||!savedGrade){cb(null);return;}
-  fbDb.ref('study/'+fbGradeKey(savedGrade)).once('value').then(function(s){
-    var v=s.val()||{},wk=rankWeekKey(),rows=[];
-    Object.keys(v).forEach(function(uid){
-      var r=v[uid];
-      if(r&&r.week===wk&&r.nick)rows.push({uid:uid,nick:r.nick,secs:r.secs||0});
-    });
-    rows.sort(function(a,b){return b.secs-a.secs;});
-    cb(rows);
-  }).catch(function(){cb(null);});
-}

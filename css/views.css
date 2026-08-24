@@ -363,17 +363,6 @@
 .memo-add-btn{border:none;background:var(--accent);color:#fff;border-radius:10px;padding:8px 14px;
   font-size:var(--font-md);font-weight:var(--weight-bold);cursor:pointer;flex:none}
 
-/* ── 학년 랭킹 카드 ── */
-.rank-caption{font-size:var(--font-2xs);font-weight:var(--weight-regular);color:var(--text-soft);margin-left:6px}
-.rank-join-txt{font-size:var(--font-md);color:var(--text-muted);line-height:1.5;margin-bottom:2px}
-.rank-loading{font-size:var(--font-md);color:var(--text-fade);padding:4px 0}
-.rank-row{display:flex;align-items:baseline;gap:10px;padding:6px 0}
-.rank-row.me{background:var(--tint-accent);border-radius:8px;padding-left:8px;padding-right:8px;margin:0 -8px}
-.rank-row.gap{margin-top:6px}
-.rank-n{width:16px;text-align:center;font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-soft);flex:none}
-.rank-nick{flex:1;min-width:0;font-size:var(--font-md);font-weight:var(--weight-medium);color:var(--text);
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rank-secs{font-size:var(--font-md);font-weight:var(--weight-semi);color:var(--text-muted);flex:none}
 
 /* ── 백업 카드 ── */
 .sync-row{display:flex;align-items:baseline;gap:8px}
@@ -439,5 +428,5 @@
 .fseg-btn:active,.dash-goal-btn:active,.pl-add:active,.dtodo-add-card:active{transform:scale(.95)}
 .hrs-head,.sync-head{transition:opacity var(--duration-fast)}
 .hrs-head:active,.sync-head:active{opacity:.55}
-.dash-stat,.dash-exam-item,.rank-row{transition:transform var(--duration-fast) var(--ease)}
+.dash-stat,.dash-exam-item{transition:transform var(--duration-fast) var(--ease)}
 .dash-exam-item:active{transform:scale(.98)}

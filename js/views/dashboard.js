@@ -194,64 +194,6 @@ function dashGreeting(todaySecs,goalSec){
   return {greet:greet,msg:msg};
 }
 
-/* ── 학년 랭킹 카드 ── */
-function rankCardHtml(){
-  var h='<div class="dash-card">';
-  h+='<div class="dash-card-ttl">학년 랭킹<span class="rank-caption">이번 주 공부시간</span></div>';
-  if(!rankNick()){
-    h+='<div class="rank-join-txt">닉네임을 정하면 우리 학년 랭킹에 참여할 수 있어요</div>';
-    h+='<div class="memo-add-row">'
-      +'<input class="memo-input" id="rank-nick-input" placeholder="닉네임 (8자 이내)" maxlength="8">'
-      +'<button class="memo-add-btn" id="rank-join-btn">참여</button>'
-      +'</div>';
-  }else{
-    h+='<div id="rank-body" class="rank-body"><div class="rank-loading">불러오는 중…</div></div>';
-  }
-  h+='</div>';
-  return h;
-}
-function rankBind(){
-  var btn=document.getElementById('rank-join-btn');
-  if(btn){
-    btn.onclick=function(){
-      var v=(document.getElementById('rank-nick-input').value||'').trim();
-      if(!v)return;
-      try{localStorage.setItem('rank_nick',v);}catch(e){}
-      _rankLastPush=0;
-      renderDashboard();
-    };
-    return;
-  }
-  if(!rankNick())return;
-  rankPush();
-  rankFetch(function(rows){
-    var el=document.getElementById('rank-body');
-    if(!el)return;
-    if(!rows){el.innerHTML='<div class="rank-loading">불러올 수 없어요</div>';return;}
-    var me=syncUid(),h='',myIdx=-1;
-    for(var i=0;i<rows.length;i++)if(rows[i].uid===me){myIdx=i;break;}
-    var show=rows.slice(0,5);
-    if(!show.length){el.innerHTML='<div class="rank-loading">아직 이번 주 기록이 없어요</div>';return;}
-    for(var j=0;j<show.length;j++){
-      var r=show[j],mine=r.uid===me;
-      h+='<div class="rank-row'+(mine?' me':'')+'">'
-        +'<span class="rank-n">'+(j+1)+'</span>'
-        +'<span class="rank-nick">'+escHtml(r.nick)+(mine?' (나)':'')+'</span>'
-        +'<span class="rank-secs">'+tmFmtShort(r.secs*1000)+'</span>'
-        +'</div>';
-    }
-    if(myIdx>=5){
-      var r2=rows[myIdx];
-      h+='<div class="rank-row me gap">'
-        +'<span class="rank-n">'+(myIdx+1)+'</span>'
-        +'<span class="rank-nick">'+escHtml(r2.nick)+' (나)</span>'
-        +'<span class="rank-secs">'+tmFmtShort(r2.secs*1000)+'</span>'
-        +'</div>';
-    }
-    el.innerHTML=h;
-  });
-}
-
 /* ── 백업 카드 (컴팩트 — 탭하면 펼침) ── */
 var syncOpen=false,syncRestoreOpen=false;
 function syncCardHtml(){
@@ -397,8 +339,7 @@ function renderDashboard(){
   }
   h+='</div></div>';
 
-  /* 학년 랭킹 · 백업 */
-  h+=rankCardHtml();
+  /* 백업 */
   h+=syncCardHtml();
 
   h+='</div>';
@@ -408,7 +349,6 @@ function renderDashboard(){
   document.getElementById('dash-goal-minus').onclick=function(){dashSetGoal(dashGoalMin()-30);renderDashboard();};
   document.getElementById('dash-goal-plus').onclick=function(){dashSetGoal(dashGoalMin()+30);renderDashboard();};
   if(typeof tmBind==='function')tmBind(); /* 통합 타이머 카드 이벤트 */
-  rankBind();
   syncBind();
 
   /* 뷰 진입 시에만 링이 차오르는 애니메이션 */
