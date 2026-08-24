@@ -117,22 +117,13 @@
 .th-d{transition:background var(--duration-fast)}
 .th-d:active{background:var(--tint-accent)}
 
-/* ── 할 일 버튼 (헤더와 시간표 사이) ── */
-.wk-todo{display:flex;align-items:stretch;width:100%;
-  background:var(--surface);border-radius:var(--radius-lg);padding:6px 3px 6px 0;
-  margin:6px 0 8px;box-shadow:var(--shadow-xs)}
 
-/* ── 할 일 바 — 시간표 컬럼과 정렬된 날짜별 칩 ── */
-.wk-todo-sp{width:36px;flex:none;display:flex;align-items:center;justify-content:center;color:var(--text-fade)}
-.wk-todo-sp svg{width:13px;height:13px}
-.wk-day{position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;
-  border:none;background:var(--surface-muted);border-radius:10px;padding:5px 0 3px;
-  flex:1;min-width:0;margin:0 3px;
-  font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-secondary);cursor:pointer;
-  font-family:inherit;transition:transform var(--duration-fast) var(--ease),background var(--duration-fast)}
-.wk-day:active{transform:scale(.94)}
-.wk-day.today{background:var(--tint-accent);color:var(--accent)}
-.wk-day.off{background:none;cursor:default;pointer-events:none}
-.wk-day-n{min-width:14px;height:14px;border-radius:7px;font-size:9px;font-weight:800;
-  display:flex;align-items:center;justify-content:center;color:transparent}
-.wk-day-n.has{background:var(--accent);color:#fff;padding:0 4px}
+
+/* ── 날짜 헤더 할일 배지 ── */
+.th-todo{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
+  margin-left:3px;width:14px;height:13px;border-radius:4px;
+  background:var(--surface-muted);color:var(--text-soft)}
+.th-todo svg{width:9px;height:9px;display:block}
+.th-todo.has{background:var(--accent);color:#fff;font-size:9px;font-weight:800;line-height:1}
+.th-d.tc .th-todo{background:rgba(49,130,246,0.14)}
+.th-d.tc .th-todo.has{background:var(--accent);color:#fff}
