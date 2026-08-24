@@ -1,6 +1,26 @@
 
 /* ── 현재 편집 중인 데이터 소스 ── */
 function admSrc(){ return (_workingMerged && isAdmin) ? _workingMerged : merged; }
+/* 해당 과목의 교수 목록 (시수 많은 순) — 원본 시간표 기준 */
+function admProfsFor(subj){
+  var m={};
+  var src=admSrc();
+  for(var i=0;i<src.length;i++){
+    var it=src[i];
+    if(it.subject===subj&&it.professor)m[it.professor]=(m[it.professor]||0)+1;
+  }
+  return Object.keys(m).sort(function(a,b){return m[b]-m[a]||a.localeCompare(b,'ko');});
+}
+function admProfOptsHtml(subj,cur){
+  var ps=admProfsFor(subj),found=!cur;
+  var h='<option value="">교수 없음</option>';
+  ps.forEach(function(pn){
+    if(pn===cur)found=true;
+    h+='<option value="'+escAdm(pn)+'"'+(pn===cur?' selected':'')+'>'+escAdm(pn)+'</option>';
+  });
+  h+='<option value="__custom"'+(!found?' selected':'')+'>직접 입력…</option>';
+  return h;
+}
 
 /* ── FAB / 패널 ── */
 function updateAdminFab(){
@@ -91,7 +111,8 @@ function renderAdminEditModal(){
     '</div>'+
     '<div style="background:var(--surface);border-radius:14px;padding:14px 16px;">'+
       '<div style="font-size:11px;font-weight:700;color:var(--text-soft);margin-bottom:8px;">교수명</div>'+
-      '<input id="adm-prof" value="'+escAdm(it.professor||'')+'" placeholder="교수명 (없으면 빈칸)" style="width:100%;border:none;outline:none;font-size:15px;color:var(--text);background:none;box-sizing:border-box;">'+
+      '<select id="adm-prof-sel" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-size:14px;font-family:inherit;background:var(--surface-2);box-sizing:border-box;">'+admProfOptsHtml(it.subject||'',it.professor||'')+'</select>'+
+      '<input id="adm-prof" value="'+escAdm(it.professor||'')+'" placeholder="교수명 직접 입력" style="width:100%;border:1.5px solid var(--border);border-radius:10px;padding:10px;font-size:14px;color:var(--text);background:var(--surface-2);box-sizing:border-box;margin-top:8px;display:'+((it.professor&&admProfsFor(it.subject||'').indexOf(it.professor)<0)?'block':'none')+';outline:none;">'+
     '</div>'+
     '<div style="background:var(--surface);border-radius:14px;padding:14px 16px;">'+
       '<label style="display:flex;align-items:center;gap:12px;cursor:pointer;">'+
@@ -250,6 +271,16 @@ function renderAdminEditModal(){
       var cur=document.getElementById('adm-cur');
       if(dot) dot.style.background=gcol(v);
       if(cur) cur.textContent=v||'과목 선택';
+      /* 과목이 바뀌면 그 과목의 교수 목록으로 갱신 */
+      var ps=document.getElementById('adm-prof-sel');
+      if(ps){ps.innerHTML=admProfOptsHtml(v,'');var pi=document.getElementById('adm-prof');if(pi)pi.style.display='none';}
+    };
+    var psel=document.getElementById('adm-prof-sel');
+    if(psel) psel.onchange=function(){
+      var pi=document.getElementById('adm-prof');
+      if(!pi)return;
+      if(this.value==='__custom'){pi.style.display='block';pi.focus();}
+      else pi.style.display='none';
     };
 
     /* ── 시험 체크박스 클릭 ── */
@@ -257,8 +288,8 @@ function renderAdminEditModal(){
     if(examBox) examBox.parentNode.onclick=function(){
       admSrc()[ri].is_exam=!admSrc()[ri].is_exam;
       var chk=admSrc()[ri].is_exam;
-      examBox.style.border='2px solid '+(chk?'#EF4444':'#D1D5DB');
-      examBox.style.background=chk?'#EF4444':'#fff';
+      examBox.style.border='2px solid '+(chk?'#EF4444':'var(--border-strong)');
+      examBox.style.background=chk?'#EF4444':'var(--surface)';
       examBox.innerHTML=chk?'<span style="color:#fff;font-size:14px;font-weight:800;">✓</span>':'';
     };
   },30);
@@ -266,10 +297,14 @@ function renderAdminEditModal(){
   /* ── 저장 버튼 ── */
   saveB.onclick=function(){
     var sel=document.getElementById('adm-sel');
+    var psel=document.getElementById('adm-prof-sel');
     var prof=document.getElementById('adm-prof');
     var subj=sel?sel.value.trim():'';
     if(subj) admSrc()[ri].subject=subj;
-    if(prof) admSrc()[ri].professor=prof.value.trim();
+    var pv='';
+    if(psel)pv=(psel.value==='__custom')?(prof?prof.value.trim():''):psel.value;
+    else if(prof)pv=prof.value.trim();
+    admSrc()[ri].professor=pv;
     /* is_exam은 체크박스에서 이미 실시간 반영됨 - 별도 처리 불필요 */
     _subjColorMap=null;
     admCloseModal();

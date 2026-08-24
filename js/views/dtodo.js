@@ -129,16 +129,12 @@ function dtodoDel(i){
   else fin();
 }
 function updateTodoDots(){
-  /* 날짜 헤더의 할일 배지 갱신 (wh 캐시와 무관하게 DOM 직접 갱신) */
-  var IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 6l1.2 1.2L7.5 4.9M4 11.5l1.2 1.2 2.3-2.3M4 17l1.2 1.2 2.3-2.3"/></svg>';
-  document.querySelectorAll('.th-d[data-date]').forEach(function(th){
-    var dt=th.getAttribute('data-date');
-    var el=th.querySelector('.th-todo');
-    if(!dt||!el)return;
-    var n=dtodoLoad(dt).length;
-    el.className='th-todo'+(n?' has':'');
-    el.innerHTML=n?String(n):IC;
-  });
+  /* 좌상단 할 일 버튼의 오늘 개수 배지 갱신 */
+  var el=document.getElementById('tht-n');
+  if(!el)return;
+  var n=dtodoLoad(today()).length;
+  el.className='tht-n'+(n?' has':'');
+  el.textContent=n||'';
 }
 (function(){
   var CHECK=setInterval(function(){

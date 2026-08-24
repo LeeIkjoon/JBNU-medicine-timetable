@@ -254,7 +254,7 @@
 .dash-exam-more:active{background:var(--surface-muted)}
 /* 시험 카드 2개 나란히 */
 .dash-exam-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);align-items:start}
-.dash-exam-row .dash-card{padding:var(--space-4)}
+.dash-exam-row .dash-card{padding:var(--space-4);min-width:0}
 .dash-exam-row .dash-exam-list{gap:var(--space-1)}
 /* 항목은 한 줄: 이모지 + 과목명(가변) + 날짜 */
 .dash-exam-row .dash-exam-item{flex-direction:row;align-items:center;gap:5px}

@@ -119,11 +119,15 @@
 
 
 
-/* ── 날짜 헤더 할일 배지 ── */
-.th-todo{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;
-  margin-left:3px;width:14px;height:13px;border-radius:4px;
-  background:var(--surface-muted);color:var(--text-soft)}
-.th-todo svg{width:9px;height:9px;display:block}
-.th-todo.has{background:var(--accent);color:#fff;font-size:9px;font-weight:800;line-height:1}
-.th-d.tc .th-todo{background:rgba(49,130,246,0.14)}
-.th-d.tc .th-todo.has{background:var(--accent);color:#fff}
+
+/* ── 좌상단 할 일 버튼 (교시 열 헤더) ── */
+.tht-todo{position:relative;width:100%;height:100%;min-height:34px;border:none;cursor:pointer;
+  background:none;display:flex;align-items:center;justify-content:center;color:var(--text-soft);
+  font-family:inherit;-webkit-tap-highlight-color:transparent;
+  transition:transform var(--duration-fast) var(--ease)}
+.tht-todo:active{transform:scale(.88)}
+.tht-todo svg{width:15px;height:15px}
+.tht-n{position:absolute;top:2px;right:1px;min-width:14px;height:14px;border-radius:7px;
+  font-size:9px;font-weight:800;display:none;align-items:center;justify-content:center;
+  background:var(--accent);color:#fff;padding:0 3px}
+.tht-n.has{display:inline-flex}
