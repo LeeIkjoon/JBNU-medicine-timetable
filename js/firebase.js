@@ -20,7 +20,9 @@ function checkSharedUpdate(){}  /* Firebase listener로 대체 */
 /* ── Firebase 헬퍼 ── */
 function fbGradeKey(grade){
   var m={'의학과 1학년':'med1','의학과 2학년':'med2','의예과 2학년':'premed2'};
-  return m[grade]||grade.replace(/\s/g,'_');
+  var sc=savedSchool||'jbnu';
+  if(sc==='jbnu')return m[grade]||grade.replace(/\s/g,'_'); /* 레거시 무접두 */
+  return sc+'_'+(grade||'').replace(/\s/g,'_');
 }
 function fbRef(grade){
   if(!fbDb||!grade) return null;

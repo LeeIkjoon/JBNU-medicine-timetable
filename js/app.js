@@ -3,7 +3,7 @@
 ══════════════════════════════════════════ */
 function updHdr(){
   var w=wks[ci];
-  document.getElementById('wl').textContent=w+'주차';
+  document.getElementById('wl').textContent=(w||'-')+'주차';
   document.getElementById('pb').disabled=(ci===0);
   document.getElementById('nb').disabled=(ci===wks.length-1);
 }
@@ -200,8 +200,9 @@ function init(){
       for(var _mi=0;_mi<newItems.length;_mi++) merged.push(newItems[_mi]);
       buildFromItems(merged,nWdd||wdd,nEd||ed);
       _subjColorMap=null;
-      try{localStorage.setItem('timetable_data',JSON.stringify({items:merged,wdd:nWdd||wdd,ed:nEd||ed,grade:savedGrade,ts:Date.now()}));}catch(e){}
-      ci=0;
+      /* 학교·학년별 키로 저장 (개인 업로드 영속화) */
+      try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:nWdd||wdd,ed:nEd||ed,grade:savedGrade,ts:Date.now()}));}catch(e){}
+      goTodayWeek();
       closeXL();
       if(isAdmin) renderAdminBody();
       else{render();}
@@ -210,6 +211,12 @@ function init(){
 
   /* ── 학년 선택 & localStorage 복원 ── */
   savedGrade=localStorage.getItem('user_grade')||''; /* 전역변수에 저장 */
+  savedSchool=localStorage.getItem('user_school')||'';
+  /* 마이그레이션: 기존(전북대 전용) 사용자는 학교 미설정 → jbnu */
+  if(!savedSchool&&savedGrade){
+    savedSchool='jbnu';
+    try{localStorage.setItem('user_school','jbnu');}catch(e){}
+  }
   var savedTimetable=null;
   /* 저장된 학년이 있으면 해당 학년의 시간표 키로 로드 */
   try{
@@ -219,8 +226,52 @@ function init(){
     if(_st) savedTimetable=JSON.parse(_st);
   }catch(e){}
 
-  function showGradeScreen(){document.getElementById('gs-screen').style.display='flex';}
+  var GS_IC='<span class="gs-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#3182F6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.3C10.4 5 8 4.5 5 4.7v12c3-.2 5.4.3 7 1.6 1.6-1.3 4-1.8 7-1.6v-12c-3-.2-5.4.3-7 1.6z"/><path d="M12 6.3v12"/></svg></span>';
+
+  /* 학교 선택 화면 */
+  function showSchoolScreen(){
+    var grid=document.getElementById('sc-grid');
+    var h='';
+    SCHOOL_ORDER.forEach(function(k){
+      var sc=SCHOOLS[k];
+      h+='<div class="gs-card sc-card'+(savedSchool===k?' sel':'')+'" data-school="'+k+'">'
+        +'<div class="gs-name">'+sc.name+'</div>'
+        +'<div class="gs-desc">'+sc.dept+'</div></div>';
+    });
+    grid.innerHTML=h;
+    grid.querySelectorAll('.sc-card').forEach(function(c){
+      c.onclick=function(){
+        savedSchool=this.getAttribute('data-school');
+        try{localStorage.setItem('user_school',savedSchool);}catch(e){}
+        document.getElementById('sc-screen').style.display='none';
+        showGradeScreen();
+      };
+    });
+    document.getElementById('sc-screen').style.display='flex';
+  }
+
+  /* 학년 선택 화면 — 현재 학교의 학년 목록으로 렌더 */
+  function showGradeScreen(){
+    var sc=SCHOOLS[savedSchool||'jbnu'];
+    document.getElementById('gs-title').textContent=sc.name+' '+sc.dept;
+    var grid=document.getElementById('gs-grid');
+    grid.style.gridTemplateColumns='repeat('+Math.min(sc.grades.length,3)+',1fr)';
+    var h='';
+    sc.grades.forEach(function(g){
+      h+='<div class="gs-card" data-grade="'+g.label+'">'+GS_IC
+        +'<div class="gs-name">'+g.label+'</div>'
+        +(g.desc?'<div class="gs-desc">'+g.desc+'</div>':'')+'</div>';
+    });
+    grid.innerHTML=h;
+    grid.querySelectorAll('.gs-card').forEach(function(c){
+      c.onclick=function(){applyGrade(this.getAttribute('data-grade'));};
+    });
+    document.getElementById('gs-screen').style.display='flex';
+  }
   function hideGradeScreen(){document.getElementById('gs-screen').style.display='none';}
+  document.getElementById('gs-school-change').onclick=function(){
+    hideGradeScreen();showSchoolScreen();
+  };
 
   /* 분반 선택 화면 (학년 선택 직후, gs-screen과 동일한 룩) */
   function showSectionScreen(){
@@ -273,6 +324,9 @@ function init(){
     if(saved&&saved.items&&saved.items.length){
       /* buildFromItems가 merged를 saved.items로 교체함 — 별도 push 시 중복 */
       buildFromItems(saved.items, saved.wdd||{}, saved.ed||[]);
+    }else{
+      /* 데이터 없는 학교·학년: 레거시 번들 데이터 잔재 제거 */
+      wks=[];wdd={};ed=[];wh={};wl={};ci=0;
     }
     goTodayWeek(); /* 학년(=주차 구성) 변경 → 주차 인덱스 재계산 */
     render();
@@ -285,21 +339,16 @@ function init(){
   }
 
   /* 학년 카드 클릭 */
-  var gsCards=document.querySelectorAll('.gs-card');
-  for(var gi=0;gi<gsCards.length;gi++){
-    gsCards[gi].onclick=(function(card){return function(){
-      applyGrade(card.getAttribute('data-grade'));
-    };})(gsCards[gi]);
-  }
-
-  /* 학년 변경 버튼 */
+  /* 학년 변경 버튼 → 현재 학교의 학년 화면 (학교 변경 링크 포함) */
   document.getElementById('grade-btn').onclick=function(){showGradeScreen();};
 
-  /* 저장된 학년 복원 */
+  /* 저장된 학교·학년 복원 */
   if(savedGrade){
     var gl0=document.getElementById('grade-lbl');if(gl0)gl0.textContent=savedGrade;
-  } else {
+  } else if(savedSchool){
     showGradeScreen();
+  } else {
+    showSchoolScreen(); /* 신규 사용자: 학교부터 */
   }
 
   /* 저장된 시간표 복원 */

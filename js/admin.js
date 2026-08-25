@@ -532,8 +532,8 @@ function doLogin(){
   var pw=document.getElementById('adm-pw');
   var err=document.getElementById('adm-err');
   if(!pw) return;
-  var correctPw=ADMIN_PWS[savedGrade||'']||'';
-  if(!correctPw){if(err)err.textContent='학년을 먼저 선택해주세요';return;}
+  var correctPw=adminPwFor(savedSchool,savedGrade||'')||'';
+  if(!correctPw){if(err)err.textContent='이 학년은 아직 공유 관리자가 지정되지 않았어요';return;}
   if(pw.value===correctPw){
     isAdmin=true;
     _workingMerged=JSON.parse(JSON.stringify(merged));

@@ -147,6 +147,21 @@ function bindSecBar(){
 }
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
+  /* 시간표 없음(신규 학교·학년) → 개인 업로드 안내 */
+  if(!merged.length){
+    var wnav=document.getElementById('wnav');
+    if(wnav)wnav.style.display='none';
+    document.getElementById('main').innerHTML=
+      '<div class="empty-tt">'
+      +'<div class="empty-tt-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4M12 4l-4 4M12 4l4 4"/><path d="M5 15v3.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V15"/></svg></div>'
+      +'<div class="empty-tt-ttl">아직 시간표가 없어요</div>'
+      +'<div class="empty-tt-sub">학교에서 받은 시간표 파일(엑셀·PDF)을 올리면<br>이 기기에서 바로 볼 수 있어요</div>'
+      +'<button class="empty-tt-btn" id="empty-upload">시간표 파일 업로드</button>'
+      +'</div>';
+    var eb=document.getElementById('empty-upload');
+    if(eb)eb.onclick=function(){openXL();};
+    return;
+  }
   document.getElementById('main').innerHTML=
     secBarHtml()
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'

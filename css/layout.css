@@ -75,3 +75,22 @@
 .bn:active .bn-ic{transform:scale(.85)}
 .gs-card{transition:transform var(--duration-fast) var(--ease),box-shadow var(--duration-fast)}
 .gs-card:active{transform:scale(.96)}
+
+/* 학교 변경 링크 + 학교 카드 */
+.gs-school-change{margin-top:18px;border:none;background:none;color:var(--text-soft);
+  font-size:var(--font-sm);font-weight:var(--weight-semi);cursor:pointer;padding:8px 14px;
+  text-decoration:underline;text-underline-offset:3px;font-family:inherit}
+.sc-card.sel{border-color:var(--accent);box-shadow:0 0 0 1.5px var(--accent)}
+
+/* 시간표 없음 — 업로드 안내 */
+.empty-tt{background:var(--surface);border-radius:var(--radius-xl);padding:44px 24px;
+  text-align:center;box-shadow:var(--shadow-xs);margin-top:6px}
+.empty-tt-ic{width:52px;height:52px;border-radius:16px;background:var(--tint-accent);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.empty-tt-ic svg{width:26px;height:26px}
+.empty-tt-ttl{font-size:var(--font-xl);font-weight:var(--weight-heavy);letter-spacing:-0.02em;color:var(--text-strong)}
+.empty-tt-sub{font-size:var(--font-md);color:var(--text-soft);line-height:1.6;margin:8px 0 18px}
+.empty-tt-btn{background:var(--accent);color:#fff;border:none;border-radius:14px;
+  padding:13px 22px;font-size:var(--font-base);font-weight:var(--weight-bold);cursor:pointer;
+  font-family:inherit;transition:transform var(--duration-fast) var(--ease)}
+.empty-tt-btn:active{transform:scale(.96)}

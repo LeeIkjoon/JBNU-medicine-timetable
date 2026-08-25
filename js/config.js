@@ -11,12 +11,42 @@ var SECTION_RULES={
   '의예과 2학년':{subject:'인체육안구조실습',days:['화','수','금'],label:'해부실습 분반'}
 };
 
-/* 학년별 관리자 비밀번호 */
+/* ── 학교 레지스트리 (멀티스쿨) ──
+   jbnu는 레거시 호환: Firebase/localStorage 키가 무접두 학년키(premed2 등) */
+var SCHOOLS={
+  jbnu:{name:'전북대학교',dept:'의과대학',
+    grades:[
+      {label:'의예과 2학년',desc:'예과 2년차'},
+      {label:'의학과 1학년',desc:'본과 1년차'},
+      {label:'의학과 2학년',desc:'본과 2년차'}
+    ]},
+  kmu:{name:'계명대학교',dept:'의과대학',
+    grades:[
+      {label:'의예과 1학년'},{label:'의예과 2학년'},
+      {label:'의학과 1학년'},{label:'의학과 2학년'},
+      {label:'의학과 3학년'},{label:'의학과 4학년'}
+    ]},
+  wku:{name:'원광대학교',dept:'의과대학',
+    grades:[
+      {label:'의예과 1학년'},{label:'의예과 2학년'},
+      {label:'의학과 1학년'},{label:'의학과 2학년'},
+      {label:'의학과 3학년'},{label:'의학과 4학년'}
+    ]}
+};
+var SCHOOL_ORDER=['jbnu','kmu','wku'];
+
+/* 학년별 관리자 비밀번호 (jbnu 레거시) */
 var ADMIN_PWS={
   '의예과 2학년':'jbnupremed2',
   '의학과 1학년':'jbnumed1',
   '의학과 2학년':'jbnumed2'
 };
+/* 타 학교 관리자 비밀번호: {schoolKey:{학년:pw}} — 공유방 개설 시 추가 */
+var ADMIN_PWS_EXT={};
+function adminPwFor(school,grade){
+  if((school||'jbnu')==='jbnu')return ADMIN_PWS[grade];
+  return (ADMIN_PWS_EXT[school]||{})[grade];
+}
 var SHARED_KEY='shared_timetable_v2';
 var NOTIF_KEY='shared_notif_v2';
 

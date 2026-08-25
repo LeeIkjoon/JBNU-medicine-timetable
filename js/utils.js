@@ -40,11 +40,18 @@ function exLabel(s){
   return[s,''];
 }
 
-/* 학년별 localStorage 키 */
-function ttKey(){return 'timetable_data_'+(savedGrade||'default');}
+/* 학교·학년별 localStorage 키 (jbnu는 레거시 무접두 유지) */
+function ttKey(){
+  var sc=savedSchool||'jbnu';
+  if(sc==='jbnu')return 'timetable_data_'+(savedGrade||'default');
+  return 'timetable_data_'+sc+'_'+(savedGrade||'default');
+}
 
 /* ── 분반 (SECTION_RULES 기반) ── */
-function secRule(){return (typeof SECTION_RULES!=='undefined'&&SECTION_RULES[savedGrade])||null;}
+function secRule(){
+  if((savedSchool||'jbnu')!=='jbnu')return null; /* 분반 규칙은 학교별 — 현재 jbnu만 */
+  return (typeof SECTION_RULES!=='undefined'&&SECTION_RULES[savedGrade])||null;
+}
 function secKey(){return 'section_'+(savedGrade||'default');}
 function secSel(){try{return localStorage.getItem(secKey());}catch(e){return null;}}
 function secSet(d){try{localStorage.setItem(secKey(),d);}catch(e){}}

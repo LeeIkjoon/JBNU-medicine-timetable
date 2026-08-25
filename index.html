@@ -19,7 +19,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <link rel="stylesheet" href="css/tokens.css?v=20260820f">
 <link rel="stylesheet" href="css/base.css?v=20260820f">
-<link rel="stylesheet" href="css/layout.css?v=20260820i">
+<link rel="stylesheet" href="css/layout.css?v=20260825b">
 <link rel="stylesheet" href="css/timetable.css?v=20260824c">
 <link rel="stylesheet" href="css/components.css?v=20260820k">
 <link rel="stylesheet" href="css/views.css?v=20260825a">
@@ -44,32 +44,21 @@
   </div>
 </div>
 
+<div id="sc-screen" class="gs-screen" style="display:none">
+  <div class="gs-logo">
+    <div class="gs-title">학교 선택</div>
+    <div class="gs-sub">우리 학교를 선택해주세요</div>
+  </div>
+  <div class="gs-grid" id="sc-grid" style="grid-template-columns:1fr;max-width:320px;width:100%"></div>
+</div>
+
 <div id="gs-screen" class="gs-screen" style="display:none">
   <div class="gs-logo">
-    <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#4F8EF7,#6C63FF);
-      display:flex;align-items:center;justify-content:center;margin:0 auto;box-shadow:0 4px 20px rgba(79,142,247,0.3)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="width:30px;height:30px"><path d="M12 4L2 9l10 5 10-5z"/><path d="M6 11v4.5c0 1 2.7 2.3 6 2.3s6-1.3 6-2.3V11"/><path d="M22 9v5"/></svg>
-    </div>
-    <div class="gs-title">전북대 의과대학</div>
-    <div class="gs-sub">학년을 선택해주세요</div>
+    <div class="gs-title" id="gs-title">학년 선택</div>
+    <div class="gs-sub" id="gs-sub">학년을 선택해주세요</div>
   </div>
-  <div class="gs-grid" style="grid-template-columns:1fr 1fr 1fr;max-width:420px">
-    <div class="gs-card" data-grade="의예과 2학년" style="border-color:#D1FAE5">
-      <span class="gs-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.3C10.4 5 8 4.5 5 4.7v12c3-.2 5.4.3 7 1.6 1.6-1.3 4-1.8 7-1.6v-12c-3-.2-5.4.3-7 1.6z"/><path d="M12 6.3v12"/></svg></span>
-      <div class="gs-name">의예과 2학년</div>
-      <div class="gs-desc">예과 2년차</div>
-    </div>
-    <div class="gs-card" data-grade="의학과 1학년" style="border-color:#EDE9FE">
-      <span class="gs-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#6C63FF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.3C10.4 5 8 4.5 5 4.7v12c3-.2 5.4.3 7 1.6 1.6-1.3 4-1.8 7-1.6v-12c-3-.2-5.4.3-7 1.6z"/><path d="M12 6.3v12"/></svg></span>
-      <div class="gs-name">의학과 1학년</div>
-      <div class="gs-desc">본과 1년차</div>
-    </div>
-    <div class="gs-card" data-grade="의학과 2학년" style="border-color:#FCE7F3">
-      <span class="gs-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.3C10.4 5 8 4.5 5 4.7v12c3-.2 5.4.3 7 1.6 1.6-1.3 4-1.8 7-1.6v-12c-3-.2-5.4.3-7 1.6z"/><path d="M12 6.3v12"/></svg></span>
-      <div class="gs-name">의학과 2학년</div>
-      <div class="gs-desc">본과 2년차</div>
-    </div>
-  </div>
+  <div class="gs-grid" id="gs-grid" style="max-width:420px"></div>
+  <button class="gs-school-change" id="gs-school-change">다른 학교 선택</button>
 </div>
 
 <div id="sec-screen" class="gs-screen" style="display:none">
@@ -137,26 +126,26 @@
   </div>
 </div>
 
-<script src="js/config.js?v=20260820a"></script>
-<script src="js/utils.js?v=20260820b"></script>
+<script src="js/config.js?v=20260825b"></script>
+<script src="js/utils.js?v=20260825b"></script>
 <script src="js/data.js?v=20260820k"></script>
-<script src="js/state.js?v=20260820a"></script>
-<script src="js/firebase.js?v=20260820b"></script>
+<script src="js/state.js?v=20260825b"></script>
+<script src="js/firebase.js?v=20260825b"></script>
 <script src="js/parsers/csv.js?v=20260820a"></script>
 <script src="js/parsers/xlsx.js?v=20260820a"></script>
 <script src="js/parsers/pdf.js?v=20260820a"></script>
 <script src="js/upload.js?v=20260820a"></script>
-<script src="js/views/weekly.js?v=20260824c"></script>
+<script src="js/views/weekly.js?v=20260825b"></script>
 <script src="js/views/filter.js?v=20260820k"></script>
 <script src="js/views/calendar.js?v=20260820a"></script>
 <script src="js/views/planner.js?v=20260820a"></script>
 <script src="js/views/timer.js?v=20260820d"></script>
 <script src="js/views/dashboard.js?v=20260825a"></script>
 <script src="js/views/dtodo.js?v=20260824c"></script>
-<script src="js/admin.js?v=20260824c"></script>
+<script src="js/admin.js?v=20260825b"></script>
 <script src="js/sync.js?v=20260825a"></script>
 <script src="js/push.js?v=20260820d"></script>
-<script src="js/app.js?v=20260820h"></script>
+<script src="js/app.js?v=20260825b"></script>
 
 <!-- 관리자 FAB -->
 <button class="admin-fab" id="admin-fab" title="관리자 모드"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2 2 0 0 0-2.8-2.8L5 17.2z"/><path d="M13.5 6.7l3.8 3.8"/></svg></button>
