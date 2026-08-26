@@ -43,7 +43,10 @@ module.exports = async (req, res) => {
     if (!tt || !tt.items) continue;
 
     let items = tt.items.filter(i => i.date === today);
-    if (rec.sec && gk === 'premed2') items = items.filter(i => i.subject !== SECTION_SUBJECT || i.day === rec.sec);
+    if (rec.sec) {
+      if (gk === 'premed2') items = items.filter(i => i.subject !== SECTION_SUBJECT || i.day === rec.sec);
+      else items = items.filter(i => !i.sec || i.sec === rec.sec);
+    }
     const classes = items.filter(i => !HOLIDAY_KW.some(k => (i.subject || '').includes(k)));
     if (!classes.length) { results.push({ uid, skip: 'no-classes' }); continue; }
 

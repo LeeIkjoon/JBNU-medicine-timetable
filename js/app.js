@@ -283,12 +283,14 @@ function init(){
     var grid=document.getElementById('sec-grid');
     document.getElementById('sec-title').textContent=r.label+' 선택';
     var cur=secSel(),h='';
-    for(var i=0;i<r.days.length;i++){
-      var d=r.days[i];
-      h+='<div class="gs-card sec-card'+(cur===d?' sel':'')+'" data-sec="'+d+'">'
-        +'<div class="gs-name">'+d+'반</div>'
-        +'<div class="gs-desc">'+d+'요일 실습</div></div>';
+    var opts=r.options||[];
+    for(var i=0;i<opts.length;i++){
+      var o=opts[i];
+      h+='<div class="gs-card sec-card'+(cur===o.v?' sel':'')+'" data-sec="'+o.v+'">'
+        +'<div class="gs-name">'+o.t+'</div>'
+        +'<div class="gs-desc">'+o.d+'</div></div>';
     }
+    document.getElementById('sec-grid').style.gridTemplateColumns='repeat('+Math.min(opts.length,3)+',1fr)';
     grid.innerHTML=h;
     var cards=grid.querySelectorAll('.sec-card');
     for(var j=0;j<cards.length;j++){

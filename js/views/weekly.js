@@ -124,14 +124,18 @@ function secBarHtml(){
   var r=secRule();
   if(!r||secSel())return'';
   var has=false;
-  for(var i=0;i<merged.length;i++){if(merged[i].subject===r.subject){has=true;break;}}
+  for(var i=0;i<merged.length;i++){
+    var it=merged[i];
+    if((r.mode==='sec'&&it.sec)||(r.mode!=='sec'&&it.subject===r.subject)){has=true;break;}
+  }
   if(!has)return'';
   var sel=secSel();
   var h='<div class="sec-bar'+(sel?'':' need')+'">';
   h+='<span class="sec-lbl">'+escHtml(r.label)+(sel?'':' 선택')+'</span>';
-  for(var j=0;j<r.days.length;j++){
-    var d=r.days[j];
-    h+='<button class="sec-chip'+(sel===d?' on':'')+'" data-sec="'+d+'">'+d+'반</button>';
+  var opts=r.options||[];
+  for(var j=0;j<opts.length;j++){
+    var o=opts[j];
+    h+='<button class="sec-chip'+(sel===o.v?' on':'')+'" data-sec="'+o.v+'">'+o.t+'</button>';
   }
   h+='</div>';
   return h;

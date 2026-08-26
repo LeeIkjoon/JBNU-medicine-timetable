@@ -31,7 +31,7 @@ def parse_cell(text):
         lines = [''.join(lines)]
     joined = ' '.join(lines)
     if is_holiday(joined):
-        return (''.join(lines) if len(joined) <= 12 else lines[0], '', '', False)
+        return (''.join(lines) if len(joined) <= 12 else lines[0], '', '', False, '')
     subject = lines[0]
     rest = lines[1:]
     prof = ''
@@ -40,8 +40,13 @@ def parse_cell(text):
         prof = rest[-1][1:-1].strip()
         rest = rest[:-1]
     topic = ' '.join(rest).strip()
+    sec = ''
+    sm = re.search(r'\(?\s*([12])\s*분반\s*\)?', topic)
+    if sm:
+        sec = sm.group(1)
+        topic = re.sub(r'\(?\s*[12]\s*분반\s*\)?', '', topic).strip()
     is_exam = bool(EXAM_RE.search(joined)) and not NOT_EXAM_RE.search(joined)
-    return (subject, topic, prof, is_exam)
+    return (subject, topic, prof, is_exam, sec)
 
 def build_grade(pages, grade_label):
     """해당 학년의 주차 페이지들 → items/wdd/ed/wks"""
@@ -96,7 +101,7 @@ def build_grade(pages, grade_label):
                         break
                 parsed = parse_cell(raw)
                 if parsed:
-                    subject, topic, prof, is_exam = parsed
+                    subject, topic, prof, is_exam, sec = parsed
                     for p in range(ri, span_end + 1):
                         if p not in times:
                             continue
@@ -106,6 +111,8 @@ def build_grade(pages, grade_label):
                               'professor': prof, 'is_exam': is_exam}
                         if topic:
                             it['topic'] = topic
+                        if sec:
+                            it['sec'] = sec
                         items.append(it)
                 ri = span_end + 1
     ed = sorted({it['date'] for it in items if it['is_exam']})

@@ -7,8 +7,12 @@ var HOLIDAY_KW = ['근로자의날','대체휴무','대체휴일','어린이날'
 
 /* 분반 규칙: 특정 과목이 요일별 분반으로 나뉘는 학년.
    선택한 요일의 수업만 표시 (미선택 시 전체 표시 + 선택 안내) */
+/* 키: '학교|학년'. mode 'day'=요일 분반(과목 한정), 'sec'=아이템 sec 필드 분반 */
 var SECTION_RULES={
-  '의예과 2학년':{subject:'인체육안구조실습',days:['화','수','금'],label:'해부실습 분반'}
+  'jbnu|의예과 2학년':{mode:'day',subject:'인체육안구조실습',days:['화','수','금'],label:'해부실습 분반',
+    options:[{v:'화',t:'화반',d:'화요일 실습'},{v:'수',t:'수반',d:'수요일 실습'},{v:'금',t:'금반',d:'금요일 실습'}]},
+  'wku|의예과 2학년':{mode:'sec',label:'실습 분반',
+    options:[{v:'1',t:'1분반',d:'1분반 실습'},{v:'2',t:'2분반',d:'2분반 실습'}]}
 };
 
 /* ── 학교 레지스트리 (멀티스쿨) ──
@@ -41,8 +45,13 @@ var ADMIN_PWS={
   '의학과 1학년':'jbnumed1',
   '의학과 2학년':'jbnumed2'
 };
-/* 타 학교 관리자 비밀번호: {schoolKey:{학년:pw}} — 공유방 개설 시 추가 */
-var ADMIN_PWS_EXT={};
+/* 타 학교 관리자 비밀번호: {schoolKey:{학년:pw}} */
+var ADMIN_PWS_EXT={
+  wku:{'의예과 1학년':'wkupremed1','의예과 2학년':'wkupremed2','의학과 1학년':'wkumed1',
+       '의학과 2학년':'wkumed2','의학과 3학년':'wkumed3','의학과 4학년':'wkumed4'},
+  kmu:{'의예과 1학년':'kmupremed1','의예과 2학년':'kmupremed2','의학과 1학년':'kmumed1',
+       '의학과 2학년':'kmumed2','의학과 3학년':'kmumed3','의학과 4학년':'kmumed4'}
+};
 function adminPwFor(school,grade){
   if((school||'jbnu')==='jbnu')return ADMIN_PWS[grade];
   return (ADMIN_PWS_EXT[school]||{})[grade];

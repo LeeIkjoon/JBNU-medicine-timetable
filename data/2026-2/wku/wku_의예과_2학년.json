@@ -350,7 +350,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "혀, 치아, 식도의 조직실습 (1분반)"
+   "topic": "혀, 치아, 식도의 조직실습",
+   "sec": "1"
   },
   {
    "week": "1",
@@ -362,7 +363,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "혀, 치아, 식도의 조직실습 (1분반)"
+   "topic": "혀, 치아, 식도의 조직실습",
+   "sec": "1"
   },
   {
    "week": "1",
@@ -398,7 +400,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "혀, 치아, 식도의 조직실습 (2분반)"
+   "topic": "혀, 치아, 식도의 조직실습",
+   "sec": "2"
   },
   {
    "week": "1",
@@ -410,7 +413,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "혀, 치아, 식도의 조직실습 (2분반)"
+   "topic": "혀, 치아, 식도의 조직실습",
+   "sec": "2"
   },
   {
    "week": "1",
@@ -422,7 +426,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "위, 창자의 조직실습 (1분반)"
+   "topic": "위, 창자의 조직실습",
+   "sec": "1"
   },
   {
    "week": "1",
@@ -434,7 +439,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "위, 창자의 조직실습 (1분반)"
+   "topic": "위, 창자의 조직실습",
+   "sec": "1"
   },
   {
    "week": "1",
@@ -446,7 +452,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "위, 창자의 조직실습 (2분반)"
+   "topic": "위, 창자의 조직실습",
+   "sec": "2"
   },
   {
    "week": "1",
@@ -458,7 +465,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "위, 창자의 조직실습 (2분반)"
+   "topic": "위, 창자의 조직실습",
+   "sec": "2"
   },
   {
    "week": "2",
@@ -638,7 +646,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "간, 쓸개, 이자의 조직실습 (1분반)"
+   "topic": "간, 쓸개, 이자의 조직실습",
+   "sec": "1"
   },
   {
    "week": "2",
@@ -650,7 +659,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "간, 쓸개, 이자의 조직실습 (1분반)"
+   "topic": "간, 쓸개, 이자의 조직실습",
+   "sec": "1"
   },
   {
    "week": "2",
@@ -734,7 +744,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "간, 쓸개, 이자의 조직실습 (2분반)"
+   "topic": "간, 쓸개, 이자의 조직실습",
+   "sec": "2"
   },
   {
    "week": "2",
@@ -746,7 +757,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "간, 쓸개, 이자의 조직실습 (2분반)"
+   "topic": "간, 쓸개, 이자의 조직실습",
+   "sec": "2"
   },
   {
    "week": "2",
@@ -1166,7 +1178,8 @@
    "subject": "기초대사및내분비",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "내분비기관 조직실습 (1분반)"
+   "topic": "내분비기관 조직실습",
+   "sec": "1"
   },
   {
    "week": "3",
@@ -1178,7 +1191,8 @@
    "subject": "기초대사및내분비",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "내분비기관 조직실습 (1분반)"
+   "topic": "내분비기관 조직실습",
+   "sec": "1"
   },
   {
    "week": "3",
@@ -1190,7 +1204,8 @@
    "subject": "기초대사및내분비",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "내분비기관 조직실습 (2분반)"
+   "topic": "내분비기관 조직실습",
+   "sec": "2"
   },
   {
    "week": "3",
@@ -1202,7 +1217,8 @@
    "subject": "기초대사및내분비",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "내분비기관 조직실습 (2분반)"
+   "topic": "내분비기관 조직실습",
+   "sec": "2"
   },
   {
    "week": "3",
@@ -1262,7 +1278,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "뼈, 연골, 관절 조직실습 (1분반)"
+   "topic": "뼈, 연골, 관절 조직실습",
+   "sec": "1"
   },
   {
    "week": "3",
@@ -1274,7 +1291,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "뼈, 연골, 관절 조직실습 (1분반)"
+   "topic": "뼈, 연골, 관절 조직실습",
+   "sec": "1"
   },
   {
    "week": "3",
@@ -1286,7 +1304,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "뼈, 연골, 관절 조직실습 (2분반)"
+   "topic": "뼈, 연골, 관절 조직실습",
+   "sec": "2"
   },
   {
    "week": "3",
@@ -1298,7 +1317,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "뼈, 연골, 관절 조직실습 (2분반)"
+   "topic": "뼈, 연골, 관절 조직실습",
+   "sec": "2"
   },
   {
    "week": "3",
@@ -1694,7 +1714,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "가슴우리 및 척추뼈 모형실습 (TBL) (1분반)"
+   "topic": "가슴우리 및 척추뼈 모형실습 (TBL)",
+   "sec": "1"
   },
   {
    "week": "4",
@@ -1706,7 +1727,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "가슴우리 및 척추뼈 모형실습 (TBL) (1분반)"
+   "topic": "가슴우리 및 척추뼈 모형실습 (TBL)",
+   "sec": "1"
   },
   {
    "week": "4",
@@ -1718,7 +1740,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "가슴우리 및 척추뼈 모형실습 (TBL) (2분반)"
+   "topic": "가슴우리 및 척추뼈 모형실습 (TBL)",
+   "sec": "2"
   },
   {
    "week": "4",
@@ -1730,7 +1753,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "가슴우리 및 척추뼈 모형실습 (TBL) (2분반)"
+   "topic": "가슴우리 및 척추뼈 모형실습 (TBL)",
+   "sec": "2"
   },
   {
    "week": "4",
@@ -1886,7 +1910,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "팔뼈의 구조 및 기능 모형실습 (TBL) (1분반)"
+   "topic": "팔뼈의 구조 및 기능 모형실습 (TBL)",
+   "sec": "1"
   },
   {
    "week": "5",
@@ -1898,7 +1923,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "팔뼈의 구조 및 기능 모형실습 (TBL) (1분반)"
+   "topic": "팔뼈의 구조 및 기능 모형실습 (TBL)",
+   "sec": "1"
   },
   {
    "week": "5",
@@ -1910,7 +1936,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "팔뼈의 구조 및 기능 모형실습 (TBL) (2분반)"
+   "topic": "팔뼈의 구조 및 기능 모형실습 (TBL)",
+   "sec": "2"
   },
   {
    "week": "5",
@@ -1922,7 +1949,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "팔뼈의 구조 및 기능 모형실습 (TBL) (2분반)"
+   "topic": "팔뼈의 구조 및 기능 모형실습 (TBL)",
+   "sec": "2"
   },
   {
    "week": "5",
@@ -2150,7 +2178,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "근육세포 및 근육 조직실습 (1분반)"
+   "topic": "근육세포 및 근육 조직실습",
+   "sec": "1"
   },
   {
    "week": "5",
@@ -2162,7 +2191,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "근육세포 및 근육 조직실습 (1분반)"
+   "topic": "근육세포 및 근육 조직실습",
+   "sec": "1"
   },
   {
    "week": "5",
@@ -2174,7 +2204,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "근육세포 및 근육 조직실습 (2분반)"
+   "topic": "근육세포 및 근육 조직실습",
+   "sec": "2"
   },
   {
    "week": "5",
@@ -2186,7 +2217,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "근육세포 및 근육 조직실습 (2분반)"
+   "topic": "근육세포 및 근육 조직실습",
+   "sec": "2"
   },
   {
    "week": "5",
@@ -2686,7 +2718,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "신경 조직실습 (1분반)"
+   "topic": "신경 조직실습",
+   "sec": "1"
   },
   {
    "week": "7",
@@ -2698,7 +2731,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "신경 조직실습 (1분반)"
+   "topic": "신경 조직실습",
+   "sec": "1"
   },
   {
    "week": "7",
@@ -2710,7 +2744,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "신경 조직실습 (2분반)"
+   "topic": "신경 조직실습",
+   "sec": "2"
   },
   {
    "week": "7",
@@ -2722,7 +2757,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "신경 조직실습 (2분반)"
+   "topic": "신경 조직실습",
+   "sec": "2"
   },
   {
    "week": "7",
@@ -2918,7 +2954,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "다리뼈의 구조 및 기능 모형실습 (TBL) (1분반)"
+   "topic": "다리뼈의 구조 및 기능 모형실습 (TBL)",
+   "sec": "1"
   },
   {
    "week": "7",
@@ -2930,7 +2967,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "다리뼈의 구조 및 기능 모형실습 (TBL) (1분반)"
+   "topic": "다리뼈의 구조 및 기능 모형실습 (TBL)",
+   "sec": "1"
   },
   {
    "week": "7",
@@ -2942,7 +2980,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "다리뼈의 구조 및 기능 모형실습 (TBL) (2분반)"
+   "topic": "다리뼈의 구조 및 기능 모형실습 (TBL)",
+   "sec": "2"
   },
   {
    "week": "7",
@@ -2954,7 +2993,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "다리뼈의 구조 및 기능 모형실습 (TBL) (2분반)"
+   "topic": "다리뼈의 구조 및 기능 모형실습 (TBL)",
+   "sec": "2"
   },
   {
    "week": "7",
@@ -3294,7 +3334,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "피부 조직실습 (1분반)"
+   "topic": "피부 조직실습",
+   "sec": "1"
   },
   {
    "week": "8",
@@ -3306,7 +3347,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "피부 조직실습 (1분반)"
+   "topic": "피부 조직실습",
+   "sec": "1"
   },
   {
    "week": "8",
@@ -3318,7 +3360,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "피부 조직실습 (2분반)"
+   "topic": "피부 조직실습",
+   "sec": "2"
   },
   {
    "week": "8",
@@ -3330,7 +3373,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "피부 조직실습 (2분반)"
+   "topic": "피부 조직실습",
+   "sec": "2"
   },
   {
    "week": "8",
@@ -3574,7 +3618,8 @@
    "subject": "기초호흡기",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "호흡기 조직실습 TBL (1분반)"
+   "topic": "호흡기 조직실습 TBL",
+   "sec": "1"
   },
   {
    "week": "9",
@@ -3586,7 +3631,8 @@
    "subject": "기초호흡기",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "호흡기 조직실습 TBL (1분반)"
+   "topic": "호흡기 조직실습 TBL",
+   "sec": "1"
   },
   {
    "week": "9",
@@ -3598,7 +3644,8 @@
    "subject": "기초호흡기",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "호흡기 조직실습 TBL (2분반)"
+   "topic": "호흡기 조직실습 TBL",
+   "sec": "2"
   },
   {
    "week": "9",
@@ -3610,7 +3657,8 @@
    "subject": "기초호흡기",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "호흡기 조직실습 TBL (2분반)"
+   "topic": "호흡기 조직실습 TBL",
+   "sec": "2"
   },
   {
    "week": "9",
@@ -4402,7 +4450,8 @@
    "subject": "기초순환기",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "순환기 조직 실습 (1분반)"
+   "topic": "순환기 조직 실습",
+   "sec": "1"
   },
   {
    "week": "11",
@@ -4414,7 +4463,8 @@
    "subject": "기초순환기",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "순환기 조직 실습 (1분반)"
+   "topic": "순환기 조직 실습",
+   "sec": "1"
   },
   {
    "week": "11",
@@ -4426,7 +4476,8 @@
    "subject": "기초순환기",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "순환기 조직 실습 (2분반)"
+   "topic": "순환기 조직 실습",
+   "sec": "2"
   },
   {
    "week": "11",
@@ -4438,7 +4489,8 @@
    "subject": "기초순환기",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "순환기 조직 실습 (2분반)"
+   "topic": "순환기 조직 실습",
+   "sec": "2"
   },
   {
    "week": "11",
@@ -4498,7 +4550,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "머리뼈 구조 모형실습 (TBL) (1분반)"
+   "topic": "머리뼈 구조 모형실습 (TBL)",
+   "sec": "1"
   },
   {
    "week": "11",
@@ -4510,7 +4563,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "머리뼈 구조 모형실습 (TBL) (1분반)"
+   "topic": "머리뼈 구조 모형실습 (TBL)",
+   "sec": "1"
   },
   {
    "week": "11",
@@ -4522,7 +4576,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "머리뼈 구조 모형실습 (TBL) (2분반)"
+   "topic": "머리뼈 구조 모형실습 (TBL)",
+   "sec": "2"
   },
   {
    "week": "11",
@@ -4534,7 +4589,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "머리뼈 구조 모형실습 (TBL) (2분반)"
+   "topic": "머리뼈 구조 모형실습 (TBL)",
+   "sec": "2"
   },
   {
    "week": "11",
@@ -4882,7 +4938,8 @@
    "subject": "기초신장및요로",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "신장 및 요로 구조 조직 실습 (1분반)"
+   "topic": "신장 및 요로 구조 조직 실습",
+   "sec": "1"
   },
   {
    "week": "12",
@@ -4894,7 +4951,8 @@
    "subject": "기초신장및요로",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "신장 및 요로 구조 조직 실습 (1분반)"
+   "topic": "신장 및 요로 구조 조직 실습",
+   "sec": "1"
   },
   {
    "week": "12",
@@ -4906,7 +4964,8 @@
    "subject": "기초신장및요로",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "신장 및 요로 구조 조직 실습 (2분반)"
+   "topic": "신장 및 요로 구조 조직 실습",
+   "sec": "2"
   },
   {
    "week": "12",
@@ -4918,7 +4977,8 @@
    "subject": "기초신장및요로",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "신장 및 요로 구조 조직 실습 (2분반)"
+   "topic": "신장 및 요로 구조 조직 실습",
+   "sec": "2"
   },
   {
    "week": "12",
@@ -5506,7 +5566,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "뇌 조직 (TBL) (1분반)"
+   "topic": "뇌 조직 (TBL)",
+   "sec": "1"
   },
   {
    "week": "13",
@@ -5518,7 +5579,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "뇌 조직 (TBL) (1분반)"
+   "topic": "뇌 조직 (TBL)",
+   "sec": "1"
   },
   {
    "week": "13",
@@ -5530,7 +5592,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "뇌 조직 (TBL) (2분반)"
+   "topic": "뇌 조직 (TBL)",
+   "sec": "2"
   },
   {
    "week": "13",
@@ -5542,7 +5605,8 @@
    "subject": "기초근골격",
    "professor": "양미영",
    "is_exam": false,
-   "topic": "뇌 조직 (TBL) (2분반)"
+   "topic": "뇌 조직 (TBL)",
+   "sec": "2"
   },
   {
    "week": "13",
@@ -5854,7 +5918,8 @@
    "subject": "기초생식",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "생식기 조직구조 관찰 (조직실습) (1분반)"
+   "topic": "생식기 조직구조 관찰 (조직실습)",
+   "sec": "1"
   },
   {
    "week": "14",
@@ -5866,7 +5931,8 @@
    "subject": "기초생식",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "생식기 조직구조 관찰 (조직실습) (1분반)"
+   "topic": "생식기 조직구조 관찰 (조직실습)",
+   "sec": "1"
   },
   {
    "week": "14",
@@ -5878,7 +5944,8 @@
    "subject": "기초생식",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "생식기 조직구조 관찰 (조직실습) (2분반)"
+   "topic": "생식기 조직구조 관찰 (조직실습)",
+   "sec": "2"
   },
   {
    "week": "14",
@@ -5890,7 +5957,8 @@
    "subject": "기초생식",
    "professor": "남성민",
    "is_exam": false,
-   "topic": "생식기 조직구조 관찰 (조직실습) (2분반)"
+   "topic": "생식기 조직구조 관찰 (조직실습)",
+   "sec": "2"
   },
   {
    "week": "14",
@@ -6088,7 +6156,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 1 (1분반)"
+   "topic": "실습 근골격 해부실습 1",
+   "sec": "1"
   },
   {
    "week": "15",
@@ -6100,7 +6169,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 1 (1분반)"
+   "topic": "실습 근골격 해부실습 1",
+   "sec": "1"
   },
   {
    "week": "15",
@@ -6112,7 +6182,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 2 (1분반)"
+   "topic": "실습 근골격 해부실습 2",
+   "sec": "1"
   },
   {
    "week": "15",
@@ -6124,7 +6195,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 2 (1분반)"
+   "topic": "실습 근골격 해부실습 2",
+   "sec": "1"
   },
   {
    "week": "15",
@@ -6136,7 +6208,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 1 (2분반)"
+   "topic": "실습 근골격 해부실습 1",
+   "sec": "2"
   },
   {
    "week": "15",
@@ -6148,7 +6221,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 1 (2분반)"
+   "topic": "실습 근골격 해부실습 1",
+   "sec": "2"
   },
   {
    "week": "15",
@@ -6160,7 +6234,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 2 (2분반)"
+   "topic": "실습 근골격 해부실습 2",
+   "sec": "2"
   },
   {
    "week": "15",
@@ -6172,7 +6247,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 2 (2분반)"
+   "topic": "실습 근골격 해부실습 2",
+   "sec": "2"
   },
   {
    "week": "15",
@@ -6184,7 +6260,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 3 (2분반)"
+   "topic": "실습 근골격 해부실습 3",
+   "sec": "2"
   },
   {
    "week": "15",
@@ -6196,7 +6273,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 3 (2분반)"
+   "topic": "실습 근골격 해부실습 3",
+   "sec": "2"
   },
   {
    "week": "15",
@@ -6208,7 +6286,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 3 (1분반)"
+   "topic": "실습 근골격 해부실습 3",
+   "sec": "1"
   },
   {
    "week": "15",
@@ -6220,7 +6299,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 3 (1분반)"
+   "topic": "실습 근골격 해부실습 3",
+   "sec": "1"
   },
   {
    "week": "15",
@@ -6232,7 +6312,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 기초소화기 해부실습 (1분반)"
+   "topic": "실습 기초소화기 해부실습",
+   "sec": "1"
   },
   {
    "week": "15",
@@ -6244,7 +6325,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 기초소화기 해부실습 (1분반)"
+   "topic": "실습 기초소화기 해부실습",
+   "sec": "1"
   },
   {
    "week": "15",
@@ -6256,7 +6338,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 기초소화기 해부실습 (2분반)"
+   "topic": "실습 기초소화기 해부실습",
+   "sec": "2"
   },
   {
    "week": "15",
@@ -6268,7 +6351,8 @@
    "subject": "기초소화기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 기초소화기 해부실습 (2분반)"
+   "topic": "실습 기초소화기 해부실습",
+   "sec": "2"
   },
   {
    "week": "15",
@@ -6280,7 +6364,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 4 (2분반)"
+   "topic": "실습 근골격 해부실습 4",
+   "sec": "2"
   },
   {
    "week": "15",
@@ -6292,7 +6377,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 4 (2분반)"
+   "topic": "실습 근골격 해부실습 4",
+   "sec": "2"
   },
   {
    "week": "15",
@@ -6304,7 +6390,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 4 (1분반)"
+   "topic": "실습 근골격 해부실습 4",
+   "sec": "1"
   },
   {
    "week": "15",
@@ -6316,7 +6403,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 4 (1분반)"
+   "topic": "실습 근골격 해부실습 4",
+   "sec": "1"
   },
   {
    "week": "16",
@@ -6328,7 +6416,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 5 (1분반)"
+   "topic": "실습 근골격 해부실습 5",
+   "sec": "1"
   },
   {
    "week": "16",
@@ -6340,7 +6429,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 5 (1분반)"
+   "topic": "실습 근골격 해부실습 5",
+   "sec": "1"
   },
   {
    "week": "16",
@@ -6352,7 +6442,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 5 (2분반)"
+   "topic": "실습 근골격 해부실습 5",
+   "sec": "2"
   },
   {
    "week": "16",
@@ -6364,7 +6455,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 5 (2분반)"
+   "topic": "실습 근골격 해부실습 5",
+   "sec": "2"
   },
   {
    "week": "16",
@@ -6376,7 +6468,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 6 (2분반)"
+   "topic": "실습 근골격 해부실습 6",
+   "sec": "2"
   },
   {
    "week": "16",
@@ -6388,7 +6481,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 6 (2분반)"
+   "topic": "실습 근골격 해부실습 6",
+   "sec": "2"
   },
   {
    "week": "16",
@@ -6400,7 +6494,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 6 (1분반)"
+   "topic": "실습 근골격 해부실습 6",
+   "sec": "1"
   },
   {
    "week": "16",
@@ -6412,7 +6507,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 6 (1분반)"
+   "topic": "실습 근골격 해부실습 6",
+   "sec": "1"
   },
   {
    "week": "16",
@@ -6424,7 +6520,8 @@
    "subject": "기초대사및내분비",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 해부실습 (1분반)"
+   "topic": "실습 해부실습",
+   "sec": "1"
   },
   {
    "week": "16",
@@ -6436,7 +6533,8 @@
    "subject": "기초대사및내분비",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 해부실습 (1분반)"
+   "topic": "실습 해부실습",
+   "sec": "1"
   },
   {
    "week": "16",
@@ -6448,7 +6546,8 @@
    "subject": "기초대사및내분비",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 해부실습 (2분반)"
+   "topic": "실습 해부실습",
+   "sec": "2"
   },
   {
    "week": "16",
@@ -6460,7 +6559,8 @@
    "subject": "기초대사및내분비",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 해부실습 (2분반)"
+   "topic": "실습 해부실습",
+   "sec": "2"
   },
   {
    "week": "16",
@@ -6472,7 +6572,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 7 (2분반)"
+   "topic": "실습 근골격 해부실습 7",
+   "sec": "2"
   },
   {
    "week": "16",
@@ -6484,7 +6585,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 7 (2분반)"
+   "topic": "실습 근골격 해부실습 7",
+   "sec": "2"
   },
   {
    "week": "16",
@@ -6496,7 +6598,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 7 (1분반)"
+   "topic": "실습 근골격 해부실습 7",
+   "sec": "1"
   },
   {
    "week": "16",
@@ -6508,7 +6611,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 7 (1분반)"
+   "topic": "실습 근골격 해부실습 7",
+   "sec": "1"
   },
   {
    "week": "16",
@@ -6568,7 +6672,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 8 (2분반)"
+   "topic": "실습 근골격 해부실습 8",
+   "sec": "2"
   },
   {
    "week": "17",
@@ -6580,7 +6685,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 8 (2분반)"
+   "topic": "실습 근골격 해부실습 8",
+   "sec": "2"
   },
   {
    "week": "17",
@@ -6592,7 +6698,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 8 (1분반)"
+   "topic": "실습 근골격 해부실습 8",
+   "sec": "1"
   },
   {
    "week": "17",
@@ -6604,7 +6711,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 8 (1분반)"
+   "topic": "실습 근골격 해부실습 8",
+   "sec": "1"
   },
   {
    "week": "17",
@@ -6616,7 +6724,8 @@
    "subject": "기초순환기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "순환기 해부 실습 (1분반)"
+   "topic": "순환기 해부 실습",
+   "sec": "1"
   },
   {
    "week": "17",
@@ -6628,7 +6737,8 @@
    "subject": "기초순환기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "순환기 해부 실습 (1분반)"
+   "topic": "순환기 해부 실습",
+   "sec": "1"
   },
   {
    "week": "17",
@@ -6640,7 +6750,8 @@
    "subject": "기초순환기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "순환기 해부 실습 (2분반)"
+   "topic": "순환기 해부 실습",
+   "sec": "2"
   },
   {
    "week": "17",
@@ -6652,7 +6763,8 @@
    "subject": "기초순환기",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "순환기 해부 실습 (2분반)"
+   "topic": "순환기 해부 실습",
+   "sec": "2"
   },
   {
    "week": "17",
@@ -6664,7 +6776,8 @@
    "subject": "기초호흡기",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "호흡기 해부실습 (2분반)"
+   "topic": "호흡기 해부실습",
+   "sec": "2"
   },
   {
    "week": "17",
@@ -6676,7 +6789,8 @@
    "subject": "기초호흡기",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "호흡기 해부실습 (2분반)"
+   "topic": "호흡기 해부실습",
+   "sec": "2"
   },
   {
    "week": "17",
@@ -6688,7 +6802,8 @@
    "subject": "기초호흡기",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "호흡기 해부실습 (1분반)"
+   "topic": "호흡기 해부실습",
+   "sec": "1"
   },
   {
    "week": "17",
@@ -6700,7 +6815,8 @@
    "subject": "기초호흡기",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "호흡기 해부실습 (1분반)"
+   "topic": "호흡기 해부실습",
+   "sec": "1"
   },
   {
    "week": "17",
@@ -6712,7 +6828,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 9 (1분반)"
+   "topic": "실습 근골격 해부실습 9",
+   "sec": "1"
   },
   {
    "week": "17",
@@ -6724,7 +6841,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 9 (1분반)"
+   "topic": "실습 근골격 해부실습 9",
+   "sec": "1"
   },
   {
    "week": "17",
@@ -6736,7 +6854,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 9 (2분반)"
+   "topic": "실습 근골격 해부실습 9",
+   "sec": "2"
   },
   {
    "week": "17",
@@ -6748,7 +6867,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 9 (2분반)"
+   "topic": "실습 근골격 해부실습 9",
+   "sec": "2"
   },
   {
    "week": "17",
@@ -6760,7 +6880,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 10 (2분반)"
+   "topic": "실습 근골격 해부실습 10",
+   "sec": "2"
   },
   {
    "week": "17",
@@ -6772,7 +6893,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 10 (2분반)"
+   "topic": "실습 근골격 해부실습 10",
+   "sec": "2"
   },
   {
    "week": "17",
@@ -6784,7 +6906,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 10 (1분반)"
+   "topic": "실습 근골격 해부실습 10",
+   "sec": "1"
   },
   {
    "week": "17",
@@ -6796,7 +6919,8 @@
    "subject": "기초근골격",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 10 (1분반)"
+   "topic": "실습 근골격 해부실습 10",
+   "sec": "1"
   },
   {
    "week": "18",
@@ -6808,7 +6932,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 11 (1분반)"
+   "topic": "실습 근골격 해부실습 11",
+   "sec": "1"
   },
   {
    "week": "18",
@@ -6820,7 +6945,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 11 (1분반)"
+   "topic": "실습 근골격 해부실습 11",
+   "sec": "1"
   },
   {
    "week": "18",
@@ -6832,7 +6958,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 11 (2분반)"
+   "topic": "실습 근골격 해부실습 11",
+   "sec": "2"
   },
   {
    "week": "18",
@@ -6844,7 +6971,8 @@
    "subject": "기초근골격",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 11 (2분반)"
+   "topic": "실습 근골격 해부실습 11",
+   "sec": "2"
   },
   {
    "week": "18",
@@ -6856,7 +6984,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 12 (2분반)"
+   "topic": "실습 근골격 해부실습 12",
+   "sec": "2"
   },
   {
    "week": "18",
@@ -6868,7 +6997,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 12 (2분반)"
+   "topic": "실습 근골격 해부실습 12",
+   "sec": "2"
   },
   {
    "week": "18",
@@ -6880,7 +7010,8 @@
    "subject": "기초신장및요로",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "신장 및 요로 구조 해부실습 (2분반) open lab"
+   "topic": "신장 및 요로 구조 해부실습  open lab",
+   "sec": "2"
   },
   {
    "week": "18",
@@ -6892,7 +7023,8 @@
    "subject": "기초신장및요로",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "신장 및 요로 구조 해부실습 (2분반) open lab"
+   "topic": "신장 및 요로 구조 해부실습  open lab",
+   "sec": "2"
   },
   {
    "week": "18",
@@ -6904,7 +7036,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 12 (1분반)"
+   "topic": "실습 근골격 해부실습 12",
+   "sec": "1"
   },
   {
    "week": "18",
@@ -6916,7 +7049,8 @@
    "subject": "기초근골격",
    "professor": "원형선",
    "is_exam": false,
-   "topic": "실습 근골격 해부실습 12 (1분반)"
+   "topic": "실습 근골격 해부실습 12",
+   "sec": "1"
   },
   {
    "week": "18",
@@ -6928,7 +7062,8 @@
    "subject": "기초신장및요로",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "신장 및 요로 구조 해부실습 (1분반) open lab"
+   "topic": "신장 및 요로 구조 해부실습  open lab",
+   "sec": "1"
   },
   {
    "week": "18",
@@ -6940,7 +7075,8 @@
    "subject": "기초신장및요로",
    "professor": "이신효",
    "is_exam": false,
-   "topic": "신장 및 요로 구조 해부실습 (1분반) open lab"
+   "topic": "신장 및 요로 구조 해부실습  open lab",
+   "sec": "1"
   },
   {
    "week": "18",
@@ -7000,7 +7136,8 @@
    "subject": "기초생식",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "생식기 해부구조관찰 (해부실습) (2분반)"
+   "topic": "생식기 해부구조관찰 (해부실습)",
+   "sec": "2"
   },
   {
    "week": "18",
@@ -7012,7 +7149,8 @@
    "subject": "기초생식",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "생식기 해부구조관찰 (해부실습) (2분반)"
+   "topic": "생식기 해부구조관찰 (해부실습)",
+   "sec": "2"
   },
   {
    "week": "18",
@@ -7024,7 +7162,8 @@
    "subject": "기초생식",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "생식기 해부구조관찰 (해부실습) (1분반)"
+   "topic": "생식기 해부구조관찰 (해부실습)",
+   "sec": "1"
   },
   {
    "week": "18",
@@ -7036,7 +7175,8 @@
    "subject": "기초생식",
    "professor": "조태현",
    "is_exam": false,
-   "topic": "생식기 해부구조관찰 (해부실습) (1분반)"
+   "topic": "생식기 해부구조관찰 (해부실습)",
+   "sec": "1"
   },
   {
    "week": "18",
@@ -7769,9 +7909,9 @@
   "19"
  ],
  "grade": "의예과 2학년",
- "ts": 1787747637998,
+ "ts": 1787750481101,
  "changelog": {
-  "ts": 1787747637998,
+  "ts": 1787750481101,
   "msg": "2026-2학기 시간표 적용"
  }
 }

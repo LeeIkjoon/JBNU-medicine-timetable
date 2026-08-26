@@ -49,16 +49,24 @@ function ttKey(){
 
 /* ── 분반 (SECTION_RULES 기반) ── */
 function secRule(){
-  if((savedSchool||'jbnu')!=='jbnu')return null; /* 분반 규칙은 학교별 — 현재 jbnu만 */
-  return (typeof SECTION_RULES!=='undefined'&&SECTION_RULES[savedGrade])||null;
+  if(typeof SECTION_RULES==='undefined')return null;
+  return SECTION_RULES[(savedSchool||'jbnu')+'|'+savedGrade]||null;
 }
-function secKey(){return 'section_'+(savedGrade||'default');}
+function secKey(){
+  var sc=savedSchool||'jbnu';
+  if(sc==='jbnu')return 'section_'+(savedGrade||'default'); /* 레거시 키 유지 */
+  return 'section_'+sc+'_'+(savedGrade||'default');
+}
 function secSel(){try{return localStorage.getItem(secKey());}catch(e){return null;}}
 function secSet(d){try{localStorage.setItem(secKey(),d);}catch(e){}}
 /* 선택된 분반 요일 외의 분반 과목 수업 제거. 규칙 없거나 미선택이면 그대로 */
 function secFilter(items){
   var r=secRule();if(!r)return items;
-  var sel=secSel();if(!sel||r.days.indexOf(sel)<0)return items;
+  var sel=secSel();if(!sel)return items;
+  if(r.mode==='sec'){
+    return items.filter(function(it){return !it.sec||it.sec===sel;});
+  }
+  if(r.days.indexOf(sel)<0)return items;
   return items.filter(function(it){return it.subject!==r.subject||it.day===sel;});
 }
 
