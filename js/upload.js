@@ -144,6 +144,13 @@ function handleFile(file){
             status.textContent='PDF 파싱 실패: 시간표 형식을 인식할 수 없습니다.';
             return;
           }
+          /* 품질 게이트: 셀 파편이 과목으로 새는 복잡한 레이아웃이면 적용 차단 */
+          var _uq={};result.items.forEach(function(i){_uq[i.subject]=1;});
+          if(Object.keys(_uq).length>result.items.length*0.3){
+            status.className='xl-status err';
+            status.textContent='이 PDF는 자동 인식 정확도가 낮아요. 원광대 통합 시간표는 업로드 없이 학교·학년만 선택하면 자동으로 표시됩니다.';
+            return;
+          }
           pendingData={items:result.items,nativeWdd:result.wdd,nativeEd:result.ed};
           status.className='xl-status ok';
           status.textContent='✓ '+result.items.length+'개 수업 항목 인식됨 (PDF '+result.wks.length+'주)';

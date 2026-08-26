@@ -19,29 +19,36 @@ function parseWkuPdf(pageContents){
   };
   var HOLIDAY_KW=['삼일절','현충일','광복절','어린이날','근로자의날','부처님','대체휴일',
     '대각개교','개교기념','육일대재','지방선거','재시험','예과체육','국군의날','한글날'];
-  var EXAM_KW=['시험','고사','평가','TBL','PBL'];
+  var EXAM_KW=['시험','고사','평가'];
 
   function isHol(s){return HOLIDAY_KW.some(function(k){return s.indexOf(k)>=0;});}
-  function isExamStr(s){return EXAM_KW.some(function(k){return s.indexOf(k)>=0;});}
+  function isExamStr(s){if(s.indexOf('교육과정')>=0&&s.indexOf('평가')>=0)return false;return EXAM_KW.some(function(k){return s.indexOf(k)>=0;});}
 
   function parseCell(text){
     if(!text||!text.trim())return null;
     var s=text.trim();
     var lines=s.split('\n').map(function(l){return l.trim();}).filter(Boolean);
     /* 세로 텍스트: 1~4글자짜리 줄이 여러 개 */
-    if(lines.length>=2&&lines.every(function(l){return l.length<=5;})){
+    if(lines.length>=2&&lines.every(function(l){return l.length<=2;})){
       var joined=lines.join('');
       if(isHol(joined))return{subj:joined,prof:'',isExam:false};
-      if(joined.length>=3)s=joined;
+      if(joined.length>=3&&joined.length<=8)s=joined;
     }
-    /* 교수명 추출 */
+    /* 교수명 추출: 마지막 유효 괄호 (분반·숫자 괄호 제외) */
     var prof='';
-    var pm=s.match(/\(\s*([^)]{1,30})\s*\)/);
-    if(pm){prof=pm[1].trim();s=s.slice(0,pm.index).trim();}
+    var groups=s.match(/\([^)]{1,30}\)/g)||[];
+    for(var gi=groups.length-1;gi>=0;gi--){
+      var cand=groups[gi].slice(1,-1).replace(/\s+/g,' ').trim();
+      if(cand.indexOf('분반')<0&&/^[가-힣A-Za-z·,/ ]{2,20}$/.test(cand)){prof=cand;break;}
+    }
+    var fp=s.indexOf('(');
+    if(fp>0)s=s.slice(0,fp).trim();
     var subjLines=s.split('\n').map(function(l){return l.trim();}).filter(Boolean);
     var subj=subjLines.length?subjLines[0].replace(/[,，]$/,'').trim():'';
     if(subj==='중간'||subj==='기말')subj=subj+'고사';
     if(subj.length<2)return null;
+    if(/^-\s*\d+\s*-$/.test(subj))return null;      /* 페이지 번호 */
+    if(subj.charAt(0)==='(')return null;              /* 이전 셀 잔재 */
     return{subj:subj,prof:prof,isExam:isExamStr(subj)||isExamStr(text)};
   }
 
@@ -49,9 +56,14 @@ function parseWkuPdf(pageContents){
 
   pageContents.forEach(function(pc){
     var allText=pc.items.map(function(i){return i.str;}).join(' ');
-    var wkMatch=allText.match(/수\s*업\s*주\s*:\s*(\d+)\s*주/);
+    var wkMatch=allText.match(/수\s*업\s*주\s*[:：]\s*(\d+)\s*주/);
     if(!wkMatch)return;
     var wk=wkMatch[1];
+    /* 전 학년 통합 PDF: 현재 선택 학년 페이지만 파싱 */
+    var gm=allText.match(/대상학년\s*[:：]\s*(의예과|의학과)\s*(\d)\s*학년/);
+    if(gm&&typeof savedGrade!=='undefined'&&savedGrade){
+      if((gm[1]+' '+gm[2]+'학년')!==savedGrade)return;
+    }
 
     var pageH=pc.page.view[3];
     var pageW=pc.page.view[2];
@@ -68,6 +80,27 @@ function parseWkuPdf(pageContents){
         });
       }
     });
+    if(!dayDates.length){
+      /* 조각난 헤더: "월" + 근처의 "8.17)" 조합 */
+      var dayCands=[],dateCands=[];
+      pc.items.forEach(function(item){
+        var t=item.str.trim();
+        if(/^[월화수목금]$/.test(t))dayCands.push({d:t,x:item.transform[4],y:item.transform[5]});
+        var dm=t.match(/^\(?(\d{1,2})\.(\d{1,2})\)?$/);
+        if(dm)dateCands.push({mm:dm[1],dd:dm[2],x:item.transform[4],y:item.transform[5]});
+      });
+      dayCands.forEach(function(dc){
+        var best=null;
+        dateCands.forEach(function(t){
+          if(Math.abs(t.y-dc.y)<7&&t.x>dc.x-5&&(t.x-dc.x)<70){if(!best||t.x<best.x)best=t;}
+        });
+        if(best)dayDates.push({
+          day:dc.d,
+          date:'2026-'+('0'+best.mm).slice(-2)+'-'+('0'+best.dd).slice(-2),
+          xMid:dc.x
+        });
+      });
+    }
     if(!dayDates.length)return;
     dayDates.sort(function(a,b){return a.xMid-b.xMid;});
 
@@ -114,6 +147,7 @@ function parseWkuPdf(pageContents){
         var x=item.transform[4];
         var s=item.str;
         if(!s.trim()||x>=annotMinX||x<=periodColMax)return;
+        if(/^-\s*\d+\s*-$/.test(s.trim()))return;
         for(var ci=0;ci<colBounds.length;ci++){
           if(x>=colBounds[ci].xMin&&x<colBounds[ci].xMax){
             var key=currentPeriod+'_'+colBounds[ci].day;
