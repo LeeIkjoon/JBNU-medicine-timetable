@@ -72,7 +72,7 @@ function byDateH(items){
   return h;
 }
 function renderL(){
-  document.getElementById('main').innerHTML='<div class="list-wrap">'+byDateH(secFilter(merged))+'</div>';
+  document.getElementById('main').innerHTML='<div class="list-wrap">'+byDateH(viewItems(merged))+'</div>';
 }
 
 /* ══════════════════════════════════════════
@@ -85,7 +85,7 @@ var fHoursOpen={};      /* 과목명 → 펼침 여부 */
 
 function hoursData(){
   var subj={};
-  var src=secFilter(merged);
+  var src=viewItems(merged);
   for(var i=0;i<src.length;i++){
     var it=src[i],s=it.subject;
     if(!s||isEv(s)||isHoliday(s))continue;
@@ -228,7 +228,7 @@ function bindFSeg(){
   document.getElementById('fseg-hours').onclick=function(){if(fView!=='hours'){fView='hours';window.scrollTo(0,0);renderF();}};
 }
 function renderFR(){
-  var items=secFilter(merged).slice();
+  var items=viewItems(merged).slice();
   if(fExam){
     items=items.filter(function(i){return isEx(i.subject)||i.is_exam===true||i.is_exam==='true';});
   }else{

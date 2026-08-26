@@ -93,7 +93,7 @@ function dashDday(dateStr){
 }
 /* ── 시험 소스: 시간표(merged)의 is_exam 항목 (분반 필터 적용) ── */
 function dashExamSource(){
-  return secFilter(merged).filter(function(m){return m.is_exam;});
+  return viewItems(merged).filter(function(m){return m.is_exam;});
 }
 
 /* 다가오는 시험 (오늘 이후, 날짜+과목 중복 제거, 가까운 순) */

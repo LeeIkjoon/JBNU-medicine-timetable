@@ -172,6 +172,14 @@ function init(){
     var cx=document.getElementById('cls-x');
     if(cx)cx.onclick=closeClassInfo;
   }
+  var edO=document.getElementById('edit-ovl');
+  if(edO){
+    edO.onclick=function(e){if(e.target===edO)closeClassEdit();};
+    var ex=document.getElementById('edit-x');
+    if(ex)ex.onclick=closeClassEdit;
+    var es=document.getElementById('edit-save');
+    if(es)es.onclick=saveClassEdit;
+  }
   document.getElementById('ovl').onclick=function(e){if(e.target===document.getElementById('ovl'))closeCal();};
   document.getElementById('cal-p').onclick=function(){cm2--;if(cm2<0){cm2=11;cy--;}renderCal();};
   document.getElementById('cal-n').onclick=function(){cm2++;if(cm2>11){cm2=0;cy++;}renderCal();};

@@ -70,5 +70,35 @@ function secFilter(items){
   return items.filter(function(it){return it.subject!==r.subject||it.day===sel;});
 }
 
+/* ── 개인 시간표 편집 (로컬 오버라이드 — 본인 기기에만 적용) ── */
+function ovKey(){return 'tt_ov_'+(savedSchool||'jbnu')+'_'+(savedGrade||'');}
+function ovLoad(){
+  try{var o=JSON.parse(localStorage.getItem(ovKey())||'null');
+    if(o&&o.mod&&o.del&&o.add)return o;}catch(e){}
+  return {mod:{},del:{},add:[]};
+}
+function ovSave(o){try{localStorage.setItem(ovKey(),JSON.stringify(o));}catch(e){}}
+function ovSlot(it){return it.date+'|'+it.period;}
+function ovHas(){var o=ovLoad();return Object.keys(o.mod).length||Object.keys(o.del).length||o.add.length;}
+function ovApply(items){
+  var o=ovLoad();
+  if(!Object.keys(o.mod).length&&!Object.keys(o.del).length&&!o.add.length)return items;
+  var out=[];
+  for(var i=0;i<items.length;i++){
+    var k=ovSlot(items[i]);
+    if(o.del[k])continue;
+    if(o.mod[k]){out.push(o.mod[k]);continue;}
+    out.push(items[i]);
+  }
+  for(var j=0;j<o.add.length;j++)out.push(o.add[j]);
+  return out;
+}
+/* 뷰 표시용 아이템: 분반 필터 + 개인 오버라이드 (관리자 모드는 원본 그대로) */
+function viewItems(items){
+  var f=secFilter(items);
+  if(typeof isAdmin!=='undefined'&&isAdmin)return f;
+  return ovApply(f);
+}
+
 /* null-safe HTML escape (원본의 두 escHtml 선언 중 살아 있던 버전) */
 function escHtml(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}

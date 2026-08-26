@@ -1,5 +1,5 @@
 function buildWeekTable(w,items){
-  items=secFilter(items); /* 분반: 선택한 요일의 분반 수업만 */
+  items=viewItems(items); /* 분반 + 개인 편집 반영 */
   var dd=wdd[w]||{};
   var PERIODS=[
     {n:1,t:'8:30'},{n:2,t:'9:30'},{n:3,t:'10:30'},{n:4,t:'11:30'},
@@ -97,7 +97,7 @@ function buildWeekTable(w,items){
 }
 
 function buildLegend(items){
-  items=secFilter(items);
+  items=viewItems(items);
   var seen={};
   var html='';
   for(var i=0;i<items.length;i++){
@@ -162,7 +162,7 @@ function wkTodoRowHtml(){
 }
 /* 수업 상세 시트 — 셀 탭 시 원본 정보 전체 표시 */
 function openClassInfo(dt,day,period){
-  var pool=secFilter(merged);
+  var pool=viewItems(merged);
   var list=pool.filter(function(i){return i.date===dt&&i.period===period;});
   if(!list.length)return;
   var it=list[0];
@@ -185,8 +185,74 @@ function openClassInfo(dt,day,period){
   if(it.topic)h+='<div class="cls-row"><span class="cls-lbl">주제</span><span class="cls-val">'+escHtml(it.topic)+'</span></div>';
   if(it.professor)h+='<div class="cls-row"><span class="cls-lbl">교수</span><span class="cls-val">'+escHtml(it.professor)+'</span></div>';
   if(it.room)h+='<div class="cls-row"><span class="cls-lbl">강의실</span><span class="cls-val">'+escHtml(it.room)+'</span></div>';
+  /* 개인 편집 버튼 (관리자 모드가 아닐 때) */
+  if(typeof isAdmin==='undefined'||!isAdmin){
+    var o=ovLoad(),k=dt+'|'+period;
+    var touched=!!(o.mod[k]||o.del[k]||o.add.some(function(a){return ovSlot(a)===k;}));
+    h+='<div class="cls-actions">'
+      +'<button class="cls-act" id="cls-edit">수정</button>'
+      +'<button class="cls-act danger" id="cls-del">삭제</button>'
+      +(touched?'<button class="cls-act" id="cls-reset">원래대로</button>':'')
+      +'</div>';
+  }
   document.getElementById('cls-body').innerHTML=h;
   document.getElementById('cls-ovl').className='cls-ovl show';
+  var eb=document.getElementById('cls-edit');
+  if(eb)eb.onclick=function(){closeClassInfo();openClassEdit(dt,day,period,it);};
+  var db=document.getElementById('cls-del');
+  if(db)db.onclick=function(){
+    var o=ovLoad(),k=dt+'|'+period;
+    o.add=o.add.filter(function(a){return ovSlot(a)!==k;});
+    delete o.mod[k];
+    /* 원본에 있던 슬롯이면 삭제 마크 */
+    if(secFilter(merged).some(function(i){return i.date===dt&&i.period===period;}))o.del[k]=1;
+    ovSave(o);closeClassInfo();ovRefresh();
+  };
+  var rb=document.getElementById('cls-reset');
+  if(rb)rb.onclick=function(){
+    var o=ovLoad(),k=dt+'|'+period;
+    delete o.mod[k];delete o.del[k];
+    o.add=o.add.filter(function(a){return ovSlot(a)!==k;});
+    ovSave(o);closeClassInfo();ovRefresh();
+  };
+}
+/* 편집 반영 후 재렌더 */
+function ovRefresh(){
+  buildFromItems(merged,wdd,ed);
+  _subjColorMap=null;
+  render();
+}
+/* 개인 편집 폼 */
+var _editCtx=null;
+function openClassEdit(dt,day,period,base){
+  _editCtx={dt:dt,day:day,period:period};
+  var p=dt.split('-');
+  document.getElementById('edit-when').textContent=parseInt(p[1])+'월 '+parseInt(p[2])+'일 ('+day+') · '+period+'교시';
+  document.getElementById('edit-subj').value=base?base.subject:'';
+  document.getElementById('edit-topic').value=(base&&base.topic)||'';
+  document.getElementById('edit-prof').value=(base&&base.professor)||'';
+  document.getElementById('edit-exam-chk').checked=!!(base&&(base.is_exam===true||base.is_exam==='true'));
+  document.getElementById('edit-ovl').className='cls-ovl show';
+}
+function closeClassEdit(){document.getElementById('edit-ovl').className='cls-ovl';}
+function saveClassEdit(){
+  if(!_editCtx)return;
+  var subj=document.getElementById('edit-subj').value.trim();
+  if(!subj)return;
+  var c=_editCtx,k=c.dt+'|'+c.period;
+  var wk=null;for(var w in wdd){if(wdd[w]&&wdd[w][c.day]===c.dt){wk=w;break;}}
+  var item={week:wk||wks[ci]||'1',date:c.dt,day:c.day,period:c.period,
+    start:PERIOD_START[c.period]||'',end:PERIOD_END[c.period]||'',
+    subject:subj,professor:document.getElementById('edit-prof').value.trim(),
+    is_exam:document.getElementById('edit-exam-chk').checked};
+  var tp=document.getElementById('edit-topic').value.trim();
+  if(tp)item.topic=tp;
+  var o=ovLoad();
+  delete o.del[k];
+  o.add=o.add.filter(function(a){return ovSlot(a)!==k;});
+  if(secFilter(merged).some(function(i){return i.date===c.dt&&i.period===c.period;}))o.mod[k]=item;
+  else o.add.push(item);
+  ovSave(o);closeClassEdit();ovRefresh();
 }
 function closeClassInfo(){
   var o=document.getElementById('cls-ovl');
@@ -224,7 +290,9 @@ function renderW(){
       var dt=ddNow[d];
       if(!dt)return;
       if(isAdmin&&typeof admInlineEdit==='function'){admInlineEdit(dt,d,pn);return;}
-      openClassInfo(dt,d,pn);
+      var has=viewItems(merged).some(function(i){return i.date===dt&&i.period===pn&&!isHoliday(i.subject);});
+      if(has)openClassInfo(dt,d,pn);
+      else openClassEdit(dt,d,pn,null);
     };
   });
   document.querySelectorAll('.wk-td[data-date]').forEach(function(b){

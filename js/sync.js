@@ -4,7 +4,7 @@
    - 복원: 다른 기기에서 코드 입력 → localStorage 덮어쓰기 → 리로드
 ══════════════════════════════════════════ */
 var SYNC_KEYS=['tm_logs','pl_todos','study_goal_min'];
-var SYNC_PREFIX=['dtodo_'];
+var SYNC_PREFIX=['dtodo_','tt_ov_'];
 
 function syncUid(){
   var u=null;
