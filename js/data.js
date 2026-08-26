@@ -63,21 +63,52 @@ function buildFromItems(items,nativeWdd,nativeEd){
     }
   }
 
-  /* 3. 색상 맵 - 구별되는 초연한 파스텔 팔레트 */
-  var palette=['#CFFAFE','#DCFCE7','#D1FAE5','#FCE7F3','#FEF3C7','#EDE9FE','#FFEDD5','#DBEAFE','#FEF9C3','#FFE4E6','#F3E8FF','#FEE2E2','#E0F2FE','#FDF4FF','#D1FAE5','#FFF7ED','#F0F9FF','#EDE9FE'];
-  var pIdx=0;
-  /* 1차: 일반 과목 색 배정 */
+  /* 3. 색상 맵 — 현재 시간표 안에서 과목 간 중복 없는 파스텔 배정
+     색상환에서 멀리 떨어진 순서로 나열; 소진되면 HSL로 새 파스텔 생성 */
+  var palette=['#DBEAFE','#DCFCE7','#FFE4E6','#FEF3C7','#EDE9FE','#CFFAFE',
+    '#FFEDD5','#FCE7F3','#ECFCCB','#E0E7FF','#FEE2E2','#CCFBF1',
+    '#FEF9C3','#F3E8FF','#D1FAE5','#FAE8FF','#E0F2FE','#FFDAB8'];
+  function _pastel(h){ /* hue → 파스텔 hex (s85% l91%) */
+    h=((h%360)+360)%360;
+    var c=(1-Math.abs(2*0.91-1))*0.85, x=c*(1-Math.abs((h/60)%2-1)), m=0.91-c/2;
+    var r,g,b;
+    if(h<60){r=c;g=x;b=0;}else if(h<120){r=x;g=c;b=0;}else if(h<180){r=0;g=c;b=x;}
+    else if(h<240){r=0;g=x;b=c;}else if(h<300){r=x;g=0;b=c;}else{r=c;g=0;b=x;}
+    function hx(v){v=Math.round((v+m)*255);return('0'+v.toString(16)).slice(-2).toUpperCase();}
+    return'#'+hx(r)+hx(g)+hx(b);
+  }
+  /* 이미 색이 정해진(하드코딩) 과목의 색은 사용 중으로 표시 */
+  var used={};
+  for(var i=0;i<items.length;i++){
+    var s0=items[i].subject;
+    if(cmap[s0]&&!isEx(s0))used[cmap[s0]]=true;
+  }
+  var hueSeed=0;
+  function nextColor(){
+    for(var pi=0;pi<palette.length;pi++){
+      if(!used[palette[pi]]){used[palette[pi]]=true;return palette[pi];}
+    }
+    var c2=_pastel(hueSeed);
+    while(used[c2]){hueSeed+=137.5;c2=_pastel(hueSeed);}
+    hueSeed+=137.5;used[c2]=true;return c2;
+  }
+  /* 1차: 휴일·행사는 무채색 (팔레트 소모 방지) */
   for(var i=0;i<items.length;i++){
     var s=items[i].subject;
-    if(!cmap[s]&&!isEx(s)){cmap[s]=palette[pIdx%palette.length];pIdx++;}
+    if(!cmap[s]&&(isHoliday(s)||isEv(s)))cmap[s]='#F1F5F9';
   }
-  /* 2차: 시험 과목은 원 과목 색을 그대로 사용 (빨간 테두리로만 구분) */
+  /* 2차: 일반 과목 — 미사용 색 배정 */
+  for(var i=0;i<items.length;i++){
+    var s=items[i].subject;
+    if(!cmap[s]&&!isEx(s))cmap[s]=nextColor();
+  }
+  /* 3차: 시험 과목은 원 과목 색을 그대로 (빨간 테두리로만 구분) */
   for(var i=0;i<items.length;i++){
     var s=items[i].subject;
     if(!cmap[s]){
       var base=examBase(s);
       if(base&&cmap[base])cmap[s]=cmap[base];
-      else{cmap[s]=palette[pIdx%palette.length];pIdx++;}
+      else cmap[s]=nextColor();
     }
   }
 
