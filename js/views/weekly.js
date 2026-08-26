@@ -91,6 +91,7 @@ function buildWeekTable(w,items){
       }else{
         html+='<div class="cn-s">'+it.subject+'</div>';
       }
+      if(it.topic)html+='<div class="cn-tp">'+it.topic+'</div>';
       if(it.professor)html+='<div class="cn-p">'+it.professor+'</div>';
       html+='</div></td>';
     });

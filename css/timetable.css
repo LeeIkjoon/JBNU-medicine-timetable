@@ -131,3 +131,6 @@
   font-size:9px;font-weight:800;display:none;align-items:center;justify-content:center;
   background:var(--accent);color:#fff;padding:0 3px}
 .tht-n.has{display:inline-flex}
+
+/* 강의 주제 (원광대 등 — 셀 내 소제목) */
+.cn-tp{font-size:8.5px;color:var(--text-on-pastel-soft);line-height:1.25;margin-top:1px;word-break:keep-all}
