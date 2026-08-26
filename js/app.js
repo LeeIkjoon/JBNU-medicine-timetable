@@ -329,7 +329,7 @@ function init(){
       buildFromItems(saved.items, saved.wdd||{}, saved.ed||[]);
     }else{
       /* 데이터 없는 학교·학년: 레거시 번들 데이터 잔재 제거 */
-      wks=[];wdd={};ed=[];wh={};wl={};ci=0;
+      wks=[];wdd={};ed=[];wh={};wl={};ci=0;fsubj=[];fsubj2=[];
     }
     goTodayWeek(); /* 학년(=주차 구성) 변경 → 주차 인덱스 재계산 */
     render();
