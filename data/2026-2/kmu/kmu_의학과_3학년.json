@@ -1,0 +1,675 @@
+{
+ "items": [
+  {
+   "week": "1",
+   "date": "2026-07-30",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "김혜순",
+   "is_exam": false,
+   "topic": "의료면담 총론 (What is medical communications?)",
+   "room": "M212"
+  },
+  {
+   "week": "1",
+   "date": "2026-07-30",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "김예림",
+   "is_exam": false,
+   "topic": "만성질환을 앓는 환자와 소통 (Communication with patients with chronic disease)",
+   "room": "M212"
+  },
+  {
+   "week": "2",
+   "date": "2026-08-06",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "최희정",
+   "is_exam": false,
+   "topic": "소아환자 및 보호자와 소통하기 (Communication with pediatric patients and caregivers)",
+   "room": "M212"
+  },
+  {
+   "week": "2",
+   "date": "2026-08-06",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "백성규",
+   "is_exam": false,
+   "topic": "외래 및 병실 진료의 실제 (The practice of outpatient and hospital room care)",
+   "room": "M212"
+  },
+  {
+   "week": "3",
+   "date": "2026-08-13",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "이지민",
+   "is_exam": false,
+   "topic": "외국인 환자 진료하기 (1)",
+   "room": "M212"
+  },
+  {
+   "week": "3",
+   "date": "2026-08-13",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "이지민",
+   "is_exam": false,
+   "topic": "외국인 환자 진료하기 (2)",
+   "room": "M212"
+  },
+  {
+   "week": "4",
+   "date": "2026-08-20",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "박기범",
+   "is_exam": false,
+   "topic": "통증이 심한 환자와 소통하기 (Communication with patients with severe pain)",
+   "room": "M212"
+  },
+  {
+   "week": "4",
+   "date": "2026-08-20",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "이상훈",
+   "is_exam": false,
+   "topic": "응급 환자와 소통하기 (Communication with patients in the emergency room)",
+   "room": "M212"
+  },
+  {
+   "week": "5",
+   "date": "2026-08-27",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "김진영(내과)",
+   "is_exam": false,
+   "topic": "암 환자 및 보호자와 의사소통하기, 연명 치료의 결정 (Communications with cancer patients and caregivers, Decision on life-sustaining treatment)) 1",
+   "room": "M212"
+  },
+  {
+   "week": "5",
+   "date": "2026-08-27",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "김진영(내과)",
+   "is_exam": false,
+   "topic": "암 환자 및 보호자와 의사소통하기, 연명 치료의 결정 (Communications with cancer patients and caregivers, Decision on life-sustaining treatment)) 2",
+   "room": "M212"
+  },
+  {
+   "week": "6",
+   "date": "2026-09-03",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "최재훈",
+   "is_exam": false,
+   "topic": "동료들과 소통하기 (Communication with colleagues and medical assistants) 1",
+   "room": "M212"
+  },
+  {
+   "week": "6",
+   "date": "2026-09-03",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "최재훈",
+   "is_exam": false,
+   "topic": "동료들과 소통하기 (Communication with colleagues and medical assistants) 2",
+   "room": "M212"
+  },
+  {
+   "week": "7",
+   "date": "2026-09-10",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "이경재",
+   "is_exam": false,
+   "topic": "외과의사와 환자의 소통, 노인환자와의 의사소통 (Surgeon-patient communication, Communication with elderly patients) 2",
+   "room": "M212"
+  },
+  {
+   "week": "7",
+   "date": "2026-09-10",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "이경재",
+   "is_exam": false,
+   "topic": "외과의사와 환자의 소통, 노인환자와의 의사소통 (Surgeon-patient communication, Communication with elderly patients) 1",
+   "room": "M212"
+  },
+  {
+   "week": "8",
+   "date": "2026-09-17",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "김혜순",
+   "is_exam": false,
+   "topic": "평가 (토론, 발표) 1",
+   "room": "M212"
+  },
+  {
+   "week": "8",
+   "date": "2026-09-17",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의료인문(5):의료면담",
+   "professor": "김혜순",
+   "is_exam": false,
+   "topic": "평가 (토론, 발표) 2",
+   "room": "M212"
+  },
+  {
+   "week": "9",
+   "date": "2026-09-24",
+   "day": "목",
+   "period": 1,
+   "start": "8:30",
+   "end": "9:20",
+   "subject": "가정학습주간(추석연휴)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "9",
+   "date": "2026-09-24",
+   "day": "목",
+   "period": 2,
+   "start": "9:30",
+   "end": "10:20",
+   "subject": "가정학습주간(추석연휴)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "9",
+   "date": "2026-09-24",
+   "day": "목",
+   "period": 3,
+   "start": "10:30",
+   "end": "11:20",
+   "subject": "가정학습주간(추석연휴)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "9",
+   "date": "2026-09-24",
+   "day": "목",
+   "period": 4,
+   "start": "11:30",
+   "end": "12:20",
+   "subject": "가정학습주간(추석연휴)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "9",
+   "date": "2026-09-24",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "가정학습주간(추석연휴)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "9",
+   "date": "2026-09-24",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "가정학습주간(추석연휴)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "9",
+   "date": "2026-09-24",
+   "day": "목",
+   "period": 7,
+   "start": "15:30",
+   "end": "16:20",
+   "subject": "가정학습주간(추석연휴)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "9",
+   "date": "2026-09-24",
+   "day": "목",
+   "period": 8,
+   "start": "16:30",
+   "end": "17:20",
+   "subject": "가정학습주간(추석연휴)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "10",
+   "date": "2026-10-01",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의학연구(5)",
+   "professor": "조태희",
+   "is_exam": false,
+   "topic": "의사 과학자가 되는 방법",
+   "room": "M212"
+  },
+  {
+   "week": "10",
+   "date": "2026-10-01",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의학연구(5)",
+   "professor": "김경보",
+   "is_exam": false,
+   "topic": "임상 의학연구의 이론과 실제",
+   "room": "M212"
+  },
+  {
+   "week": "10",
+   "date": "2026-10-01",
+   "day": "목",
+   "period": 7,
+   "start": "15:30",
+   "end": "16:20",
+   "subject": "의학연구(5)",
+   "professor": "현정호",
+   "is_exam": false,
+   "topic": "Molecular tools for tagging neural ensembles to help treat brain illness",
+   "room": "M212"
+  },
+  {
+   "week": "11",
+   "date": "2026-10-08",
+   "day": "목",
+   "period": 1,
+   "start": "8:30",
+   "end": "9:20",
+   "subject": "가정학습주간(개천절, 한글날)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "11",
+   "date": "2026-10-08",
+   "day": "목",
+   "period": 2,
+   "start": "9:30",
+   "end": "10:20",
+   "subject": "가정학습주간(개천절, 한글날)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "11",
+   "date": "2026-10-08",
+   "day": "목",
+   "period": 3,
+   "start": "10:30",
+   "end": "11:20",
+   "subject": "가정학습주간(개천절, 한글날)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "11",
+   "date": "2026-10-08",
+   "day": "목",
+   "period": 4,
+   "start": "11:30",
+   "end": "12:20",
+   "subject": "가정학습주간(개천절, 한글날)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "11",
+   "date": "2026-10-08",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "가정학습주간(개천절, 한글날)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "11",
+   "date": "2026-10-08",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "가정학습주간(개천절, 한글날)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "11",
+   "date": "2026-10-08",
+   "day": "목",
+   "period": 7,
+   "start": "15:30",
+   "end": "16:20",
+   "subject": "가정학습주간(개천절, 한글날)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "11",
+   "date": "2026-10-08",
+   "day": "목",
+   "period": 8,
+   "start": "16:30",
+   "end": "17:20",
+   "subject": "가정학습주간(개천절, 한글날)",
+   "professor": "",
+   "is_exam": false
+  },
+  {
+   "week": "12",
+   "date": "2026-10-15",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의학연구(5)",
+   "professor": "황재윤",
+   "is_exam": false,
+   "topic": "Medical Ultrasound Imaging Systems Met AI",
+   "room": "M212"
+  },
+  {
+   "week": "12",
+   "date": "2026-10-15",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의학연구(5)",
+   "professor": "박재형",
+   "is_exam": false,
+   "topic": "분자생물 연구: 장-뇌 축의 양방향 신호전달",
+   "room": "M212"
+  },
+  {
+   "week": "13",
+   "date": "2026-10-22",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의학연구(5)",
+   "professor": "홍정호, 김종홍",
+   "is_exam": false,
+   "topic": "빅데이터의 의학적 활용(1)",
+   "room": "M212"
+  },
+  {
+   "week": "13",
+   "date": "2026-10-22",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의학연구(5)",
+   "professor": "홍정호, 김종홍",
+   "is_exam": false,
+   "topic": "빅데이터의 의학적 활용(2)",
+   "room": "M212"
+  },
+  {
+   "week": "14",
+   "date": "2026-10-29",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의학연구(5)",
+   "professor": "이민선",
+   "is_exam": false,
+   "topic": "Medicine is an integrative science of Human Being - From an era of Selfish Gene to an era of Convergence",
+   "room": "M212"
+  },
+  {
+   "week": "14",
+   "date": "2026-10-29",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의학연구(5)",
+   "professor": "이재민",
+   "is_exam": false,
+   "topic": "The role of cellular stresses and their associated signaling in aging-associated metabolic diseases",
+   "room": "M212"
+  },
+  {
+   "week": "14",
+   "date": "2026-10-29",
+   "day": "목",
+   "period": 7,
+   "start": "15:30",
+   "end": "16:20",
+   "subject": "의학연구(5)",
+   "professor": "조재형",
+   "is_exam": false,
+   "topic": "의료 빅데이터 분석 이론",
+   "room": "M212"
+  },
+  {
+   "week": "15",
+   "date": "2026-11-05",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의학연구(5)",
+   "professor": "이승보",
+   "is_exam": false,
+   "topic": "의료 빅데이터 분석 실습(1)",
+   "room": "M212"
+  },
+  {
+   "week": "15",
+   "date": "2026-11-05",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의학연구(5)",
+   "professor": "이승보",
+   "is_exam": false,
+   "topic": "의료 빅데이터 분석 실습(2)",
+   "room": "M212"
+  },
+  {
+   "week": "16",
+   "date": "2026-11-12",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의학연구(5)",
+   "professor": "고일규",
+   "is_exam": false,
+   "topic": "기초 의학연구의 이론과 실제",
+   "room": "M212"
+  },
+  {
+   "week": "16",
+   "date": "2026-11-12",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의학연구(5)",
+   "professor": "강준호",
+   "is_exam": false,
+   "topic": "의생명정보분석",
+   "room": "M212"
+  },
+  {
+   "week": "17",
+   "date": "2026-11-19",
+   "day": "목",
+   "period": 5,
+   "start": "13:30",
+   "end": "14:20",
+   "subject": "의학연구(5)",
+   "professor": "정혜라",
+   "is_exam": false,
+   "topic": "유전체 의학연구: 분자병리검사를 활용한 의학연구 동향",
+   "room": "M212"
+  },
+  {
+   "week": "17",
+   "date": "2026-11-19",
+   "day": "목",
+   "period": 6,
+   "start": "14:30",
+   "end": "15:20",
+   "subject": "의학연구(5)",
+   "professor": "이성원",
+   "is_exam": false,
+   "topic": "Wearable electronics for bio-medical application",
+   "room": "M212"
+  }
+ ],
+ "wdd": {
+  "1": {
+   "목": "2026-07-30"
+  },
+  "2": {
+   "목": "2026-08-06"
+  },
+  "3": {
+   "목": "2026-08-13"
+  },
+  "4": {
+   "목": "2026-08-20"
+  },
+  "5": {
+   "목": "2026-08-27"
+  },
+  "6": {
+   "목": "2026-09-03"
+  },
+  "7": {
+   "목": "2026-09-10"
+  },
+  "8": {
+   "목": "2026-09-17"
+  },
+  "9": {
+   "목": "2026-09-24"
+  },
+  "10": {
+   "목": "2026-10-01"
+  },
+  "11": {
+   "목": "2026-10-08"
+  },
+  "12": {
+   "목": "2026-10-15"
+  },
+  "13": {
+   "목": "2026-10-22"
+  },
+  "14": {
+   "목": "2026-10-29"
+  },
+  "15": {
+   "목": "2026-11-05"
+  },
+  "16": {
+   "목": "2026-11-12"
+  },
+  "17": {
+   "목": "2026-11-19"
+  }
+ },
+ "ed": [],
+ "wks": [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+  "13",
+  "14",
+  "15",
+  "16",
+  "17"
+ ],
+ "grade": "의학과 3학년",
+ "ts": 1787753617222,
+ "changelog": {
+  "ts": 1787753617222,
+  "msg": "2026-2학기 시간표 적용"
+ }
+}
