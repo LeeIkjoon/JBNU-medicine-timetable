@@ -89,3 +89,11 @@
   padding:13px 22px;font-size:var(--font-base);font-weight:var(--weight-bold);cursor:pointer;
   font-family:inherit;transition:transform var(--duration-fast) var(--ease)}
 .empty-tt-btn:active{transform:scale(.96)}
+
+/* 학교 추가 요청 */
+.sc-req{margin-top:22px;text-align:center}
+.sc-req-t{font-size:var(--font-md);font-weight:var(--weight-bold);color:var(--text-strong)}
+.sc-req-d{font-size:var(--font-sm);color:var(--text-soft);line-height:1.5;margin:4px 0 10px}
+.sc-req-btn{display:inline-block;background:var(--surface);color:var(--accent);text-decoration:none;
+  font-size:var(--font-sm);font-weight:var(--weight-bold);border-radius:var(--radius-pill);
+  padding:9px 16px;box-shadow:var(--shadow-xs)}
