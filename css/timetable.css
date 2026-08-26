@@ -120,20 +120,24 @@
 
 
 
-/* ── 좌상단 할 일 버튼 (교시 열 헤더) ── */
-.tht-todo{position:relative;width:100%;height:100%;min-height:34px;border:none;cursor:pointer;
-  background:none;display:flex;align-items:center;justify-content:center;color:var(--text-soft);
-  font-family:inherit;-webkit-tap-highlight-color:transparent;
-  transition:transform var(--duration-fast) var(--ease)}
-.tht-todo:active{transform:scale(.88)}
-.tht-todo svg{width:15px;height:15px}
-.tht-n{position:absolute;top:2px;right:1px;min-width:14px;height:14px;border-radius:7px;
-  font-size:9px;font-weight:800;display:none;align-items:center;justify-content:center;
-  background:var(--accent);color:#fff;padding:0 3px}
-.tht-n.has{display:inline-flex}
 
 /* 강의 주제 (원광대 등 — 셀 내 소제목) */
 .cn-tp{font-size:8.5px;color:var(--text-on-pastel-soft);line-height:1.25;margin-top:1px;word-break:keep-all}
 
 /* 강의 주제 — 최대 2줄 (셀 공간 보호) */
 .cn-tp{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ── 요일별 할 일 아이콘 줄 (시간표 칼럼 위 정렬) ── */
+.wk-todos{display:flex;align-items:center;margin:2px 0 5px}
+.wk-todos-sp{width:36px;flex:none}
+.wk-td{flex:1;min-width:0;border:none;background:none;cursor:pointer;padding:2px 0;
+  display:flex;align-items:center;justify-content:center;font-family:inherit;
+  -webkit-tap-highlight-color:transparent;transition:transform var(--duration-fast) var(--ease)}
+.wk-td:active{transform:scale(.85)}
+.wk-td.off{pointer-events:none}
+.wk-td-ic{display:inline-flex;align-items:center;justify-content:center;
+  min-width:20px;height:20px;border-radius:10px;background:var(--surface-muted);color:var(--text-soft)}
+.wk-td-ic svg{width:11px;height:11px}
+.wk-td-ic.has{background:var(--accent);color:#fff;font-size:10px;font-weight:800;padding:0 6px}
+.wk-td.today .wk-td-ic{background:var(--tint-accent);color:var(--accent)}
+.wk-td.today .wk-td-ic.has{background:var(--accent);color:#fff}

@@ -129,12 +129,15 @@ function dtodoDel(i){
   else fin();
 }
 function updateTodoDots(){
-  /* 좌상단 할 일 버튼의 오늘 개수 배지 갱신 */
-  var el=document.getElementById('tht-n');
-  if(!el)return;
-  var n=dtodoLoad(today()).length;
-  el.className='tht-n'+(n?' has':'');
-  el.textContent=n||'';
+  /* 요일별 할 일 아이콘 줄 배지 갱신 */
+  var IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 6l1.2 1.2L7.5 4.9M4 11.5l1.2 1.2 2.3-2.3M4 17l1.2 1.2 2.3-2.3"/></svg>';
+  document.querySelectorAll('.wk-td[data-date]').forEach(function(b){
+    var el=b.querySelector('.wk-td-ic');
+    if(!el)return;
+    var n=dtodoLoad(b.getAttribute('data-date')).length;
+    el.className='wk-td-ic'+(n?' has':'');
+    el.innerHTML=n?String(n):IC;
+  });
 }
 (function(){
   var CHECK=setInterval(function(){

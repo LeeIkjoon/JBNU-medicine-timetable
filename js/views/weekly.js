@@ -32,13 +32,7 @@ function buildWeekTable(w,items){
   }
 
   /* HTML 생성 - rowspan 없이 교시별 독립 렌더 */
-  /* 좌상단 모서리: 할 일 버튼 (오늘 개수 배지, 탭하면 오늘 시트) */
-  var TODO_IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 6l1.2 1.2L7.5 4.9M4 11.5l1.2 1.2 2.3-2.3M4 17l1.2 1.2 2.3-2.3"/></svg>';
-  var tn=0;
-  if(typeof dtodoLoad==='function'){try{tn=dtodoLoad(today()).length;}catch(e){}}
-  var html='<table class="tt"><thead><tr><th class="th-t">'
-    +'<button class="tht-todo" id="tht-todo">'+TODO_IC
-    +'<span class="tht-n'+(tn?' has':'')+'" id="tht-n">'+(tn||'')+'</span></button></th>';
+  var html='<table class="tt"><thead><tr><th class="th-t"></th>';
   DAYS.forEach(function(d){
     var dt=dd[d]||'';
     html+='<th class="th-d" data-day="'+d+'" data-date="'+dt+'">'+d+'<br><span class="th-date">'+(dt?fmtDate(dt):'')+'</span></th>';
@@ -150,6 +144,22 @@ function bindSecBar(){
     };
   }
 }
+/* 요일별 할 일 아이콘 줄 — 시간표 칼럼 위에 정렬 (가볍게, 카드 없이) */
+function wkTodoRowHtml(){
+  var dd=wdd[wks[ci]]||{},t=today();
+  var IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 6l1.2 1.2L7.5 4.9M4 11.5l1.2 1.2 2.3-2.3M4 17l1.2 1.2 2.3-2.3"/></svg>';
+  var any=false,h='<div class="wk-todos"><span class="wk-todos-sp"></span>';
+  for(var i=0;i<DAYS.length;i++){
+    var d=DAYS[i],dt=dd[d]||'';
+    if(!dt){h+='<span class="wk-td off"></span>';continue;}
+    any=true;
+    var n=0;try{n=dtodoLoad(dt).length;}catch(e){}
+    h+='<button class="wk-td'+(dt===t?' today':'')+'" data-date="'+dt+'" data-day="'+d+'" title="'+d+'요일 할 일">'
+      +'<span class="wk-td-ic'+(n?' has':'')+'">'+(n?n:IC)+'</span></button>';
+  }
+  h+='</div>';
+  return any?h:'';
+}
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
   /* 시간표 없음(신규 학교·학년) → 개인 업로드 안내 */
@@ -169,16 +179,16 @@ function renderW(){
   }
   document.getElementById('main').innerHTML=
     secBarHtml()
+    +wkTodoRowHtml()
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
   bindSecBar();
-  var tb=document.getElementById('tht-todo');
-  if(tb)tb.onclick=function(e){
-    e.stopPropagation();
-    var ds=today(),p=ds.split('-');
-    var WKN=['일','월','화','수','목','금','토'];
-    openDtodo(ds,parseInt(p[1])+'월 '+parseInt(p[2])+'일 ('+WKN[new Date(+p[0],+p[1]-1,+p[2]).getDay()]+')');
-  };
+  document.querySelectorAll('.wk-td[data-date]').forEach(function(b){
+    b.onclick=function(){
+      var ds=this.getAttribute('data-date'),d=this.getAttribute('data-day'),p=ds.split('-');
+      openDtodo(ds,parseInt(p[1])+'월 '+parseInt(p[2])+'일 ('+d+')');
+    };
+  });
   for(var i=0;i<DAYS.length;i++){
     var d=DAYS[i];
     if(dd[d]===t){
