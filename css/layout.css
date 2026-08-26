@@ -59,11 +59,6 @@
   border-radius:50%;background:#34D399;border:1.5px solid var(--header-bg)}
 #push-btn.on .push-dot{display:block}
 
-/* 하단 네비 — iOS 블러 (미지원 시 불투명 유지) */
-@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
-  .bnav{background:color-mix(in srgb,var(--surface) 94%,transparent);
-    -webkit-backdrop-filter:saturate(180%) blur(16px);backdrop-filter:saturate(180%) blur(16px)}
-}
 
 /* 헤더 좌측 학년 타이틀 (토스식 볼드) */
 .ht2{font-size:var(--font-xl);font-weight:var(--weight-heavy);color:var(--text-strong);letter-spacing:-0.02em;white-space:nowrap}

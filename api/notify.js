@@ -34,7 +34,7 @@ module.exports = async (req, res) => {
   for (const uid of Object.keys(subs)) {
     const rec = subs[uid];
     if (!rec || !rec.sub) continue;
-    const gk = GRADE_KEY[rec.grade] || rec.grade;
+    const gk = rec.key || GRADE_KEY[rec.grade] || rec.grade; /* 신규 구독은 학교 포함 키 저장 */
     if (!gk) continue;
     if (!(gk in ttCache)) {
       ttCache[gk] = await fetch(`${DB}/timetable/${gk}.json`).then(r => r.json()).catch(() => null);
@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
     if (!tt || !tt.items) continue;
 
     let items = tt.items.filter(i => i.date === today);
-    if (rec.sec) items = items.filter(i => i.subject !== SECTION_SUBJECT || i.day === rec.sec);
+    if (rec.sec && gk === 'premed2') items = items.filter(i => i.subject !== SECTION_SUBJECT || i.day === rec.sec);
     const classes = items.filter(i => !HOLIDAY_KW.some(k => (i.subject || '').includes(k)));
     if (!classes.length) { results.push({ uid, skip: 'no-classes' }); continue; }
 

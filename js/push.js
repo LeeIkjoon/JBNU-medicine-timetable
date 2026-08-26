@@ -37,7 +37,8 @@ function pushEnable(cb){
     }).then(function(sub){
       if(!fbDb)throw new Error('no-db');
       return fbDb.ref('push/'+syncUid()).set({
-        grade:savedGrade||'',sec:secSel()||'',sub:JSON.stringify(sub),ts:Date.now()
+        grade:savedGrade||'',school:savedSchool||'jbnu',key:fbGradeKey(savedGrade||''),
+        sec:secSel()||'',sub:JSON.stringify(sub),ts:Date.now()
       });
     }).then(function(){
       try{localStorage.setItem('push_on','1');}catch(e){}
@@ -65,7 +66,7 @@ function pushDisable(cb){
 /* 학년·분반 변경 시 구독 메타 갱신 */
 function pushMetaUpdate(){
   if(!pushEnabled()||!fbDb)return;
-  fbDb.ref('push/'+syncUid()).update({grade:savedGrade||'',sec:secSel()||''}).catch(function(){});
+  fbDb.ref('push/'+syncUid()).update({grade:savedGrade||'',school:savedSchool||'jbnu',key:fbGradeKey(savedGrade||''),sec:secSel()||''}).catch(function(){});
 }
 
 /* ── 헤더 벨 버튼 ── */
