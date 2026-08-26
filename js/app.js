@@ -333,6 +333,7 @@ function init(){
       cards[j].onclick=function(){
         secSet(this.getAttribute('data-sec'));
         sc.style.display='none';
+        if(typeof pushMetaUpdate==='function')pushMetaUpdate();
         buildFromItems(merged,wdd,ed);
         render();
       };
@@ -349,6 +350,7 @@ function init(){
     localStorage.setItem('user_grade',grade);
     var gl=document.getElementById('grade-lbl');if(gl)gl.textContent=grade;
     hideGradeScreen();
+    if(typeof pushMetaUpdate==='function')pushMetaUpdate(); /* 알림 구독을 새 학교·학년으로 */
     if(secRule())showSectionScreen(); /* 분반 있는 학년은 이어서 분반 선택 */
 
     /* ── 학년별 시간표로 초기화 ── */
