@@ -56,25 +56,25 @@ function buildWeekTable(w,items){
       if(holidayByDay[d]){
         if(pn===1){
           var holSubj=holidayByDay[d];
-          html+='<td class="td-c" data-day="'+d+'">';
+          html+='<td class="td-c" data-day="'+d+'" data-p="'+pn+'">';
           html+='<div style="height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;">';
           html+='<div style="font-size:15px">🗓</div>';
           html+='<div style="font-size:9px;font-weight:600;color:#9CA3AF;text-align:center;word-break:keep-all;line-height:1.3">'+holSubj+'</div>';
           html+='</div></td>';
         }else{
-          html+='<td class="td-c" data-day="'+d+'"></td>';
+          html+='<td class="td-c" data-day="'+d+'" data-p="'+pn+'"></td>';
         }
         return;
       }
 
       var it=grid[pn]&&grid[pn][d];
       if(!it){
-        html+='<td class="td-c" data-day="'+d+'"></td>';
+        html+='<td class="td-c" data-day="'+d+'" data-p="'+pn+'"></td>';
         return;
       }
       var bg=gcol(it.subject);
       var itIsExam=(it.is_exam===true||it.is_exam==='true');
-      html+='<td class="td-c" data-day="'+d+'">';
+      html+='<td class="td-c" data-day="'+d+'" data-p="'+pn+'">';
       html+='<div class="card" style="background:'+bg+';'+(itIsExam?'box-shadow:inset 0 0 0 2.5px #EF4444;':'')+'">';
       if(itIsExam){
         html+='<div class="cn-s cn-exam">'+it.subject+'</div>';
@@ -160,6 +160,38 @@ function wkTodoRowHtml(){
   h+='</div>';
   return any?h:'';
 }
+/* 수업 상세 시트 — 셀 탭 시 원본 정보 전체 표시 */
+function openClassInfo(dt,day,period){
+  var pool=secFilter(merged);
+  var list=pool.filter(function(i){return i.date===dt&&i.period===period;});
+  if(!list.length)return;
+  var it=list[0];
+  if(isHoliday(it.subject))return;
+  /* 같은 수업의 연속 교시 범위 */
+  var same=pool.filter(function(i){
+    return i.date===dt&&i.subject===it.subject
+      &&(i.topic||'')===(it.topic||'')&&(i.professor||'')===(it.professor||'');
+  }).map(function(i){return i.period;});
+  var ps=it.period,pe=it.period;
+  while(same.indexOf(ps-1)>=0)ps--;
+  while(same.indexOf(pe+1)>=0)pe++;
+  var perTxt=(ps===pe?ps+'교시':ps+'~'+pe+'교시');
+  var st=PERIOD_START[ps]||it.start,en=PERIOD_END[pe]||it.end;
+  var p=dt.split('-');
+  var isExam=(it.is_exam===true||it.is_exam==='true')||isEx(it.subject);
+  var h='<div class="cls-date">'+parseInt(p[1])+'월 '+parseInt(p[2])+'일 ('+day+') · '+perTxt+' · '+st+'~'+en+'</div>';
+  h+='<div class="cls-subj"><span class="cls-dot" style="background:'+gcol(it.subject)+'"></span>'
+    +escHtml(it.subject)+(isExam?'<span class="cls-exam">시험</span>':'')+'</div>';
+  if(it.topic)h+='<div class="cls-row"><span class="cls-lbl">주제</span><span class="cls-val">'+escHtml(it.topic)+'</span></div>';
+  if(it.professor)h+='<div class="cls-row"><span class="cls-lbl">교수</span><span class="cls-val">'+escHtml(it.professor)+'</span></div>';
+  if(it.room)h+='<div class="cls-row"><span class="cls-lbl">강의실</span><span class="cls-val">'+escHtml(it.room)+'</span></div>';
+  document.getElementById('cls-body').innerHTML=h;
+  document.getElementById('cls-ovl').className='cls-ovl show';
+}
+function closeClassInfo(){
+  var o=document.getElementById('cls-ovl');
+  if(o)o.className='cls-ovl';
+}
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
   /* 시간표 없음(신규 학교·학년) → 개인 업로드 안내 */
@@ -183,6 +215,17 @@ function renderW(){
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
   bindSecBar();
+  /* 셀 탭 → 수업 상세 */
+  var ddNow=wdd[wks[ci]]||{};
+  document.querySelectorAll('.sw .td-c[data-p]').forEach(function(td){
+    td.onclick=function(){
+      var d=this.getAttribute('data-day'),pn=parseInt(this.getAttribute('data-p'),10);
+      var dt=ddNow[d];
+      if(!dt)return;
+      if(isAdmin&&typeof admInlineEdit==='function'){admInlineEdit(dt,d,pn);return;}
+      openClassInfo(dt,d,pn);
+    };
+  });
   document.querySelectorAll('.wk-td[data-date]').forEach(function(b){
     b.onclick=function(){
       var ds=this.getAttribute('data-date'),d=this.getAttribute('data-day'),p=ds.split('-');

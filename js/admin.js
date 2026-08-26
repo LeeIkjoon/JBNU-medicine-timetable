@@ -44,6 +44,30 @@ function closeAdminPanel(){
 function escAdm(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 /* ── 모달 열기/닫기 ── */
+/* 편집 반영: 관리자 패널이 열려 있으면 패널 갱신, 아니면(주간 인라인) 화면 재빌드 */
+function admAfterEdit(){
+  var panel=document.getElementById('admin-panel');
+  if(panel&&panel.classList.contains('show')){renderAdminBody();return;}
+  if(_workingMerged){
+    buildFromItems(JSON.parse(JSON.stringify(_workingMerged)),wdd,ed);
+    _subjColorMap=null;
+  }
+  render();
+}
+/* 주간 뷰 셀 탭 → 해당 수업 편집 (없으면 새 수업 추가) */
+function admInlineEdit(date,day,period){
+  var src=admSrc();
+  for(var i=0;i<src.length;i++){
+    if(src[i].date===date&&src[i].period===period){admOpenModal(i);return;}
+  }
+  var wk=null;
+  for(var w in wdd){if(wdd[w]&&wdd[w][day]===date){wk=w;break;}}
+  src.push({week:wk||wks[ci]||'1',date:date,day:day,period:period,
+    start:PERIOD_START[period]||'8:30',end:PERIOD_END[period]||'9:20',
+    subject:getUniqueSubjects()[0]||'새 수업',professor:'',is_exam:false});
+  admEditIdx=src.length-1;
+  renderAdminEditModal();
+}
 function admOpenModal(ri){
   var src=admSrc();
   if(ri<0||ri>=src.length) return;
@@ -308,7 +332,7 @@ function renderAdminEditModal(){
     /* is_exam은 체크박스에서 이미 실시간 반영됨 - 별도 처리 불필요 */
     _subjColorMap=null;
     admCloseModal();
-    renderAdminBody();
+    admAfterEdit();
   };
 
   /* ── 삭제 버튼 ── */
@@ -339,7 +363,7 @@ function renderAdminEditModal(){
       /* 삭제 */
       var src=admSrc();
       if(capturedRi>=0&&capturedRi<src.length) src.splice(capturedRi,1);
-      renderAdminBody();
+      admAfterEdit();
     };
   };
 }
@@ -543,7 +567,16 @@ function doLogin(){
     pw.value=''; pw.focus();
   }
 }
-function doLogout(){ isAdmin=false; _workingMerged=null; closeAdminPanel(); }
+function doLogout(){
+  isAdmin=false;_workingMerged=null;closeAdminPanel();
+  /* 미배포 편집 롤백: 마지막 배포본(localStorage) 복원 */
+  try{
+    var s0=JSON.parse(localStorage.getItem(ttKey())||'null');
+    if(s0&&s0.items&&s0.items.length)buildFromItems(s0.items,s0.wdd||wdd,s0.ed||ed);
+  }catch(e){}
+  _subjColorMap=null;
+  render();
+}
 
 /* ── 배포 ── */
 function publishTT(){

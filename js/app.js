@@ -166,6 +166,12 @@ function init(){
   document.getElementById('theme-btn').onclick=cycleTheme;updThemeBtn();
   document.getElementById('cal-btn').onclick=function(){openCal();};
   document.getElementById('cal-x').onclick=function(){closeCal();};
+  var clsO=document.getElementById('cls-ovl');
+  if(clsO){
+    clsO.onclick=function(e){if(e.target===clsO)closeClassInfo();};
+    var cx=document.getElementById('cls-x');
+    if(cx)cx.onclick=closeClassInfo;
+  }
   document.getElementById('ovl').onclick=function(e){if(e.target===document.getElementById('ovl'))closeCal();};
   document.getElementById('cal-p').onclick=function(){cm2--;if(cm2<0){cm2=11;cy--;}renderCal();};
   document.getElementById('cal-n').onclick=function(){cm2++;if(cm2>11){cm2=0;cy++;}renderCal();};
