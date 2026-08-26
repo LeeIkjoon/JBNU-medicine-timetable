@@ -290,3 +290,22 @@
   display:flex;align-items:center;justify-content:center;z-index:2;
   -webkit-tap-highlight-color:transparent;transition:transform var(--duration-fast) var(--ease)}
 .sheet-x:active{transform:scale(.88)}
+
+/* ── 내 편집 목록 ── */
+.ov-bar{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:var(--radius-lg);
+  padding:8px 12px;margin-bottom:var(--space-2);box-shadow:var(--shadow-xs)}
+.ov-bar-lbl{flex:1;font-size:var(--font-sm);font-weight:var(--weight-semi);color:var(--text-muted)}
+.ov-bar-btn{border:none;background:var(--surface-muted);border-radius:var(--radius-pill);
+  padding:6px 12px;font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-secondary);
+  cursor:pointer;font-family:inherit}
+.ovm-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--border-faint)}
+.ovm-tag{flex:none;font-size:var(--font-2xs);font-weight:var(--weight-bold);border-radius:6px;padding:2px 7px}
+.ovm-tag.mod{background:var(--tint-accent);color:var(--accent)}
+.ovm-tag.add{background:#DCFCE7;color:#15803D}
+.ovm-tag.del{background:var(--danger-bg);color:var(--danger-strong)}
+.ovm-txt{flex:1;min-width:0;font-size:var(--font-md);color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ovm-undo{flex:none;border:none;background:var(--surface-muted);border-radius:var(--radius-pill);
+  padding:5px 10px;font-size:var(--font-sm);font-weight:var(--weight-semi);color:var(--text-secondary);
+  cursor:pointer;font-family:inherit}
+.edit-row2{display:flex;gap:8px;align-items:center}
+.edit-row2 select{flex:1}

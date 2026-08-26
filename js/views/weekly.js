@@ -231,7 +231,19 @@ var _editCtx=null;
 function openClassEdit(dt,day,period,base){
   _editCtx={dt:dt,day:day,period:period};
   var p=dt.split('-');
-  document.getElementById('edit-when').textContent=parseInt(p[1])+'월 '+parseInt(p[2])+'일 ('+day+') · '+period+'교시';
+  document.getElementById('edit-when').textContent=parseInt(p[1])+'월 '+parseInt(p[2])+'일 ('+day+')';
+  /* 과목·교수 자동완성 (현재 시간표 기준) */
+  var pool=viewItems(merged),subjSet={},profSet={};
+  pool.forEach(function(i){
+    if(i.subject&&!isEv(i.subject)&&!isHoliday(i.subject))subjSet[i.subject]=1;
+    if(i.professor)i.professor.split(/[,，]/).forEach(function(x){x=x.trim();if(x)profSet[x]=1;});
+  });
+  document.getElementById('edit-subj-list').innerHTML=Object.keys(subjSet).sort().map(function(x){return '<option value="'+escHtml(x)+'">';}).join('');
+  document.getElementById('edit-prof-list').innerHTML=Object.keys(profSet).sort().map(function(x){return '<option value="'+escHtml(x)+'">';}).join('');
+  /* 교시 선택 (이동 가능) */
+  var ps=document.getElementById('edit-period'),ph='';
+  for(var pi=1;pi<=10;pi++)ph+='<option value="'+pi+'"'+(pi===period?' selected':'')+'>'+pi+'교시 · '+PERIOD_START[pi]+'~'+PERIOD_END[pi]+'</option>';
+  ps.innerHTML=ph;
   document.getElementById('edit-subj').value=base?base.subject:'';
   document.getElementById('edit-topic').value=(base&&base.topic)||'';
   document.getElementById('edit-prof').value=(base&&base.professor)||'';
@@ -249,20 +261,75 @@ function saveClassEdit(){
   if(!_editCtx)return;
   var subj=document.getElementById('edit-subj').value.trim();
   if(!subj)return;
-  var c=_editCtx,k=c.dt+'|'+c.period;
+  var c=_editCtx;
+  var newPeriod=parseInt(document.getElementById('edit-period').value,10)||c.period;
   var wk=null;for(var w in wdd){if(wdd[w]&&wdd[w][c.day]===c.dt){wk=w;break;}}
-  var item={week:wk||wks[ci]||'1',date:c.dt,day:c.day,period:c.period,
-    start:PERIOD_START[c.period]||'',end:PERIOD_END[c.period]||'',
+  var item={week:wk||wks[ci]||'1',date:c.dt,day:c.day,period:newPeriod,
+    start:PERIOD_START[newPeriod]||'',end:PERIOD_END[newPeriod]||'',
     subject:subj,professor:document.getElementById('edit-prof').value.trim(),
     is_exam:document.getElementById('edit-exam-chk').checked};
   var tp=document.getElementById('edit-topic').value.trim();
   if(tp)item.topic=tp;
   var o=ovLoad();
-  delete o.del[k];
-  o.add=o.add.filter(function(a){return ovSlot(a)!==k;});
-  if(secFilter(merged).some(function(i){return i.date===c.dt&&i.period===c.period;}))o.mod[k]=item;
+  /* 원래 슬롯 정리 (교시 이동 시 원 슬롯은 삭제 처리) */
+  var k0=c.dt+'|'+c.period;
+  delete o.del[k0];delete o.mod[k0];
+  o.add=o.add.filter(function(a){return ovSlot(a)!==k0;});
+  if(newPeriod!==c.period&&secFilter(merged).some(function(i){return i.date===c.dt&&i.period===c.period;}))o.del[k0]=1;
+  /* 대상 슬롯에 배치 */
+  var k1=c.dt+'|'+newPeriod;
+  delete o.del[k1];
+  o.add=o.add.filter(function(a){return ovSlot(a)!==k1;});
+  if(secFilter(merged).some(function(i){return i.date===c.dt&&i.period===newPeriod;}))o.mod[k1]=item;
   else o.add.push(item);
   ovSave(o);closeClassEdit();ovRefresh();
+}
+/* ── 내 편집 목록 (오버라이드 관리) ── */
+function ovBarHtml(){
+  if(typeof isAdmin!=='undefined'&&isAdmin)return'';
+  var o=ovLoad();
+  var n=Object.keys(o.mod).length+Object.keys(o.del).length+o.add.length;
+  if(!n)return'';
+  return '<div class="ov-bar"><span class="ov-bar-lbl">내가 수정한 수업 '+n+'개</span>'
+    +'<button class="ov-bar-btn" id="ov-manage">관리</button></div>';
+}
+function openOvManage(){
+  var o=ovLoad(),rows=[];
+  Object.keys(o.mod).forEach(function(k){rows.push({k:k,t:'수정',it:o.mod[k]});});
+  o.add.forEach(function(it){rows.push({k:ovSlot(it),t:'추가',it:it});});
+  Object.keys(o.del).forEach(function(k){
+    var p=k.split('|');
+    var org=merged.filter(function(i){return i.date===p[0]&&i.period===parseInt(p[1],10);})[0];
+    rows.push({k:k,t:'삭제',it:org||{date:p[0],period:p[1],subject:'(원본 수업)'}});
+  });
+  rows.sort(function(a,b){return a.k<b.k?-1:1;});
+  var h='<div class="cls-date">내가 수정한 수업</div>';
+  rows.forEach(function(r){
+    var p=r.k.split('-');
+    var d=r.it.date?r.it.date.slice(5).replace('-','/'):'';
+    h+='<div class="ovm-row">'
+      +'<span class="ovm-tag '+(r.t==='삭제'?'del':r.t==='추가'?'add':'mod')+'">'+r.t+'</span>'
+      +'<span class="ovm-txt">'+d+' '+r.it.period+'교시 · '+escHtml(r.it.subject||'')+'</span>'
+      +'<button class="ovm-undo" data-k="'+r.k+'">되돌리기</button>'
+      +'</div>';
+  });
+  h+='<button class="cls-act danger" id="ovm-reset-all" style="width:100%;margin-top:12px">전체 되돌리기</button>';
+  document.getElementById('cls-body').innerHTML=h;
+  var ovl=document.getElementById('cls-ovl');
+  ovl.className='cls-ovl show';
+  ovl.onclick=function(e){if(e.target===ovl)closeClassInfo();};
+  var cx=document.getElementById('cls-x');
+  if(cx)cx.onclick=function(e){e.stopPropagation();closeClassInfo();};
+  document.querySelectorAll('.ovm-undo').forEach(function(b){
+    b.onclick=function(){
+      var k=this.getAttribute('data-k'),o2=ovLoad();
+      delete o2.mod[k];delete o2.del[k];
+      o2.add=o2.add.filter(function(a){return ovSlot(a)!==k;});
+      ovSave(o2);closeClassInfo();ovRefresh();
+    };
+  });
+  var ra=document.getElementById('ovm-reset-all');
+  if(ra)ra.onclick=function(){ovSave({mod:{},del:{},add:[]});closeClassInfo();ovRefresh();};
 }
 function closeClassInfo(){
   var o=document.getElementById('cls-ovl');
@@ -288,10 +355,13 @@ function renderW(){
   document.getElementById('main').innerHTML=
     (typeof admBarHtml==='function'?admBarHtml():'')
     +secBarHtml()
+    +ovBarHtml()
     +wkTodoRowHtml()
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
   bindSecBar();
+  var om=document.getElementById('ov-manage');
+  if(om)om.onclick=openOvManage;
   /* 셀 탭 → 수업 상세 */
   var ddNow=wdd[wks[ci]]||{};
   document.querySelectorAll('.sw .td-c[data-p]').forEach(function(td){

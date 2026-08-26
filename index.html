@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="css/base.css?v=20260820f">
 <link rel="stylesheet" href="css/layout.css?v=20260826j">
 <link rel="stylesheet" href="css/timetable.css?v=20260827c">
-<link rel="stylesheet" href="css/components.css?v=20260827e">
+<link rel="stylesheet" href="css/components.css?v=20260827f">
 <link rel="stylesheet" href="css/views.css?v=20260825a">
 
 <!-- Firebase SDK -->
@@ -140,7 +140,7 @@
 <script src="js/parsers/xlsx.js?v=20260820a"></script>
 <script src="js/parsers/pdf.js?v=20260826e"></script>
 <script src="js/upload.js?v=20260826e"></script>
-<script src="js/views/weekly.js?v=20260827e"></script>
+<script src="js/views/weekly.js?v=20260827f"></script>
 <script src="js/views/filter.js?v=20260827d"></script>
 <script src="js/views/calendar.js?v=20260820a"></script>
 <script src="js/views/planner.js?v=20260820a"></script>
@@ -179,10 +179,15 @@
     <button class="sheet-x" id="edit-x">✕</button>
     <div class="cls-date" id="edit-when"></div>
     <div class="edit-fields">
-      <input class="memo-input" id="edit-subj" placeholder="과목명" maxlength="40">
+      <input class="memo-input" id="edit-subj" placeholder="과목명" maxlength="40" list="edit-subj-list">
+      <datalist id="edit-subj-list"></datalist>
       <input class="memo-input" id="edit-topic" placeholder="내용·주제 (선택)" maxlength="80">
-      <input class="memo-input" id="edit-prof" placeholder="교수 (선택)" maxlength="30">
-      <label class="edit-exam"><input type="checkbox" id="edit-exam-chk"> 시험</label>
+      <input class="memo-input" id="edit-prof" placeholder="교수 (선택)" maxlength="30" list="edit-prof-list">
+      <datalist id="edit-prof-list"></datalist>
+      <div class="edit-row2">
+        <select class="memo-input" id="edit-period"></select>
+        <label class="edit-exam"><input type="checkbox" id="edit-exam-chk"> 시험</label>
+      </div>
     </div>
     <div class="edit-btns">
       <button class="edit-save" id="edit-save">저장</button>
