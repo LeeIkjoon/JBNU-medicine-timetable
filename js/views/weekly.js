@@ -147,7 +147,7 @@ function bindSecBar(){
 /* 요일별 할 일 아이콘 줄 — 시간표 칼럼 위에 정렬 (가볍게, 카드 없이) */
 function wkTodoRowHtml(){
   var dd=wdd[wks[ci]]||{},t=today();
-  var IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.5h10M10 12h10M10 17.5h10"/><path d="M4 6l1.2 1.2L7.5 4.9M4 11.5l1.2 1.2 2.3-2.3M4 17l1.2 1.2 2.3-2.3"/></svg>';
+  var IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><path d="M8 12.3l2.6 2.6 5.4-5.6"/></svg>';
   var any=false,h='<div class="wk-todos"><span class="wk-todos-sp"></span>';
   for(var i=0;i<DAYS.length;i++){
     var d=DAYS[i],dt=dd[d]||'';
