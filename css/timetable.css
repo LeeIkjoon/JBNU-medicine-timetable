@@ -141,3 +141,15 @@
 .wk-td-ic.has{background:var(--accent);color:#fff;font-size:10px;font-weight:800;padding:0 6px}
 .wk-td.today .wk-td-ic{background:var(--tint-accent);color:var(--accent)}
 .wk-td.today .wk-td-ic.has{background:var(--accent);color:#fff}
+
+/* ── 관리자 모드 바 ── */
+.adm-bar{display:flex;align-items:center;gap:6px;background:var(--surface);
+  border-radius:var(--radius-lg);padding:8px 12px;margin-bottom:var(--space-2);
+  box-shadow:inset 0 0 0 1.5px var(--warning-2),var(--shadow-xs)}
+.adm-bar-lbl{flex:1;font-size:var(--font-sm);font-weight:var(--weight-semi);color:var(--warning-text)}
+.adm-bar-lbl b{color:var(--danger-strong)}
+.adm-bar-btn{border:none;background:var(--surface-muted);border-radius:var(--radius-pill);
+  padding:6px 12px;font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-secondary);
+  cursor:pointer;font-family:inherit;transition:transform var(--duration-fast) var(--ease)}
+.adm-bar-btn:active{transform:scale(.94)}
+.adm-bar-btn.pub{background:var(--accent);color:#fff}

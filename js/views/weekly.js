@@ -210,7 +210,8 @@ function renderW(){
     return;
   }
   document.getElementById('main').innerHTML=
-    secBarHtml()
+    (typeof admBarHtml==='function'?admBarHtml():'')
+    +secBarHtml()
     +wkTodoRowHtml()
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';

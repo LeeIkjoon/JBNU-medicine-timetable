@@ -23,6 +23,16 @@ function admProfOptsHtml(subj,cur){
 }
 
 /* ── FAB / 패널 ── */
+/* 일반 화면 관리자 모드 바 (주간 뷰 상단) */
+function admBarHtml(){
+  if(!isAdmin)return'';
+  return '<div class="adm-bar">'
+    +'<span class="adm-bar-lbl">관리자 모드'+(admDirty?' · <b>미배포 변경</b>':'')+'</span>'
+    +'<button class="adm-bar-btn" onclick="admOpenUpload()">업로드</button>'
+    +'<button class="adm-bar-btn pub" onclick="publishTT()">배포</button>'
+    +'<button class="adm-bar-btn" onclick="doLogout()">종료</button>'
+    +'</div>';
+}
 function updateAdminFab(){
   var fab=document.getElementById('admin-fab');
   if(fab) fab.style.display=(wks&&wks.length>0)?'flex':'none';
@@ -45,7 +55,9 @@ function escAdm(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').re
 
 /* ── 모달 열기/닫기 ── */
 /* 편집 반영: 관리자 패널이 열려 있으면 패널 갱신, 아니면(주간 인라인) 화면 재빌드 */
+var admDirty=false;
 function admAfterEdit(){
+  admDirty=true;
   var panel=document.getElementById('admin-panel');
   if(panel&&panel.classList.contains('show')){renderAdminBody();return;}
   if(_workingMerged){
@@ -560,15 +572,20 @@ function doLogin(){
   if(!correctPw){if(err)err.textContent='이 학년은 아직 공유 관리자가 지정되지 않았어요';return;}
   if(pw.value===correctPw){
     isAdmin=true;
+    admDirty=false;
     _workingMerged=JSON.parse(JSON.stringify(merged));
-    renderAdminBody();
+    closeAdminPanel();
+    setView('weekly');
+    var t0=document.getElementById('update-toast');
+    if(t0){t0.textContent='관리자 모드 — 시간표 셀을 눌러 수정하세요';t0.className='update-toast show';
+      setTimeout(function(){t0.className='update-toast';},2800);}
   } else {
     if(err) err.textContent='비밀번호가 틀렸습니다';
     pw.value=''; pw.focus();
   }
 }
 function doLogout(){
-  isAdmin=false;_workingMerged=null;closeAdminPanel();
+  isAdmin=false;_workingMerged=null;admDirty=false;closeAdminPanel();
   /* 미배포 편집 롤백: 마지막 배포본(localStorage) 복원 */
   try{
     var s0=JSON.parse(localStorage.getItem(ttKey())||'null');
