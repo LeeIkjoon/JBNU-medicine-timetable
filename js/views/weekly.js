@@ -196,7 +196,11 @@ function openClassInfo(dt,day,period){
       +'</div>';
   }
   document.getElementById('cls-body').innerHTML=h;
-  document.getElementById('cls-ovl').className='cls-ovl show';
+  var ovl=document.getElementById('cls-ovl');
+  ovl.className='cls-ovl show';
+  ovl.onclick=function(e){if(e.target===ovl)closeClassInfo();};
+  var cx=document.getElementById('cls-x');
+  if(cx)cx.onclick=function(e){e.stopPropagation();closeClassInfo();};
   var eb=document.getElementById('cls-edit');
   if(eb)eb.onclick=function(){closeClassInfo();openClassEdit(dt,day,period,it);};
   var db=document.getElementById('cls-del');
@@ -232,7 +236,13 @@ function openClassEdit(dt,day,period,base){
   document.getElementById('edit-topic').value=(base&&base.topic)||'';
   document.getElementById('edit-prof').value=(base&&base.professor)||'';
   document.getElementById('edit-exam-chk').checked=!!(base&&(base.is_exam===true||base.is_exam==='true'));
-  document.getElementById('edit-ovl').className='cls-ovl show';
+  var eo=document.getElementById('edit-ovl');
+  eo.className='cls-ovl show';
+  eo.onclick=function(e){if(e.target===eo)closeClassEdit();};
+  var ex=document.getElementById('edit-x');
+  if(ex)ex.onclick=function(e){e.stopPropagation();closeClassEdit();};
+  var es=document.getElementById('edit-save');
+  if(es)es.onclick=saveClassEdit;
 }
 function closeClassEdit(){document.getElementById('edit-ovl').className='cls-ovl';}
 function saveClassEdit(){

@@ -33,9 +33,10 @@ function admBarHtml(){
     +'<button class="adm-bar-btn" onclick="doLogout()">종료</button>'
     +'</div>';
 }
+function admEntryOn(){try{return localStorage.getItem('adm_entry')==='1';}catch(e){return false;}}
 function updateAdminFab(){
   var fab=document.getElementById('admin-fab');
-  if(fab) fab.style.display=(wks&&wks.length>0)?'flex':'none';
+  if(fab) fab.style.display=(admEntryOn()&&wks&&wks.length>0)?'flex':'none';
 }
 function openAdminPanel(){
   var panel=document.getElementById('admin-panel');

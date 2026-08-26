@@ -164,6 +164,28 @@ function init(){
   document.getElementById('bn-w').onclick=function(){goTodayWeek();setView('weekly');};
   document.getElementById('bn-f').onclick=function(){setView('filter');};
   document.getElementById('theme-btn').onclick=cycleTheme;updThemeBtn();
+  /* 관리자 진입 제스처: 좌상단 학년명 7연타 (2.5초 내) */
+  (function(){
+    var lbl=document.getElementById('grade-lbl');
+    if(!lbl)return;
+    var taps=0,timer=null;
+    lbl.addEventListener('click',function(){
+      taps++;
+      if(timer)clearTimeout(timer);
+      timer=setTimeout(function(){taps=0;},2500);
+      if(taps>=7){
+        taps=0;
+        var on=localStorage.getItem('adm_entry')==='1';
+        try{localStorage.setItem('adm_entry',on?'0':'1');}catch(e){}
+        if(on&&isAdmin)doLogout();
+        updateAdminFab();
+        var t=document.getElementById('update-toast');
+        if(t){t.textContent=on?'관리자 진입 숨김':'관리자 진입 표시 — 연필 버튼을 누르세요';
+          t.className='update-toast show';
+          setTimeout(function(){t.className='update-toast';},2500);}
+      }
+    });
+  })();
   document.getElementById('cal-btn').onclick=function(){openCal();};
   document.getElementById('cal-x').onclick=function(){closeCal();};
   var clsO=document.getElementById('cls-ovl');

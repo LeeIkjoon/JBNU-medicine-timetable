@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="css/base.css?v=20260820f">
 <link rel="stylesheet" href="css/layout.css?v=20260826j">
 <link rel="stylesheet" href="css/timetable.css?v=20260827c">
-<link rel="stylesheet" href="css/components.css?v=20260827d">
+<link rel="stylesheet" href="css/components.css?v=20260827e">
 <link rel="stylesheet" href="css/views.css?v=20260825a">
 
 <!-- Firebase SDK -->
@@ -140,17 +140,17 @@
 <script src="js/parsers/xlsx.js?v=20260820a"></script>
 <script src="js/parsers/pdf.js?v=20260826e"></script>
 <script src="js/upload.js?v=20260826e"></script>
-<script src="js/views/weekly.js?v=20260827d"></script>
+<script src="js/views/weekly.js?v=20260827e"></script>
 <script src="js/views/filter.js?v=20260827d"></script>
 <script src="js/views/calendar.js?v=20260820a"></script>
 <script src="js/views/planner.js?v=20260820a"></script>
 <script src="js/views/timer.js?v=20260820d"></script>
 <script src="js/views/dashboard.js?v=20260827d"></script>
 <script src="js/views/dtodo.js?v=20260826i"></script>
-<script src="js/admin.js?v=20260827c"></script>
+<script src="js/admin.js?v=20260827e"></script>
 <script src="js/sync.js?v=20260827d"></script>
 <script src="js/push.js?v=20260826b"></script>
-<script src="js/app.js?v=20260827d"></script>
+<script src="js/app.js?v=20260827e"></script>
 
 <!-- 관리자 FAB -->
 <button class="admin-fab" id="admin-fab" title="관리자 모드"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2 2 0 0 0-2.8-2.8L5 17.2z"/><path d="M13.5 6.7l3.8 3.8"/></svg></button>
@@ -168,7 +168,7 @@
 <!-- 수업 상세 시트 -->
 <div class="cls-ovl" id="cls-ovl">
   <div class="cls-sh" id="cls-sh">
-    <button class="dtodo-close" id="cls-x">✕</button>
+    <button class="sheet-x" id="cls-x">✕</button>
     <div id="cls-body"></div>
   </div>
 </div>
@@ -176,7 +176,7 @@
 <!-- 개인 수업 편집 시트 -->
 <div class="cls-ovl" id="edit-ovl">
   <div class="cls-sh" id="edit-sh">
-    <button class="dtodo-close" id="edit-x">✕</button>
+    <button class="sheet-x" id="edit-x">✕</button>
     <div class="cls-date" id="edit-when"></div>
     <div class="edit-fields">
       <input class="memo-input" id="edit-subj" placeholder="과목명" maxlength="40">
