@@ -226,7 +226,7 @@ function init(){
   }catch(e){}
   /* 타 학교 사용자: 전북대 레거시 번들 데이터가 보이지 않게 초기화 */
   if((savedSchool||'jbnu')!=='jbnu'&&!(savedTimetable&&savedTimetable.items&&savedTimetable.items.length)){
-    merged=[];wks=[];wdd={};ed=[];wh={};wl={};
+    merged=[];wks=[];wdd={};ed=[];wh={};wl={};fsubj=[];fsubj2=[];
   }
 
   var GS_IC='<span class="gs-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#3182F6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.3C10.4 5 8 4.5 5 4.7v12c3-.2 5.4.3 7 1.6 1.6-1.3 4-1.8 7-1.6v-12c-3-.2-5.4.3-7 1.6z"/><path d="M12 6.3v12"/></svg></span>';
