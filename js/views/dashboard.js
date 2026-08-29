@@ -339,6 +339,27 @@ function renderDashboard(){
   }
   h+='</div></div>';
 
+  /* 학습 히트맵 — 최근 12주 */
+  var hm=dashHeatmap(12);
+  h+='<div class="dash-card">';
+  h+='<div class="dash-card-ttl">학습 기록<span class="ttl-caption">최근 12주</span></div>';
+  h+='<div class="dash-hm">';
+  hm.forEach(function(c){
+    h+='<span class="hm-c l'+(c.level<0?'f':c.level)+(c.isToday?' today':'')+'"></span>';
+  });
+  h+='</div>';
+  h+='<div class="dash-hm-legend"><span>적음</span>'
+    +'<span class="hm-c l1"></span><span class="hm-c l2"></span><span class="hm-c l3"></span><span class="hm-c l4"></span>'
+    +'<span>많음</span></div>';
+  h+='</div>';
+
+  /* 쌓아온 기록 */
+  h+='<div class="dash-stat-grid" style="grid-template-columns:1fr 1fr 1fr">';
+  h+='<div class="dash-stat"><div class="dash-stat-n" style="font-size:var(--font-lg)">'+tmFmtShort(dashTotalAll()*1000)+'</div><div class="dash-stat-l">총 누적</div></div>';
+  h+='<div class="dash-stat"><div class="dash-stat-n" style="font-size:var(--font-lg)">'+tmFmtShort(dashMonthTotal()*1000)+'</div><div class="dash-stat-l">이번 달</div></div>';
+  h+='<div class="dash-stat"><div class="dash-stat-n" style="font-size:var(--font-lg)">'+best+'일</div><div class="dash-stat-l">최고 연속</div></div>';
+  h+='</div>';
+
   /* 백업 */
   h+=syncCardHtml();
 
