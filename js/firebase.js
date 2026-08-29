@@ -32,6 +32,7 @@ function fbRef(grade){
 /* Firebase 데이터를 받아서 시간표에 적용 */
 function applyFirebaseData(data){
   if(!data||!data.items||!data.items.length) return;
+  if(typeof ttLocalOn==='function'&&ttLocalOn())return; /* 내 파일 사용 중 — 동기화 일시 중지 */
   /* Firebase가 항상 최신 - 로컬 캐시와 비교 없이 바로 적용 */
   var prevTs=0;
   try{ prevTs=(JSON.parse(localStorage.getItem(ttKey())||'{}').ts)||0; }catch(e){}

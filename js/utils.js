@@ -70,6 +70,11 @@ function secFilter(items){
   return items.filter(function(it){return it.subject!==r.subject||it.day===sel;});
 }
 
+/* ── 내 파일 모드: 사용자가 직접 올린 파일 사용 중 (실시간 동기화 일시 중지) ── */
+function ttLocalKey(){return 'tt_local_'+(savedSchool||'jbnu')+'_'+(savedGrade||'');}
+function ttLocalOn(){try{return localStorage.getItem(ttLocalKey())==='1';}catch(e){return false;}}
+function ttLocalSet(v){try{v?localStorage.setItem(ttLocalKey(),'1'):localStorage.removeItem(ttLocalKey());}catch(e){}}
+
 /* ── 개인 시간표 편집 (로컬 오버라이드 — 본인 기기에만 적용) ── */
 function ovKey(){return 'tt_ov_'+(savedSchool||'jbnu')+'_'+(savedGrade||'');}
 function ovLoad(){

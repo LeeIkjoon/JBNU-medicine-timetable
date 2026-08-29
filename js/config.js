@@ -59,6 +59,27 @@ function adminPwFor(school,grade){
 var SHARED_KEY='shared_timetable_v2';
 var NOTIF_KEY='shared_notif_v2';
 
+/* 기본 교시(전북대·계명대·원광대 공통). 학교별 상이 시 SCHOOLS[key].periods로 정의:
+   {times:{1:['8:30','9:20'],...}, lunchAfter:4} — applySchoolPeriods()가 아래 전역을 덮어씀 */
+var DEFAULT_PERIODS={
+  times:{1:['8:30','9:20'],2:['9:30','10:20'],3:['10:30','11:20'],4:['11:30','12:20'],
+    5:['13:30','14:20'],6:['14:30','15:20'],7:['15:30','16:20'],8:['16:30','17:20'],
+    9:['17:30','18:20'],10:['18:30','19:20']},
+  lunchAfter:4,lunchLabel:'점심시간  12:20 ~ 13:30'
+};
+var SCHOOL_LUNCH_AFTER=4,SCHOOL_LUNCH_LABEL=DEFAULT_PERIODS.lunchLabel;
+function applySchoolPeriods(){
+  var sc=(typeof SCHOOLS!=='undefined')&&SCHOOLS[savedSchool||'jbnu'];
+  var conf=(sc&&sc.periods)||DEFAULT_PERIODS;
+  PERIOD_START={};PERIOD_END={};PERIOD_INFO={};
+  Object.keys(conf.times).forEach(function(k){
+    PERIOD_START[k]=conf.times[k][0];
+    PERIOD_END[k]=conf.times[k][1];
+    PERIOD_INFO[k]={label:k+'교시',time:conf.times[k][0]+'~'+conf.times[k][1]};
+  });
+  SCHOOL_LUNCH_AFTER=(conf.lunchAfter!=null)?conf.lunchAfter:4;
+  SCHOOL_LUNCH_LABEL=conf.lunchLabel||DEFAULT_PERIODS.lunchLabel;
+}
 var PERIOD_INFO={
   1:{label:'1교시',time:'08:30~09:20'},2:{label:'2교시',time:'09:30~10:20'},
   3:{label:'3교시',time:'10:30~11:20'},4:{label:'4교시',time:'11:30~12:20'},

@@ -1,12 +1,11 @@
 function buildWeekTable(w,items){
   items=viewItems(items); /* 분반 + 개인 편집 반영 */
   var dd=wdd[w]||{};
-  var PERIODS=[
-    {n:1,t:'8:30'},{n:2,t:'9:30'},{n:3,t:'10:30'},{n:4,t:'11:30'},
-    {n:5,t:'13:30'},{n:6,t:'14:30'},{n:7,t:'15:30'},{n:8,t:'16:30'},
-    {n:9,t:'17:30'},{n:10,t:'18:30'}
-  ];
-  var HOUR_TO_PERIOD={'8':1,'9':2,'10':3,'11':4,'13':5,'14':6,'15':7,'16':8,'17':9,'18':10};
+  /* 학교 교시 설정 기반 그리드 축 */
+  var PERIODS=Object.keys(PERIOD_START).map(Number).sort(function(a,b){return a-b;})
+    .map(function(n){return {n:n,t:PERIOD_START[n]};});
+  var HOUR_TO_PERIOD={};
+  PERIODS.forEach(function(pp){HOUR_TO_PERIOD[String(parseInt(pp.t.split(':')[0],10))]=pp.n;});
 
   /* period -> day -> item 맵 (각 교시·요일별 수업) */
   var grid={};
@@ -15,8 +14,11 @@ function buildWeekTable(w,items){
   for(var i=0;i<items.length;i++){
     var it=items[i];
     if(!it.day||DAYS.indexOf(it.day)<0)continue;
-    var h=parseInt((it.start||'8:30').split(':')[0]);
-    var sp=HOUR_TO_PERIOD[String(h)]||1;
+    var sp=parseInt(it.period,10);
+    if(!sp||!PERIOD_START[sp]){
+      var h=parseInt((it.start||'8:30').split(':')[0]);
+      sp=HOUR_TO_PERIOD[String(h)]||1;
+    }
     /* 같은 교시에 여러 항목이면 마지막 우선 (실제론 교시당 1개) */
     if(!grid[sp])grid[sp]={};
     grid[sp][it.day]=it;
@@ -43,10 +45,10 @@ function buildWeekTable(w,items){
     var pn=PERIODS[pi].n;
     var pt=PERIODS[pi].t;
 
-    /* 점심 행 */
-    if(pn===5){
+    /* 점심 행 (학교 설정 위치) */
+    if(SCHOOL_LUNCH_AFTER&&pn===SCHOOL_LUNCH_AFTER+1){
       html+='<tr class="lunchrow"><td class="td-t"><span style="font-size:12px">🍱</span></td>';
-      html+='<td colspan="5" class="td-lunch">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr>';
+      html+='<td colspan="5" class="td-lunch">'+SCHOOL_LUNCH_LABEL+'</td></tr>';
     }
 
     html+='<tr><td class="td-t"><span class="pn">'+pn+'</span><span class="pt">'+pt+'</span></td>';
@@ -335,6 +337,16 @@ function closeClassInfo(){
   var o=document.getElementById('cls-ovl');
   if(o)o.className='cls-ovl';
 }
+/* 시간표 출처 표시·전환 (범례 아래) */
+function ttSrcHtml(){
+  if(typeof isAdmin!=='undefined'&&isAdmin)return'';
+  if(ttLocalOn()){
+    return '<div class="tt-src"><span class="tt-src-lbl">내가 올린 파일 사용 중 · 실시간 업데이트 꺼짐</span>'
+      +'<button class="tt-src-btn" id="tt-resync">동기화 복원</button>'
+      +'<button class="tt-src-btn" id="tt-upload">다시 업로드</button></div>';
+  }
+  return '<div class="tt-src"><button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button></div>';
+}
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
   /* 시간표 없음(신규 학교·학년) → 개인 업로드 안내 */
@@ -358,8 +370,17 @@ function renderW(){
     +ovBarHtml()
     +wkTodoRowHtml()
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
-    +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>';
+    +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>'
+    +ttSrcHtml();
   bindSecBar();
+  var up=document.getElementById('tt-upload');
+  if(up)up.onclick=function(){openXL();};
+  var rs=document.getElementById('tt-resync');
+  if(rs)rs.onclick=function(){
+    ttLocalSet(false);
+    try{localStorage.removeItem(ttKey());}catch(e){}
+    loadFromFirebase();
+  };
   var om=document.getElementById('ov-manage');
   if(om)om.onclick=openOvManage;
   /* 셀 탭 → 수업 상세 */

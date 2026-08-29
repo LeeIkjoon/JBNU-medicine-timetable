@@ -238,6 +238,7 @@ function init(){
       _subjColorMap=null;
       /* 학교·학년별 키로 저장 (개인 업로드 영속화) */
       try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:nWdd||wdd,ed:nEd||ed,grade:savedGrade,ts:Date.now()}));}catch(e){}
+      if(!isAdmin)ttLocalSet(true); /* 내 파일 모드 — 공유 동기화 일시 중지 */
       goTodayWeek();
       closeXL();
       if(isAdmin) renderAdminBody();
@@ -253,6 +254,7 @@ function init(){
     savedSchool='jbnu';
     try{localStorage.setItem('user_school','jbnu');}catch(e){}
   }
+  applySchoolPeriods();
   var savedTimetable=null;
   /* 저장된 학년이 있으면 해당 학년의 시간표 키로 로드 */
   try{
@@ -350,6 +352,7 @@ function init(){
     localStorage.setItem('user_grade',grade);
     var gl=document.getElementById('grade-lbl');if(gl)gl.textContent=grade;
     hideGradeScreen();
+    applySchoolPeriods(); /* 학교별 교시 시각 반영 */
     if(typeof pushMetaUpdate==='function')pushMetaUpdate(); /* 알림 구독을 새 학교·학년으로 */
     if(secRule())showSectionScreen(); /* 분반 있는 학년은 이어서 분반 선택 */
 

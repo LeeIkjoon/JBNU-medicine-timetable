@@ -153,3 +153,11 @@
   cursor:pointer;font-family:inherit;transition:transform var(--duration-fast) var(--ease)}
 .adm-bar-btn:active{transform:scale(.94)}
 .adm-bar-btn.pub{background:var(--accent);color:#fff}
+
+/* ── 시간표 출처 표시·전환 ── */
+.tt-src{display:flex;align-items:center;gap:6px;justify-content:center;margin:10px 0 4px;flex-wrap:wrap}
+.tt-src-lbl{font-size:var(--font-2xs);color:var(--warning-text);font-weight:var(--weight-semi)}
+.tt-src-btn{border:none;background:var(--surface);border-radius:var(--radius-pill);
+  padding:6px 12px;font-size:var(--font-2xs);font-weight:var(--weight-bold);color:var(--text-secondary);
+  cursor:pointer;font-family:inherit;box-shadow:var(--shadow-xs)}
+.tt-src-btn.ghost{background:none;box-shadow:none;color:var(--text-fade);text-decoration:underline;text-underline-offset:3px}
