@@ -21,7 +21,7 @@ function byDateH(items){
   var todayStr=today();
   var WK=['일','월','화','수','목','금','토'];
   var h='<table class="xl-table"><thead><tr>'+
-    '<th>교시</th><th></th><th>과목</th><th>교수</th><th>시간</th>'+
+    '<th>시간</th><th></th><th>과목</th><th>교수</th>'+
   '</tr></thead><tbody>';
   for(var di=0;di<dates.length;di++){
     var dt=dates[di],d=new Date(dt),grp=bd[dt];
@@ -30,7 +30,7 @@ function byDateH(items){
     var lbl=m+'/'+day+' ('+dow+')';
     var hx=false;for(var gi=0;gi<grp.length;gi++)if(isEx(grp[gi].subject)){hx=true;break;}
     var todayCls=isToday?' today':'';
-    h+='<tr class="xl-date-row'+todayCls+'"><td colspan="5">'+lbl+
+    h+='<tr class="xl-date-row'+todayCls+'"><td colspan="4">'+lbl+
       (isToday?'<span class="xl-today-badge">오늘</span>':'')+
       (hx?'<span class="exam-flag">시험</span>':'')+
     '</td></tr>';
@@ -57,14 +57,11 @@ function byDateH(items){
       var isE=isEx(it2.subject);
       var lb=isE?exLabel(it2.subject):null;
       var subjTxt=isE?(lb?lb[0]:it2.subject):it2.subject;
-      var perTxt=it2.period===it2.endPeriod?it2.period+'교시':it2.period+'~'+it2.endPeriod+'교시';
-      var timeTxt=it2.start+'~'+it2.end;
       h+='<tr class="xl-row'+(isE?' exam-row':'')+'">'+
-        '<td class="xl-period">'+perTxt+'</td>'+
+        '<td class="xl-tm"><b>'+it2.start+'</b><span>'+it2.end+'</span></td>'+
         '<td class="xl-dot" style="background:'+c+'"></td>'+
         '<td class="xl-subj'+(isE?' exam':'')+'">'+subjTxt+'</td>'+
         '<td class="xl-prof">'+(it2.professor||'')+'</td>'+
-        '<td class="xl-time">'+timeTxt+'</td>'+
       '</tr>';
     }
   }
@@ -96,11 +93,13 @@ function hoursData(){
     var p=(it.professor||'').trim()||'미정';
     if(!subj[s])subj[s]={total:0,prof:{},rep:it.subject}; /* rep: 색상용 원본 과목명 */
     subj[s].total++;
-    subj[s].prof[p]=(subj[s].prof[p]||0)+1;
+    var pr=subj[s].prof[p]||(subj[s].prof[p]={n:0,last:''});
+    pr.n++;
+    if(it.date>pr.last)pr.last=it.date; /* 마지막 수업일 → 시험 시점 가늠 */
   }
   return Object.keys(subj).map(function(s){
     var profs=Object.keys(subj[s].prof).map(function(p){
-      return {name:p,hours:subj[s].prof[p]};
+      return {name:p,hours:subj[s].prof[p].n,last:subj[s].prof[p].last};
     }).sort(function(a,b){return b.hours-a.hours||a.name.localeCompare(b.name,'ko');});
     return {subject:s,rep:subj[s].rep,total:subj[s].total,profs:profs};
   }).sort(function(a,b){return b.total-a.total||a.subject.localeCompare(b.subject,'ko');});
@@ -112,7 +111,7 @@ function renderHours(){
   if(!data.length){
     h+='<div class="no-res">수업 데이터가 없습니다</div>';
   }else{
-    h+='<div class="hrs-note">1교시 = 1시간 · 시험·행사 제외 · 시험 배점은 교수님별 시수에 비례</div>';
+    h+='<div class="hrs-note">1교시 = 1시간 · 시험·행사 제외 · 배점은 교수님별 시수에 비례 · ~날짜는 그 교수님의 마지막 수업</div>';
     for(var i=0;i<data.length;i++){
       var d=data[i],c=gcol(cmap[d.subject]?d.subject:d.rep),open=!!fHoursOpen[d.subject];
       h+='<div class="hrs-card">';
@@ -127,8 +126,10 @@ function renderHours(){
         for(var j=0;j<d.profs.length;j++){
           var pr=d.profs[j];
           var pct=d.total>0?Math.round(pr.hours/d.total*100):0;
+          var lastTxt=pr.last?('~'+parseInt(pr.last.slice(5,7),10)+'/'+parseInt(pr.last.slice(8,10),10)):'';
           h+='<div class="hrs-row">';
-          h+='<div class="hrs-row-top"><span class="hrs-prof">'+escHtml(pr.name)+'</span>'
+          h+='<div class="hrs-row-top"><span class="hrs-prof">'+escHtml(pr.name)
+            +(lastTxt?'<span class="hrs-last">'+lastTxt+'</span>':'')+'</span>'
             +'<span class="hrs-meta">'+pr.hours+'시간 · '+pct+'%</span></div>';
           h+='<div class="hrs-track"><div class="hrs-bar" style="width:'+pct+'%;background:'+c+'"></div></div>';
           h+='</div>';

@@ -444,3 +444,12 @@
   font-size:var(--font-2xs);color:var(--text-fade)}
 .dash-hm-legend .hm-c{width:10px;min-width:10px;flex:none}
 .ttl-caption{font-size:var(--font-2xs);font-weight:var(--weight-regular);color:var(--text-soft);margin-left:6px}
+
+/* 시수: 교수별 마지막 수업 */
+.hrs-last{margin-left:6px;font-size:var(--font-2xs);font-weight:var(--weight-semi);color:var(--text-fade)}
+
+/* 목록: 시간 열 (시작 굵게 / 종료 아래 작게) */
+.xl-tm{width:46px;min-width:46px;text-align:center;line-height:1.25;
+  border-right:1px solid var(--border-faint);font-variant-numeric:tabular-nums}
+.xl-tm b{display:block;font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text)}
+.xl-tm span{display:block;font-size:var(--font-2xs);color:var(--text-fade)}
