@@ -37,12 +37,14 @@ function updThemeBtn(){
   var t=getTheme();
   var sun='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.3M12 19.2v2.3M4.4 4.4l1.6 1.6M18 18l1.6 1.6M2.5 12h2.3M19.2 12h2.3M4.4 19.6l1.6-1.6M18 6l1.6-1.6"/></svg>';
   var moon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.3A8 8 0 1 1 9.7 4a6.4 6.4 0 0 0 10.3 10.3z"/></svg>';
-  var auto='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M12 3.6a8.4 8.4 0 0 1 0 16.8z" fill="currentColor" stroke="none"/></svg>';
-  b.innerHTML=t==='dark'?moon:t==='light'?sun:auto;
+  var effDark=t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+  b.innerHTML=effDark?moon:sun;
 }
 function cycleTheme(){
-  var t=getTheme(); /* null(시스템) → 라이트 → 다크 → 시스템 */
-  applyTheme(t==='light'?'dark':t==='dark'?null:'light');
+  /* 현재 실제 표시 테마 기준으로 즉시 반전 (한 번 탭 = 바로 전환) */
+  var t=getTheme();
+  var effDark=t==='dark'||(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+  applyTheme(effDark?'light':'dark');
 }
 /* 뷰 진입 애니메이션 — 잠깐 .anim을 켜서 새로 그려지는 요소만 등장 모션 */
 var _animT=null;

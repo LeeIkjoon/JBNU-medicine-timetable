@@ -1,0 +1,14 @@
+name: morning-notify
+on:
+  schedule:
+    - cron: '30 21,22,23 * * *'   # KST 06:30 07:30 08:30
+    - cron: '30 0,1 * * *'        # KST 09:30 10:30
+  workflow_dispatch:
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call notify endpoint
+        run: |
+          curl -sf -H "Authorization: Bearer ${{ secrets.NOTIFY_SECRET }}" \
+            "https://sehyunlee.vercel.app/api/notify" | head -c 300

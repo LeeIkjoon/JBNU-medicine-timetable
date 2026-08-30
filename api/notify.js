@@ -25,6 +25,7 @@ module.exports = async (req, res) => {
 
   const kst = new Date(Date.now() + 9 * 3600 * 1000);
   const today = kst.toISOString().slice(0, 10);
+  const kstHour = kst.getUTCHours(); /* 현재 KST 시각 — 구독자의 선택 시간과 매칭 */
 
   const subs = (await fetch(`${DB}/push.json`).then(r => r.json())) || {};
   if (subs.error) return res.status(500).json({ error: 'db: ' + subs.error });
@@ -34,6 +35,7 @@ module.exports = async (req, res) => {
   for (const uid of Object.keys(subs)) {
     const rec = subs[uid];
     if (!rec || !rec.sub) continue;
+    if ((rec.hour || 7) !== kstHour && !(req.query && req.query.dry === '1')) continue; /* 선택 시간대만 */
     const gk = rec.key || GRADE_KEY[rec.grade] || rec.grade; /* 신규 구독은 학교 포함 키 저장 */
     if (!gk) continue;
     if (!(gk in ttCache)) {
