@@ -406,6 +406,8 @@ function renderW(){
     if(eb)eb.onclick=function(){openXL();};
     return;
   }
+  var wnavEl=document.getElementById('wnav');
+  if(wnavEl&&vw==='weekly')wnavEl.style.display='flex'; /* 빈 상태에서 숨긴 것 복원 */
   document.getElementById('main').innerHTML=
     (typeof admBarHtml==='function'?admBarHtml():'')
     +secBarHtml()

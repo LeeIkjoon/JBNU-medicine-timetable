@@ -26,17 +26,31 @@ function renderCal(){
   }
 
   var edSet={};for(var ei=0;ei<ed.length;ei++)edSet[ed[ei]]=true;
+  /* 공휴일·행사: merged에서 날짜→이름 */
+  var holMap={};
+  for(var hi2=0;hi2<merged.length;hi2++){
+    var hitm=merged[hi2];
+    if(hitm.subject&&(isHoliday(hitm.subject)||isEv(hitm.subject))&&!holMap[hitm.date]){
+      holMap[hitm.date]=hitm.subject;
+    }
+  }
   var first=new Date(cy,cm2,1),last=new Date(cy,cm2+1,0),g='';
   for(var i=0;i<first.getDay();i++)g+='<div class="cday"></div>';
   for(var day=1;day<=last.getDate();day++){
     var ds=cy+'-'+p2(cm2+1)+'-'+p2(day);
-    var dow=new Date(cy,cm2,day).getDay(),isWD=dow>=1&&dow<=5;
-    var hx=!!edSet[ds],it2=ds===t,iw=cv.indexOf(ds)>=0&&isWD;
+    var dow=new Date(cy,cm2,day).getDay();
+    var hx=!!edSet[ds],it2=ds===t,hol=holMap[ds];
     var ck=!!dateToWeek[ds];
-    var cls='cday'+(ck?' ck':'')+(it2?' td2':'')+(iw&&!it2?' iw':'');
-    var dot=hx?'<div class="cdot"><span class="dtr"></span></div>':'<div class="cdot"></div>';
+    var inCurWeek=cv.indexOf(ds)>=0;
+    var cls='cday'+(ck?' ck':'')+(it2?' td2':'')
+      +(dow===0||hol?' red':'')+(dow===6&&!hol?' blue':'')
+      +(inCurWeek&&!it2?' cur':'');
+    var sub='';
+    if(hx)sub='<div class="cdot"><span class="dtr"></span></div>';
+    else if(hol)sub='<div class="cdot"><span class="chol">'+escHtml(hol.slice(0,4))+'</span></div>';
+    else sub='<div class="cdot"></div>';
     var oc=ck?' id="cd-'+ds+'"':'';
-    g+='<div class="'+cls+'"'+oc+'><div class="cdn">'+day+'</div>'+dot+'</div>';
+    g+='<div class="'+cls+'"'+oc+'><div class="cdn">'+day+'</div>'+sub+'</div>';
   }
   document.getElementById('cal-g').innerHTML=g;
   var ckEls=document.querySelectorAll('.cday.ck');

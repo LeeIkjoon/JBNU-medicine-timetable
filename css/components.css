@@ -17,21 +17,29 @@
   font-size:16px;cursor:pointer;color:var(--text-secondary);display:flex;align-items:center;justify-content:center;
   transition:transform var(--duration-fast) var(--ease)}
 .cal-nb:active{transform:scale(.88)}
-.cal-g{display:grid;grid-template-columns:repeat(7,1fr);padding:0 var(--space-2) var(--space-3);gap:2px 0}
+.cal-g{display:grid;grid-template-columns:repeat(7,1fr);padding:0 var(--space-3) var(--space-4);gap:2px 0}
 .cal-dow{text-align:center;font-size:var(--font-xs);font-weight:var(--weight-semi);color:var(--text-soft);padding:6px 0 var(--space-2)}
-.cday{text-align:center;padding:3px 1px;cursor:default;-webkit-tap-highlight-color:transparent}
+.cal-dow:first-child{color:#F04452}
+.cal-dow:last-child{color:#3182F6}
+.cday{text-align:center;padding:2px 1px 4px;cursor:default;-webkit-tap-highlight-color:transparent;min-height:46px}
 .cday.ck{cursor:pointer}
-.cday.ck .cdn{transition:transform var(--duration-fast) var(--ease),background var(--duration-fast)}
-.cday.ck:active .cdn{transform:scale(.85);background:var(--tint-accent)}
-.cdn{font-size:var(--font-base);font-weight:var(--weight-regular);line-height:1;
+.cdn{font-size:var(--font-base);font-weight:var(--weight-medium);line-height:1;
   display:flex;align-items:center;justify-content:center;
-  width:32px;height:32px;border-radius:50%;margin:0 auto;
-  box-sizing:border-box;}
-.cday.ck .cdn{font-weight:var(--weight-medium)}
-.cday.iw .cdn{background:var(--tint-accent);color:var(--accent);font-weight:var(--weight-bold);border-radius:0!important;width:100%!important;height:32px!important}
-.cday.td2 .cdn{background:var(--accent)!important;color:var(--text-onbrand)!important;border-radius:50%!important;font-weight:var(--weight-bold)!important}
-.cdot{height:6px;display:flex;justify-content:center;align-items:center;margin-top:2px}
+  width:34px;height:34px;border-radius:50%;margin:0 auto;
+  color:var(--text-fade);box-sizing:border-box;
+  transition:transform var(--duration-fast) var(--ease),background var(--duration-fast)}
+.cday.ck .cdn{color:var(--text);font-weight:var(--weight-semi)}
+.cday.red .cdn{color:#F04452}
+.cday.blue .cdn{color:#3182F6}
+.cday.red:not(.ck) .cdn{color:rgba(240,68,82,0.45)}
+.cday.blue:not(.ck) .cdn{color:rgba(49,130,246,0.4)}
+.cday.cur .cdn{background:var(--tint-accent)}
+.cday.ck:active .cdn{transform:scale(.85)}
+.cday.td2 .cdn{background:var(--accent)!important;color:#fff!important;font-weight:var(--weight-bold)!important}
+.cdot{height:12px;display:flex;justify-content:center;align-items:center;margin-top:1px}
 .dtr{width:5px;height:5px;border-radius:50%;background:var(--danger-strong);display:inline-block}
+.chol{font-size:8px;font-weight:var(--weight-semi);color:#F04452;line-height:1;
+  max-width:100%;overflow:hidden;white-space:nowrap}
 
 /* ── EXCEL UPLOAD OVERLAY ── */
 .xl-ovl{position:fixed;inset:0;background:var(--overlay);z-index:900;
