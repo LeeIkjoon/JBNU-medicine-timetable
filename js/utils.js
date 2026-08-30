@@ -75,6 +75,58 @@ function ttLocalKey(){return 'tt_local_'+(savedSchool||'jbnu')+'_'+(savedGrade||
 function ttLocalOn(){try{return localStorage.getItem(ttLocalKey())==='1';}catch(e){return false;}}
 function ttLocalSet(v){try{v?localStorage.setItem(ttLocalKey(),'1'):localStorage.removeItem(ttLocalKey());}catch(e){}}
 
+/* ── 전공선택(선택과목) — 시간이 겹치는 과목 그룹에서 수강 과목 선택 ── */
+function elKey(){return 'elective_'+(savedSchool||'jbnu')+'_'+(savedGrade||'');}
+function elLoad(){
+  try{var o=JSON.parse(localStorage.getItem(elKey())||'null');if(o&&o.chosen)return o;}catch(e){}
+  return {chosen:{}};
+}
+function elSave(o){try{localStorage.setItem(elKey(),JSON.stringify(o));}catch(e){}}
+/* 같은 교시대에 공존하는 과목들 → 선택 그룹 (연결 요소로 병합) */
+function electiveGroups(){
+  var src=secFilter(merged),slot={};
+  for(var i=0;i<src.length;i++){
+    var it=src[i],s=it.subject;
+    if(!s||isEv(s)||isHoliday(s)||isEx(s)||it.is_exam===true||it.is_exam==='true')continue;
+    var k=it.date+'|'+it.period;
+    (slot[k]=slot[k]||{})[s]=1;
+  }
+  var adj={};
+  Object.keys(slot).forEach(function(k){
+    var subs=Object.keys(slot[k]);
+    if(subs.length<2)return;
+    subs.forEach(function(a){
+      adj[a]=adj[a]||{};
+      subs.forEach(function(b){if(a!==b)adj[a][b]=1;});
+    });
+  });
+  var seen={},groups=[];
+  Object.keys(adj).forEach(function(a){
+    if(seen[a])return;
+    var stack=[a],grp=[];
+    while(stack.length){
+      var x=stack.pop();
+      if(seen[x])continue;
+      seen[x]=1;grp.push(x);
+      Object.keys(adj[x]||{}).forEach(function(y){if(!seen[y])stack.push(y);});
+    }
+    if(grp.length>1)groups.push(grp.sort());
+  });
+  return groups;
+}
+function electiveFilter(items){
+  var groups=electiveGroups();
+  if(!groups.length)return items;
+  var chosen=elLoad().chosen;
+  if(!Object.keys(chosen).length)return items; /* 미선택 → 전체 표시 */
+  var inGroup={};
+  groups.forEach(function(g){g.forEach(function(s){inGroup[s]=1;});});
+  return items.filter(function(it){
+    if(!inGroup[it.subject])return true;
+    return !!chosen[it.subject];
+  });
+}
+
 /* ── 개인 시간표 편집 (로컬 오버라이드 — 본인 기기에만 적용) ── */
 function ovKey(){return 'tt_ov_'+(savedSchool||'jbnu')+'_'+(savedGrade||'');}
 function ovLoad(){
@@ -102,7 +154,7 @@ function ovApply(items){
 function viewItems(items){
   var f=secFilter(items);
   if(typeof isAdmin!=='undefined'&&isAdmin)return f;
-  return ovApply(f);
+  return ovApply(electiveFilter(f));
 }
 
 /* null-safe HTML escape (원본의 두 escHtml 선언 중 살아 있던 버전) */

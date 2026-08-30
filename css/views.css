@@ -453,3 +453,10 @@
   border-right:1px solid var(--border-faint);font-variant-numeric:tabular-nums}
 .xl-tm b{display:block;font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text)}
 .xl-tm span{display:block;font-size:var(--font-2xs);color:var(--text-fade)}
+
+/* 시수 범위 세그먼트 */
+.hrs-range{display:flex;gap:4px;margin:0 0 10px}
+.hrs-range-btn{border:none;background:var(--surface);border-radius:var(--radius-pill);
+  padding:6px 12px;font-size:var(--font-sm);font-weight:var(--weight-semi);color:var(--text-soft);
+  cursor:pointer;font-family:inherit;box-shadow:var(--shadow-xs)}
+.hrs-range-btn.on{background:var(--accent);color:#fff}

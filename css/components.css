@@ -309,3 +309,11 @@
   cursor:pointer;font-family:inherit}
 .edit-row2{display:flex;gap:8px;align-items:center}
 .edit-row2 select{flex:1}
+
+/* ── 선택과목 시트 ── */
+.el-desc{font-size:var(--font-sm);color:var(--text-soft);line-height:1.5;margin-bottom:10px}
+.el-group{border-top:1px solid var(--border-faint);padding:6px 0}
+.el-item{display:flex;align-items:center;gap:10px;padding:8px 2px;cursor:pointer}
+.el-item input{width:18px;height:18px;accent-color:var(--accent);flex:none}
+.el-dot{width:10px;height:10px;border-radius:50%;flex:none}
+.el-name{flex:1;min-width:0;font-size:var(--font-md);font-weight:var(--weight-medium);color:var(--text);word-break:keep-all}

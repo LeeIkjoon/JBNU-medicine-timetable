@@ -337,6 +337,46 @@ function closeClassInfo(){
   var o=document.getElementById('cls-ovl');
   if(o)o.className='cls-ovl';
 }
+/* 전공선택 안내 바 + 선택 시트 */
+function elBarHtml(){
+  if(typeof isAdmin!=='undefined'&&isAdmin)return'';
+  var groups=electiveGroups();
+  if(!groups.length)return'';
+  var chosen=elLoad().chosen;
+  if(Object.keys(chosen).length)return'';
+  return '<div class="sec-bar need"><span class="sec-lbl">선택과목 고르기</span>'
+    +'<button class="sec-chip" id="el-open">선택</button></div>';
+}
+function openElective(){
+  var groups=electiveGroups(),chosen=elLoad().chosen;
+  var h='<div class="cls-date">선택과목</div>'
+    +'<div class="el-desc">시간이 겹치는 과목들이에요. 수강하는 과목만 체크하면 시간표에 그 과목만 표시됩니다.</div>';
+  groups.forEach(function(g,gi){
+    h+='<div class="el-group">';
+    g.forEach(function(sub){
+      var on=chosen[sub]||!Object.keys(chosen).length&&false;
+      h+='<label class="el-item"><input type="checkbox" class="el-chk" value="'+escHtml(sub)+'"'+(chosen[sub]?' checked':'')+'>'
+        +'<span class="el-dot" style="background:'+gcol(sub)+'"></span>'
+        +'<span class="el-name">'+escHtml(sub)+'</span></label>';
+    });
+    h+='</div>';
+  });
+  h+='<button class="edit-save" id="el-save" style="margin-top:12px">저장</button>';
+  h+='<div class="edit-note">전체 다시 보려면 모두 해제하고 저장</div>';
+  document.getElementById('cls-body').innerHTML=h;
+  var ovl=document.getElementById('cls-ovl');
+  ovl.className='cls-ovl show';
+  ovl.onclick=function(e){if(e.target===ovl)closeClassInfo();};
+  var cx=document.getElementById('cls-x');
+  if(cx)cx.onclick=function(e){e.stopPropagation();closeClassInfo();};
+  document.getElementById('el-save').onclick=function(){
+    var c={};
+    document.querySelectorAll('.el-chk').forEach(function(b){if(b.checked)c[b.value]=true;});
+    elSave({chosen:c});
+    closeClassInfo();ovRefresh();
+  };
+}
+
 /* 시간표 출처 표시·전환 (범례 아래) */
 function ttSrcHtml(){
   if(typeof isAdmin!=='undefined'&&isAdmin)return'';
@@ -345,7 +385,9 @@ function ttSrcHtml(){
       +'<button class="tt-src-btn" id="tt-resync">동기화 복원</button>'
       +'<button class="tt-src-btn" id="tt-upload">다시 업로드</button></div>';
   }
-  return '<div class="tt-src"><button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button></div>';
+  var el='';
+  if(electiveGroups().length)el='<button class="tt-src-btn ghost" id="el-manage">선택과목 설정</button>';
+  return '<div class="tt-src">'+el+'<button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button></div>';
 }
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
@@ -367,6 +409,7 @@ function renderW(){
   document.getElementById('main').innerHTML=
     (typeof admBarHtml==='function'?admBarHtml():'')
     +secBarHtml()
+    +elBarHtml()
     +ovBarHtml()
     +wkTodoRowHtml()
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
@@ -383,6 +426,10 @@ function renderW(){
   };
   var om=document.getElementById('ov-manage');
   if(om)om.onclick=openOvManage;
+  var eb2=document.getElementById('el-open');
+  if(eb2)eb2.onclick=openElective;
+  var em=document.getElementById('el-manage');
+  if(em)em.onclick=openElective;
   /* 셀 탭 → 수업 상세 */
   var ddNow=wdd[wks[ci]]||{};
   document.querySelectorAll('.sw .td-c[data-p]').forEach(function(td){

@@ -78,18 +78,43 @@ function renderL(){
 ══════════════════════════════════════════ */
 var fView='hours';      /* 'hours' | 'sched' — 시수가 기본 */
 var fCleared=false;     /* 전체 해제 상태 (빈 선택을 전체선택으로 되돌리지 않게) */
+var hrsRange='all';     /* 시수 범위: all | mid(중간까지) | fin(중간 이후) */
 var fHoursOpen={};      /* 과목명 → 펼침 여부 */
 
 function hoursData(){
   var subj={};
   var src=viewItems(merged);
+  /* 과목(베이스)별 중간고사 날짜 — 범위 분할 기준 */
+  function baseName(x){
+    return x.replace(/\s*\(([^)]*)\)\s*$/,function(m,inner){
+      return /^\d+$/.test(inner.trim())?m:'';
+    })||x;
+  }
+  var midDate={};
+  for(var mi2=0;mi2<src.length;mi2++){
+    var m2=src[mi2];
+    var txt=(m2.subject||'')+' '+(m2.topic||'');
+    if(/중간/.test(txt)&&/(고사|시험|평가)/.test(txt)){
+      var b2=baseName(m2.subject);
+      if(!midDate[b2]||m2.date<midDate[b2])midDate[b2]=m2.date;
+    }
+  }
   for(var i=0;i<src.length;i++){
     var it=src[i],s=it.subject;
     if(!s||isEv(s)||isHoliday(s))continue;
     if((it.is_exam===true||it.is_exam==='true')||isEx(s))continue;
-    /* 끝 괄호 분파 통합: '인체육안구조(일반해부)'+'(신경해부)' → '인체육안구조'
-       (배점은 과목 단위 시수 기준이므로 합산해서 표시) */
-    s=s.replace(/\s*\([^)]*\)\s*$/,'')||s;
+    /* 범위 필터: 그 과목에 중간고사가 있을 때만 분할 */
+    if(hrsRange!=='all'){
+      var bb=baseName(s),md=midDate[bb];
+      if(md){
+        if(hrsRange==='mid'&&it.date>=md)continue;
+        if(hrsRange==='fin'&&it.date<md)continue;
+      }
+    }
+    /* 끝 괄호 분파 통합 — 단 (1)(2)처럼 숫자 괄호는 별개 과목이므로 유지 */
+    s=s.replace(/\s*\(([^)]*)\)\s*$/,function(m,inner){
+      return /^\d+$/.test(inner.trim())?m:'';
+    })||s;
     var p=(it.professor||'').trim()||'미정';
     if(!subj[s])subj[s]={total:0,prof:{},rep:it.subject}; /* rep: 색상용 원본 과목명 */
     subj[s].total++;
@@ -112,6 +137,11 @@ function renderHours(){
     h+='<div class="no-res">수업 데이터가 없습니다</div>';
   }else{
     h+='<div class="hrs-note">1교시 = 1시간 · 시험·행사 제외 · 배점은 교수님별 시수에 비례 · ~날짜는 그 교수님의 마지막 수업</div>';
+    h+='<div class="hrs-range">'
+      +'<button class="hrs-range-btn'+(hrsRange==='all'?' on':'')+'" data-r="all">전체</button>'
+      +'<button class="hrs-range-btn'+(hrsRange==='mid'?' on':'')+'" data-r="mid">중간 범위</button>'
+      +'<button class="hrs-range-btn'+(hrsRange==='fin'?' on':'')+'" data-r="fin">기말 범위</button>'
+      +'</div>';
     for(var i=0;i<data.length;i++){
       var d=data[i],c=gcol(cmap[d.subject]?d.subject:d.rep),open=!!fHoursOpen[d.subject];
       h+='<div class="hrs-card">';
@@ -141,6 +171,9 @@ function renderHours(){
   }
   var el=document.getElementById('fres');if(!el)return;
   el.innerHTML=h;
+  el.querySelectorAll('.hrs-range-btn').forEach(function(b){
+    b.onclick=function(){hrsRange=this.getAttribute('data-r');renderF();};
+  });
   var heads=el.querySelectorAll('.hrs-head');
   for(var k=0;k<heads.length;k++){
     heads[k].onclick=function(){
