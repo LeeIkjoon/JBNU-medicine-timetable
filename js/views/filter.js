@@ -34,19 +34,30 @@ function byDateH(items){
       (isToday?'<span class="xl-today-badge">오늘</span>':'')+
       (hx?'<span class="exam-flag">시험</span>':'')+
     '</td></tr>';
-    grp.sort(function(a,b){return a.period-b.period;});
+    grp.sort(function(a,b){return a.period-b.period||(a.subject<b.subject?-1:1);});
 
-    /* 인접한 같은 과목+교수 묶기 */
+    /* 완전 중복 제거 (같은 교시·과목·교수·주제) */
+    var seen2={},uniq=[];
+    for(var ui=0;ui<grp.length;ui++){
+      var u=grp[ui];
+      var uk=u.period+'|'+u.subject+'|'+(u.professor||'')+'|'+(u.topic||'');
+      if(seen2[uk])continue;
+      seen2[uk]=1;uniq.push(u);
+    }
+    /* 인접 병합: 과목+교수+주제 동일 & 점심 경계 넘지 않을 때만 */
+    var lunchAfter=(typeof SCHOOL_LUNCH_AFTER!=='undefined')?SCHOOL_LUNCH_AFTER:4;
     var merged2=[];
-    for(var gi2=0;gi2<grp.length;gi2++){
-      var it=grp[gi2];
+    for(var gi2=0;gi2<uniq.length;gi2++){
+      var it=uniq[gi2];
       var last=merged2.length>0?merged2[merged2.length-1]:null;
       if(last && last.subject===it.subject && last.professor===it.professor
-         && it.period===last.endPeriod+1){
+         && (last.topic||'')===(it.topic||'')
+         && it.period===last.endPeriod+1
+         && !(lunchAfter&&last.endPeriod===lunchAfter)){
         last.endPeriod=it.period;
         last.end=it.end;
       } else {
-        merged2.push({subject:it.subject,professor:it.professor,
+        merged2.push({subject:it.subject,professor:it.professor,topic:it.topic,
           period:it.period,endPeriod:it.period,start:it.start,end:it.end});
       }
     }
@@ -60,7 +71,8 @@ function byDateH(items){
       h+='<tr class="xl-row'+(isE?' exam-row':'')+'">'+
         '<td class="xl-tm"><b>'+it2.start+'</b><span>'+it2.end+'</span></td>'+
         '<td class="xl-dot" style="background:'+c+'"></td>'+
-        '<td class="xl-subj'+(isE?' exam':'')+'">'+subjTxt+'</td>'+
+        '<td class="xl-subj'+(isE?' exam':'')+'">'+subjTxt
+          +(it2.topic?'<div class="xl-topic">'+escHtml(it2.topic)+'</div>':'')+'</td>'+
         '<td class="xl-prof">'+(it2.professor||'')+'</td>'+
       '</tr>';
     }
