@@ -474,35 +474,7 @@ function renderDashboard(){
   h+=dashExamCard('남은 시험',upcExams,{open:dashUpcOpen,toggleKey:'upc',past:false,empty:'예정된 시험이 없어요'});
   h+='</div>';
 
-  /* 주간 그래프 */
-  var weekData=[],now=new Date(),dow=now.getDay();
-  var WN3=['일','월','화','수','목','금','토'];
-  for(var wi=0;wi<7;wi++){
-    var dd2=new Date(now);dd2.setDate(now.getDate()-dow+wi);
-    var dk=dashYmd(dd2);
-    weekData.push({lbl:WN3[wi],secs:dashDayTotal(dk),isToday:wi===dow});
-  }
-  var maxW=Math.max.apply(null,weekData.map(function(d){return d.secs;}));
-  h+='<div class="dash-card">';
-  h+='<div class="dash-card-ttl">주간 공부량</div>';
-  h+='<div class="dash-week-bars">';
-  for(var wj=0;wj<weekData.length;wj++){
-    var wd=weekData[wj];
-    var barH=maxW>0?Math.round(wd.secs/maxW*64):0;
-    h+='<div class="dash-wbar-wrap">';
-    if(wd.secs>0)h+='<div class="dash-wbar-val">'+tmFmtShort(wd.secs*1000)+'</div>';
-    h+='<div class="dash-wbar-track"><div class="dash-wbar'+(wd.isToday?' today':'')+'" style="height:'+Math.max(barH,wd.secs>0?4:0)+'px"></div></div>';
-    h+='<span class="dash-wbar-lbl'+(wd.isToday?' today':'')+'">'+wd.lbl+'</span>';
-    h+='</div>';
-  }
-  h+='</div></div>';
 
-  /* 쌓아온 기록 */
-  h+='<div class="dash-stat-grid" style="grid-template-columns:1fr 1fr 1fr">';
-  h+='<div class="dash-stat"><div class="dash-stat-n" style="font-size:var(--font-lg)">'+tmFmtShort(dashTotalAll()*1000)+'</div><div class="dash-stat-l">총 누적</div></div>';
-  h+='<div class="dash-stat"><div class="dash-stat-n" style="font-size:var(--font-lg)">'+tmFmtShort(dashMonthTotal()*1000)+'</div><div class="dash-stat-l">이번 달</div></div>';
-  h+='<div class="dash-stat"><div class="dash-stat-n" style="font-size:var(--font-lg)">'+best+'일</div><div class="dash-stat-l">최고 연속</div></div>';
-  h+='</div>';
 
   /* 백업 */
   h+=syncCardHtml();
