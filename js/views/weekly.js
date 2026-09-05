@@ -1,6 +1,10 @@
 function buildWeekTable(w,items){
   items=viewItems(items); /* 분반 + 개인 편집 반영 */
   var dd=wdd[w]||{};
+  /* 개인 추가 항목은 전 주차 목록에 합류하므로 이 주의 날짜만 남김 */
+  var wkDates={};
+  Object.keys(dd).forEach(function(k){if(dd[k])wkDates[dd[k]]=1;});
+  items=items.filter(function(it){return it.date&&wkDates[it.date];});
   /* (과목|교수)별 마지막 수업 슬롯 — 전체 시간표 기준 */
   var lastMap={};
   var all=viewItems(merged);
@@ -117,7 +121,9 @@ function buildWeekTable(w,items){
 }
 
 function buildLegend(items){
+  var wk0=items.length?String(items[0].week):null;
   items=viewItems(items);
+  if(wk0!=null)items=items.filter(function(it){return String(it.week)===wk0;});
   var seen={};
   var html='';
   for(var i=0;i<items.length;i++){
