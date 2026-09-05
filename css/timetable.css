@@ -27,9 +27,9 @@
 .th-date{font-size:9px;font-weight:var(--weight-medium);color:var(--text-soft);display:block;margin-top:1px;font-variant-numeric:tabular-nums}
 
 /* 오늘 요일 강조 */
-.th-d.tc{background:var(--tint-accent);color:var(--accent);border-bottom:2px solid var(--accent)}
-.th-d.tc .th-date{color:var(--accent)}
-.td-c.tc{background:var(--tint-brand)}
+.th-d.tc{background:var(--surface);color:var(--text-strong);border-bottom:2.5px solid var(--text-strong)}
+.th-d.tc .th-date{color:var(--text-strong);font-weight:var(--weight-bold)}
+.td-c.tc{background:transparent}
 
 /* 일반 셀 - 빈 셀은 살짝 가라앉히고, 채워진 셀은 살짝 들어올림 */
 .td-c{

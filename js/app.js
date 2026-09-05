@@ -1,3 +1,13 @@
+/* 전역 에러 리포터 — 사용자에게 원인 문구를 보여줘 원격 진단 가능하게 */
+window.addEventListener('error',function(e){
+  try{
+    var t=document.getElementById('update-toast');
+    if(t){t.textContent='⚠️ 오류: '+String(e.message).slice(0,60);t.className='update-toast show';
+      setTimeout(function(){t.className='update-toast';},5000);}
+    localStorage.setItem('last_err',String(e.message)+' @'+String(e.filename).split('/').pop()+':'+e.lineno);
+  }catch(x){}
+});
+
 /* ══════════════════════════════════════════
    헤더 & 렌더
 ══════════════════════════════════════════ */

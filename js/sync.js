@@ -4,7 +4,7 @@
    - 복원: 다른 기기에서 코드 입력 → localStorage 덮어쓰기 → 리로드
 ══════════════════════════════════════════ */
 var SYNC_KEYS=['tm_logs','pl_todos','study_goal_min'];
-var SYNC_PREFIX=['dtodo_','tt_ov_'];
+var SYNC_PREFIX=['dtodo_','tt_ov_','plan_'];
 
 function syncUid(){
   var u=null;
@@ -71,3 +71,17 @@ function syncRestore(code,cb){
   }).catch(function(){cb('불러오기에 실패했습니다');});
 }
 
+
+/* ── 익명 사용 통계 핑 (학교·학년·최근 사용 시각만, 6시간 스로틀) ── */
+function presencePing(){
+  if(!fbDb||!savedGrade)return;
+  var last=0;
+  try{last=parseInt(localStorage.getItem('presence_ts')||'0',10);}catch(e){}
+  if(Date.now()-last<6*3600*1000)return;
+  fbDb.ref('study/presence/'+syncUid()).set({
+    school:savedSchool||'jbnu',grade:savedGrade,ts:Date.now()
+  }).then(function(){
+    try{localStorage.setItem('presence_ts',String(Date.now()));}catch(e){}
+  }).catch(function(){});
+}
+setTimeout(presencePing,3000);

@@ -238,6 +238,107 @@ function syncBind(){
   };
 }
 
+/* ── 오늘 플래너 (수험 플래너: 내용·목표·실제·시간대, 타이머 연동) ── */
+function planKey(d){return 'plan_'+(d||dashYmd(new Date()));}
+function planLoad(d){
+  try{var a=JSON.parse(localStorage.getItem(planKey(d))||'[]');if(Array.isArray(a))return a;}catch(e){}
+  return[];
+}
+function planSave(arr,d){try{localStorage.setItem(planKey(d),JSON.stringify(arr));}catch(e){}}
+function planAdd(text,goalMin){
+  var a=planLoad();
+  a.push({id:Date.now(),text:text,goal:goalMin,secs:0,sessions:[],done:false});
+  planSave(a);renderDashboard();
+}
+function planToggle(id){
+  var a=planLoad();
+  a.forEach(function(it){if(it.id===id)it.done=!it.done;});
+  planSave(a);renderDashboard();
+}
+function planDel(id){
+  planSave(planLoad().filter(function(it){return it.id!==id;}));
+  renderDashboard();
+}
+/* 타이머 종료 시 플래너 항목에 시간·세션 기록 (timer.js에서 호출) */
+function planRecord(planId,addSecs,startMs,endMs){
+  var a=planLoad(),hit=false;
+  function hm(ms){var d=new Date(ms);return p2(d.getHours())+':'+p2(d.getMinutes());}
+  a.forEach(function(it){
+    if(it.id===planId){
+      it.secs=(it.secs||0)+addSecs;
+      (it.sessions=it.sessions||[]).push(hm(startMs)+'~'+hm(endMs));
+      if(it.goal&&it.secs>=it.goal*60)it.done=true;
+      hit=true;
+    }
+  });
+  if(hit)planSave(a);
+}
+function planCardHtml(){
+  var a=planLoad();
+  var d=new Date();
+  var h='<div class="dash-card">';
+  h+='<div class="dash-card-ttl">오늘 플래너<span class="ttl-caption">'+(d.getMonth()+1)+'월 '+d.getDate()+'일</span></div>';
+  if(a.length){
+    h+='<div class="pln-list">';
+    a.forEach(function(it){
+      var pct=it.goal?Math.min(100,Math.round((it.secs||0)/(it.goal*60)*100)):0;
+      var running=(typeof tmPlanId!=='undefined'&&tmPlanId===it.id&&tmState==='running');
+      h+='<div class="pln-item'+(it.done?' done':'')+'">';
+      h+='<button class="pln-chk'+(it.done?' on':'')+'" data-id="'+it.id+'">'+(it.done?'✓':'')+'</button>';
+      h+='<div class="pln-body">';
+      h+='<div class="pln-text">'+escHtml(it.text)+'</div>';
+      h+='<div class="pln-meta">'+tmFmtShort((it.secs||0)*1000)
+        +(it.goal?' / '+(it.goal>=60?Math.floor(it.goal/60)+'시간'+(it.goal%60?' '+(it.goal%60)+'분':''):it.goal+'분'):'')
+        +(pct?' · '+pct+'%':'')+'</div>';
+      if(it.goal)h+='<div class="pln-track"><div class="pln-bar'+(it.done?' done':'')+'" style="width:'+pct+'%"></div></div>';
+      if(it.sessions&&it.sessions.length)h+='<div class="pln-sess">'+it.sessions.join(' · ')+'</div>';
+      h+='</div>';
+      h+='<button class="pln-play'+(running?' running':'')+'" data-id="'+it.id+'" data-text="'+escHtml(it.text)+'">'
+        +(running?'⏸':'▶')+'</button>';
+      h+='<button class="pln-del" data-id="'+it.id+'">✕</button>';
+      h+='</div>';
+    });
+    h+='</div>';
+  }else{
+    h+='<div class="dash-exam-empty">오늘 공부할 내용을 적어보세요</div>';
+  }
+  h+='<div class="pln-add">'
+    +'<input class="memo-input" id="pln-text" placeholder="공부할 내용" maxlength="60">'
+    +'<select class="memo-input pln-goal" id="pln-goal">'
+    +'<option value="">목표</option><option value="30">30분</option><option value="60">1시간</option>'
+    +'<option value="90">1.5시간</option><option value="120">2시간</option><option value="180">3시간</option><option value="240">4시간</option>'
+    +'</select>'
+    +'<button class="memo-add-btn" id="pln-add-btn">추가</button></div>';
+  h+='</div>';
+  return h;
+}
+function planBind(){
+  var btn=document.getElementById('pln-add-btn');
+  var inp=document.getElementById('pln-text');
+  function add(){
+    if(!inp||!inp.value.trim())return;
+    planAdd(inp.value.trim(),parseInt(document.getElementById('pln-goal').value,10)||0);
+  }
+  if(btn)btn.onclick=add;
+  if(inp)inp.onkeydown=function(e){if(e.key==='Enter')add();};
+  document.querySelectorAll('.pln-chk').forEach(function(b){
+    b.onclick=function(){planToggle(parseInt(this.getAttribute('data-id'),10));};
+  });
+  document.querySelectorAll('.pln-del').forEach(function(b){
+    b.onclick=function(){planDel(parseInt(this.getAttribute('data-id'),10));};
+  });
+  document.querySelectorAll('.pln-play').forEach(function(b){
+    b.onclick=function(){
+      var id=parseInt(this.getAttribute('data-id'),10);
+      if(typeof tmPlanId!=='undefined'&&tmPlanId===id&&tmState==='running'){tmPause();return;}
+      if(tmState==='running')tmPause(); /* 다른 항목 진행 중이면 일시정지 후 전환 */
+      tmSubject=this.getAttribute('data-text');
+      tmPlanId=id;
+      tmStart_();
+    };
+  });
+}
+
 function renderDashboard(){
   var todayKey=dashYmd(new Date());
   var todaySecs=dashDayTotal(todayKey);
@@ -297,6 +398,9 @@ function renderDashboard(){
 
   h+='</div>'; /* close ring card */
 
+  /* 오늘 플래너 */
+  h+=planCardHtml();
+
   /* 연속 공부 + 이번 주 */
   h+='<div class="dash-stat-grid">';
   h+='<div class="dash-stat">';
@@ -339,20 +443,6 @@ function renderDashboard(){
   }
   h+='</div></div>';
 
-  /* 학습 히트맵 — 최근 12주 */
-  var hm=dashHeatmap(12);
-  h+='<div class="dash-card">';
-  h+='<div class="dash-card-ttl">학습 기록<span class="ttl-caption">최근 12주</span></div>';
-  h+='<div class="dash-hm">';
-  hm.forEach(function(c){
-    h+='<span class="hm-c l'+(c.level<0?'f':c.level)+(c.isToday?' today':'')+'"></span>';
-  });
-  h+='</div>';
-  h+='<div class="dash-hm-legend"><span>적음</span>'
-    +'<span class="hm-c l1"></span><span class="hm-c l2"></span><span class="hm-c l3"></span><span class="hm-c l4"></span>'
-    +'<span>많음</span></div>';
-  h+='</div>';
-
   /* 쌓아온 기록 */
   h+='<div class="dash-stat-grid" style="grid-template-columns:1fr 1fr 1fr">';
   h+='<div class="dash-stat"><div class="dash-stat-n" style="font-size:var(--font-lg)">'+tmFmtShort(dashTotalAll()*1000)+'</div><div class="dash-stat-l">총 누적</div></div>';
@@ -370,6 +460,7 @@ function renderDashboard(){
   document.getElementById('dash-goal-minus').onclick=function(){dashSetGoal(dashGoalMin()-30);renderDashboard();};
   document.getElementById('dash-goal-plus').onclick=function(){dashSetGoal(dashGoalMin()+30);renderDashboard();};
   if(typeof tmBind==='function')tmBind(); /* 통합 타이머 카드 이벤트 */
+  planBind();
   syncBind();
 
   /* 뷰 진입 시에만 링이 차오르는 애니메이션 */

@@ -288,12 +288,7 @@ function saveClassEdit(){
 }
 /* ── 내 편집 목록 (오버라이드 관리) ── */
 function ovBarHtml(){
-  if(typeof isAdmin!=='undefined'&&isAdmin)return'';
-  var o=ovLoad();
-  var n=Object.keys(o.mod).length+Object.keys(o.del).length+o.add.length;
-  if(!n)return'';
-  return '<div class="ov-bar"><span class="ov-bar-lbl">내가 수정한 수업 '+n+'개</span>'
-    +'<button class="ov-bar-btn" id="ov-manage">관리</button></div>';
+  return''; /* 관리 바 비노출 — 되돌리기는 셀 상세의 '원래대로'로 */
 }
 function openOvManage(){
   var o=ovLoad(),rows=[];

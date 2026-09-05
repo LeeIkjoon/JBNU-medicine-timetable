@@ -8,6 +8,7 @@ var tmState='idle'; /* idle | running | paused */
 var tmStart=0, tmAccum=0, tmTick=null;
 var tmLogs=[]; /* {date,subject,secs} */
 var tmSubject='';
+var tmPlanId=null,tmPlanStartMs=0; /* 플래너 항목 연동 */
 (function(){
   try{var s=localStorage.getItem('tm_logs');if(s)tmLogs=JSON.parse(s);}catch(e){}
   tmActiveRestore();
@@ -21,7 +22,8 @@ function tmActiveSave(){
   try{
     if(tmState==='idle'){localStorage.removeItem('tm_active');return;}
     localStorage.setItem('tm_active',JSON.stringify({
-      state:tmState,startTs:tmStart,accumMs:tmAccum,subject:tmSubject
+      state:tmState,startTs:tmStart,accumMs:tmAccum,subject:tmSubject,
+      planId:tmPlanId,planStart:tmPlanStartMs
     }));
   }catch(e){}
 }
@@ -31,6 +33,7 @@ function tmActiveRestore(){
     var a=JSON.parse(s);
     if(a&&(a.state==='running'||a.state==='paused')){
       tmState=a.state;tmStart=a.startTs||tmNow();tmAccum=a.accumMs||0;tmSubject=a.subject||'';
+      tmPlanId=a.planId||null;tmPlanStartMs=a.planStart||0;
     }
   }catch(e){}
 }
@@ -68,6 +71,7 @@ function tmClearTick(){if(tmTick){clearInterval(tmTick);tmTick=null;}}
 
 function tmStart_(){
   if(tmState==='idle'||tmState==='paused'){
+    if(tmState==='idle')tmPlanStartMs=tmNow();
     tmStart=tmNow();tmState='running';
     tmEnsureTick();tmActiveSave();
     tmRenderHost();
@@ -99,16 +103,19 @@ function tmStop(){
     }
     if(!found)tmLogs.push({date:key,subject:subj,secs:addSecs});
     tmSave();
+    if(tmPlanId&&typeof planRecord==='function'){
+      planRecord(tmPlanId,addSecs,tmPlanStartMs||tmNow()-elapsed,tmNow());
+    }
     if(goalSec>0&&beforeSecs<goalSec&&(beforeSecs+addSecs)>=goalSec&&typeof dashCelebrate==='function'){
       dashCelebrate('오늘 목표를 채웠어요');
     }
   }
-  tmAccum=0;tmState='idle';tmActiveSave();
+  tmAccum=0;tmState='idle';tmPlanId=null;tmPlanStartMs=0;tmActiveSave();
   tmRenderHost();
 }
 function tmReset(){
   tmClearTick();
-  tmAccum=0;tmState='idle';tmActiveSave();
+  tmAccum=0;tmState='idle';tmPlanId=null;tmPlanStartMs=0;tmActiveSave();
   tmRenderHost();
 }
 

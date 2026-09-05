@@ -461,3 +461,32 @@
   cursor:pointer;font-family:inherit;box-shadow:var(--shadow-xs)}
 .hrs-range-btn.on{background:var(--accent);color:#fff}
 .xl-topic{font-size:var(--font-2xs);color:var(--text-soft);font-weight:var(--weight-regular);margin-top:1px;line-height:1.3}
+
+/* ── 오늘 플래너 ── */
+.pln-list{margin-bottom:4px}
+.pln-item{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:1px solid var(--border-faint)}
+.pln-item:last-child{border-bottom:none}
+.pln-chk{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-strong);background:var(--surface);
+  cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;
+  color:#fff;margin-top:1px;-webkit-tap-highlight-color:transparent;transition:background .2s,border-color .2s}
+.pln-chk.on{background:var(--accent);border-color:var(--accent)}
+.pln-body{flex:1;min-width:0}
+.pln-text{font-size:var(--font-md);font-weight:var(--weight-semi);color:var(--text);word-break:keep-all;
+  position:relative;display:inline-block}
+.pln-text::after{content:'';position:absolute;left:0;top:52%;height:1.5px;width:0;background:currentColor;transition:width .3s var(--ease)}
+.pln-item.done .pln-text{color:var(--text-fade)}
+.pln-item.done .pln-text::after{width:100%}
+.pln-meta{font-size:var(--font-sm);color:var(--text-soft);margin-top:2px}
+.pln-track{height:5px;background:var(--surface-muted);border-radius:3px;overflow:hidden;margin-top:5px}
+.pln-bar{height:100%;border-radius:3px;background:var(--accent);transition:width .4s}
+.pln-bar.done{background:var(--success)}
+.pln-sess{font-size:var(--font-2xs);color:var(--text-fade);margin-top:4px;font-variant-numeric:tabular-nums}
+.pln-play{width:32px;height:32px;border-radius:50%;border:none;background:var(--tint-accent);color:var(--accent);
+  font-size:12px;cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;transition:transform var(--duration-fast) var(--ease)}
+.pln-play:active{transform:scale(.88)}
+.pln-play.running{background:var(--accent);color:#fff}
+.pln-del{border:none;background:none;color:var(--text-fade);font-size:12px;cursor:pointer;padding:4px 2px;flex:none}
+.pln-add{display:flex;gap:6px;margin-top:8px}
+.pln-add .memo-input{min-width:0}
+.pln-goal{flex:none;width:84px}
