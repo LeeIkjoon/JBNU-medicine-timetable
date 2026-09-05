@@ -490,3 +490,26 @@
 .pln-add{display:flex;gap:6px;margin-top:8px}
 .pln-add .memo-input{min-width:0}
 .pln-goal{flex:none;width:84px}
+
+/* 플래너 확장 — 각오·타임테이블·반성·자평 */
+.pln-res{width:100%;border:none;border-bottom:1.5px solid var(--border);background:none;
+  padding:6px 2px 8px;margin-bottom:8px;font-size:var(--font-md);font-weight:var(--weight-semi);
+  color:var(--text);outline:none;font-family:inherit;box-sizing:border-box}
+.pln-res::placeholder{color:var(--text-fade);font-weight:var(--weight-regular)}
+.pln-res:focus{border-bottom-color:var(--accent)}
+.pln-tl{margin:10px 0 4px}
+.pln-tl-track{position:relative;height:14px;background:var(--surface-muted);border-radius:7px;overflow:hidden}
+.pln-tl-seg{position:absolute;top:0;height:100%;background:var(--accent);opacity:.85;border-radius:2px}
+.pln-tl-ticks{position:relative;height:14px;font-size:8px;color:var(--text-fade)}
+.pln-tl-ticks span{position:absolute;transform:translateX(-50%);top:2px;font-variant-numeric:tabular-nums}
+.pln-ref{width:100%;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);
+  padding:9px 11px;margin-top:10px;font-size:var(--font-sm);color:var(--text);line-height:1.5;
+  outline:none;font-family:inherit;box-sizing:border-box;resize:none}
+.pln-ref:focus{border-color:var(--accent)}
+.pln-rate{display:flex;align-items:center;gap:6px;margin-top:8px}
+.pln-rate-lbl{flex:1;font-size:var(--font-sm);font-weight:var(--weight-semi);color:var(--text-soft)}
+.pln-rate-b{width:30px;height:30px;border-radius:50%;border:none;background:var(--surface-muted);
+  font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-soft);cursor:pointer;
+  font-family:inherit;transition:transform var(--duration-fast) var(--ease)}
+.pln-rate-b:active{transform:scale(.88)}
+.pln-rate-b.on{background:var(--accent);color:#fff}

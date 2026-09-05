@@ -1,6 +1,24 @@
 function buildWeekTable(w,items){
   items=viewItems(items); /* 분반 + 개인 편집 반영 */
   var dd=wdd[w]||{};
+  /* (과목|교수)별 마지막 수업 슬롯 — 전체 시간표 기준 */
+  var lastMap={};
+  var all=viewItems(merged);
+  for(var li=0;li<all.length;li++){
+    var a=all[li];
+    if(!a.professor||!a.subject)continue;
+    if(a.is_exam===true||a.is_exam==='true'||isEx(a.subject)||isHoliday(a.subject)||isEv(a.subject))continue;
+    var lk=a.subject+'|'+a.professor;
+    var cur=lastMap[lk];
+    if(!cur||a.date>cur.date||(a.date===cur.date&&a.period>cur.period)){
+      lastMap[lk]={date:a.date,period:a.period};
+    }
+  }
+  function isLastClass(it){
+    if(!it.professor)return false;
+    var m=lastMap[it.subject+'|'+it.professor];
+    return !!m&&m.date===it.date&&m.period===it.period;
+  }
   /* 학교 교시 설정 기반 그리드 축 */
   var PERIODS=Object.keys(PERIOD_START).map(Number).sort(function(a,b){return a-b;})
     .map(function(n){return {n:n,t:PERIOD_START[n]};});
@@ -88,7 +106,7 @@ function buildWeekTable(w,items){
         html+='<div class="cn-s">'+it.subject+'</div>';
       }
       if(it.topic)html+='<div class="cn-tp">'+it.topic+'</div>';
-      if(it.professor)html+='<div class="cn-p">'+it.professor+'</div>';
+      if(it.professor)html+='<div class="cn-p">'+it.professor+(isLastClass(it)?' <span class="cn-last">❗</span>':'')+'</div>';
       html+='</div></td>';
     });
 
@@ -187,6 +205,18 @@ function openClassInfo(dt,day,period){
   if(it.topic)h+='<div class="cls-row"><span class="cls-lbl">주제</span><span class="cls-val">'+escHtml(it.topic)+'</span></div>';
   if(it.professor)h+='<div class="cls-row"><span class="cls-lbl">교수</span><span class="cls-val">'+escHtml(it.professor)+'</span></div>';
   if(it.room)h+='<div class="cls-row"><span class="cls-lbl">강의실</span><span class="cls-val">'+escHtml(it.room)+'</span></div>';
+  /* 교수 마지막 수업 여부 */
+  if(it.professor&&!isExam){
+    var pool2=viewItems(merged);
+    var isLast=true;
+    for(var pi2=0;pi2<pool2.length;pi2++){
+      var q=pool2[pi2];
+      if(q.subject===it.subject&&q.professor===it.professor
+        &&!(q.is_exam===true||q.is_exam==='true')
+        &&(q.date>it.date||(q.date===it.date&&q.period>pe))){isLast=false;break;}
+    }
+    if(isLast)h+='<div class="cls-row"><span class="cls-lbl">❗</span><span class="cls-val">'+escHtml(it.professor)+' 교수님의 마지막 수업이에요</span></div>';
+  }
   /* 개인 편집 버튼 (관리자 모드가 아닐 때) */
   if(typeof isAdmin==='undefined'||!isAdmin){
     var o=ovLoad(),k=dt+'|'+period;

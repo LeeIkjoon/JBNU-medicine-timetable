@@ -273,11 +273,45 @@ function planRecord(planId,addSecs,startMs,endMs){
   });
   if(hit)planSave(a);
 }
+function planMetaLoad(d){
+  try{var m=JSON.parse(localStorage.getItem('plan_meta_'+(d||dashYmd(new Date())))||'null');if(m)return m;}catch(e){}
+  return {res:'',ref:'',rate:0};
+}
+function planMetaSave(m,d){try{localStorage.setItem('plan_meta_'+(d||dashYmd(new Date())),JSON.stringify(m));}catch(e){}}
+/* 타임테이블 스트립: 세션(HH:MM~HH:MM)들을 6시~26시 축에 표시 */
+function planTimelineHtml(items){
+  var segs=[];
+  items.forEach(function(it){
+    (it.sessions||[]).forEach(function(sv){
+      var m=sv.match(/^(\d{1,2}):(\d{2})~(\d{1,2}):(\d{2})$/);
+      if(!m)return;
+      var a=parseInt(m[1],10)*60+parseInt(m[2],10);
+      var b=parseInt(m[3],10)*60+parseInt(m[4],10);
+      if(a<360)a+=1440; if(b<360)b+=1440; /* 새벽은 다음날로 */
+      if(b<=a)b=a+5;
+      segs.push([a,b]);
+    });
+  });
+  var lo=360,hi=1560; /* 6:00~26:00 */
+  var h='<div class="pln-tl"><div class="pln-tl-track">';
+  segs.forEach(function(sg){
+    var l=Math.max(0,(sg[0]-lo)/(hi-lo)*100),w=Math.max(0.8,(Math.min(sg[1],hi)-Math.max(sg[0],lo))/(hi-lo)*100);
+    h+='<span class="pln-tl-seg" style="left:'+l.toFixed(1)+'%;width:'+w.toFixed(1)+'%"></span>';
+  });
+  h+='</div><div class="pln-tl-ticks">';
+  [6,9,12,15,18,21,24].forEach(function(t){
+    h+='<span style="left:'+((t*60-lo)/(hi-lo)*100).toFixed(1)+'%">'+(t>=24?t-24:t)+'</span>';
+  });
+  h+='</div></div>';
+  return h;
+}
 function planCardHtml(){
   var a=planLoad();
   var d=new Date();
+  var meta=planMetaLoad();
   var h='<div class="dash-card">';
   h+='<div class="dash-card-ttl">오늘 플래너<span class="ttl-caption">'+(d.getMonth()+1)+'월 '+d.getDate()+'일</span></div>';
+  h+='<input class="pln-res" id="pln-res" placeholder="오늘의 각오" maxlength="60" value="'+escHtml(meta.res||'')+'">';
   if(a.length){
     h+='<div class="pln-list">';
     a.forEach(function(it){
@@ -302,6 +336,9 @@ function planCardHtml(){
   }else{
     h+='<div class="dash-exam-empty">오늘 공부할 내용을 적어보세요</div>';
   }
+  /* 타임테이블 (세션이 있을 때만) */
+  var hasSess=a.some(function(it){return it.sessions&&it.sessions.length;});
+  if(hasSess)h+=planTimelineHtml(a);
   h+='<div class="pln-add">'
     +'<input class="memo-input" id="pln-text" placeholder="공부할 내용" maxlength="60">'
     +'<select class="memo-input pln-goal" id="pln-goal">'
@@ -309,6 +346,11 @@ function planCardHtml(){
     +'<option value="90">1.5시간</option><option value="120">2시간</option><option value="180">3시간</option><option value="240">4시간</option>'
     +'</select>'
     +'<button class="memo-add-btn" id="pln-add-btn">추가</button></div>';
+  /* 반성 + 자기평가 */
+  h+='<textarea class="pln-ref" id="pln-ref" placeholder="오늘의 반성과 내일의 다짐" maxlength="200" rows="2">'+escHtml(meta.ref||'')+'</textarea>';
+  h+='<div class="pln-rate"><span class="pln-rate-lbl">Self 평가</span>';
+  for(var ri=1;ri<=5;ri++)h+='<button class="pln-rate-b'+(meta.rate>=ri?' on':'')+'" data-r="'+ri+'">'+ri+'</button>';
+  h+='</div>';
   h+='</div>';
   return h;
 }
@@ -321,6 +363,18 @@ function planBind(){
   }
   if(btn)btn.onclick=add;
   if(inp)inp.onkeydown=function(e){if(e.key==='Enter')add();};
+  var res=document.getElementById('pln-res');
+  if(res)res.onchange=function(){var m=planMetaLoad();m.res=this.value.trim();planMetaSave(m);};
+  var ref=document.getElementById('pln-ref');
+  if(ref)ref.onchange=function(){var m=planMetaLoad();m.ref=this.value.trim();planMetaSave(m);};
+  document.querySelectorAll('.pln-rate-b').forEach(function(b){
+    b.onclick=function(){
+      var r=parseInt(this.getAttribute('data-r'),10);
+      var m=planMetaLoad();
+      m.rate=(m.rate===r)?0:r;
+      planMetaSave(m);renderDashboard();
+    };
+  });
   document.querySelectorAll('.pln-chk').forEach(function(b){
     b.onclick=function(){planToggle(parseInt(this.getAttribute('data-id'),10));};
   });
