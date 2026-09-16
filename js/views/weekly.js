@@ -282,6 +282,19 @@ function openClassEdit(dt,day,period,base){
   var ps=document.getElementById('edit-period'),ph='';
   for(var pi=1;pi<=10;pi++)ph+='<option value="'+pi+'"'+(pi===period?' selected':'')+'>'+pi+'교시 · '+PERIOD_START[pi]+'~'+PERIOD_END[pi]+'</option>';
   ps.innerHTML=ph;
+  /* 날짜 선택 (다른 날로 이동 가능) — 학기 범위 안에서 */
+  var de=document.getElementById('edit-date');
+  if(de){
+    var all=[];for(var w0 in wdd){for(var d0 in wdd[w0])if(wdd[w0][d0])all.push(wdd[w0][d0]);}
+    all.sort();
+    de.value=dt;de.min=all[0]||'';de.max=all[all.length-1]||'';
+    de.onchange=function(){
+      var v=this.value;if(!v)return;
+      var q=v.split('-'),dow=new Date(+q[0],+q[1]-1,+q[2]).getDay();
+      var lbl=document.getElementById('edit-when');
+      if(lbl)lbl.textContent=parseInt(q[1])+'월 '+parseInt(q[2])+'일 ('+WN[dow]+')'+(v!==dt?' · 이동':'');
+    };
+  }
   document.getElementById('edit-subj').value=base?base.subject:'';
   document.getElementById('edit-topic').value=(base&&base.topic)||'';
   document.getElementById('edit-prof').value=(base&&base.professor)||'';
@@ -301,24 +314,42 @@ function saveClassEdit(){
   if(!subj)return;
   var c=_editCtx;
   var newPeriod=parseInt(document.getElementById('edit-period').value,10)||c.period;
-  var wk=null;for(var w in wdd){if(wdd[w]&&wdd[w][c.day]===c.dt){wk=w;break;}}
-  var item={week:wk||wks[ci]||'1',date:c.dt,day:c.day,period:newPeriod,
+  /* 날짜 이동: 주말은 불가, 요일은 날짜에서 계산 */
+  var de=document.getElementById('edit-date');
+  var newDt=(de&&/^\d{4}-\d{2}-\d{2}$/.test(de.value))?de.value:c.dt;
+  var q=newDt.split('-'),dow=new Date(+q[0],+q[1]-1,+q[2]).getDay();
+  if(dow===0||dow===6){newDt=c.dt;q=newDt.split('-');dow=new Date(+q[0],+q[1]-1,+q[2]).getDay();}
+  var newDay=WN[dow];
+  /* 주차: wdd에서 날짜로 찾고, 없으면 그 날짜가 속한 주(월~일)의 다른 날짜로 찾음 */
+  var wk=null;
+  for(var w in wdd){for(var d in wdd[w]){if(wdd[w][d]===newDt){wk=w;break;}}if(wk)break;}
+  if(!wk){
+    var base=new Date(+q[0],+q[1]-1,+q[2]);var mon=new Date(base);mon.setDate(base.getDate()-((dow+6)%7));
+    var span={};for(var k=0;k<7;k++){var dd2=new Date(mon);dd2.setDate(mon.getDate()+k);span[dd2.getFullYear()+'-'+p2(dd2.getMonth()+1)+'-'+p2(dd2.getDate())]=1;}
+    for(var w2 in wdd){for(var d2 in wdd[w2]){if(span[wdd[w2][d2]]){wk=w2;break;}}if(wk)break;}
+  }
+  if(!wk)wk=wks[ci]||'1';
+  /* 그 주에 해당 요일 날짜가 비어 있으면(휴일 등) 열이 생기도록 등록 */
+  if(wdd[wk]&&!wdd[wk][newDay]){wdd[wk][newDay]=newDt;
+    try{var st=JSON.parse(localStorage.getItem(ttKey())||'null');if(st&&st.wdd){st.wdd[wk]=st.wdd[wk]||{};st.wdd[wk][newDay]=newDt;localStorage.setItem(ttKey(),JSON.stringify(st));}}catch(e){}}
+  var item={week:wk,date:newDt,day:newDay,period:newPeriod,
     start:PERIOD_START[newPeriod]||'',end:PERIOD_END[newPeriod]||'',
     subject:subj,professor:document.getElementById('edit-prof').value.trim(),
     is_exam:document.getElementById('edit-exam-chk').checked};
   var tp=document.getElementById('edit-topic').value.trim();
   if(tp)item.topic=tp;
   var o=ovLoad();
-  /* 원래 슬롯 정리 (교시 이동 시 원 슬롯은 삭제 처리) */
+  var moved=(newDt!==c.dt||newPeriod!==c.period);
+  /* 원래 슬롯 정리 (이동 시 원 슬롯은 삭제 처리) */
   var k0=c.dt+'|'+c.period;
   delete o.del[k0];delete o.mod[k0];
   o.add=o.add.filter(function(a){return ovSlot(a)!==k0;});
-  if(newPeriod!==c.period&&secFilter(merged).some(function(i){return i.date===c.dt&&i.period===c.period;}))o.del[k0]=1;
+  if(moved&&secFilter(merged).some(function(i){return i.date===c.dt&&i.period===c.period;}))o.del[k0]=1;
   /* 대상 슬롯에 배치 */
-  var k1=c.dt+'|'+newPeriod;
+  var k1=newDt+'|'+newPeriod;
   delete o.del[k1];
   o.add=o.add.filter(function(a){return ovSlot(a)!==k1;});
-  if(secFilter(merged).some(function(i){return i.date===c.dt&&i.period===newPeriod;}))o.mod[k1]=item;
+  if(secFilter(merged).some(function(i){return i.date===newDt&&i.period===newPeriod;}))o.mod[k1]=item;
   else o.add.push(item);
   ovSave(o);closeClassEdit();ovRefresh();
 }

@@ -117,6 +117,8 @@ function smartHeaderKind(v){
 function smartCell(val){
   var s=smartStr(val);
   if(!s||s===','||s==='-'||s==='·'||s==='x'||s==='X')return null;
+  /* 숫자·시각·날짜만 있는 셀은 과목이 아님 (열 추정 실패 시 쓰레기 방지) */
+  if(/^[\d.:\-~\/\s]+$/.test(s))return null;
   var r=(typeof parseNativeCell==='function')?parseNativeCell(s):{subj:s,prof:''};
   if(!r||!r.subj)return null;
   if(!r.prof){
@@ -243,8 +245,8 @@ function smartGuessWide(rows){
       if(dc<0&&smartDate(row[c]))dc=c;
       else if(dc>=0&&dyc<0&&smartDay(row[c]))dyc=c;
     }
-    if(dc<0)continue;
-    var first=(dyc>=0?dyc:dc)+1;
+    if(dc<0||dyc<0)continue; /* 날짜와 요일 열이 모두 보여야 추정 */
+    var first=dyc+1;
     if(row.length-first<4)continue;
     var wc=-1;
     for(var c2=0;c2<dc;c2++){var n=parseInt(smartStr(row[c2]),10);if(!isNaN(n)&&n>=1&&n<=52&&String(n)===smartStr(row[c2])){wc=c2;break;}}
@@ -461,6 +463,39 @@ function smartParseLegacy(rows){
   return smartFinish(items,'legacy',[]);
 }
 
+/* ══════════ 학년 병렬 long 레이아웃 (계명대 '전체' 시트) ══════════
+   헤더: 일시 | 교시 | 시작시간 | 의예과 1학년 | 교수명 | 강의실 | 의예과 2학년 | 교수명 | 강의실 …
+   → 학년 열마다 별도 결과 [{name, result}] */
+function smartParseMultiGrade(rows){
+  var limit=Math.min(rows.length,30),hdrRow=-1,map={},grades=[];
+  for(var r=0;r<limit&&hdrRow<0;r++){
+    var row=rows[r]||[],m={},gs=[];
+    for(var c=0;c<row.length;c++){
+      var txt=smartStr(row[c]);
+      if(/학년/.test(txt)&&!/^(학년)$/.test(txt)){gs.push({col:c,name:txt.replace(/\s+/g,' ')});continue;}
+      var k=smartHeaderKind(row[c]);
+      if(k&&m[k]===undefined&&(k==='date'||k==='period'||k==='time'||k==='week'||k==='day'))m[k]=c;
+    }
+    if(m.date!==undefined&&(m.period!==undefined||m.time!==undefined)&&gs.length>=1){hdrRow=r;map=m;grades=gs;}
+  }
+  if(hdrRow<0)return null;
+  var hdr=rows[hdrRow];
+  var out=[];
+  grades.forEach(function(g,gi){
+    var endCol=gi+1<grades.length?grades[gi+1].col:hdr.length;
+    var gm={date:map.date,period:map.period,time:map.time,week:map.week,day:map.day,subject:g.col};
+    for(var c=g.col+1;c<endCol;c++){
+      var k=smartHeaderKind(hdr[c]);
+      if(k==='prof'&&gm.prof===undefined)gm.prof=c;
+      else if(k==='room'&&gm.room===undefined)gm.room=c;
+      else if(k==='topic'&&gm.topic===undefined)gm.topic=c;
+    }
+    var res=smartParseLong(rows,{row:hdrRow,map:gm});
+    if(res&&!res.error&&res.items.length)out.push({name:g.name,result:res});
+  });
+  return out.length?out:null;
+}
+
 /* ══════════ 진입점 ══════════ */
 function smartParseRows(rows){
   if(!rows||!rows.length)return{error:'파일이 비어있습니다.'};
@@ -476,7 +511,14 @@ function smartParseRows(rows){
   var g=smartParseGrid(rows);if(!g.error)results.push(g);
   if(!results.length&&!wideH&&!longH){
     var guess=smartGuessWide(rows);
-    if(guess){var w2=smartParseWide(rows,guess);if(!w2.error){w2.warnings.push('헤더가 없어 열 순서를 추정했어요 (주차·날짜·요일·1~10교시)');results.push(w2);}}
+    if(guess){
+      var w2=smartParseWide(rows,guess);
+      /* 추정 결과는 과목명에 글자가 있는 항목이 대부분일 때만 채택 */
+      if(!w2.error){
+        var alpha=w2.items.filter(function(it){return /[가-힣A-Za-z]/.test(it.subject);}).length;
+        if(alpha>=w2.items.length*0.8){w2.warnings.push('헤더가 없어 열 순서를 추정했어요 (주차·날짜·요일·1~10교시)');results.push(w2);}
+      }
+    }
   }
   if(!results.length)return{error:'시간표 형식을 인식할 수 없습니다. 날짜·교시·과목이 있는 표인지 확인해주세요.'};
   /* 가장 많이 인식한 결과 채택 (동률이면 wide > long > grid > legacy) */

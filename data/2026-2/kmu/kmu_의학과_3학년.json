@@ -112,7 +112,7 @@
    "start": "13:30",
    "end": "14:20",
    "subject": "의료인문(5):의료면담",
-   "professor": "김진영(내과)",
+   "professor": "김진영",
    "is_exam": false,
    "topic": "암 환자 및 보호자와 의사소통하기, 연명 치료의 결정 (Communications with cancer patients and caregivers, Decision on life-sustaining treatment)) 1",
    "room": "M212"
@@ -125,7 +125,7 @@
    "start": "14:30",
    "end": "15:20",
    "subject": "의료인문(5):의료면담",
-   "professor": "김진영(내과)",
+   "professor": "김진영",
    "is_exam": false,
    "topic": "암 환자 및 보호자와 의사소통하기, 연명 치료의 결정 (Communications with cancer patients and caregivers, Decision on life-sustaining treatment)) 2",
    "room": "M212"
@@ -304,9 +304,9 @@
    "start": "13:30",
    "end": "14:20",
    "subject": "의학연구(5)",
-   "professor": "조태희",
+   "professor": "이재민",
    "is_exam": false,
-   "topic": "의사 과학자가 되는 방법",
+   "topic": "대사 질환의 이해",
    "room": "M212"
   },
   {
@@ -317,9 +317,9 @@
    "start": "14:30",
    "end": "15:20",
    "subject": "의학연구(5)",
-   "professor": "김경보",
+   "professor": "조태희",
    "is_exam": false,
-   "topic": "임상 의학연구의 이론과 실제",
+   "topic": "의사과학자가 되는 방법",
    "room": "M212"
   },
   {
@@ -330,9 +330,9 @@
    "start": "15:30",
    "end": "16:20",
    "subject": "의학연구(5)",
-   "professor": "현정호",
+   "professor": "이민선",
    "is_exam": false,
-   "topic": "Molecular tools for tagging neural ensembles to help treat brain illness",
+   "topic": "방사선 의료영상기기",
    "room": "M212"
   },
   {
@@ -431,9 +431,9 @@
    "start": "13:30",
    "end": "14:20",
    "subject": "의학연구(5)",
-   "professor": "황재윤",
+   "professor": "이기준",
    "is_exam": false,
-   "topic": "Medical Ultrasound Imaging Systems Met AI",
+   "topic": "광학기반 혈류측정기",
    "room": "M212"
   },
   {
@@ -444,9 +444,9 @@
    "start": "14:30",
    "end": "15:20",
    "subject": "의학연구(5)",
-   "professor": "박재형",
+   "professor": "이성원",
    "is_exam": false,
-   "topic": "분자생물 연구: 장-뇌 축의 양방향 신호전달",
+   "topic": "웨어러블 의료기기",
    "room": "M212"
   },
   {
@@ -457,9 +457,9 @@
    "start": "13:30",
    "end": "14:20",
    "subject": "의학연구(5)",
-   "professor": "홍정호, 김종홍",
+   "professor": "김창완",
    "is_exam": false,
-   "topic": "빅데이터의 의학적 활용(1)",
+   "topic": "의학연구에서 창업까지(1)",
    "room": "M212"
   },
   {
@@ -470,9 +470,9 @@
    "start": "14:30",
    "end": "15:20",
    "subject": "의학연구(5)",
-   "professor": "홍정호, 김종홍",
+   "professor": "김창완",
    "is_exam": false,
-   "topic": "빅데이터의 의학적 활용(2)",
+   "topic": "의학연구에서 창업까지(2)",
    "room": "M212"
   },
   {
@@ -483,9 +483,9 @@
    "start": "13:30",
    "end": "14:20",
    "subject": "의학연구(5)",
-   "professor": "이민선",
+   "professor": "강준호",
    "is_exam": false,
-   "topic": "Medicine is an integrative science of Human Being - From an era of Selfish Gene to an era of Convergence",
+   "topic": "의생명정보분석 (1)",
    "room": "M212"
   },
   {
@@ -496,9 +496,9 @@
    "start": "14:30",
    "end": "15:20",
    "subject": "의학연구(5)",
-   "professor": "이재민",
+   "professor": "강준호",
    "is_exam": false,
-   "topic": "The role of cellular stresses and their associated signaling in aging-associated metabolic diseases",
+   "topic": "의생명정보분석 (2)",
    "room": "M212"
   },
   {
@@ -509,9 +509,9 @@
    "start": "15:30",
    "end": "16:20",
    "subject": "의학연구(5)",
-   "professor": "조재형",
+   "professor": "정찬",
    "is_exam": false,
-   "topic": "의료 빅데이터 분석 이론",
+   "topic": "뇌종양 치료제 개발",
    "room": "M212"
   },
   {
@@ -522,9 +522,9 @@
    "start": "13:30",
    "end": "14:20",
    "subject": "의학연구(5)",
-   "professor": "이승보",
+   "professor": "조재형",
    "is_exam": false,
-   "topic": "의료 빅데이터 분석 실습(1)",
+   "topic": "의료 빅데이터 분석 이론",
    "room": "M212"
   },
   {
@@ -535,9 +535,9 @@
    "start": "14:30",
    "end": "15:20",
    "subject": "의학연구(5)",
-   "professor": "이승보",
+   "professor": "조재형",
    "is_exam": false,
-   "topic": "의료 빅데이터 분석 실습(2)",
+   "topic": "빅데이터의 의학적 활용",
    "room": "M212"
   },
   {
@@ -550,7 +550,7 @@
    "subject": "의학연구(5)",
    "professor": "고일규",
    "is_exam": false,
-   "topic": "기초 의학연구의 이론과 실제",
+   "topic": "기초 의학연구의 이론과 실제 (1)",
    "room": "M212"
   },
   {
@@ -561,9 +561,9 @@
    "start": "14:30",
    "end": "15:20",
    "subject": "의학연구(5)",
-   "professor": "강준호",
+   "professor": "고일규",
    "is_exam": false,
-   "topic": "의생명정보분석",
+   "topic": "기초 의학연구의 이론과 실제 (2)",
    "room": "M212"
   },
   {
@@ -574,9 +574,9 @@
    "start": "13:30",
    "end": "14:20",
    "subject": "의학연구(5)",
-   "professor": "정혜라",
+   "professor": "박재형",
    "is_exam": false,
-   "topic": "유전체 의학연구: 분자병리검사를 활용한 의학연구 동향",
+   "topic": "분자생물 연구: 장-뇌 축의 양방향 신호전달",
    "room": "M212"
   },
   {
@@ -587,9 +587,9 @@
    "start": "14:30",
    "end": "15:20",
    "subject": "의학연구(5)",
-   "professor": "이성원",
+   "professor": "황재윤",
    "is_exam": false,
-   "topic": "Wearable electronics for bio-medical application",
+   "topic": "인공지능 초음파 기술",
    "room": "M212"
   }
  ],
@@ -667,9 +667,9 @@
   "17"
  ],
  "grade": "의학과 3학년",
- "ts": 1787753617222,
+ "ts": 1789572073332,
  "changelog": {
-  "ts": 1787753617222,
-  "msg": "2026-2학기 시간표 적용"
+  "ts": 1789572073332,
+  "msg": "8/28 기준 시간표 반영 — 강의실 추가, 일부 수업·교수 변경"
  }
 }

@@ -10,7 +10,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Introduction"
+   "topic": "Introduction",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -22,7 +23,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Cholesterol synthesis, transport, and excretion"
+   "topic": "Cholesterol synthesis, transport, and excretion",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -34,7 +36,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "물, pH의 조절, 아미노산(1)"
+   "topic": "물, pH의 조절, 아미노산(1)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -46,7 +49,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "물, pH의 조절, 아미노산(2)"
+   "topic": "물, pH의 조절, 아미노산(2)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -97,7 +101,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "탄수화물(1)"
+   "topic": "탄수화물(1)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -109,7 +114,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "탄수화물(2)"
+   "topic": "탄수화물(2)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -121,7 +127,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Lipid transport & storage (I)"
+   "topic": "Lipid transport & storage (I)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -133,7 +140,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Lipid transport & storage (II)"
+   "topic": "Lipid transport & storage (II)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -184,7 +192,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "지질(1)"
+   "topic": "지질(1)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -196,7 +205,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "지질(2)"
+   "topic": "지질(2)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -208,7 +218,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Oxidation of fatty acids: ketogenesis (I)"
+   "topic": "Oxidation of fatty acids: ketogenesis (I)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -220,7 +231,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Oxidation of fatty acids: ketogenesis (II)"
+   "topic": "Oxidation of fatty acids: ketogenesis (II)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -232,7 +244,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Biosynthesis of Fatty acids (I)"
+   "topic": "Biosynthesis of Fatty acids (I)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -244,7 +257,8 @@
    "subject": "대사와세포조절",
    "professor": "백원기",
    "is_exam": false,
-   "topic": "세포외 기질(I)"
+   "topic": "세포외 기질(I)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -256,7 +270,8 @@
    "subject": "대사와세포조절",
    "professor": "백원기",
    "is_exam": false,
-   "topic": "세포외 기질(II)"
+   "topic": "세포외 기질(II)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -268,7 +283,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "세포 호흡"
+   "topic": "세포 호흡",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -280,7 +296,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "해당작용(I)"
+   "topic": "해당작용(I)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -292,7 +309,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "해당작용(II)"
+   "topic": "해당작용(II)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -304,7 +322,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "해당작용 (III)"
+   "topic": "해당작용(III)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -368,7 +387,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "아미노산, 펩티드와 단백질(1)"
+   "topic": "아미노산, 펩티드와 단백질(1)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -380,7 +400,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "아미노산, 펩티드와 단백질(2)"
+   "topic": "아미노산, 펩티드와 단백질(2)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -392,7 +413,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "TCA 회로(1)"
+   "topic": "TCA 회로(1)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -404,7 +426,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "TCA 회로(2)"
+   "topic": "TCA 회로(2)",
+   "room": "백202"
   },
   {
    "week": "1",
@@ -468,7 +491,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "효소(1)"
+   "topic": "효소(1)",
+   "room": "백202"
   },
   {
    "week": "2",
@@ -480,7 +504,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "효소(2)"
+   "topic": "효소(2)",
+   "room": "백202"
   },
   {
    "week": "2",
@@ -492,7 +517,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Biosynthesis of Fatty acids (II)"
+   "topic": "Biosynthesis of Fatty acids (II)",
+   "room": "백202"
   },
   {
    "week": "2",
@@ -504,7 +530,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "의학연구와 논문"
+   "topic": "의학연구와 논문",
+   "room": "백202"
   },
   {
    "week": "2",
@@ -516,7 +543,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "연구 주제와 가설 설정"
+   "topic": "연구 주제와 가설 설정",
+   "room": "백202"
   },
   {
    "week": "2",
@@ -580,7 +608,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "전자전달계 (I)"
+   "topic": "전자전달계 (I)",
+   "room": "백202"
   },
   {
    "week": "2",
@@ -592,7 +621,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "전자전달계 (II)"
+   "topic": "전자전달계 (II)",
+   "room": "백202"
   },
   {
    "week": "2",
@@ -604,7 +634,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Hormones that regulate fuel metabolism"
+   "topic": "Hormones that regulate fuel metabolism",
+   "room": "백202"
   },
   {
    "week": "2",
@@ -616,7 +647,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "개강 예배",
+   "topic": "개강 예배, 계명의대 인문학 공모전 시상식",
    "room": "존슨홀"
   },
   {
@@ -681,7 +712,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "암세포대사 (I)"
+   "topic": "암세포대사 (I)",
+   "room": "백202"
   },
   {
    "week": "2",
@@ -693,7 +725,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "암세포대사 (II)"
+   "topic": "암세포대사 (II)",
+   "room": "백202"
   },
   {
    "week": "2",
@@ -809,7 +842,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": true,
-   "topic": "1차 시험"
+   "topic": "1차 시험",
+   "room": "존슨홀"
   },
   {
    "week": "3",
@@ -821,7 +855,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Liver metabolism"
+   "topic": "Liver metabolism",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -833,7 +868,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "포도당신생합성 (I)"
+   "topic": "포도당신생합성 (I)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -845,7 +881,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "포도당신생합성 (II)"
+   "topic": "포도당신생합성 (II)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -857,7 +894,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "아미노산대사 (I)"
+   "topic": "아미노산대사 (I)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -869,7 +907,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "연구의 신뢰도와 타당도"
+   "topic": "연구의 신뢰도와 타당도",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -881,7 +920,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "진단검사의 타당도와 신뢰도"
+   "topic": "진단검사의 타당도와 신뢰도",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -932,7 +972,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": true,
-   "topic": "1차 시험 피드백"
+   "topic": "1차 시험 피드백",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -944,7 +985,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "아미노산대사 (II)"
+   "topic": "아미노산대사 (II)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -956,7 +998,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "아미노산대사 (III)"
+   "topic": "아미노산대사 (III)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -968,7 +1011,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "채플 예배",
+   "topic": "김신우 목사 - 중요한 결정을 앞두고 불안할 때",
    "room": "존슨홀"
   },
   {
@@ -981,7 +1024,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "아미노산대사 (IV)"
+   "topic": "아미노산대사 (IV)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -993,7 +1037,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Vitamins (I)"
+   "topic": "Vitamins (I)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1005,7 +1050,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Vitamins (II)"
+   "topic": "Vitamins (II)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1017,7 +1063,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "혈액 생화학 (I)"
+   "topic": "혈액 생화학 (I)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1029,7 +1076,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "혈액 생화학 (II)"
+   "topic": "혈액 생화학 (II)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1041,7 +1089,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "글리코겐대사(I)"
+   "topic": "글리코겐대사(I)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1053,7 +1102,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "글리코겐대사(II)"
+   "topic": "글리코겐대사(II)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1117,7 +1167,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Integration of carbohydrate and lipid metabolism"
+   "topic": "Integration of carbohydrate and lipid metabolism",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1129,7 +1180,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "혈색소와 헴 대사"
+   "topic": "혈색소와 헴 대사",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1141,7 +1193,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "핵산 대사 (I)"
+   "topic": "핵산 대사 (I)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1150,11 +1203,11 @@
    "period": 5,
    "start": "13:30",
    "end": "14:20",
-   "subject": "기초의학통합실습(2)",
-   "professor": "문교철,하은영,서지혜",
+   "subject": "대사와세포조절",
+   "professor": "하은영",
    "is_exam": false,
-   "topic": "조직에서의 리피드 염색",
-   "room": "M521, 621"
+   "topic": "Intertissue relationships in the metabolism (I)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1163,11 +1216,11 @@
    "period": 6,
    "start": "14:30",
    "end": "15:20",
-   "subject": "기초의학통합실습(2)",
-   "professor": "문교철,하은영,서지혜",
+   "subject": "대사와세포조절",
+   "professor": "하은영",
    "is_exam": false,
-   "topic": "조직에서의 리피드 염색",
-   "room": "M521, 621"
+   "topic": "Intertissue relationships in the metabolism (II)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1176,23 +1229,24 @@
    "period": 7,
    "start": "15:30",
    "end": "16:20",
-   "subject": "기초의학통합실습(2)",
-   "professor": "문교철,하은영,서지혜",
+   "subject": "대사와세포조절",
+   "professor": "문교철",
    "is_exam": false,
-   "topic": "조직에서의 리피드 염색",
-   "room": "M521, 621"
+   "topic": "핵산 대사 (II)",
+   "room": "백202"
   },
   {
    "week": "3",
-   "date": "2026-09-18",
-   "day": "금",
-   "period": 1,
-   "start": "8:30",
-   "end": "9:20",
+   "date": "2026-09-17",
+   "day": "목",
+   "period": 8,
+   "start": "16:30",
+   "end": "17:20",
    "subject": "대사와세포조절",
-   "professor": "하은영",
+   "professor": "문교철",
    "is_exam": false,
-   "topic": "Intertissue relationships in the metabolism (I)"
+   "topic": "세포외기질 (I)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1202,9 +1256,10 @@
    "start": "9:30",
    "end": "10:20",
    "subject": "대사와세포조절",
-   "professor": "하은영",
+   "professor": "문교철",
    "is_exam": false,
-   "topic": "Intertissue relationships in the metabolism (II)"
+   "topic": "세포외기질 (II)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1216,7 +1271,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "핵산 대사 (II)"
+   "topic": "호르몬과 신호전달 (I)",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1226,9 +1282,10 @@
    "start": "11:30",
    "end": "12:20",
    "subject": "대사와세포조절",
-   "professor": "문교철",
+   "professor": "하은영",
    "is_exam": false,
-   "topic": "세포외기질 (I)"
+   "topic": "Metabolism of Ethanol",
+   "room": "백202"
   },
   {
    "week": "3",
@@ -1237,10 +1294,11 @@
    "period": 5,
    "start": "13:30",
    "end": "14:20",
-   "subject": "대사와세포조절",
-   "professor": "문교철",
+   "subject": "기초의학통합실습(2)",
+   "professor": "문교철,하은영,서지혜",
    "is_exam": false,
-   "topic": "세포외기질 (II)"
+   "topic": "조직에서의 리피드 염색",
+   "room": "M521, 621"
   },
   {
    "week": "3",
@@ -1249,10 +1307,11 @@
    "period": 6,
    "start": "14:30",
    "end": "15:20",
-   "subject": "대사와세포조절",
-   "professor": "문교철",
+   "subject": "기초의학통합실습(2)",
+   "professor": "문교철,하은영,서지혜",
    "is_exam": false,
-   "topic": "호르몬과 신호전달 (I)"
+   "topic": "조직에서의 리피드 염색",
+   "room": "M521, 621"
   },
   {
    "week": "3",
@@ -1261,10 +1320,11 @@
    "period": 7,
    "start": "15:30",
    "end": "16:20",
-   "subject": "대사와세포조절",
-   "professor": "하은영",
+   "subject": "기초의학통합실습(2)",
+   "professor": "문교철,하은영,서지혜",
    "is_exam": false,
-   "topic": "Metabolism of Ethanol"
+   "topic": "조직에서의 리피드 염색",
+   "room": "M521, 621"
   },
   {
    "week": "4",
@@ -1276,7 +1336,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "다른 단당류의 대사(I)"
+   "topic": "다른 단당류의 대사(I)",
+   "room": "백202"
   },
   {
    "week": "4",
@@ -1288,7 +1349,8 @@
    "subject": "대사와세포조절",
    "professor": "서지혜",
    "is_exam": false,
-   "topic": "다른 단당류의 대사(II)"
+   "topic": "다른 단당류의 대사(II)",
+   "room": "백202"
   },
   {
    "week": "4",
@@ -1300,7 +1362,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "호르몬과 신호전달 (II)"
+   "topic": "호르몬과 신호전달 (II)",
+   "room": "백202"
   },
   {
    "week": "4",
@@ -1312,7 +1375,8 @@
    "subject": "대사와세포조절",
    "professor": "문교철",
    "is_exam": false,
-   "topic": "호르몬과 신호전달 (III)"
+   "topic": "호르몬과 신호전달 (III)",
+   "room": "백202"
   },
   {
    "week": "4",
@@ -1324,7 +1388,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Maintenance of Blood Glucose Levels"
+   "topic": "Maintenance of Blood Glucose Levels",
+   "room": "백202"
   },
   {
    "week": "4",
@@ -1336,7 +1401,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "Aging"
+   "topic": "Aging",
+   "room": "백202"
   },
   {
    "week": "4",
@@ -1358,11 +1424,11 @@
    "period": 7,
    "start": "15:30",
    "end": "16:20",
-   "subject": "의생명과학역사를뒤흔든실험들",
-   "professor": "이용욱",
+   "subject": "세포와질병",
+   "professor": "장병철",
    "is_exam": false,
-   "topic": "Recombinant DNA",
-   "room": "M111"
+   "topic": "피부 각질 세포의 기능 이해 및 기능 이상에 따른 피부질환 발생기전",
+   "room": "M212"
   },
   {
    "week": "4",
@@ -1371,11 +1437,11 @@
    "period": 7,
    "start": "15:30",
    "end": "16:20",
-   "subject": "세포와질병",
-   "professor": "장병철",
+   "subject": "의생명과학역사를뒤흔든실험들",
+   "professor": "이용욱",
    "is_exam": false,
-   "topic": "피부 각질 세포의 기능 이해 및 기능 이상에 따른 피부질환 발생기전",
-   "room": "M212"
+   "topic": "Recombinant DNA",
+   "room": "M111"
   },
   {
    "week": "4",
@@ -1413,7 +1479,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": true,
-   "topic": "2차 시험"
+   "topic": "2차 시험",
+   "room": "존슨홀"
   },
   {
    "week": "4",
@@ -1425,7 +1492,8 @@
    "subject": "기초의학통합실습(2)",
    "professor": "하은영",
    "is_exam": true,
-   "topic": "1차 시험"
+   "topic": "1차 시험",
+   "room": "존슨홀"
   },
   {
    "week": "4",
@@ -1613,7 +1681,8 @@
    "subject": "대사와세포조절",
    "professor": "하은영",
    "is_exam": false,
-   "topic": "피드백"
+   "topic": "피드백",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1625,7 +1694,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "백원기,김진경",
    "is_exam": false,
-   "topic": "의학기초와질병(1) 소개 및 미생물학의 발전사"
+   "topic": "의학기초와질병(1) 소개 및 미생물학의 발전사",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1637,7 +1707,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김진경",
    "is_exam": false,
-   "topic": "세균의 분류 (I)"
+   "topic": "세균의 분류 (I)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1649,7 +1720,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김진경",
    "is_exam": false,
-   "topic": "세균의 분류 (II)"
+   "topic": "세균의 분류 (II)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1661,7 +1733,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "의학연구방법론 (1)"
+   "topic": "의학연구방법론 (1)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1673,7 +1746,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "의학연구방법론 (2)"
+   "topic": "의학연구방법론 (2)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1724,7 +1798,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "의학유전학의 서론"
+   "topic": "의학유전학의 서론",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1736,7 +1811,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김진경",
    "is_exam": false,
-   "topic": "세균의 미세구조 (I)"
+   "topic": "세균의 미세구조 (I)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1748,7 +1824,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "채플 예배",
+   "topic": "조일흠 목사 - 보이지 않는 신을 믿는 이유",
    "room": "존슨홀"
   },
   {
@@ -1761,7 +1837,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김진경",
    "is_exam": false,
-   "topic": "세균의 미세구조 (II)"
+   "topic": "세균의 미세구조 (II)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1773,7 +1850,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "대립유전자와 발현의 불균형, 세포분열의 특성"
+   "topic": "대립유전자와 발현의 불균형, 세포분열의 특성",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1785,7 +1863,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "인간 유전 다양성 (I)"
+   "topic": "인간 유전 다양성 (I)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1797,7 +1876,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "이용욱",
    "is_exam": false,
-   "topic": "세균의 신진대사"
+   "topic": "세균의 신진대사",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1809,7 +1889,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "인간 유전 다양성 (II)"
+   "topic": "인간 유전 다양성 (II)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1821,7 +1902,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "임상 세포유전학과 유전체 분석의 원리 (I)"
+   "topic": "임상 세포유전학과 유전체 분석의 원리 (I)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1885,7 +1967,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "이용욱",
    "is_exam": false,
-   "topic": "세균의 유전학 (I)"
+   "topic": "세균의 유전학 (I)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1897,7 +1980,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "이용욱",
    "is_exam": false,
-   "topic": "세균의 유전학 (II)"
+   "topic": "세균의 유전학 (II)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1909,7 +1993,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "이용욱",
    "is_exam": false,
-   "topic": "세균의 유전학 (III)"
+   "topic": "세균의 유전학 (III)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1921,7 +2006,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김진경",
    "is_exam": false,
-   "topic": "세균의 성장"
+   "topic": "세균의 성장",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1985,7 +2071,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "임상 세포유전학과 유전체 분석의 원리 (II)"
+   "topic": "임상 세포유전학과 유전체 분석의 원리 (II)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -1997,7 +2084,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "하정숙",
    "is_exam": false,
-   "topic": "질병의 염색체와 유전체의적 기초 (I)"
+   "topic": "질병의 염색체와 유전체의적 기초 (I)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -2009,7 +2097,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "이용욱",
    "is_exam": false,
-   "topic": "멸균 및 소독"
+   "topic": "멸균 및 소독",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -2021,7 +2110,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김진경",
    "is_exam": false,
-   "topic": "항균제 총론 (I)"
+   "topic": "항균제 총론 (I)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -2033,7 +2123,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "하정숙",
    "is_exam": false,
-   "topic": "질병의 염색체와 유전체의적 기초 (II)"
+   "topic": "질병의 염색체와 유전체의적 기초 (II)",
+   "room": "백202"
   },
   {
    "week": "5",
@@ -2155,28 +2246,6 @@
    "week": "6",
    "date": "2026-10-05",
    "day": "월",
-   "period": 7,
-   "start": "15:30",
-   "end": "16:20",
-   "subject": "개천절 대체공휴일",
-   "professor": "",
-   "is_exam": false
-  },
-  {
-   "week": "6",
-   "date": "2026-10-05",
-   "day": "월",
-   "period": 7,
-   "start": "15:30",
-   "end": "16:20",
-   "subject": "개천절 대체공휴일",
-   "professor": "",
-   "is_exam": false
-  },
-  {
-   "week": "6",
-   "date": "2026-10-05",
-   "day": "월",
    "period": 8,
    "start": "16:30",
    "end": "17:20",
@@ -2194,7 +2263,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "단일유전자 유전양식 (I)"
+   "topic": "단일유전자 유전양식 (I)",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2206,7 +2276,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김진경",
    "is_exam": false,
-   "topic": "항균제총론 (II)"
+   "topic": "항균제총론 (II)",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2218,7 +2289,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김진경",
    "is_exam": false,
-   "topic": "항균제총론 (III)"
+   "topic": "항균제총론 (III)",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2230,7 +2302,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "채플 예배",
+   "topic": "김신우 목사 - 인간관계에 대한 성경적 관점",
    "room": "존슨홀"
   },
   {
@@ -2295,7 +2367,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "단일유전자 유전양식 (II)"
+   "topic": "단일유전자 유전양식 (II)",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2307,7 +2380,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김경보",
    "is_exam": false,
-   "topic": "다인자질환의 복합 유전"
+   "topic": "다인자질환의 복합 유전",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2319,7 +2393,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김도훈",
    "is_exam": false,
-   "topic": "인구 집단내 유전적 변이"
+   "topic": "인구 집단내 유전적 변이",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2331,7 +2406,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "하정숙",
    "is_exam": false,
-   "topic": "위험도 평가와 유전상담, 질의 및 응답"
+   "topic": "위험도 평가와 유전상담, 질의 및 응답",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2361,6 +2437,32 @@
   },
   {
    "week": "6",
+   "date": "2026-10-07",
+   "day": "수",
+   "period": 7,
+   "start": "15:30",
+   "end": "16:20",
+   "subject": "의학기초와질병(1)",
+   "professor": "김도훈",
+   "is_exam": false,
+   "topic": "유전병의 분자원리 (I)",
+   "room": "백202"
+  },
+  {
+   "week": "6",
+   "date": "2026-10-07",
+   "day": "수",
+   "period": 8,
+   "start": "16:30",
+   "end": "17:20",
+   "subject": "의학기초와질병(1)",
+   "professor": "김도훈",
+   "is_exam": false,
+   "topic": "유전병의 분자원리 (II)",
+   "room": "백202"
+  },
+  {
+   "week": "6",
    "date": "2026-10-08",
    "day": "목",
    "period": 2,
@@ -2369,7 +2471,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "서성일",
    "is_exam": false,
-   "topic": "항균제 각론 (I)"
+   "topic": "항균제 각론 (I)",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2381,7 +2484,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "서성일",
    "is_exam": false,
-   "topic": "항균제 각론 (II)"
+   "topic": "항균제 각론 (II)",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2393,7 +2497,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "백원기",
    "is_exam": false,
-   "topic": "의료인문학"
+   "topic": "의료인문학",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2405,7 +2510,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "인간 질병에 대한 유전적 기초 동정 (I)"
+   "topic": "인간 질병에 대한 유전적 기초 동정 (I)",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2417,7 +2523,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김진경",
    "is_exam": false,
-   "topic": "정상균무리"
+   "topic": "정상균무리",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2429,7 +2536,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "서성일",
    "is_exam": false,
-   "topic": "세균의 병원성 기전 (I)"
+   "topic": "세균의 병원성 기전 (I)",
+   "room": "백202"
   },
   {
    "week": "6",
@@ -2540,9 +2648,10 @@
    "start": "9:30",
    "end": "10:20",
    "subject": "의학기초와질병(1)",
-   "professor": "서성일,김대광",
+   "professor": "김진경,김대광",
    "is_exam": true,
-   "topic": "1차 시험"
+   "topic": "1차 시험",
+   "room": "존슨홀"
   },
   {
    "week": "7",
@@ -2554,7 +2663,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "의학연구방법론 (3)"
+   "topic": "의학연구방법론 (3)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2566,7 +2676,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "의학연구방법론 (4)"
+   "topic": "의학연구방법론 (4)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2617,7 +2728,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "인간 질병에 대한 유전적 기초 동정 (II)"
+   "topic": "인간 질병에 대한 유전적 기초 동정 (II)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2629,7 +2741,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "서성일",
    "is_exam": false,
-   "topic": "세균의 병원성 기전 (II)"
+   "topic": "세균의 병원성 기전 (II)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2641,7 +2754,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "서성일",
    "is_exam": false,
-   "topic": "세균의 병원성 기전 (III)"
+   "topic": "세균의 병원성 기전 (III)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2653,7 +2767,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "채플 예배",
+   "topic": "이효준 목사(삼덕교회) - 채플 예배",
    "room": "존슨홀"
   },
   {
@@ -2666,7 +2780,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "유전병의 분자적, 생화학적 및 세포학적 기초 (I)"
+   "topic": "유전병의 분자적, 생화학적 및 세포학적 기초 (I)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2678,7 +2793,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "유전병의 분자적, 생화학적 및 세포학적 기초 (II)"
+   "topic": "유전병의 분자적, 생화학적 및 세포학적 기초 (II)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2688,33 +2804,23 @@
    "start": "15:30",
    "end": "16:20",
    "subject": "의학기초와질병(1)",
-   "professor": "서성일,김대광",
+   "professor": "김진경,김대광",
    "is_exam": false,
-   "topic": "피드백"
+   "topic": "피드백",
+   "room": "백202"
   },
   {
    "week": "7",
-   "date": "2026-10-14",
-   "day": "수",
-   "period": 1,
-   "start": "8:30",
-   "end": "9:20",
+   "date": "2026-10-13",
+   "day": "화",
+   "period": 8,
+   "start": "16:30",
+   "end": "17:20",
    "subject": "의학기초와질병(1)",
    "professor": "백원기",
    "is_exam": false,
-   "topic": "진균학 총론 (I)"
-  },
-  {
-   "week": "7",
-   "date": "2026-10-14",
-   "day": "수",
-   "period": 2,
-   "start": "9:30",
-   "end": "10:20",
-   "subject": "의학기초와질병(1)",
-   "professor": "백원기",
-   "is_exam": false,
-   "topic": "진균학 총론 (II)"
+   "topic": "바이러스 특성 및 분류",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2726,7 +2832,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "유전병의 치료 (I)"
+   "topic": "유전병의 치료 (I)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2738,7 +2845,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "유전병의 치료 (II)"
+   "topic": "유전병의 치료 (II)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2802,7 +2910,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "발생유전학과 출생결함 (I)"
+   "topic": "발생유전학과 출생결함 (I)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2814,43 +2923,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "발생유전학과 출생결함 (II)"
-  },
-  {
-   "week": "7",
-   "date": "2026-10-15",
-   "day": "목",
-   "period": 3,
-   "start": "10:30",
-   "end": "11:20",
-   "subject": "의학기초와질병(1)",
-   "professor": "백원기",
-   "is_exam": false,
-   "topic": "바이러스 특성 및 분류"
-  },
-  {
-   "week": "7",
-   "date": "2026-10-15",
-   "day": "목",
-   "period": 4,
-   "start": "11:30",
-   "end": "12:20",
-   "subject": "의학기초와질병(1)",
-   "professor": "김도훈",
-   "is_exam": false,
-   "topic": "유전병의 분자원리 (I)"
-  },
-  {
-   "week": "7",
-   "date": "2026-10-15",
-   "day": "목",
-   "period": 5,
-   "start": "13:30",
-   "end": "14:20",
-   "subject": "의학기초와질병(1)",
-   "professor": "김도훈",
-   "is_exam": false,
-   "topic": "유전병의 분자원리 (II)"
+   "topic": "발생유전학과 출생결함 (II)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2862,7 +2936,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "백원기",
    "is_exam": false,
-   "topic": "바이러스의 구조 (I)"
+   "topic": "바이러스의 구조 (I)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2874,7 +2949,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "백원기",
    "is_exam": false,
-   "topic": "바이러스의 구조 (II)"
+   "topic": "바이러스의 구조 (II)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2899,7 +2975,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "백원기",
    "is_exam": false,
-   "topic": "바이러스증식"
+   "topic": "바이러스증식",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2911,7 +2988,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "행동유전학 (I)"
+   "topic": "행동유전학 (I)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2923,7 +3001,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "행동유전학 (II)"
+   "topic": "행동유전학 (II)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2933,9 +3012,10 @@
    "start": "11:30",
    "end": "12:20",
    "subject": "의학기초와질병(1)",
-   "professor": "서성일",
+   "professor": "이용욱",
    "is_exam": false,
-   "topic": "바이러스의 병원성 기전 (I)"
+   "topic": "바이러스의 유전현상",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2947,7 +3027,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "서성일",
    "is_exam": false,
-   "topic": "바이러스의 병원성 기전 (II)"
+   "topic": "바이러스의 병원성 기전 (I)",
+   "room": "백202"
   },
   {
    "week": "7",
@@ -2959,7 +3040,34 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "의학과 맞춤 건강관리에서 유전체의 적용, 암유전학(1)"
+   "topic": "의학과 맞춤 건강관리에서 유전체의 적용, 암유전학(1)",
+   "room": "백202"
+  },
+  {
+   "week": "7",
+   "date": "2026-10-16",
+   "day": "금",
+   "period": 7,
+   "start": "15:30",
+   "end": "16:20",
+   "subject": "의학기초와질병(1)",
+   "professor": "백원기",
+   "is_exam": false,
+   "topic": "진균학 총론 (I)",
+   "room": "백202"
+  },
+  {
+   "week": "7",
+   "date": "2026-10-16",
+   "day": "금",
+   "period": 8,
+   "start": "16:30",
+   "end": "17:20",
+   "subject": "의학기초와질병(1)",
+   "professor": "백원기",
+   "is_exam": false,
+   "topic": "진균학 총론 (II)",
+   "room": "백202"
   },
   {
    "week": "8",
@@ -2971,7 +3079,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "서성일",
    "is_exam": false,
-   "topic": "항바이러스제제"
+   "topic": "바이러스의 병원성 기전 (II)",
+   "room": "백202"
   },
   {
    "week": "8",
@@ -2981,9 +3090,10 @@
    "start": "9:30",
    "end": "10:20",
    "subject": "의학기초와질병(1)",
-   "professor": "이용욱",
+   "professor": "서성일",
    "is_exam": false,
-   "topic": "바이러스의 유전현상"
+   "topic": "항바이러스제제",
+   "room": "백202"
   },
   {
    "week": "8",
@@ -2995,7 +3105,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "암유전학(2)"
+   "topic": "암유전학(2)",
+   "room": "백202"
   },
   {
    "week": "8",
@@ -3007,7 +3118,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "김대광",
    "is_exam": false,
-   "topic": "의학유전학과 인문학"
+   "topic": "의학유전학과 인문학",
+   "room": "백202"
   },
   {
    "week": "8",
@@ -3019,7 +3131,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "바이어스의 종류와 제어 (1)"
+   "topic": "바이어스의 종류와 제어 (1)",
+   "room": "백202"
   },
   {
    "week": "8",
@@ -3031,7 +3144,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "바이어스의 종류와 제어 (2)"
+   "topic": "바이어스의 종류와 제어 (2)",
+   "room": "백202"
   },
   {
    "week": "8",
@@ -3041,7 +3155,7 @@
    "start": "15:30",
    "end": "16:20",
    "subject": "의생명과학역사를뒤흔든실험들",
-   "professor": "이용욱",
+   "professor": "이지선",
    "is_exam": false,
    "topic": "Genome Sequencing (NGS)",
    "room": "M111"
@@ -3074,6 +3188,19 @@
   },
   {
    "week": "8",
+   "date": "2026-10-19",
+   "day": "월",
+   "period": 8,
+   "start": "16:30",
+   "end": "17:20",
+   "subject": "세포와질병",
+   "professor": "신형찬",
+   "is_exam": false,
+   "topic": "위 점막 세포의 구조 및 위 선암의 발생기전",
+   "room": "M212"
+  },
+  {
+   "week": "8",
    "date": "2026-10-20",
    "day": "화",
    "period": 3,
@@ -3082,7 +3209,8 @@
    "subject": "의학기초와질병(1)",
    "professor": "백원기",
    "is_exam": false,
-   "topic": "질의 및 응답"
+   "topic": "질의 및 응답",
+   "room": "백202"
   },
   {
    "week": "8",
@@ -3112,15 +3240,29 @@
   },
   {
    "week": "8",
+   "date": "2026-10-20",
+   "day": "화",
+   "period": 8,
+   "start": "16:30",
+   "end": "17:20",
+   "subject": "의료선교학(2)",
+   "professor": "-",
+   "is_exam": false,
+   "topic": "요양기관 불법개설 예방교육",
+   "room": "온라인"
+  },
+  {
+   "week": "8",
    "date": "2026-10-23",
    "day": "금",
    "period": 4,
    "start": "11:30",
    "end": "12:20",
    "subject": "의학기초와질병(1)",
-   "professor": "서성일,김대광",
+   "professor": "김진경,김대광",
    "is_exam": true,
-   "topic": "2차 시험"
+   "topic": "2차 시험",
+   "room": "존슨홀"
   },
   {
    "week": "8",
@@ -3132,7 +3274,8 @@
    "subject": "기초의학통합실습(2)",
    "professor": "김진경,백원기,서성일,이용욱",
    "is_exam": true,
-   "topic": "2차 시험"
+   "topic": "2차 시험",
+   "room": "존슨홀"
   },
   {
    "week": "9",
@@ -3144,7 +3287,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "권선영",
    "is_exam": false,
-   "topic": "정상 조직의 형태와 변형"
+   "topic": "정상 조직의 형태와 변형",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3156,7 +3300,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "권선영",
    "is_exam": false,
-   "topic": "가역성 세포손상과 비가역성 세포손상"
+   "topic": "가역성 세포손상과 비가역성 세포손상",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3166,9 +3311,10 @@
    "start": "11:30",
    "end": "12:20",
    "subject": "의학기초와질병(1)",
-   "professor": "서성일,김대광",
+   "professor": "김진경,김대광",
    "is_exam": false,
-   "topic": "피드백"
+   "topic": "피드백",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3180,7 +3326,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "의학연구에서 통계의 활용(1)"
+   "topic": "의학연구에서 통계의 활용(1)",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3192,7 +3339,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "의학연구에서 통계의 활용(2)"
+   "topic": "의학연구에서 통계의 활용(2)",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3206,19 +3354,6 @@
    "is_exam": false,
    "topic": "비언어적 의사소통(1): 음악과 의사소통",
    "room": "M410"
-  },
-  {
-   "week": "9",
-   "date": "2026-10-26",
-   "day": "월",
-   "period": 7,
-   "start": "15:30",
-   "end": "16:20",
-   "subject": "세포와질병",
-   "professor": "신형찬",
-   "is_exam": false,
-   "topic": "위 점막 세포의 구조 및 위 선암의 발생기전",
-   "room": "M212"
   },
   {
    "week": "9",
@@ -3269,7 +3404,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "권선영",
    "is_exam": false,
-   "topic": "세포손상의 원인과 기전"
+   "topic": "세포손상의 원인과 기전",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3281,7 +3417,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "권선영",
    "is_exam": false,
-   "topic": "세포자멸사와 자가포식"
+   "topic": "세포자멸사와 자가포식",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3293,7 +3430,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "신형찬",
    "is_exam": false,
-   "topic": "염증의 정의, 원인 및 분류, 염증세포의 종류"
+   "topic": "염증의 정의, 원인 및 분류, 염증세포의 종류",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3305,7 +3443,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "신형찬",
    "is_exam": false,
-   "topic": "급성염증에서의 혈역학적 변동 및 염증세포의 이동"
+   "topic": "급성염증에서의 혈역학적 변동 및 염증세포의 이동",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3317,7 +3456,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "신형찬",
    "is_exam": false,
-   "topic": "급성염증에서의 탐식작용에 대해 이해한다."
+   "topic": "급성염증에서의 탐식작용",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3329,7 +3469,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "신형찬",
    "is_exam": false,
-   "topic": "급성염증의 화학매개체에 대해 설명할 수 있다."
+   "topic": "급성염증의 화학매개체",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3341,7 +3482,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "신형찬",
    "is_exam": false,
-   "topic": "급성염증의 형태학적 양상 및 경과에 대해 숙지한다."
+   "topic": "급성염증의 형태학적 양상 및 경과",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3353,7 +3495,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "이혜원",
    "is_exam": false,
-   "topic": "면역계의 개요"
+   "topic": "면역계 질환의 병리 - 면역계의 개요",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3365,7 +3508,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "신형찬",
    "is_exam": false,
-   "topic": "만성염증_원인 및 매개체와 형태학적 양상"
+   "topic": "만성염증의 원인 및 매개체와 형태학적 양상",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3377,7 +3521,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "신형찬",
    "is_exam": false,
-   "topic": "염증이 신체에 미치는 영향"
+   "topic": "염증이 신체에 미치는 영향",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3389,7 +3534,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "신형찬",
    "is_exam": false,
-   "topic": "수복과 재생: 분자기전"
+   "topic": "수복과 재생",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3440,7 +3586,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "최미선",
    "is_exam": false,
-   "topic": "채액의 순환장애"
+   "topic": "채액의 순환장애",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3452,7 +3599,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "최미선",
    "is_exam": false,
-   "topic": "혈액의 순환장애"
+   "topic": "혈액의 순환장애",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3464,7 +3612,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "최미선",
    "is_exam": false,
-   "topic": "지혈의 단계, 혈소판의 역할"
+   "topic": "지혈의 단계, 혈소판의 역할",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3476,7 +3625,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "이혜원",
    "is_exam": false,
-   "topic": "면역계 질환의 병리 - 과민반응"
+   "topic": "면역계 질환의 병리 - 과민반응",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3488,7 +3638,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "이혜원",
    "is_exam": false,
-   "topic": "면역계 질환의 병리 - 자가면역질환"
+   "topic": "면역계 질환의 병리 - 자가면역질환",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3500,7 +3651,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "이혜원",
    "is_exam": false,
-   "topic": "면역계 질환의 병리 - 이식거부반응"
+   "topic": "면역계 질환의 병리 - 이식거부반응",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3512,7 +3664,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "이혜원",
    "is_exam": false,
-   "topic": "면역계 질환의 병리 - 면역결핍증후군"
+   "topic": "면역계 질환의 병리 - 면역결핍증후군",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3524,7 +3677,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "최미선",
    "is_exam": false,
-   "topic": "지혈에서 혈액응고계와 혈관내피의 역할을 설명할 수 있다."
+   "topic": "지혈에서 혈액응고계와 혈관내피의 역할",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3536,7 +3690,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "최미선",
    "is_exam": false,
-   "topic": "혈전증의 병태생리를 설명할 수 있다."
+   "topic": "혈전증의 병태생리",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3548,7 +3703,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "최미선",
    "is_exam": false,
-   "topic": "출혈, 색전증, 경색증, 쇼크의 차이를 설명할 수 있다."
+   "topic": "출혈, 색전증, 경색증, 쇼크",
+   "room": "백202"
   },
   {
    "week": "9",
@@ -3599,7 +3755,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "이혜원",
    "is_exam": false,
-   "topic": "면역계 질환의 병리 - 아밀로이드증"
+   "topic": "면역계 질환의 병리 - 아밀로이드증",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3611,7 +3768,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "정혜라",
    "is_exam": false,
-   "topic": "영양질환"
+   "topic": "영양질환",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3623,7 +3781,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "정혜라",
    "is_exam": false,
-   "topic": "환경질환"
+   "topic": "환경질환",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3635,7 +3794,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": false,
-   "topic": "종양의 특징"
+   "topic": "종양의 특징",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3647,7 +3807,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": false,
-   "topic": "종양유전자, 세포증식, 세포주기조절자"
+   "topic": "종양유전자, 세포증식, 세포주기조절자",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3659,7 +3820,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": false,
-   "topic": "종양억제유전자"
+   "topic": "종양억제유전자",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3736,7 +3898,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": false,
-   "topic": "종양세포의 대사와 사멸, 무한복제, 혈관신생"
+   "topic": "종양세포의 대사와 사멸, 무한복제, 혈관신생",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3748,7 +3911,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": false,
-   "topic": "종양의 침윤 및 전이와 면역 회피, 유전적 병터"
+   "topic": "종양의 침윤 및 전이와 면역 회피, 유전적 병터",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3760,7 +3924,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": false,
-   "topic": "발암물질과 발암미생물"
+   "topic": "발암물질과 발암미생물",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3772,7 +3937,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "채플 예배",
+   "topic": "김신우 목사 - 인간관계에 대한 성경적 관점",
    "room": "존슨홀"
   },
   {
@@ -3824,7 +3989,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": false,
-   "topic": "종양의 임상적 측면과 병리적 확진"
+   "topic": "종양의 임상적 측면과 병리적 확진",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3836,7 +4002,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "정혜라",
    "is_exam": false,
-   "topic": "감염원의 분류와 확인"
+   "topic": "감염원의 분류와 확인",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3848,7 +4015,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "정혜라",
    "is_exam": false,
-   "topic": "미생물의 전파와 방어기전"
+   "topic": "미생물의 전파와 방어기전",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3860,7 +4028,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "정혜라",
    "is_exam": false,
-   "topic": "감염에 의한 숙주 조직반응"
+   "topic": "감염에 의한 숙주 조직반응",
+   "room": "백202"
   },
   {
    "week": "10",
@@ -3924,7 +4093,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": true,
-   "topic": "시험"
+   "topic": "1차 시험",
+   "room": "CBT실"
   },
   {
    "week": "11",
@@ -3936,7 +4106,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "연구결과의 해석과 추론 (1)"
+   "topic": "연구결과의 해석과 추론 (1)",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -3948,7 +4119,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "연구결과의 해석과 추론 (2)"
+   "topic": "연구결과의 해석과 추론 (2)",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4024,8 +4196,9 @@
    "end": "9:20",
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
-   "is_exam": false,
-   "topic": "피드백"
+   "is_exam": true,
+   "topic": "중간고사 피드백",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4037,7 +4210,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "건강 및 질병의 정의 및 결정요인"
+   "topic": "건강 및 질병의 정의 및 결정요인",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4049,7 +4223,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "역학의 기본원리와 역학연구의 자료"
+   "topic": "역학의 기본원리와 역학연구의 자료",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4061,7 +4236,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "채플 예배",
+   "topic": "조일흠 목사 - 무가치함으로부터의 해방",
    "room": "존슨홀"
   },
   {
@@ -4074,7 +4249,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "분야별 역학연구: 약물, 분자, 유전, 영양, 사회 역학 등"
+   "topic": "분야별 역학연구: 약물, 분자, 유전, 영양, 사회 역학 등",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4086,7 +4262,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "질병 및 사망, 건강수준의 측정 I"
+   "topic": "질병 및 사망, 건강수준의 측정 I",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4098,7 +4275,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "질병 및 사망, 건강수준의 측정 II"
+   "topic": "질병 및 사망, 건강수준의 측정 II",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4110,7 +4288,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "정혜라",
    "is_exam": false,
-   "topic": "주요 감염 질환의 증례와 새로운 감염질환"
+   "topic": "주요 감염 질환의 증례와 새로운 감염질환",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4122,7 +4301,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "감염질환의 역학 I: 감염병의 자연사와 전파"
+   "topic": "감염질환의 역학 I: 감염병의 자연사와 전파",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4134,7 +4314,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "감염질환의 역학 II: 감염병 유행조사와 관리원칙"
+   "topic": "감염질환의 역학 II: 감염병 유행조사와 관리원칙",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4185,7 +4366,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "감염질환의 역학 III: 감염병의 역학특성 및 예방관리"
+   "topic": "감염질환의 역학 III: 감염병의 역학특성 및 예방관리",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4197,7 +4379,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "정혜라",
    "is_exam": false,
-   "topic": "감염질환의 역학 Iv: 감염병의 역학특성 및 예방관리"
+   "topic": "감염질환의 역학 Iv: 감염병의 역학특성 및 예방관리",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4209,7 +4392,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "한국의 건강수준"
+   "topic": "한국의 건강수준",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4221,7 +4405,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "만성질환의 역학 I : 만성질환"
+   "topic": "만성질환의 역학 I : 만성질환",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4233,7 +4418,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "우형택",
    "is_exam": false,
-   "topic": "만성질환의 역학 II: 만성질환의 역학특성과 예방관리"
+   "topic": "만성질환의 역학 II: 만성질환의 역학특성과 예방관리",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4245,7 +4431,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "권선영",
    "is_exam": false,
-   "topic": "증례를 바탕으로 유방암의 임상적 의의 및 분자 병리학적 소견을 이해할 수 있다."
+   "topic": "사례를 통한 유방암의 임상적 의의 및 분자 병리학적 소견 이해",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4257,7 +4444,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "권선영",
    "is_exam": false,
-   "topic": "증례를 바탕으로 유방암의 임상적 의의 및 분자 병리학적 소견을 이해할 수 있다."
+   "topic": "사례를 통한 유방암의 임상적 의의 및 분자 병리학적 소견 이해",
+   "room": "백202"
   },
   {
    "week": "11",
@@ -4269,7 +4457,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "박순효",
    "is_exam": false,
-   "topic": "폐암의 임상 소견과 발병 기전을 설명할 수 있다."
+   "topic": "폐암의 임상양상과 병리학적 소견",
+   "room": "백202"
   },
   {
    "week": "12",
@@ -4281,7 +4470,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": false,
-   "topic": "[증례] 폐암의 임상양상과 병리학적 소견 : 형성평가 피드백"
+   "topic": "폐암의 임상양상과 병리학적 소견",
+   "room": "백202"
   },
   {
    "week": "12",
@@ -4293,7 +4483,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "이혜원",
    "is_exam": false,
-   "topic": "증례를 바탕으로 결장암의 임상소견과 발병 기전을 이해한다"
+   "topic": "증례 기반 대장암의 병리",
+   "room": "백202"
   },
   {
    "week": "12",
@@ -4305,7 +4496,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "이혜원",
    "is_exam": false,
-   "topic": "증례를 바탕으로 결장암의 임상소견과 발병 기전을 설명할 수 있다."
+   "topic": "증례 기반 대장암의 병리",
+   "room": "백202"
   },
   {
    "week": "12",
@@ -4317,7 +4509,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "최미선",
    "is_exam": false,
-   "topic": "증례를 바탕으로 전립샘암의 임상적 의의 및 병리학적 소견을 이해할 수 있다."
+   "topic": "전립샘암",
+   "room": "백202"
   },
   {
    "week": "12",
@@ -4329,7 +4522,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "최미선",
    "is_exam": false,
-   "topic": "증례를 바탕으로 전립샘암의 임상적 의의 및 병리학적 소견을 이해할 수 있다."
+   "topic": "전립샘암",
+   "room": "백202"
   },
   {
    "week": "12",
@@ -4341,7 +4535,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "신형찬",
    "is_exam": false,
-   "topic": "위암의 분자 병리학적 소견1"
+   "topic": "위암의 분자 병리학적 소견1",
+   "room": "백202"
   },
   {
    "week": "12",
@@ -4418,7 +4613,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "신형찬",
    "is_exam": false,
-   "topic": "위암의 분자 병리학적 소견2"
+   "topic": "위암의 분자 병리학적 소견2",
+   "room": "백202"
   },
   {
    "week": "12",
@@ -4430,7 +4626,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": false,
-   "topic": "종양 TBL 피드백"
+   "topic": "종양 TBL 피드백",
+   "room": "백202"
   },
   {
    "week": "12",
@@ -4442,7 +4639,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "채플 예배",
+   "topic": "이효준 목사(삼덕교회) - 채플예배",
    "room": "존슨홀"
   },
   {
@@ -4518,10 +4715,10 @@
    "start": "15:30",
    "end": "16:20",
    "subject": "기초의학통합실습(2)",
-   "professor": "권선영,김상표",
+   "professor": "황일선",
    "is_exam": false,
    "topic": "종양(2) - 문제풀이",
-   "room": "강의실"
+   "room": "백202"
   },
   {
    "week": "12",
@@ -4533,7 +4730,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": true,
-   "topic": "시험"
+   "topic": "시험",
+   "room": "CBT실"
   },
   {
    "week": "12",
@@ -4545,7 +4743,8 @@
    "subject": "기초의학통합실습(2)",
    "professor": "황일선",
    "is_exam": true,
-   "topic": "3차 시험"
+   "topic": "3차 시험",
+   "room": "CBT실"
   },
   {
    "week": "13",
@@ -4557,7 +4756,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "약리학의 개요 및 원리1"
+   "topic": "약리학의 개요 및 원리1",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4569,7 +4769,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "약리학의 개요 및 원리2"
+   "topic": "약리학의 개요 및 원리2",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4581,7 +4782,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이지선",
    "is_exam": false,
-   "topic": "신약개발 및 임상 시험"
+   "topic": "신약개발 및 임상 시험",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4593,7 +4795,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "약력학1"
+   "topic": "약력학1",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4605,7 +4808,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "약력학2"
+   "topic": "약력학2",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4617,7 +4821,8 @@
    "subject": "의학기초와질병(2)",
    "professor": "황일선",
    "is_exam": false,
-   "topic": "피드백"
+   "topic": "피드백",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4668,7 +4873,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "약동학1"
+   "topic": "약동학1",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4680,7 +4886,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "약동학2"
+   "topic": "약동학2",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4692,7 +4899,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "채플 예배",
+   "topic": "김신우 목사 - 진짜 운명이 결정되는 순간",
    "room": "존슨홀"
   },
   {
@@ -4757,7 +4964,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "약물 상호작용"
+   "topic": "약물 상호작용",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4769,7 +4977,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "약물내성"
+   "topic": "약물내성",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4781,7 +4990,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "약물유해반응"
+   "topic": "약물유해반응",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4793,7 +5003,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이지선",
    "is_exam": false,
-   "topic": "약물 중독 및 치료"
+   "topic": "약물 중독 및 치료",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4857,7 +5068,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "다약제"
+   "topic": "다약제",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4869,7 +5081,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "노인 약리학"
+   "topic": "노인 약리학",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4881,7 +5094,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "강혜인",
    "is_exam": false,
-   "topic": "치료적 약물 농도 감시(TDM)에 대한 이해"
+   "topic": "치료적 약물 농도 감시(TDM)에 대한 이해",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4893,7 +5107,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "박종욱",
    "is_exam": false,
-   "topic": "면역계의 개요"
+   "topic": "면역계의 개요",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4905,7 +5120,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "김신",
    "is_exam": false,
-   "topic": "과민반응 분류 및 기전 1"
+   "topic": "과민반응 분류 및 기전 1",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4917,7 +5133,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "김신",
    "is_exam": false,
-   "topic": "과민반응 분류 및 기전 2"
+   "topic": "과민반응 분류 및 기전 2",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4929,7 +5146,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "권택규",
    "is_exam": false,
-   "topic": "사이토카인"
+   "topic": "사이토카인",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4941,7 +5159,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "권택규",
    "is_exam": false,
-   "topic": "사이토카인"
+   "topic": "사이토카인",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4953,7 +5172,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이지선",
    "is_exam": false,
-   "topic": "약물유전체학"
+   "topic": "약물유전체학",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4965,7 +5185,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "박종욱",
    "is_exam": false,
-   "topic": "Vaccine"
+   "topic": "Vaccine",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4977,7 +5198,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "김신",
    "is_exam": false,
-   "topic": "즉시형과민반응1"
+   "topic": "즉시형과민반응1",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -4989,7 +5211,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "김신",
    "is_exam": false,
-   "topic": "즉시형과민반응2"
+   "topic": "즉시형과민반응2",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -5001,7 +5224,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "박종욱",
    "is_exam": false,
-   "topic": "선천성 면역결핍증"
+   "topic": "선천성 면역결핍증",
+   "room": "백202"
   },
   {
    "week": "13",
@@ -5013,7 +5237,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "박종욱",
    "is_exam": false,
-   "topic": "후천성 면역결핍증"
+   "topic": "후천성 면역결핍증",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5025,7 +5250,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "권택규",
    "is_exam": false,
-   "topic": "미생물에 대한 면역"
+   "topic": "미생물에 대한 면역",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5037,7 +5263,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "김신",
    "is_exam": false,
-   "topic": "면역관용1"
+   "topic": "면역관용1",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5049,7 +5276,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "김신",
    "is_exam": false,
-   "topic": "면역관용2"
+   "topic": "면역관용2",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5061,7 +5289,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "박종욱",
    "is_exam": false,
-   "topic": "조직이식과 면역반응1"
+   "topic": "조직이식과 면역반응1",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5073,7 +5302,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "박종욱",
    "is_exam": false,
-   "topic": "조직이식과 면역반응2"
+   "topic": "조직이식과 면역반응2",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5085,7 +5315,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "항염증약물"
+   "topic": "항염증약물",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5162,7 +5393,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "에이코사노이드1"
+   "topic": "에이코사노이드1",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5174,7 +5406,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "에이코사노이드2"
+   "topic": "에이코사노이드2",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5186,7 +5419,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "박재형",
    "is_exam": false,
-   "topic": "통증반응"
+   "topic": "통증반응",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5198,7 +5432,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "채플 예배",
+   "topic": "조일흠 목사 - 품격있는 메타인지 수업",
    "room": "존슨홀"
   },
   {
@@ -5263,7 +5497,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이지선",
    "is_exam": false,
-   "topic": "통증치료제"
+   "topic": "통증치료제",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5275,7 +5510,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "김신",
    "is_exam": false,
-   "topic": "면역 치료제의 원리"
+   "topic": "면역 치료제의 원리",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5287,7 +5523,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "권택규",
    "is_exam": false,
-   "topic": "종양면역학"
+   "topic": "종양면역학",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5299,7 +5536,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "권택규",
    "is_exam": false,
-   "topic": "종양면역학"
+   "topic": "종양면역학",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5311,7 +5549,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "자율신경계 약리학 총론1"
+   "topic": "자율신경계 약리학 총론1",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5323,7 +5562,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "자율신경계 약리학 총론2"
+   "topic": "자율신경계 약리학 총론2",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5335,7 +5575,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "콜린성 약물"
+   "topic": "콜린성 약물",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5347,7 +5588,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "항콜린성 약물"
+   "topic": "항콜린성 약물",
+   "room": "백202"
   },
   {
    "week": "14",
@@ -5359,7 +5601,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "권택규,이지선",
    "is_exam": true,
-   "topic": "시험"
+   "topic": "시험",
+   "room": "CBT실"
   },
   {
    "week": "15",
@@ -5371,7 +5614,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "아드레날린성 약물"
+   "topic": "아드레날린성 약물",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5383,7 +5627,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "항아드레날린성 약물"
+   "topic": "항아드레날린성 약물",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5395,7 +5640,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "히스타민, 세로토닌, 맥각 알칼로이드1"
+   "topic": "히스타민, 세로토닌, 맥각 알칼로이드1",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5407,7 +5653,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "히스타민, 세로토닌, 맥각 알칼로이드2"
+   "topic": "히스타민, 세로토닌, 맥각 알칼로이드2",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5419,7 +5666,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이지선",
    "is_exam": false,
-   "topic": "vasoactive peptide / NO1"
+   "topic": "vasoactive peptide / NO1",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5431,7 +5679,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이지선",
    "is_exam": false,
-   "topic": "vasoactive peptide / NO2"
+   "topic": "vasoactive peptide / NO2",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5482,7 +5731,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "중추신경계 약리학 총론1"
+   "topic": "중추신경계 약리학 총론1",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5494,7 +5744,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "중추신경계 약리학 총론2"
+   "topic": "중추신경계 약리학 총론2",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5506,7 +5757,7 @@
    "subject": "의료선교학(2)",
    "professor": "원목실",
    "is_exam": false,
-   "topic": "종강 예배",
+   "topic": "전세광 목사 - 종강예배 : 2, 30대의 당신들에게",
    "room": "존슨홀"
   },
   {
@@ -5571,7 +5822,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "근육이완제"
+   "topic": "근육이완제",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5583,7 +5835,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이지선",
    "is_exam": false,
-   "topic": "국소마취제"
+   "topic": "국소마취제",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5595,7 +5848,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "전신 마취제1"
+   "topic": "전신 마취제1",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5607,7 +5861,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "전신 마취제2"
+   "topic": "전신 마취제2",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5671,7 +5926,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "총괄형성평가 및 피드백"
+   "topic": "총괄형성평가 및 피드백",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5683,7 +5939,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "알코올"
+   "topic": "알코올",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5695,7 +5952,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이지선",
    "is_exam": false,
-   "topic": "항정신병 약물 및 lithium"
+   "topic": "항정신병 약물 및 lithium",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5707,7 +5965,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "장정희",
    "is_exam": false,
-   "topic": "항우울제"
+   "topic": "항우울제",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5771,7 +6030,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "진정제 및 수면제"
+   "topic": "진정제 및 수면제",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5783,7 +6043,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "응급의학 약물1"
+   "topic": "응급의학 약물1",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5795,7 +6056,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "이성용",
    "is_exam": false,
-   "topic": "응급의학 약물2"
+   "topic": "응급의학 약물2",
+   "room": "백202"
   },
   {
    "week": "15",
@@ -5859,7 +6121,8 @@
    "subject": "의학연구(2)",
    "professor": "우형택",
    "is_exam": true,
-   "topic": "시험"
+   "topic": "시험",
+   "room": "CBT실"
   },
   {
    "week": "16",
@@ -5910,7 +6173,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "권택규,이지선",
    "is_exam": true,
-   "topic": "2차 시험"
+   "topic": "2차 시험",
+   "room": "CBT실"
   },
   {
    "week": "16",
@@ -5922,7 +6186,8 @@
    "subject": "기초의학통합실습(2)",
    "professor": "이성용",
    "is_exam": true,
-   "topic": "4차 시험"
+   "topic": "4차 시험",
+   "room": "CBT실"
   },
   {
    "week": "16",
@@ -5934,7 +6199,8 @@
    "subject": "기초의학종합평가",
    "professor": "",
    "is_exam": true,
-   "topic": "교내 모의고사"
+   "topic": "교내 모의고사",
+   "room": "CBT실"
   },
   {
    "week": "16",
@@ -5946,7 +6212,8 @@
    "subject": "기초의학종합평가",
    "professor": "",
    "is_exam": true,
-   "topic": "교내 모의고사"
+   "topic": "교내 모의고사",
+   "room": "CBT실"
   },
   {
    "week": "16",
@@ -5958,7 +6225,8 @@
    "subject": "기초의학종합평가",
    "professor": "",
    "is_exam": true,
-   "topic": "교내 모의고사"
+   "topic": "교내 모의고사",
+   "room": "CBT실"
   },
   {
    "week": "16",
@@ -5970,7 +6238,8 @@
    "subject": "기초의학종합평가",
    "professor": "",
    "is_exam": true,
-   "topic": "교내 모의고사"
+   "topic": "교내 모의고사",
+   "room": "CBT실"
   },
   {
    "week": "16",
@@ -5982,7 +6251,8 @@
    "subject": "의학기초와질병(3)",
    "professor": "권택규,이지선",
    "is_exam": false,
-   "topic": "피드백 및 심화학습"
+   "topic": "피드백 및 심화학습",
+   "room": "백202"
   }
  ],
  "wdd": {
@@ -6098,6 +6368,7 @@
   "2026-10-12",
   "2026-10-23",
   "2026-11-06",
+  "2026-11-10",
   "2026-11-20",
   "2026-12-04",
   "2026-12-14",
@@ -6123,9 +6394,9 @@
   "16"
  ],
  "grade": "의예과 2학년",
- "ts": 1787753617196,
+ "ts": 1789572073332,
  "changelog": {
-  "ts": 1787753617196,
-  "msg": "2026-2학기 시간표 적용"
+  "ts": 1789572073332,
+  "msg": "8/28 기준 시간표 반영 — 강의실 추가, 일부 수업·교수 변경"
  }
 }

@@ -42,13 +42,17 @@ function xlGradeScore(name){
   var gm=g.match(/(\d)\s*학년/);
   var gnum=gm?gm[1]:'';
   var isPre=/의예|예과/.test(g),isMed=/의학과|본과/.test(g);
+  /* 시트명에서 학년 숫자: '2학년', '의예2', '본2', 'M2', 'premed2' */
+  var nm=n.match(/(\d)학년/)||n.match(/(?:의예과?|예과|본과?|의학과?|premed|med|pre|m)(\d)/i);
+  var nnum=nm?nm[1]:'';
+  var nPre=/의예|예과|premed|pre(?!s)/i.test(n),nMed=/의학과?|본과?|(?:^|[^a-z])med(?!ical)/i.test(n);
   var s=0;
-  if(gnum&&new RegExp(gnum+'학년').test(n))s+=3;
+  if(gnum&&nnum){s+=nnum===gnum?3:-3;}
   else if(gnum&&new RegExp('(^|[^0-9])'+gnum+'([^0-9]|$)').test(n))s+=1;
-  if(isPre&&/의예|예과|예\d|premed|pre/i.test(n))s+=2;
-  if(isMed&&/의학과|본과|본\d|med(?!ical)/i.test(n))s+=2;
-  if(isPre&&/의학과|본과|본\d/.test(n))s-=3;
-  if(isMed&&/의예|예과|예\d/.test(n))s-=3;
+  if(isPre&&nPre)s+=2;
+  if(isMed&&nMed&&!nPre)s+=2;
+  if(isPre&&nMed&&!nPre)s-=3;
+  if(isMed&&nPre)s-=3;
   return s;
 }
 
@@ -134,6 +138,12 @@ function xlWorkbookCands(wb){
     var sname=wb.SheetNames[si];
     var rows=smartSheetRows(wb.Sheets[sname]);
     if(!rows.length)continue;
+    /* 학년 병렬 시트('전체'): 학년 열마다 후보 */
+    var multi=(typeof smartParseMultiGrade==='function')?smartParseMultiGrade(rows):null;
+    if(multi){
+      multi.forEach(function(mc){cands.push({name:(wb.SheetNames.length>1?sname+' · ':'')+mc.name,result:mc.result});});
+      continue;
+    }
     var res=smartParseRows(rows);
     if(res&&!res.error&&res.items.length){
       cands.push({name:sname,result:res});

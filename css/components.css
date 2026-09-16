@@ -375,3 +375,7 @@
   .chip:hover,.xl-chip:hover{border-color:var(--border-strong)}
   .gs-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.08)}
 }
+/* 개인 편집: 날짜 + 교시 한 줄 */
+.edit-row2 .edit-date{flex:0 0 46%;min-width:0;-webkit-appearance:none;appearance:none}
+.edit-row2 select{flex:1;min-width:0}
+input[type=date].memo-input{line-height:1.3;min-height:38px}
