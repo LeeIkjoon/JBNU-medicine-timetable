@@ -64,6 +64,16 @@ function tmEnsureTick(){
     tmTick=setInterval(function(){
       var el=document.getElementById('tm-disp');
       if(el)el.textContent=tmFmt(tmElapsed());
+      var gb=document.getElementById('tm-goal-bar');
+      if(gb&&tmPlanId&&typeof planLoad==='function'){
+        var pl=null;planLoad().forEach(function(it){if(it.id===tmPlanId)pl=it;});
+        if(pl&&pl.goal){
+          var pct=Math.min(100,Math.round(((pl.secs||0)+Math.floor(tmElapsed()/1000))/(pl.goal*60)*100));
+          gb.style.width=pct+'%';
+          var ln=gb.parentNode&&gb.parentNode.previousSibling;
+          if(ln&&ln.className==='tm-goal-line'&&ln.lastChild)ln.lastChild.textContent=pct+'%';
+        }
+      }
     },500);
   }
 }
@@ -91,9 +101,6 @@ function tmStop(){
   if(elapsed>3000){/* 3초 이상만 기록 */
     var subj=tmSubject||'기타';
     var key=tmTodayKey();
-    /* 목표 달성 축하: 이번 기록으로 일일 목표를 처음 넘기는 순간 감지 */
-    var goalSec=(typeof dashGoalMin==='function')?dashGoalMin()*60:0;
-    var beforeSecs=(typeof dashDayTotal==='function')?dashDayTotal(key):0;
     var addSecs=Math.floor(elapsed/1000);
     var found=false;
     for(var i=0;i<tmLogs.length;i++){
@@ -105,9 +112,6 @@ function tmStop(){
     tmSave();
     if(tmPlanId&&typeof planRecord==='function'){
       planRecord(tmPlanId,addSecs,tmPlanStartMs||tmNow()-elapsed,tmNow());
-    }
-    if(goalSec>0&&beforeSecs<goalSec&&(beforeSecs+addSecs)>=goalSec&&typeof dashCelebrate==='function'){
-      dashCelebrate('오늘 목표를 채웠어요');
     }
   }
   tmAccum=0;tmState='idle';tmPlanId=null;tmPlanStartMs=0;tmActiveSave();
@@ -124,42 +128,70 @@ function tmRenderHost(){
   if(typeof renderDashboard==='function')renderDashboard();
 }
 
-/* 타이머 카드 HTML — 홈(renderDashboard)에서 삽입해 사용 */
+/* 타이머 카드 HTML — 공부 탭 최상단 (renderDashboard에서 삽입) */
 function tmCardHtml(){
   var running=tmState==='running',paused=tmState==='paused';
-  return '<div class="tm-clock-card'+(running?' running':paused?' paused':'')+'">'+tmInnerHtml()+'</div>';
+  return '<div class="tm-hero'+(running?' running':paused?' paused':'')+'">'+tmInnerHtml()+'</div>';
 }
-function tmInnerHtml(){
-  var subjects=[],seen2={};
+var tmPickOpen=false; /* 대기 상태에서 '과목 직접 선택' 셀렉트 노출 여부 */
+function tmSubjects(){
+  var subjects=[],seen={};
   for(var i=0;i<fsubj.length;i++){
     var s=fsubj[i];
-    if(!isEx(s)&&!isEv(s)&&!seen2[s]){subjects.push(s);seen2[s]=true;}
+    if(!isEx(s)&&!isEv(s)&&!isHoliday(s)&&!seen[s]){subjects.push(s);seen[s]=true;}
   }
-  subjects.sort();
+  return subjects.sort();
+}
+function tmInnerHtml(){
   var running=tmState==='running',paused=tmState==='paused';
-
   var active=running||paused;
+  var plans=(typeof planLoad==='function')?planLoad():[];
+  var linkedPlan=null;
+  plans.forEach(function(it){if(it.id===tmPlanId)linkedPlan=it;});
   var h='';
   if(active){
-    /* 실행/일시정지: 과목 라이브 헤더 */
     h+='<div class="tm-live-head'+(running?' running':' paused')+'">';
     h+='<span class="tm-live-dot"></span>';
-    h+='<span class="tm-live-txt">'+(running?'집중 중':'일시정지')+(tmSubject?' · '+escHtml(tmSubject):'')+'</span>';
+    h+='<span class="tm-live-txt">'+(running?'집중 중':'일시정지')+'</span>';
     h+='</div>';
+    h+='<div class="tm-live-subj">'+escHtml(tmSubject||'과목 미지정')+'</div>';
   } else {
-    /* 대기: 과목 선택 */
-    h+='<div class="tm-subj-wrap">';
-    h+='<select class="tm-subject-select" id="tm-subj">';
-    h+='<option value="">과목 선택</option>';
-    for(var si=0;si<subjects.length;si++){
-      var sel=(tmSubject===subjects[si])?' selected':'';
-      h+='<option value="'+escHtml(subjects[si])+'"'+sel+'>'+escHtml(subjects[si])+'</option>';
+    /* 대상 선택: 플래너 미완료 항목 칩 + 과목 직접 선택 */
+    var open=plans.filter(function(it){return !it.done;});
+    if(!linkedPlan&&open.length&&!tmSubject){tmPlanId=open[0].id;tmSubject=open[0].text;linkedPlan=open[0];}
+    h+='<div class="tm-pick">';
+    if(open.length){
+      h+='<div class="tm-chips">';
+      open.forEach(function(it){
+        var on=(tmPlanId===it.id);
+        h+='<button class="tm-chip'+(on?' on':'')+'" data-plan="'+it.id+'" data-text="'+escHtml(it.text)+'">'+escHtml(it.text)+'</button>';
+      });
+      var subjOn=!tmPlanId&&tmSubject;
+      h+='<button class="tm-chip'+(subjOn?' on':'')+(tmPickOpen?' open':'')+'" id="tm-chip-subj">'+(subjOn?escHtml(tmSubject):'과목 선택')+'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>';
+      h+='</div>';
     }
-    h+='</select>';
-    h+='<svg class="tm-subj-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+    if(!open.length||tmPickOpen){
+      h+='<div class="tm-subj-wrap">';
+      h+='<select class="tm-subject-select" id="tm-subj" aria-label="과목 선택">';
+      h+='<option value="">과목 선택</option>';
+      var subjects=tmSubjects();
+      for(var si=0;si<subjects.length;si++){
+        var sel=(!tmPlanId&&tmSubject===subjects[si])?' selected':'';
+        h+='<option value="'+escHtml(subjects[si])+'"'+sel+'>'+escHtml(subjects[si])+'</option>';
+      }
+      h+='</select>';
+      h+='<svg class="tm-subj-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+      h+='</div>';
+    }
     h+='</div>';
   }
   h+='<div class="tm-display'+(running?' running':paused?' paused':'')+'" id="tm-disp">'+tmFmt(tmElapsed())+'</div>';
+  if(linkedPlan&&linkedPlan.goal){
+    var done=(linkedPlan.secs||0)+Math.floor(tmElapsed()/1000),goal=linkedPlan.goal*60;
+    var pct=Math.min(100,Math.round(done/goal*100));
+    h+='<div class="tm-goal-line"><span>'+(active?'':escHtml(linkedPlan.text)+' · ')+'목표 '+tmFmtShort(goal*1000)+'</span><span>'+pct+'%</span></div>';
+    h+='<div class="tm-goal-track"><div class="tm-goal-bar" id="tm-goal-bar" style="width:'+pct+'%"></div></div>';
+  }
   h+='<div class="tm-btns">';
   if(tmState==='idle'){
     h+='<button class="tm-btn tm-btn-start" id="tm-start">'+TM_IC.play+'공부 시작</button>';
@@ -169,7 +201,7 @@ function tmInnerHtml(){
   } else {
     h+='<button class="tm-btn tm-btn-start" id="tm-start">'+TM_IC.play+'재개</button>';
     h+='<button class="tm-btn tm-btn-stop" id="tm-stop">'+TM_IC.save+'기록 저장</button>';
-    h+='<button class="tm-btn tm-btn-reset" id="tm-reset" title="초기화">'+TM_IC.reset+'</button>';
+    h+='<button class="tm-btn tm-btn-reset" id="tm-reset" title="초기화" aria-label="초기화">'+TM_IC.reset+'</button>';
   }
   h+='</div>';
   return h;
@@ -179,12 +211,31 @@ function tmInnerHtml(){
 function tmBind(){
   tmEnsureTick();
   var subjEl=document.getElementById('tm-subj');
-  if(subjEl)subjEl.onchange=function(){tmSubject=this.value;tmActiveSave();if(tmState!=='idle')tmRenderHost();};
+  if(subjEl)subjEl.onchange=function(){
+    tmSubject=this.value;
+    if(this.value){tmPlanId=null;}
+    tmActiveSave();tmRenderHost();
+  };
+  document.querySelectorAll('.tm-chip[data-plan]').forEach(function(b){
+    b.onclick=function(){
+      tmPlanId=parseInt(this.getAttribute('data-plan'),10);
+      tmSubject=this.getAttribute('data-text');
+      tmPickOpen=false;tmRenderHost();
+    };
+  });
+  var cs=document.getElementById('tm-chip-subj');
+  if(cs)cs.onclick=function(){tmPickOpen=!tmPickOpen;if(tmPickOpen){tmPlanId=null;if(!tmSubjects().length)tmSubject='';}tmRenderHost();};
   var startEl=document.getElementById('tm-start');
   var pauseEl=document.getElementById('tm-pause');
   var stopEl=document.getElementById('tm-stop');
   var resetEl=document.getElementById('tm-reset');
-  if(startEl)startEl.onclick=function(){var e=document.getElementById('tm-subj');if(e)tmSubject=e.value;tmStart_();};
+  if(startEl)startEl.onclick=function(){
+    var e=document.getElementById('tm-subj');
+    if(e&&e.value){tmSubject=e.value;tmPlanId=null;}
+    if(tmPlanId){var ok=false;(typeof planLoad==='function'?planLoad():[]).forEach(function(it){if(it.id===tmPlanId){ok=true;tmSubject=it.text;}});if(!ok)tmPlanId=null;}
+    tmPickOpen=false;
+    tmStart_();
+  };
   if(pauseEl)pauseEl.onclick=tmPause;
   if(stopEl)stopEl.onclick=tmStop;
   if(resetEl)resetEl.onclick=tmReset;

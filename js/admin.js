@@ -721,43 +721,11 @@ function admShowConfirm(msg,onOk,okLabel,okColor){
   document.body.appendChild(overlay);
 }
 
-/* ── Firebase 업로드 열기 ── */
+/* ── 업로드 시트 열기 (관리자 패널 위에 표시) ── */
 function admOpenUpload(){
   var ovl=document.getElementById('xl-ovl');
   if(!ovl)return;
+  if(typeof xlBind==='function')xlBind();
+  openXL();
   ovl.style.zIndex='960';
-  ovl.classList.add('show');
-  var dropzone=document.getElementById('xl-drop');
-  var fileInput=document.getElementById('xl-file');
-  if(dropzone&&fileInput){
-    dropzone.onclick=function(){fileInput.click();};
-    fileInput.onchange=function(){if(fileInput.files[0])handleFile(fileInput.files[0]);};
-  }
-  var xBtn=document.getElementById('xl-x');
-  if(xBtn) xBtn.onclick=closeXL;
-  ovl.onclick=function(e){if(e.target===ovl)closeXL();};
-  var applyBtn=document.getElementById('xl-apply');
-  if(applyBtn){
-    applyBtn.onclick=function(){
-      if(!pendingData)return;
-      var newItems=Array.isArray(pendingData)?pendingData:(pendingData.items||pendingData);
-      var nWdd=(!Array.isArray(pendingData)&&pendingData.nativeWdd)||null;
-      var nEd=(!Array.isArray(pendingData)&&pendingData.nativeEd)||null;
-      if(isAdmin){
-        _workingMerged=[];
-        newItems.forEach(function(it){_workingMerged.push(it);});
-        if(nWdd) Object.assign(wdd,nWdd);
-        if(nEd&&nEd.length){ed.length=0;nEd.forEach(function(e2){ed.push(e2);});}
-        _subjColorMap=null;
-        ci=0; closeXL(); renderAdminBody();
-      } else {
-        merged.length=0;
-        newItems.forEach(function(it){merged.push(it);});
-        buildFromItems(merged,nWdd||wdd,nEd||ed);
-        _subjColorMap=null;
-        try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:nWdd||wdd,ed:nEd||ed,grade:savedGrade,ts:Date.now()}));}catch(e){}
-        ci=0; closeXL(); render();
-      }
-    };
-  }
 }

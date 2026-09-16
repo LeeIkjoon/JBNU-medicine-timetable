@@ -1,10 +1,10 @@
 {
-  "name": "2026-1학기 시간표",
+  "name": "의대 시간표",
   "short_name": "시간표",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#4F8EF7",
-  "theme_color": "#4F8EF7",
+  "background_color": "#F2F4F6",
+  "theme_color": "#3182F6",
   "start_url": ".",
   "icons": [
     {

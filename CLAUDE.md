@@ -41,8 +41,11 @@ js/state.js           ci, vw, savedGrade, fExam, fsubj2, isAdmin,
 js/firebase.js        Firebase init + listener + changelog UI
 js/parsers/csv.js     parseCSV, csvRowsToItems (incl. Keimyung sniff)
 js/parsers/xlsx.js    parseNativeCell/Format/Rows, KNOWN_SUBJ_*
+js/parsers/smart.js   smartParseRows — 형식 자동 인식(wide/long/grid/legacy),
+                      smartSheetRows(병합 셀 채움), smartNameBareExams
 js/parsers/pdf.js     loadPdfJs, parseWkuPdf
-js/upload.js          openXL, closeXL, handleFile dispatcher
+js/upload.js          openXL/closeXL, handleFile, xlWorkbookCands(시트 후보),
+                      xlSelect(시트 칩 UI), xlApply(관리자/일반 공용 적용), xlBind
 js/views/weekly.js    buildWeekTable, buildLegend, renderW
 js/views/filter.js    lcardH, byDateH, renderL, renderF, renderFR
 js/views/calendar.js  openCal, closeCal, renderCal
@@ -67,9 +70,9 @@ Korean medical-school timetable for 전북대학교 의과대학 (JBNU College o
 - `의학과 2학년` → `med2`
 
 Three main views, switched via the bottom nav (`#bn-w` / `#bn-f` / `#bn-t`) plus a calendar overlay and per-date todo sheet:
-- **주간 (weekly)** — period × weekday grid for the current 주차.
-- **필터 (filter)** — list view filtered by subject / exam-only.
-- **타이머 (timer)** — per-subject study timer with daily logs.
+- **시간표 (weekly)** — period × weekday grid for the current 주차.
+- **공부 (dashboard, `js/views/dashboard.js`)** — 인사(날짜·플래너 진행·가장 가까운 시험 D-day 칩) → 타이머 히어로(`tmCardHtml`: 대기 시 플래너 미완료 항목 칩으로 대상 선택, '과목 선택' 칩이 셀렉트 토글; 연동 항목의 목표 진행 바) → 오늘 플래너(항목별 목표·실제·달성률, ▶ 연동, 접이식 '오늘 회고'+자기평가) → 시험(한 카드, [남은|본] 세그먼트) → 기록(연속·최고 연속·이번 주) → 백업. 상단에 총 공부시간·일일 목표는 표시하지 않음(2026-09 결정: 플래너가 측정). ≥720px는 `.dash-col-a/-b` 두 열.
+- **필터 (filter)** — list view filtered by subject / exam-only, 시수 뷰.
 
 ## Reading the source
 
@@ -114,15 +117,18 @@ The admin FAB (`#admin-fab`) opens `#admin-panel`. Editing happens on a deep clo
 
 ## Upload parsing
 
-`handleFile(file)` (in `js/upload.js`) routes by extension:
+`handleFile(file)` (in `js/upload.js`) routes by extension: `csv/tsv/txt` → 텍스트 디코딩(UTF-8 실패 시 EUC-KR) → `smartParseRows`; `pdf` → `loadPdfJs` + `parseWkuPdf`; 그 외 전부(xlsx/xls/xlsm/xlsb/ods/numbers) → `XLSX.read` → 시트마다 `smartSheetRows`(병합 셀을 좌상단 값으로 채움) → `smartParseRows`.
 
-- **JBNU native format (.xlsx / .xls / .csv)** — expected columns `주차 / 날짜 / 요일 / 1교시…10교시`. `isNativeFormat()` sniffs, `parseNativeRows()` extracts (both in `js/parsers/xlsx.js`). Cell convention parsed by `parseNativeCell()`:
-  - `과목명-교수명`
-  - `과목명\n세부-교수명`
-  - `과목명\n시험명-교수명` → subject becomes `과목명 시험명`
-  - Bare keyword like `시험` or `문제바탕학습1`
-- **Generic CSV** — `csvRowsToItems()` in `js/parsers/csv.js`, expects cells in `과목명 ( 교수명 )` form (also dispatches to Keimyung format when it sniffs that header layout).
-- **원광대 PDF** — `loadPdfJs()` then `parseWkuPdf(pageContents)` in `js/parsers/pdf.js`.
+`smartParseRows(rows)` (in `js/parsers/smart.js`) detects the layout and returns `{items, wddLocal, edLocal, format, warnings}`:
+- **wide** — 행=날짜, 열=교시 (전북대 배부 엑셀). 헤더 행 위치·열 순서 무관, 헤더가 없으면 열 추정. 주차 셀이 병합돼 비어 있으면 직전 주차 승계, 주차 열이 없으면 날짜로 부여. 요일이 날짜와 다르면 날짜 기준.
+- **long** — 행=수업 1개 (계명대 등). 헤더 이름으로 열 매핑(`smartHeaderKind`): 날짜/일자, 교시 또는 시작시간, 과목명, 교수, 주제, 강의실.
+- **grid** — 열=요일, 행=교시, 주차 블록 반복. 요일 헤더 행(≥3 요일)에서 블록 시작, 날짜는 헤더 셀·아래 행·위 행에서 찾고 하나만 있어도 요일 차로 보정.
+- **legacy** — `week,date,day,period,...` 영문 헤더 CSV.
+셀 파싱은 `smartCell` → `parseNativeCell`(과목-교수, 줄바꿈 세부/시험명) → `과목명 (교수명)` → `과목 / 교수` 순. 과목명 없는 `시험` 셀은 직전 7일간 가장 많이 들은 과목명을 붙인다(`smartNameBareExams`).
+
+여러 시트가 인식되면 `xlSetCands`가 시트 칩을 보여주고 `xlGradeScore`로 `savedGrade`에 맞는 시트(예: '2학년')를 기본 선택한다. `N주차` 시트가 여럿이면 하나로 합친다. 적용은 `xlApply()` 한 곳: 관리자는 `_workingMerged`에 반영(배포 필요), 일반 사용자는 `merged` 교체 + `ttKey()` 저장 + `ttLocalSet(true)`(내 파일 모드).
+
+Legacy parsers (`parseNativeRows`, `csvRowsToItems`) remain for `tools/` ports and reference; the app no longer calls them directly.
 
 After parsing, `buildFromItems()` rebuilds all derived state and `render()` redraws.
 
@@ -139,8 +145,8 @@ After parsing, `buildFromItems()` rebuilds all derived state and `render()` redr
 - 베이스: iOS 네이티브 느낌 (현재 -apple-system, env(safe-area-inset) 유지)
 - 토스에서 가져올 것: 큰 타이포, 통통한 라운드 (14-20px), 부드러운 마이크로 인터랙션
 - 노션에서 가져올 것: 명확한 위계, 넉넉한 여백, 회색 톤 계조
-- 모바일 380px 기준
-- Phase 2에서 다크모드 도입 (디자인 시스템 만들 때)
+- 모바일 380px 기준. 반응형: `layout.css` 하단 미디어쿼리(≤430 헤더 컴팩트, ≤340 폴드, ≥720 태블릿 2열·`--content-max` 가운데 정렬, 가로모드), 시트는 `components.css` 하단(≥640 가운데 카드)
+- 다크모드는 `tokens.css` (OS 추종 + `data-theme` 강제)
 
 ## 절대 깨면 안 되는 것
 - 학년별 시간표 분리 (savedGrade 기반, ttKey() 함수로 학년별 localStorage 키)

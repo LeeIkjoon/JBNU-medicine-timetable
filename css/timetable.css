@@ -164,3 +164,18 @@
 
 /* 교수 마지막 수업 마커 */
 .cn-last{font-size:8px;vertical-align:1px}
+
+/* ── 반응형: 태블릿 이상은 셀을 키워 과목명이 덜 잘리게 ── */
+@media (min-width:720px){
+  .td-c,.td-t{height:60px}
+  .td-c{max-height:60px}
+  .card{height:54px;max-height:54px;padding:6px 8px}
+  .cn-s{font-size:var(--font-sm)}
+  .cn-name,.cn-p{font-size:10px}
+  .th-d{font-size:var(--font-base)}
+  .th-date{font-size:10px}
+  .lg-grid{grid-template-columns:repeat(3,1fr)}
+}
+@media (min-width:1000px){
+  .lg-grid{grid-template-columns:repeat(4,1fr)}
+}

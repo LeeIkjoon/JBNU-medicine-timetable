@@ -53,7 +53,9 @@ function parseNativeCell(val){
       /* eAfter가 한국어 이름이면 교수명, 앞부분은 서브타입으로 버림(과목명에 합치지 않음) */
       if(eAfter.length>=2&&eAfter.length<=5&&/^[가-힣]+$/.test(eAfter)){
         if(!prof)prof=eAfter;
-        /* extra의 과목명 부분(세부번호 등)은 무시 - 과목명에 합치지 않음 */
+        /* extra의 과목명 부분(세부번호 등)은 무시 - 단, 시험명이면 과목명에 붙임 ('감염학\n중간 시험-김철수' → '감염학 중간 시험') */
+        var eBefore0=extra.slice(0,eDash).trim();
+        if(eBefore0&&/시험|퀴즈|고사/.test(eBefore0)&&!/^\d/.test(eBefore0))subj=subj+' '+eBefore0;
       } else {
         /* 시험명 등 의미있는 텍스트면 과목명에 추가 */
         var eBefore=extra.slice(0,eDash).trim();
@@ -81,18 +83,19 @@ function isNativeFormat(rows){
 
 function parseNativeRows(rows){
   var VALID={'월':1,'화':1,'수':1,'목':1,'금':1};
-  var items=[],wddLocal={},edLocal=[];
+  var items=[],wddLocal={},edLocal=[],lastWk='';
   /* 헤더 행 체크 - 첫 행이 주차/날짜/요일이면 skip */
   var startRow=0;
   if(rows[0]&&(String(rows[0][0]).trim()==='주차'||String(rows[0][0]).trim()==='week'))startRow=1;
 
   for(var r=startRow;r<rows.length;r++){
-    var row=rows[r];
+    var row=rows[r];if(!row)continue;
     var weekRaw=row[0],dateRaw=row[1],dayRaw=row[2];
-    if(!weekRaw||!dateRaw||!dayRaw)continue;
-    var wk=String(weekRaw).trim();
-    if(!wk||isNaN(parseInt(wk)))continue;
-    wk=String(parseInt(wk));
+    /* 주차 셀이 병합돼 첫 행만 값이 있는 파일: 빈 주차는 직전 주차 승계 */
+    var wkS=String(weekRaw===null||weekRaw===undefined?'':weekRaw).trim().replace(/주차?$/,'');
+    if(wkS&&!isNaN(parseInt(wkS)))lastWk=String(parseInt(wkS));
+    if(!dateRaw||!dayRaw||!lastWk)continue;
+    var wk=lastWk;
     var day=String(dayRaw).trim();
     if(!VALID[day])continue;
     /* 날짜 정규화 */

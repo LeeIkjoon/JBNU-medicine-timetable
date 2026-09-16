@@ -218,45 +218,9 @@ function init(){
   document.getElementById('cal-p').onclick=function(){cm2--;if(cm2<0){cm2=11;cy--;}renderCal();};
   document.getElementById('cal-n').onclick=function(){cm2++;if(cm2>11){cm2=0;cy++;}renderCal();};
 
-  /* 엑셀 업로드 */
+  /* 시간표 파일 업로드 시트 (바인딩·적용 로직은 js/upload.js) */
+  xlBind();
   var xlBtn=document.getElementById('xl-btn-open');if(xlBtn)xlBtn.onclick=openXL;
-  document.getElementById('xl-x').onclick=closeXL;
-  document.getElementById('xl-ovl').onclick=function(e){if(e.target===document.getElementById('xl-ovl'))closeXL();};
-
-  var dropzone=document.getElementById('xl-drop');
-  var fileInput=document.getElementById('xl-file');
-  dropzone.onclick=function(){fileInput.click();};
-  fileInput.onchange=function(){if(fileInput.files[0])handleFile(fileInput.files[0]);};
-  dropzone.ondragover=function(e){e.preventDefault();dropzone.classList.add('drag');};
-  dropzone.ondragleave=function(){dropzone.classList.remove('drag');};
-  dropzone.ondrop=function(e){
-    e.preventDefault();dropzone.classList.remove('drag');
-    var f=e.dataTransfer&&e.dataTransfer.files[0];
-    if(f)handleFile(f);
-  };
-
-  /* xl-apply는 admOpenUpload에서도 바인딩되지만 기본 핸들러 설정 */
-  var applyEl=document.getElementById('xl-apply');
-  if(applyEl && !applyEl._bound){
-    applyEl._bound=true;
-    applyEl.onclick=function(){
-      if(!pendingData)return;
-      var newItems=Array.isArray(pendingData)?pendingData:(pendingData.items||pendingData);
-      var nWdd=(!Array.isArray(pendingData)&&pendingData.nativeWdd)||null;
-      var nEd=(!Array.isArray(pendingData)&&pendingData.nativeEd)||null;
-      merged.length=0;
-      for(var _mi=0;_mi<newItems.length;_mi++) merged.push(newItems[_mi]);
-      buildFromItems(merged,nWdd||wdd,nEd||ed);
-      _subjColorMap=null;
-      /* 학교·학년별 키로 저장 (개인 업로드 영속화) */
-      try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:nWdd||wdd,ed:nEd||ed,grade:savedGrade,ts:Date.now()}));}catch(e){}
-      if(!isAdmin)ttLocalSet(true); /* 내 파일 모드 — 공유 동기화 일시 중지 */
-      goTodayWeek();
-      closeXL();
-      if(isAdmin) renderAdminBody();
-      else{render();}
-    };
-  }
 
   /* ── 학년 선택 & localStorage 복원 ── */
   savedGrade=localStorage.getItem('user_grade')||''; /* 전역변수에 저장 */

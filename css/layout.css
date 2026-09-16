@@ -1,6 +1,13 @@
 /* ── HEADER ── */
-.hdr{background:var(--header-bg);padding:10px 14px 8px;padding-top:calc(10px + env(safe-area-inset-top));border-bottom:none;position:sticky;top:0;z-index:200;box-shadow:var(--shadow-header)}
-.hdr-top{display:flex;align-items:center;justify-content:space-between}
+/* 콘텐츠 최대폭: 폰은 꽉 차게, 태블릿·데스크톱은 가운데 정렬 */
+:root{--content-max:920px}
+.hdr{background:var(--header-bg);padding:10px 14px 8px;
+  padding-top:calc(10px + env(safe-area-inset-top));
+  padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right));
+  border-bottom:none;position:sticky;top:0;z-index:200;box-shadow:var(--shadow-header)}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;gap:8px;max-width:var(--content-max);margin:0 auto}
+.ht2{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.hdr-right{flex-shrink:0}
 .ht{font-size:var(--font-lg);font-weight:var(--weight-bold);color:var(--text-onbrand);white-space:nowrap}
 .hs{font-size:var(--font-xs);color:rgba(255,255,255,0.75);margin-top:1px}
 .hdr-right{display:flex;align-items:center;gap:6px}
@@ -14,7 +21,11 @@
 .icon-btn-txt{font-size:13px;font-weight:var(--weight-bold);width:auto;padding:0 10px}
 
 /* ── MAIN ── */
-.main{padding:var(--space-1) 4px;padding-bottom:calc(80px + env(safe-area-inset-bottom,20px));min-height:calc(100dvh - 130px);box-sizing:border-box;}
+.main{padding:var(--space-1) 4px;
+  padding-left:max(4px,env(safe-area-inset-left));padding-right:max(4px,env(safe-area-inset-right));
+  padding-bottom:calc(80px + env(safe-area-inset-bottom,20px));
+  min-height:calc(100vh - 130px);min-height:calc(100dvh - 130px);box-sizing:border-box;
+  max-width:var(--content-max);margin:0 auto;width:100%}
 .sw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-md);background:var(--surface);box-shadow:var(--shadow-sm)}
 
 /* ── BOTTOM NAV ── */
@@ -24,7 +35,8 @@
   box-shadow:0 -1px 0 rgba(0,0,0,0.08);
   /* 높이 명시 */
   min-height:calc(50px + env(safe-area-inset-bottom,0px))}
-.bn{flex:1;border:none;background:none;padding:7px var(--space-1) 5px;display:flex;flex-direction:column;
+.bnav{justify-content:center}
+.bn{flex:1;max-width:200px;border:none;background:none;padding:7px var(--space-1) 5px;display:flex;flex-direction:column;
   align-items:center;gap:2px;font-size:var(--font-2xs);color:var(--text-soft);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bn.on{color:var(--accent)}
 .bn.on .bn-ic{background:var(--tint-accent)}
@@ -97,3 +109,45 @@
 .sc-req-btn{display:inline-block;background:var(--surface);color:var(--accent);text-decoration:none;
   font-size:var(--font-sm);font-weight:var(--weight-bold);border-radius:var(--radius-pill);
   padding:9px 16px;box-shadow:var(--shadow-xs)}
+
+/* ══════════════════════════════════════════
+   반응형 — 기종별 최적화
+   · 소형(≤380px: iPhone SE·Galaxy S 시리즈 좁은 폭): 헤더 컴팩트
+   · 초소형(≤340px: 폴드 커버화면): 학년 텍스트 버튼 숨김
+   · 태블릿·데스크톱(≥720px): 가운데 정렬 + 여백, 큰 시트는 다이얼로그처럼
+══════════════════════════════════════════ */
+/* 주차 네비가 함께 뜨는 주간 뷰에서 학년명이 잘리지 않게 — 폰 폭 전반 컴팩트 */
+@media (max-width:430px){
+  .hdr-right{gap:4px}
+  .wnav{gap:2px;margin-left:2px}
+  .nb{width:28px;height:30px;font-size:18px}
+  .wl{min-width:40px;font-size:var(--font-md)}
+}
+@media (max-width:380px){
+  .hdr{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right))}
+  .ht2{font-size:var(--font-lg)}
+  .icon-btn{width:30px;height:30px}
+  .icon-btn svg{width:18px;height:18px}
+  .icon-btn-txt{width:auto;padding:0 8px;font-size:12px;white-space:nowrap}
+}
+@media (max-width:340px){
+  #grade-btn{display:none}
+  .bn{font-size:9px}
+}
+@media (min-width:720px){
+  .main{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-top:var(--space-3)}
+  .sw{border-radius:var(--radius-lg)}
+  .bnav{padding-top:2px}
+  .bn-ic{width:56px}
+  .gs-grid{max-width:520px}
+}
+@media (min-width:1100px){
+  .main{padding-top:var(--space-4)}
+}
+/* 가로모드 폰: 헤더·네비가 화면을 덜 차지하게 */
+@media (max-height:480px) and (orientation:landscape){
+  .hdr{padding-top:calc(6px + env(safe-area-inset-top));padding-bottom:6px}
+  .bn{padding:4px var(--space-1) 3px}
+  .bn-ic{height:22px}
+  .bnav{min-height:calc(40px + env(safe-area-inset-bottom,0px))}
+}

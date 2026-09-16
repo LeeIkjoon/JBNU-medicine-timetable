@@ -6,9 +6,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="시간표">
-<meta name="theme-color" content="#FFFFFF">
+<meta name="theme-color" content="#FFFFFF" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C1C1E" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
-<title>2026-1 시간표</title>
+<title>시간표</title>
 <script>/* 테마 적용 (플래시 방지: CSS 페인트 전 실행)
    우선순위: URL ?theme= (preview/디버그) > localStorage.theme > OS 설정 자동 추종 */
 (function(){var u=new URLSearchParams(location.search).get('theme');var s=null;try{s=localStorage.getItem('theme');}catch(e){}var t=u||s;if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);})();</script>
@@ -17,12 +18,12 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="manifest" href="manifest.json">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<link rel="stylesheet" href="css/tokens.css?v=20260820f">
-<link rel="stylesheet" href="css/base.css?v=20260820f">
-<link rel="stylesheet" href="css/layout.css?v=20260826j">
-<link rel="stylesheet" href="css/timetable.css?v=20260905b">
-<link rel="stylesheet" href="css/components.css?v=20260830e">
-<link rel="stylesheet" href="css/views.css?v=20260905c">
+<link rel="stylesheet" href="css/tokens.css?v=20260916a">
+<link rel="stylesheet" href="css/base.css?v=20260916a">
+<link rel="stylesheet" href="css/layout.css?v=20260916a">
+<link rel="stylesheet" href="css/timetable.css?v=20260916a">
+<link rel="stylesheet" href="css/components.css?v=20260916a">
+<link rel="stylesheet" href="css/views.css?v=20260916a">
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -116,17 +117,18 @@
       <button class="xl-x" id="xl-x">✕</button>
     </div>
     <div class="xl-desc">
-      <b>전북대</b>: 엑셀 파일 그대로 업로드 (주차/날짜/요일/1~10교시)<br>
-      <b>원광대 등</b>: PDF 시간표 파일 업로드 자동 파싱<br>
-      셀 내용: <code>과목명 ( 교수명 )</code> 형태 · 여러 시트 자동 감지
+      학교에서 받은 시간표 파일을 그대로 올리면 형식을 자동으로 인식해요.<br>
+      엑셀(xlsx·xls·csv)은 시트가 여러 개여도 되고, 주차·날짜·요일·교시 열 순서가 달라도 괜찮아요.
     </div>
     <div class="xl-dropzone" id="xl-drop">
-      <input type="file" id="xl-file" accept=".csv,.xlsx,.xls,.pdf">
+      <input type="file" id="xl-file" accept=".csv,.tsv,.txt,.xlsx,.xls,.xlsm,.xlsb,.ods,.numbers,.pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,application/pdf">
       <div class="xl-di"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4M12 4l-4 4M12 4l4 4"/><path d="M5 15v3.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V15"/></svg></div>
       <div class="xl-dt">파일을 여기에 끌어놓거나 탭하세요</div>
-      <div class="xl-ds">CSV · XLSX · XLS · <strong>PDF</strong> 지원</div>
+      <div class="xl-ds">엑셀 · CSV · PDF</div>
     </div>
     <div class="xl-status" id="xl-status"></div>
+    <div class="xl-sheets" id="xl-sheets" style="display:none"></div>
+    <div class="xl-warn" id="xl-warn" style="display:none"></div>
     <button class="xl-btn" id="xl-apply" disabled>시간표 적용</button>
   </div>
 </div>
@@ -136,21 +138,22 @@
 <script src="js/data.js?v=20260826g"></script>
 <script src="js/state.js?v=20260825b"></script>
 <script src="js/firebase.js?v=20260829a"></script>
-<script src="js/parsers/csv.js?v=20260820a"></script>
-<script src="js/parsers/xlsx.js?v=20260820a"></script>
+<script src="js/parsers/csv.js?v=20260916a"></script>
+<script src="js/parsers/xlsx.js?v=20260916a"></script>
+<script src="js/parsers/smart.js?v=20260916a"></script>
 <script src="js/parsers/pdf.js?v=20260826e"></script>
-<script src="js/upload.js?v=20260826e"></script>
+<script src="js/upload.js?v=20260916a"></script>
 <script src="js/views/weekly.js?v=20260905e"></script>
 <script src="js/views/filter.js?v=20260830d"></script>
 <script src="js/views/calendar.js?v=20260830c"></script>
 <script src="js/views/planner.js?v=20260820a"></script>
-<script src="js/views/timer.js?v=20260905a"></script>
-<script src="js/views/dashboard.js?v=20260905d"></script>
+<script src="js/views/timer.js?v=20260916a"></script>
+<script src="js/views/dashboard.js?v=20260916a"></script>
 <script src="js/views/dtodo.js?v=20260826i"></script>
-<script src="js/admin.js?v=20260827e"></script>
+<script src="js/admin.js?v=20260916a"></script>
 <script src="js/sync.js?v=20260905a"></script>
 <script src="js/push.js?v=20260830e"></script>
-<script src="js/app.js?v=20260905a"></script>
+<script src="js/app.js?v=20260916a"></script>
 
 <!-- 관리자 FAB -->
 <button class="admin-fab" id="admin-fab" title="관리자 모드"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2 2 0 0 0-2.8-2.8L5 17.2z"/><path d="M13.5 6.7l3.8 3.8"/></svg></button>

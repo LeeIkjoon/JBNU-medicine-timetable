@@ -333,3 +333,45 @@
   cursor:pointer;font-family:inherit;transition:transform var(--duration-fast) var(--ease)}
 .push-hr:active{transform:scale(.94)}
 .push-hr.on{background:var(--accent);color:#fff}
+
+/* ── 업로드 시트: 시트 선택 칩 · 경고 ── */
+.xl-sheets{margin-top:var(--space-3)}
+.xl-sheets-lbl{font-size:var(--font-2xs);font-weight:var(--weight-bold);color:var(--text-soft);margin-bottom:6px;letter-spacing:.02em}
+.xl-chips{display:flex;flex-wrap:wrap;gap:6px}
+.xl-chip{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--border);background:var(--surface);
+  border-radius:var(--radius-pill);padding:7px 12px;font-size:var(--font-sm);font-weight:var(--weight-semi);
+  color:var(--text-secondary);cursor:pointer;font-family:inherit;max-width:100%;
+  -webkit-tap-highlight-color:transparent;transition:transform var(--duration-fast) var(--ease),background var(--duration-fast),border-color var(--duration-fast)}
+.xl-chip:active{transform:scale(.95)}
+.xl-chip.on{background:var(--tint-accent);border-color:var(--accent);color:var(--accent)}
+.xl-chip-n{font-size:var(--font-2xs);font-weight:var(--weight-bold);color:var(--text-fade);background:var(--surface-muted);border-radius:999px;padding:1px 6px}
+.xl-chip.on .xl-chip-n{color:var(--accent);background:var(--surface)}
+.xl-warn{margin-top:var(--space-2);font-size:var(--font-2xs);color:var(--warning-text);background:var(--warning-bg);
+  border-radius:10px;padding:8px 11px;line-height:1.5}
+.xl-warn div+div{margin-top:3px}
+.xl-status{margin-top:var(--space-2);line-height:1.45}
+
+/* ══════════════════════════════════════════
+   반응형 — 시트·오버레이
+   좁은 화면: 아래에서 올라오는 바텀시트 / 넓은 화면: 가운데 카드
+══════════════════════════════════════════ */
+.xl-sh,.cal-sh,.changelog-modal{max-width:560px;margin:0 auto}
+.xl-sh{max-height:92dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding-bottom:calc(24px + env(safe-area-inset-bottom,12px))}
+.cal-sh{max-height:88dvh}
+@media (min-width:640px){
+  .xl-ovl,.ovl,.changelog-modal-ovl{align-items:center;padding:24px}
+  .xl-sh,.cal-sh,.changelog-modal{border-radius:var(--radius-2xl)}
+  .xl-sh::before,.cal-sh::before{display:none}
+  .xl-sh{padding-top:var(--space-5)}
+  .dtodo-sh{max-width:420px}
+  .cls-sh{max-width:400px}
+}
+@media (hover:hover){
+  .icon-btn:hover,.nb:hover{background:var(--border)}
+  .bn:hover .bn-ic{background:var(--surface-muted)}
+  .bn.on:hover .bn-ic{background:var(--tint-accent)}
+  .card:hover{transform:translateY(-1px);box-shadow:inset 0 0 0 1px rgba(0,0,0,0.06),0 2px 6px rgba(0,0,0,.08)}
+  .chip:hover,.xl-chip:hover{border-color:var(--border-strong)}
+  .gs-card:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(0,0,0,0.08)}
+}
