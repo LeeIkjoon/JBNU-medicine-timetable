@@ -160,48 +160,66 @@ function xlWorkbookCands(wb){
   return cands;
 }
 
+/* 파일 종류 판별: 확장자보다 내용(매직 바이트) 우선 — 포털에서 .tmp 등으로 받히는 엑셀 대응 */
+function xlSniff(u8,ext){
+  if(u8.length>=5&&u8[0]===0x25&&u8[1]===0x50&&u8[2]===0x44&&u8[3]===0x46)return'pdf';        /* %PDF */
+  if(u8.length>=2&&u8[0]===0x50&&u8[1]===0x4B)return'sheet';                                 /* PK — xlsx/xlsm/ods/numbers */
+  if(u8.length>=4&&u8[0]===0xD0&&u8[1]===0xCF&&u8[2]===0x11&&u8[3]===0xE0)return'sheet';     /* OLE — xls */
+  if(ext==='pdf')return'pdf';
+  if(ext==='xlsx'||ext==='xls'||ext==='xlsm'||ext==='xlsb'||ext==='ods'||ext==='numbers')return'sheet';
+  if(ext==='csv'||ext==='tsv'||ext==='txt')return'text';
+  /* 텍스트로 읽어 표(구분자) 또는 HTML 표인지 확인 */
+  var head='';
+  try{head=xlDecodeText(u8.slice(0,4096).buffer);}catch(e){}
+  if(/^\s*<(!doctype|html|table|\?xml)/i.test(head))return'sheet';                          /* HTML/XML 표 → SheetJS가 처리 */
+  if(/[,\t;]/.test(head)&&/\n/.test(head))return'text'; /* 구분자 + 줄바꿈(\r\n 포함) */
+  return'sheet';
+}
+
 function handleFile(file){
   if(!file)return;
   var ext=(file.name.split('.').pop()||'').toLowerCase();
+  if(file.name.indexOf('.')<0)ext='';
   xlReset();
   xlStatus('파일 읽는 중...');
 
   var reader=new FileReader();
   reader.onerror=function(){xlStatus('파일을 읽을 수 없습니다.','err');};
-
-  if(ext==='pdf'){
-    xlHandlePdf(file);
-    return;
-  }
-
-  if(ext==='csv'||ext==='tsv'||ext==='txt'){
-    reader.onload=function(e){
+  reader.onload=function(e){
+    var buf=e.target.result,u8=new Uint8Array(buf);
+    var kind=xlSniff(u8,ext);
+    if(kind==='pdf'){xlHandlePdf(file);return;}
+    if(kind==='text'){
       try{
-        var rows=xlParseDelimited(xlDecodeText(e.target.result));
+        var rows=xlParseDelimited(xlDecodeText(buf));
         var res=smartParseRows(rows);
         if(res.error){xlStatus(res.error,'err');return;}
         xlSetCands([{name:file.name,result:res}]);
       }catch(err){xlStatus('파싱 오류: '+err.message,'err');}
-    };
-    reader.readAsArrayBuffer(file);
-    return;
-  }
-
-  /* 그 외(xlsx·xls·xlsm·xlsb·ods·numbers·확장자 없음): SheetJS가 형식 자동 감지 */
-  if(typeof XLSX==='undefined'){
-    xlStatus('엑셀 라이브러리를 아직 불러오지 못했어요. 잠시 후 다시 시도해주세요.','err');
-    return;
-  }
-  reader.onload=function(e){
+      return;
+    }
+    /* 스프레드시트(xlsx·xls·xlsm·xlsb·ods·numbers·HTML 표): SheetJS가 형식 자동 감지 */
+    if(typeof XLSX==='undefined'){
+      xlStatus('엑셀 라이브러리를 아직 불러오지 못했어요. 잠시 후 다시 시도해주세요.','err');
+      return;
+    }
     try{
-      var wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:false});
+      var wb=XLSX.read(u8,{type:'array',cellDates:false});
       var cands=xlWorkbookCands(wb);
       if(!cands.length){
         xlStatus('시간표를 인식하지 못했어요. 시트: '+wb.SheetNames.join(', '),'err');
         return;
       }
       xlSetCands(cands);
-    }catch(err){xlStatus('파일을 열 수 없어요: '+err.message,'err');}
+    }catch(err){
+      /* 엑셀로 안 열리면 텍스트 표로 한 번 더 시도 */
+      try{
+        var rows2=xlParseDelimited(xlDecodeText(buf));
+        var res2=smartParseRows(rows2);
+        if(!res2.error){xlSetCands([{name:file.name,result:res2}]);return;}
+      }catch(e2){}
+      xlStatus('파일을 열 수 없어요: '+err.message,'err');
+    }
   };
   reader.readAsArrayBuffer(file);
 }

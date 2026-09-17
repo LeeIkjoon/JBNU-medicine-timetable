@@ -118,10 +118,10 @@
     </div>
     <div class="xl-desc">
       학교에서 받은 시간표 파일을 그대로 올리면 형식을 자동으로 인식해요.<br>
-      엑셀(xlsx·xls·csv)은 시트가 여러 개여도 되고, 주차·날짜·요일·교시 열 순서가 달라도 괜찮아요.
+      확장자가 .tmp처럼 이상해도 내용으로 판별해요. 시트가 여러 개여도, 열 순서가 달라도 괜찮아요.
     </div>
     <div class="xl-dropzone" id="xl-drop">
-      <input type="file" id="xl-file" accept=".csv,.tsv,.txt,.xlsx,.xls,.xlsm,.xlsb,.ods,.numbers,.pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,application/pdf">
+      <input type="file" id="xl-file">
       <div class="xl-di"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4M12 4l-4 4M12 4l4 4"/><path d="M5 15v3.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V15"/></svg></div>
       <div class="xl-dt">파일을 여기에 끌어놓거나 탭하세요</div>
       <div class="xl-ds">엑셀 · CSV · PDF</div>
@@ -142,7 +142,7 @@
 <script src="js/parsers/xlsx.js?v=20260916a"></script>
 <script src="js/parsers/smart.js?v=20260917a"></script>
 <script src="js/parsers/pdf.js?v=20260826e"></script>
-<script src="js/upload.js?v=20260917a"></script>
+<script src="js/upload.js?v=20260917b"></script>
 <script src="js/views/weekly.js?v=20260917a"></script>
 <script src="js/views/filter.js?v=20260830d"></script>
 <script src="js/views/calendar.js?v=20260830c"></script>

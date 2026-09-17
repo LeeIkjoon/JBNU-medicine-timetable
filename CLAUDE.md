@@ -117,7 +117,7 @@ The admin FAB (`#admin-fab`) opens `#admin-panel`. Editing happens on a deep clo
 
 ## Upload parsing
 
-`handleFile(file)` (in `js/upload.js`) routes by extension: `csv/tsv/txt` → 텍스트 디코딩(UTF-8 실패 시 EUC-KR) → `smartParseRows`; `pdf` → `loadPdfJs` + `parseWkuPdf`; 그 외 전부(xlsx/xls/xlsm/xlsb/ods/numbers) → `XLSX.read` → 시트마다 `smartSheetRows`(병합 셀을 좌상단 값으로 채움) → `smartParseRows`.
+`handleFile(file)` (in `js/upload.js`) always reads an ArrayBuffer and classifies by **content** (`xlSniff`: `%PDF` / `PK` / OLE 매직 바이트 → 확장자 → 텍스트 헤드에 HTML 태그·구분자 여부). 학교 포털이 `.tmp`나 확장자 없이 내려주는 엑셀도 열린다(파일 input에 `accept` 없음). `pdf` → `loadPdfJs` + `parseWkuPdf`; `text` → 디코딩(UTF-8 실패 시 EUC-KR) → `xlParseDelimited`(탭/쉼표) → `smartParseRows`; `sheet`(xlsx/xls/xlsm/xlsb/ods/numbers/HTML 표) → `XLSX.read` → 시트마다 `smartSheetRows`(병합 셀을 좌상단 값으로 채움) → `smartParseRows`(학년 병렬 시트는 `smartParseMultiGrade`가 먼저).
 
 `smartParseRows(rows)` (in `js/parsers/smart.js`) detects the layout and returns `{items, wddLocal, edLocal, format, warnings}`:
 - **wide** — 행=날짜, 열=교시 (전북대 배부 엑셀). 헤더 행 위치·열 순서 무관, 헤더가 없으면 열 추정. 주차 셀이 병합돼 비어 있으면 직전 주차 승계, 주차 열이 없으면 날짜로 부여. 요일이 날짜와 다르면 날짜 기준.
