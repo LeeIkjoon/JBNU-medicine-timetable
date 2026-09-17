@@ -179,3 +179,7 @@
 @media (min-width:1000px){
   .lg-grid{grid-template-columns:repeat(4,1fr)}
 }
+
+/* 수업과 같이 있는 날의 휴일 표시(개교기념일 등) — 회색 미니 카드 */
+.card-hol{background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--border-soft);justify-content:center}
+.cn-hol{color:var(--text-soft);font-weight:var(--weight-semi);text-align:center;font-size:var(--font-2xs)}

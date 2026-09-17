@@ -46,11 +46,17 @@ function buildWeekTable(w,items){
     grid[sp][it.day]=it;
   }
 
-  /* 요일별 공휴일 여부 미리 계산 */
+  /* 요일별 공휴일 여부 — 그날에 실제 수업이 하나도 없을 때만 '하루 통째 휴일'로 접음.
+     (개교기념일 등 표시만 있고 수업이 같이 있는 날은 수업을 그대로 보여준다) */
   var holidayByDay={};/* day → subject */
+  var classByDay={};
+  for(var ci0=0;ci0<items.length;ci0++){
+    var it0=items[ci0];
+    if(!isHoliday(it0.subject))classByDay[it0.day]=1;
+  }
   for(var hi=0;hi<items.length;hi++){
     var hit=items[hi];
-    if(isHoliday(hit.subject)){
+    if(isHoliday(hit.subject)&&!classByDay[hit.day]){
       holidayByDay[hit.day]=hit.subject;
     }
   }
@@ -94,6 +100,12 @@ function buildWeekTable(w,items){
       var it=grid[pn]&&grid[pn][d];
       if(!it){
         html+='<td class="td-c" data-day="'+d+'" data-p="'+pn+'"></td>';
+        return;
+      }
+      /* 수업이 있는 날의 휴일 표시 항목: 해당 교시에만 작은 회색 표시 */
+      if(isHoliday(it.subject)){
+        html+='<td class="td-c" data-day="'+d+'" data-p="'+pn+'">';
+        html+='<div class="card card-hol"><div class="cn-s cn-hol">🗓 '+it.subject+'</div></div></td>';
         return;
       }
       var bg=gcol(it.subject);
