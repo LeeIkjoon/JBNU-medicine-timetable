@@ -176,6 +176,12 @@ function xlSniff(u8,ext){
   return'sheet';
 }
 
+/* 원격 진단용 서명: 파일명·크기·첫 바이트 (오류 문구에 붙여 캡처로 원인 파악) */
+function xlSig(u8,file){
+  var hex=[];for(var i=0;i<Math.min(4,u8.length);i++)hex.push(('0'+u8[i].toString(16)).slice(-2));
+  var asc='';for(var j=0;j<Math.min(12,u8.length);j++){var c=u8[j];asc+=(c>=32&&c<127)?String.fromCharCode(c):'.';}
+  return (file&&file.name?file.name:'?')+' '+Math.round((file&&file.size||u8.length)/1024)+'KB ['+hex.join(' ')+' '+asc+']';
+}
 function handleFile(file){
   if(!file)return;
   var ext=(file.name.split('.').pop()||'').toLowerCase();
@@ -207,7 +213,7 @@ function handleFile(file){
       var wb=XLSX.read(u8,{type:'array',cellDates:false});
       var cands=xlWorkbookCands(wb);
       if(!cands.length){
-        xlStatus('시간표를 인식하지 못했어요. 시트: '+wb.SheetNames.join(', '),'err');
+        xlStatus('시간표를 인식하지 못했어요 · 시트: '+wb.SheetNames.join(', ')+' · '+xlSig(u8,file),'err');
         return;
       }
       xlSetCands(cands);
@@ -218,7 +224,7 @@ function handleFile(file){
         var res2=smartParseRows(rows2);
         if(!res2.error){xlSetCands([{name:file.name,result:res2}]);return;}
       }catch(e2){}
-      xlStatus('파일을 열 수 없어요: '+err.message,'err');
+      xlStatus('파일을 열 수 없어요 · '+xlSig(u8,file)+' · '+err.message,'err');
     }
   };
   reader.readAsArrayBuffer(file);
