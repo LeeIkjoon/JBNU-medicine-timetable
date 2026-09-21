@@ -25,6 +25,10 @@
   --tint-info: #EEF1FF;          /* fmt-badge */
   --tint-exam: #FFF5F5;          /* exam row */
   --tint-warm: #FFF7ED;          /* changelog item bg */
+  --heat-1: rgba(49,130,246,.12); /* 공부 기록 달력 — 시간 많을수록 진하게 */
+  --heat-2: rgba(49,130,246,.26);
+  --heat-3: rgba(49,130,246,.45);
+  --heat-4: rgba(49,130,246,.85);
 
   /* Text ──────────────────────────────────── */
   --text: #1C1C1E;               /* primary */
@@ -138,6 +142,10 @@
   --tint-info: #1A2138;
   --tint-exam: #2A1418;
   --tint-warm: #2A1F12;
+  --heat-1: rgba(78,151,255,.16);
+  --heat-2: rgba(78,151,255,.30);
+  --heat-3: rgba(78,151,255,.50);
+  --heat-4: rgba(78,151,255,.85);
   --text: #FFFFFF;
   --text-strong: #FFFFFF;
   --text-secondary: #EBEBF5;
@@ -177,6 +185,10 @@
     --tint-info: #1A2138;
     --tint-exam: #2A1418;
     --tint-warm: #2A1F12;
+  --heat-1: rgba(78,151,255,.16);
+  --heat-2: rgba(78,151,255,.30);
+  --heat-3: rgba(78,151,255,.50);
+  --heat-4: rgba(78,151,255,.85);
     --text: #FFFFFF;
     --text-strong: #FFFFFF;
     --text-secondary: #EBEBF5;

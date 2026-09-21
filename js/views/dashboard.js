@@ -400,10 +400,16 @@ function dashRecordHtml(){
   h+='<div class="dash-rec"><div class="dash-rec-n">'+streak+'<span>일</span></div><div class="dash-rec-l">연속 공부</div></div>';
   h+='<div class="dash-rec"><div class="dash-rec-n">'+best+'<span>일</span></div><div class="dash-rec-l">최고 연속</div></div>';
   h+='<div class="dash-rec"><div class="dash-rec-n">'+(week?tmFmtShort(week*1000):'0분')+'</div><div class="dash-rec-l">이번 주</div></div>';
-  h+='</div></div>';
+  h+='</div>';
+  h+='<button class="dash-more" onclick="histOpen()">날짜별 기록 보기</button>';
+  h+='</div>';
   return h;
 }
 function renderDashboard(){
+  if(dashPage==='hist'&&typeof histHtml==='function'){
+    document.getElementById('main').innerHTML=histHtml();
+    return;
+  }
   var h='<div class="dash-wrap">';
   h+=dashGreetHtml();
   h+='<div class="dash-col dash-col-a">';

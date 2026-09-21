@@ -172,7 +172,7 @@ function init(){
 
   document.getElementById('pb').onclick=function(){if(ci>0){ci--;animMain();render();}};
   document.getElementById('nb').onclick=function(){if(ci<wks.length-1){ci++;animMain();render();}};
-  document.getElementById('bn-d').onclick=function(){setView('dashboard');};
+  document.getElementById('bn-d').onclick=function(){if(typeof dashPage!=='undefined')dashPage='main';setView('dashboard');};
   document.getElementById('bn-w').onclick=function(){goTodayWeek();setView('weekly');};
   document.getElementById('bn-f').onclick=function(){setView('filter');};
   document.getElementById('theme-btn').onclick=cycleTheme;updThemeBtn();
