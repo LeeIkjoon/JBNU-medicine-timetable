@@ -53,20 +53,20 @@ function histHasData(k){
   }catch(e){}
   return false;
 }
-/* 달력 칸용 짧은 시간 표기: 2:30 / 45분 */
+/* 달력 칸용 짧은 시간 표기: 2h 30m / 45m / 3h */
 function histShort(secs){
-  var m=Math.round(secs/60);
-  if(m<60)return m+'분';
-  return Math.floor(m/60)+':'+p2(m%60);
+  var m=Math.round(secs/60),h=Math.floor(m/60);
+  if(!h)return (m||1)+'m';
+  return m%60?h+'h '+(m%60)+'m':h+'h';
 }
 
 function histHtml(){
   var y=histYm[0],mo=histYm[1],todayK=dashYmd(studyDate());
   var pre=y+'-'+p2(mo+1)+'-',n=new Date(y,mo+1,0).getDate();
-  var days=0,total=0,maxS=0,daySecs={};
+  var days=0,total=0,daySecs={};
   for(var i=1;i<=n;i++){
     var s=dashDayTotal(pre+p2(i));daySecs[i]=s;
-    if(s>0){days++;total+=s;if(s>maxS)maxS=s;}
+    if(s>0){days++;total+=s;}
   }
   var isCur=(todayK.indexOf(pre)===0);
   var firstYm=histFirstYm(),isFirst=!firstYm||(y+'-'+p2(mo+1))<=firstYm;
@@ -94,11 +94,10 @@ function histHtml(){
   for(var b=0;b<first;b++)h+='<div></div>';
   for(var dd=1;dd<=n;dd++){
     var k=pre+p2(dd),s2=daySecs[dd],fut=k>todayK;
-    var lv=s2>0?Math.max(1,Math.min(4,Math.ceil(s2/Math.max(maxS,1)*4))):0;
-    var cls='hist-day'+(lv?' lv'+lv:'')+(k===histSel?' sel':'')+(k===todayK?' today':'')+(fut?' fut':'');
-    var sub=s2>0?histShort(s2):(!fut&&histHasData(k)?'·':'');
+    var cls='hist-day'+(k===histSel?' sel':'')+(k===todayK?' today':'')+(fut?' fut':'');
+    var sub=s2>0?histShort(s2):'',dot=!sub&&!fut&&histHasData(k);
     h+='<button class="'+cls+'"'+(fut?' disabled':' onclick="histPick(\''+k+'\')"')+'>'
-      +'<span class="hist-dn">'+dd+'</span><span class="hist-dt">'+sub+'</span></button>';
+      +'<span class="hist-dn">'+dd+'</span><span class="hist-dt'+(dot?' dot':'')+'">'+(dot?'•':sub)+'</span></button>';
   }
   h+='</div></div>';
 
