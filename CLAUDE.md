@@ -108,6 +108,7 @@ These globals (defined across `js/data.js` and `js/state.js`) hold all app state
   - `changelog_seen_<gradeKey>` — last-read timestamp for the banner.
   - `pl_todos` — planner todos.
   - `tm_logs` — timer per-day per-subject totals.
+  - `plan_<YYYY-MM-DD>` / `plan_meta_<YYYY-MM-DD>` — 공부 탭 플래너 항목(`{id,text,goal,secs,sessions,done}`)·각오/회고/자평. **공부일 기준은 새벽 4시**(`STUDY_DAY_START_H`, `studyDate()` in `js/views/timer.js`) — 플래너·타이머·연속일은 캘린더 날짜 대신 이걸 씀. 타이머 세션은 시작한 공부일에 기록되고, `tmSegs`로 일시정지 구간을 뺀 실제 구간만 `sessions`에 남김.
   - `dtodo_<YYYY-MM-DD>` — per-date todos shown when a date header is tapped.
 - **Firebase Realtime DB** at `timetable/<gradeKey>`. Schema: `{items, wdd, ed, wks, grade, ts, changelog}`. `fbGradeKey()` maps Korean grade names to `premed2` / `med1` / `med2`. Helpers: `fbRef()`, `loadFromFirebase()`, `applyFirebaseData()`, `startFirebaseListener()`. Listener is bypassed while `isAdmin === true` to avoid clobbering in-flight edits.
 

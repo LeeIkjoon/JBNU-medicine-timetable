@@ -543,3 +543,16 @@
 @media (min-width:720px){
   .hist-top{grid-column:1/-1}
 }
+
+/* 플래너 — 지난 미완료 항목 가져오기 */
+.pln-carry{display:flex;align-items:center;gap:4px;margin-top:10px;background:var(--surface-2);border-radius:var(--radius-md);padding:2px 4px 2px 2px}
+.pln-carry-b{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:1px;border:none;background:none;
+  padding:9px 10px;cursor:pointer;font-family:inherit;text-align:left;border-radius:10px;-webkit-tap-highlight-color:transparent}
+.pln-carry-b:active{background:var(--surface-muted)}
+.pln-carry-t{font-size:var(--font-md);font-weight:var(--weight-bold);color:var(--accent)}
+.pln-carry-s{max-width:100%;font-size:var(--font-xs);color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pln-carry-x{flex:none;width:32px;height:32px;border:none;background:none;color:var(--text-fade);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;padding:0}
+.pln-carry-x svg{width:13px;height:13px}
+.hist-ref-head{display:flex;align-items:center;justify-content:space-between}
+.hist-dcard .pln-ref{margin-top:6px}

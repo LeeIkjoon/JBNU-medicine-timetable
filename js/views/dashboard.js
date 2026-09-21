@@ -10,13 +10,13 @@ function dashDayTotal(key){
 }
 /* 연속 공부 일수 — 오늘 공부했으면 오늘 포함, 아니면 어제부터 카운트(아직 만회 가능) */
 function dashStreak(){
-  var n=0,d=new Date();
+  var n=0,d=studyDate();
   if(dashDayTotal(dashYmd(d))===0)d.setDate(d.getDate()-1);
   while(dashDayTotal(dashYmd(d))>0){n++;d.setDate(d.getDate()-1);}
   return n;
 }
 function dashWeekTotal(){
-  var now=new Date(),dow=now.getDay(),sum=0;
+  var now=studyDate(),dow=now.getDay(),sum=0;
   for(var i=0;i<7;i++){var dd=new Date(now);dd.setDate(now.getDate()-dow+i);sum+=dashDayTotal(dashYmd(dd));}
   return sum;
 }
@@ -167,7 +167,7 @@ function syncBind(){
 }
 
 /* ══════════ 오늘 플래너 (내용·목표·실제·시간대, 타이머 연동) ══════════ */
-function planKey(d){return 'plan_'+(d||dashYmd(new Date()));}
+function planKey(d){return 'plan_'+(d||dashYmd(studyDate()));}
 function planLoad(d){
   try{var a=JSON.parse(localStorage.getItem(planKey(d))||'[]');if(Array.isArray(a))return a;}catch(e){}
   return[];
@@ -178,6 +178,40 @@ function planAdd(text,goalMin){
   a.push({id:Date.now(),text:text,goal:goalMin,secs:0,sessions:[],done:false});
   planSave(a);renderDashboard();
 }
+/* 이월: 최근 계획한 날(7일 이내)의 미완료 항목 중 오늘에 없는 것 */
+function planCarrySource(){
+  var names={};planLoad().forEach(function(t){names[t.text]=1;});
+  var d=studyDate();
+  for(var i=1;i<=7;i++){
+    d.setDate(d.getDate()-1);
+    var k=dashYmd(d),arr=planLoad(k);
+    if(!arr.length)continue;
+    var left=arr.filter(function(it){return !it.done&&!names[it.text];});
+    return left.length?{date:k,gap:i,items:left}:null;
+  }
+  return null;
+}
+/* 가져올 때 목표는 남은 시간(5분 단위, 최소 10분)으로 */
+function planCarry(){
+  var src=planCarrySource();if(!src)return;
+  var a=planLoad(),base=Date.now();
+  src.items.forEach(function(it,i){
+    var g=it.goal||0;
+    if(g)g=Math.max(10,Math.ceil((g-Math.floor((it.secs||0)/60))/5)*5);
+    a.push({id:base+i,text:it.text,goal:g,secs:0,sessions:[],done:false});
+  });
+  planSave(a);renderDashboard();
+}
+function planCarryOff(){var m=planMetaLoad();m.carryOff=1;planMetaSave(m);renderDashboard();}
+function planCarryHtml(meta){
+  if(meta.carryOff)return'';
+  var src=planCarrySource();if(!src)return'';
+  var when=src.gap===1?'어제':dashMd(src.date);
+  return '<div class="pln-carry"><button class="pln-carry-b" onclick="planCarry()">'
+    +'<span class="pln-carry-t">'+when+' 못 끝낸 '+src.items.length+'개 가져오기</span>'
+    +'<span class="pln-carry-s">'+escHtml(src.items.map(function(it){return it.text;}).join(', '))+'</span></button>'
+    +'<button class="pln-carry-x" onclick="planCarryOff()" aria-label="닫기">'+PLN_IC.x+'</button></div>';
+}
 function planToggle(id){
   var a=planLoad();
   a.forEach(function(it){if(it.id===id)it.done=!it.done;});
@@ -187,26 +221,35 @@ function planDel(id){
   planSave(planLoad().filter(function(it){return it.id!==id;}));
   renderDashboard();
 }
-/* 타이머 종료 시 플래너 항목에 시간·세션 기록 (timer.js에서 호출) */
-function planRecord(planId,addSecs,startMs,endMs){
-  var a=planLoad(),hit=false,justDone=null;
+/* 타이머 종료 시 플래너 항목에 시간·세션 기록 (timer.js에서 호출)
+   segs: 실제 공부 구간 [[시작ms,끝ms],...] — 2분 이내 간격은 한 구간으로 합침
+   dateKey: 세션을 시작한 공부일 (자정을 넘겨도 그 날 항목에 기록) */
+function planRecord(planId,addSecs,segs,dateKey){
+  var a=planLoad(dateKey),hit=false,justDone=null;
   function hm(ms){var d=new Date(ms);return p2(d.getHours())+':'+p2(d.getMinutes());}
+  var merged2=[];
+  (segs||[]).forEach(function(g){
+    var last=merged2[merged2.length-1];
+    if(last&&g[0]-last[1]<120000)last[1]=Math.max(last[1],g[1]);
+    else merged2.push([g[0],g[1]]);
+  });
   a.forEach(function(it){
     if(it.id===planId){
       it.secs=(it.secs||0)+addSecs;
-      (it.sessions=it.sessions||[]).push(hm(startMs)+'~'+hm(endMs));
+      it.sessions=it.sessions||[];
+      merged2.forEach(function(g){it.sessions.push(hm(g[0])+'~'+hm(g[1]));});
       if(it.goal&&it.secs>=it.goal*60&&!it.done){it.done=true;justDone=it;}
       hit=true;
     }
   });
-  if(hit)planSave(a);
+  if(hit)planSave(a,dateKey);
   if(justDone)setTimeout(function(){dashCelebrate('목표 시간을 채웠어요 · '+justDone.text);},350);
 }
 function planMetaLoad(d){
-  try{var m=JSON.parse(localStorage.getItem('plan_meta_'+(d||dashYmd(new Date())))||'null');if(m)return m;}catch(e){}
+  try{var m=JSON.parse(localStorage.getItem('plan_meta_'+(d||dashYmd(studyDate())))||'null');if(m)return m;}catch(e){}
   return {res:'',ref:'',rate:0};
 }
-function planMetaSave(m,d){try{localStorage.setItem('plan_meta_'+(d||dashYmd(new Date())),JSON.stringify(m));}catch(e){}}
+function planMetaSave(m,d){try{localStorage.setItem('plan_meta_'+(d||dashYmd(studyDate())),JSON.stringify(m));}catch(e){}}
 /* 오늘 플래너 합계: 총 공부시간·목표 합·달성률 */
 function planSummary(a){
   var secs=0,goal=0,done=0;
@@ -218,7 +261,7 @@ function planGoalLabel(min){
   return min>=60?Math.floor(min/60)+'시간'+(min%60?' '+(min%60)+'분':''):min+'분';
 }
 /* 시간대 타임라인: 항목별 세션(HH:MM~HH:MM)을 색으로 구분해 표시.
-   축은 실제 공부한 범위에 맞춰 자동 조정(최소 3시간), 새벽(6시 이전)은 전날 밤으로 이어 붙임 */
+   축은 실제 공부한 범위에 맞춰 자동 조정(최소 3시간), 새벽(4시 이전)은 전날 밤으로 이어 붙임 */
 function planTimelineHtml(items){
   var segs=[],legend=[];
   items.forEach(function(it){
@@ -228,7 +271,8 @@ function planTimelineHtml(items){
       if(!m)return;
       var a=parseInt(m[1],10)*60+parseInt(m[2],10);
       var b=parseInt(m[3],10)*60+parseInt(m[4],10);
-      if(a<360)a+=1440; if(b<360)b+=1440;
+      var cut=STUDY_DAY_START_H*60;
+      if(a<cut)a+=1440; if(b<cut)b+=1440;
       if(b<a)b+=1440; if(b===a)b=a+1;
       segs.push({a:a,b:b,c:ci2,t:it.text,sv:sv});n++;
     });
@@ -274,7 +318,7 @@ var PLN_IC={
 var planRefOpen=null; /* null=자동(내용 있거나 18시 이후 펼침) / true / false */
 function planCardHtml(){
   var a=planLoad();
-  var d=new Date();
+  var d=studyDate();
   var meta=planMetaLoad();
   var sum=planSummary(a);
   var h='<div class="dash-card pln-card">';
@@ -320,6 +364,7 @@ function planCardHtml(){
   /* 타임테이블 (세션이 있을 때만) */
   var hasSess=a.some(function(it){return it.sessions&&it.sessions.length;});
   if(hasSess)h+=planTimelineHtml(a);
+  h+=planCarryHtml(meta);
   h+='<div class="pln-add">'
     +'<input class="memo-input" id="pln-text" placeholder="공부할 내용" maxlength="60" autocomplete="off" enterkeyhint="done">'
     +'<select class="memo-input pln-goal" id="pln-goal" aria-label="목표 시간">'
@@ -329,7 +374,7 @@ function planCardHtml(){
     +'<button class="memo-add-btn" id="pln-add-btn">추가</button></div>';
   /* 회고 — 내용이 있거나 저녁(18시 이후)이면 펼침, 아니면 접힘 */
   var hr=new Date().getHours();
-  var refOpen=(planRefOpen!==null)?planRefOpen:(!!meta.ref||meta.rate>0||hr>=18);
+  var refOpen=(planRefOpen!==null)?planRefOpen:(!!meta.ref||meta.rate>0||hr>=18||hr<STUDY_DAY_START_H);
   h+='<div class="pln-ref-wrap'+(refOpen?' open':'')+'">';
   h+='<button class="pln-ref-head" id="pln-ref-toggle"><span>오늘 회고</span>';
   h+='<span class="pln-rate">';
@@ -395,7 +440,7 @@ function planBind(){
 
 /* ══════════ 렌더 ══════════ */
 function dashGreetHtml(){
-  var d=new Date();
+  var d=studyDate();
   var WN2=['일','월','화','수','목','금','토'];
   var dateStr=(d.getMonth()+1)+'월 '+d.getDate()+'일 '+WN2[d.getDay()]+'요일';
   var a=planLoad(),sum=planSummary(a);
@@ -430,6 +475,7 @@ function dashRecordHtml(){
 function renderDashboard(){
   if(dashPage==='hist'&&typeof histHtml==='function'){
     document.getElementById('main').innerHTML=histHtml();
+    histBind();
     return;
   }
   var h='<div class="dash-wrap">';

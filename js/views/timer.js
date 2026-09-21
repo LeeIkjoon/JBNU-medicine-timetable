@@ -9,6 +9,11 @@ var tmStart=0, tmAccum=0, tmTick=null;
 var tmLogs=[]; /* {date,subject,secs} */
 var tmSubject='';
 var tmPlanId=null,tmPlanStartMs=0; /* 플래너 항목 연동 */
+var tmSegs=[];     /* 이번 세션의 실제 공부 구간 [[시작ms,끝ms],...] — 일시정지 시간 제외 */
+var tmSessDate=''; /* 세션을 시작한 '공부일' — 자정을 넘겨 종료해도 이 날짜에 기록 */
+/* 공부일 기준: 새벽 4시 전까지는 전날로 친다 (밤샘 공부가 다음 날로 넘어가지 않게) */
+var STUDY_DAY_START_H=4;
+function studyDate(){return new Date(Date.now()-STUDY_DAY_START_H*3600000);}
 (function(){
   try{var s=localStorage.getItem('tm_logs');if(s)tmLogs=JSON.parse(s);}catch(e){}
   tmActiveRestore();
@@ -23,7 +28,7 @@ function tmActiveSave(){
     if(tmState==='idle'){localStorage.removeItem('tm_active');return;}
     localStorage.setItem('tm_active',JSON.stringify({
       state:tmState,startTs:tmStart,accumMs:tmAccum,subject:tmSubject,
-      planId:tmPlanId,planStart:tmPlanStartMs
+      planId:tmPlanId,planStart:tmPlanStartMs,segs:tmSegs,sessDate:tmSessDate
     }));
   }catch(e){}
 }
@@ -34,6 +39,7 @@ function tmActiveRestore(){
     if(a&&(a.state==='running'||a.state==='paused')){
       tmState=a.state;tmStart=a.startTs||tmNow();tmAccum=a.accumMs||0;tmSubject=a.subject||'';
       tmPlanId=a.planId||null;tmPlanStartMs=a.planStart||0;
+      tmSegs=Array.isArray(a.segs)?a.segs:[];tmSessDate=a.sessDate||'';
     }
   }catch(e){}
 }
@@ -54,9 +60,9 @@ function tmFmtShort(ms){
   var s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor((s%3600)/60);
   if(h>0)return m>0?h+'시간 '+m+'분':h+'시간';
   if(m>0)return m+'분';
-  return s+'초';
+  return s>0?s+'초':'0분';
 }
-function tmTodayKey(){var d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
+function tmTodayKey(){var d=studyDate();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
 
 /* 인터벌 보장 — running이면 디스플레이를 갱신 (리로드 후 복귀 시에도) */
 function tmEnsureTick(){
@@ -66,7 +72,7 @@ function tmEnsureTick(){
       if(el)el.textContent=tmFmt(tmElapsed());
       var gb=document.getElementById('tm-goal-bar');
       if(gb&&tmPlanId&&typeof planLoad==='function'){
-        var pl=null;planLoad().forEach(function(it){if(it.id===tmPlanId)pl=it;});
+        var pl=null;planLoad(tmSessDate||undefined).forEach(function(it){if(it.id===tmPlanId)pl=it;});
         if(pl&&pl.goal){
           var pct=Math.min(100,Math.round(((pl.secs||0)+Math.floor(tmElapsed()/1000))/(pl.goal*60)*100));
           gb.style.width=pct+'%';
@@ -81,7 +87,7 @@ function tmClearTick(){if(tmTick){clearInterval(tmTick);tmTick=null;}}
 
 function tmStart_(){
   if(tmState==='idle'||tmState==='paused'){
-    if(tmState==='idle')tmPlanStartMs=tmNow();
+    if(tmState==='idle'){tmPlanStartMs=tmNow();tmSegs=[];tmSessDate=tmTodayKey();}
     tmStart=tmNow();tmState='running';
     tmEnsureTick();tmActiveSave();
     tmRenderHost();
@@ -89,7 +95,7 @@ function tmStart_(){
 }
 function tmPause(){
   if(tmState==='running'){
-    tmAccum+=tmNow()-tmStart;tmState='paused';
+    tmAccum+=tmNow()-tmStart;tmSegs.push([tmStart,tmNow()]);tmState='paused';
     tmClearTick();tmActiveSave();
     tmRenderHost();
   }
@@ -97,10 +103,11 @@ function tmPause(){
 function tmStop(){
   if(tmState==='idle')return;
   var elapsed=tmElapsed();
+  if(tmState==='running')tmSegs.push([tmStart,tmNow()]);
   tmClearTick();
   if(elapsed>3000){/* 3초 이상만 기록 */
     var subj=tmSubject||'기타';
-    var key=tmTodayKey();
+    var key=tmSessDate||tmTodayKey();
     var addSecs=Math.floor(elapsed/1000);
     var found=false;
     for(var i=0;i<tmLogs.length;i++){
@@ -111,15 +118,15 @@ function tmStop(){
     if(!found)tmLogs.push({date:key,subject:subj,secs:addSecs});
     tmSave();
     if(tmPlanId&&typeof planRecord==='function'){
-      planRecord(tmPlanId,addSecs,tmPlanStartMs||tmNow()-elapsed,tmNow());
+      planRecord(tmPlanId,addSecs,tmSegs.length?tmSegs:[[tmPlanStartMs||tmNow()-elapsed,tmNow()]],key);
     }
   }
-  tmAccum=0;tmState='idle';tmPlanId=null;tmPlanStartMs=0;tmActiveSave();
+  tmAccum=0;tmState='idle';tmPlanId=null;tmPlanStartMs=0;tmSegs=[];tmSessDate='';tmActiveSave();
   tmRenderHost();
 }
 function tmReset(){
   tmClearTick();
-  tmAccum=0;tmState='idle';tmPlanId=null;tmPlanStartMs=0;tmActiveSave();
+  tmAccum=0;tmState='idle';tmPlanId=null;tmPlanStartMs=0;tmSegs=[];tmSessDate='';tmActiveSave();
   tmRenderHost();
 }
 
@@ -147,7 +154,7 @@ function tmInnerHtml(){
   var active=running||paused;
   var plans=(typeof planLoad==='function')?planLoad():[];
   var linkedPlan=null;
-  plans.forEach(function(it){if(it.id===tmPlanId)linkedPlan=it;});
+  (active&&tmSessDate?planLoad(tmSessDate):plans).forEach(function(it){if(it.id===tmPlanId)linkedPlan=it;});
   var h='';
   if(active){
     h+='<div class="tm-live-head'+(running?' running':' paused')+'">';
@@ -232,7 +239,7 @@ function tmBind(){
   if(startEl)startEl.onclick=function(){
     var e=document.getElementById('tm-subj');
     if(e&&e.value){tmSubject=e.value;tmPlanId=null;}
-    if(tmPlanId){var ok=false;(typeof planLoad==='function'?planLoad():[]).forEach(function(it){if(it.id===tmPlanId){ok=true;tmSubject=it.text;}});if(!ok)tmPlanId=null;}
+    if(tmPlanId){var ok=false;(typeof planLoad==='function'?planLoad(tmState!=='idle'&&tmSessDate?tmSessDate:undefined):[]).forEach(function(it){if(it.id===tmPlanId){ok=true;tmSubject=it.text;}});if(!ok)tmPlanId=null;}
     tmPickOpen=false;
     tmStart_();
   };

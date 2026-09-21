@@ -1,14 +1,14 @@
 /* ══════════════════════════════════════════
    공부 기록 (공부 탭 하위 화면)
    - 이미 저장된 tm_logs · plan_<날짜> · plan_meta_<날짜>를 날짜별로 다시 보여줌
-   - 월 달력(날짜별 공부시간) + 선택한 날의 플래너·회고 (읽기 전용)
+   - 월 달력(날짜별 공부시간) + 선택한 날의 플래너(읽기 전용)·회고(나중에 써도 되게 편집 가능)
 ══════════════════════════════════════════ */
 var dashPage='main';   /* main | hist */
 var histYm=null;       /* [연, 월(0-11)] */
 var histSel=null;      /* 선택한 날짜 'YYYY-MM-DD' */
 
 function histOpen(){
-  var d=new Date();
+  var d=studyDate();
   histYm=[d.getFullYear(),d.getMonth()];
   histSel=dashYmd(d);
   dashPage='hist';
@@ -19,7 +19,7 @@ function histMonth(delta){
   var d=new Date(histYm[0],histYm[1]+delta,1);
   histYm=[d.getFullYear(),d.getMonth()];
   /* 이동한 달에서 기록이 있는 마지막 날(없으면 1일, 이번 달이면 오늘)을 선택 */
-  var todayK=dashYmd(new Date()),pre=histYm[0]+'-'+p2(histYm[1]+1)+'-',last=null;
+  var todayK=dashYmd(studyDate()),pre=histYm[0]+'-'+p2(histYm[1]+1)+'-',last=null;
   var n=new Date(histYm[0],histYm[1]+1,0).getDate();
   for(var i=1;i<=n;i++){var k=pre+p2(i);if(k<=todayK&&histHasData(k))last=k;}
   histSel=last||(todayK.indexOf(pre)===0?todayK:pre+'01');
@@ -27,6 +27,18 @@ function histMonth(delta){
 }
 function histPick(k){histSel=k;renderDashboard();}
 
+/* 가장 오래된 기록의 'YYYY-MM' (이전 달 이동 한계) */
+function histFirstYm(){
+  var min=null;
+  tmLogs.forEach(function(l){if(l.secs>0&&(!min||l.date<min))min=l.date;});
+  try{
+    for(var i=0;i<localStorage.length;i++){
+      var k=localStorage.key(i),m=k&&k.match(/^plan_(?:meta_)?(\d{4}-\d{2}-\d{2})$/);
+      if(m&&(!min||m[1]<min))min=m[1];
+    }
+  }catch(e){}
+  return min?min.slice(0,7):null;
+}
 /* 하루 요약: 공부시간(tm_logs 기준) + 플래너 */
 function histDay(k){
   var items=planLoad(k),meta=planMetaLoad(k);
@@ -49,7 +61,7 @@ function histShort(secs){
 }
 
 function histHtml(){
-  var y=histYm[0],mo=histYm[1],todayK=dashYmd(new Date());
+  var y=histYm[0],mo=histYm[1],todayK=dashYmd(studyDate());
   var pre=y+'-'+p2(mo+1)+'-',n=new Date(y,mo+1,0).getDate();
   var days=0,total=0,maxS=0,daySecs={};
   for(var i=1;i<=n;i++){
@@ -57,6 +69,7 @@ function histHtml(){
     if(s>0){days++;total+=s;if(s>maxS)maxS=s;}
   }
   var isCur=(todayK.indexOf(pre)===0);
+  var firstYm=histFirstYm(),isFirst=!firstYm||(y+'-'+p2(mo+1))<=firstYm;
 
   var h='<div class="dash-wrap hist-wrap">';
   h+='<div class="hist-top"><button class="hist-back" onclick="histClose()" aria-label="공부 탭으로">'
@@ -66,7 +79,7 @@ function histHtml(){
   /* 월 카드: 이동 + 요약 + 달력 */
   h+='<div class="dash-card">';
   h+='<div class="hist-mnav">'
-    +'<button class="hist-mbtn" onclick="histMonth(-1)" aria-label="이전 달">‹</button>'
+    +'<button class="hist-mbtn" onclick="histMonth(-1)"'+(isFirst?' disabled':'')+' aria-label="이전 달">‹</button>'
     +'<div class="hist-mlbl">'+y+'년 '+(mo+1)+'월</div>'
     +'<button class="hist-mbtn" onclick="histMonth(1)"'+(isCur?' disabled':'')+' aria-label="다음 달">›</button>'
     +'</div>';
@@ -106,7 +119,7 @@ function histDayCardHtml(k){
   var meta2=[];
   if(sum.total)meta2.push('계획 '+sum.total+'개 중 '+sum.done+'개 완료');
   if(sum.goal)meta2.push('목표 달성 '+sum.pct+'%');
-  if(meta.rate)meta2.push('자기평가 '+meta.rate+'/5');
+
   if(meta2.length)h+='<div class="hist-dmeta">'+meta2.join(' · ')+'</div>';
   if(meta.res)h+='<div class="hist-res">'+escHtml(meta.res)+'</div>';
 
@@ -139,10 +152,26 @@ function histDayCardHtml(k){
     h+='</div>';
   }
 
-  if(meta.ref)h+='<div class="hist-sub">회고</div><div class="hist-ref">'+escHtml(meta.ref)+'</div>';
+  if(!a.length&&!extra.length&&!meta.res&&!day.secs)
+    h+='<div class="dash-empty">이 날은 남긴 계획이나 공부 기록이 없어요.</div>';
 
-  if(!a.length&&!extra.length&&!meta.ref&&!meta.res&&!day.secs)
-    h+='<div class="dash-empty">이 날은 남긴 기록이 없어요.</div>';
+  /* 회고·자기평가 — 지난 날도 나중에 적을 수 있게 편집 가능 */
+  h+='<div class="hist-sub hist-ref-head"><span>회고</span><span class="pln-rate">';
+  for(var ri=1;ri<=5;ri++)h+='<span class="pln-rate-b hist-rate-b'+(meta.rate>=ri?' on':'')+'" data-r="'+ri+'" role="button" aria-label="'+ri+'점">'+ri+'</span>';
+  h+='</span></div>';
+  h+='<textarea class="pln-ref" id="hist-ref" placeholder="이 날의 반성과 다음 날의 다짐" maxlength="200" rows="2">'+escHtml(meta.ref||'')+'</textarea>';
   h+='</div>';
   return h;
+}
+
+function histBind(){
+  var k=histSel;
+  var ref=document.getElementById('hist-ref');
+  if(ref)ref.onchange=function(){var m=planMetaLoad(k);m.ref=this.value.trim();planMetaSave(m,k);};
+  document.querySelectorAll('.hist-rate-b').forEach(function(b){
+    b.onclick=function(){
+      var r=parseInt(this.getAttribute('data-r'),10),m=planMetaLoad(k);
+      m.rate=(m.rate===r)?0:r;planMetaSave(m,k);renderDashboard();
+    };
+  });
 }
