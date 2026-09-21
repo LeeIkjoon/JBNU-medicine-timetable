@@ -217,31 +217,52 @@ function planGoalLabel(min){
   if(!min)return'';
   return min>=60?Math.floor(min/60)+'시간'+(min%60?' '+(min%60)+'분':''):min+'분';
 }
-/* 타임테이블 스트립: 세션(HH:MM~HH:MM)들을 6시~26시 축에 표시 */
+/* 시간대 타임라인: 항목별 세션(HH:MM~HH:MM)을 색으로 구분해 표시.
+   축은 실제 공부한 범위에 맞춰 자동 조정(최소 3시간), 새벽(6시 이전)은 전날 밤으로 이어 붙임 */
 function planTimelineHtml(items){
-  var segs=[];
+  var segs=[],legend=[];
   items.forEach(function(it){
+    var n=0,ci2=legend.length%5+1;
     (it.sessions||[]).forEach(function(sv){
       var m=sv.match(/^(\d{1,2}):(\d{2})~(\d{1,2}):(\d{2})$/);
       if(!m)return;
       var a=parseInt(m[1],10)*60+parseInt(m[2],10);
       var b=parseInt(m[3],10)*60+parseInt(m[4],10);
-      if(a<360)a+=1440; if(b<360)b+=1440; /* 새벽은 다음날로 */
-      if(b<=a)b=a+5;
-      segs.push([a,b]);
+      if(a<360)a+=1440; if(b<360)b+=1440;
+      if(b<a)b+=1440; if(b===a)b=a+1;
+      segs.push({a:a,b:b,c:ci2,t:it.text,sv:sv});n++;
     });
+    if(n)legend.push({t:it.text,c:ci2,secs:it.secs||0});
   });
-  var lo=360,hi=1560; /* 6:00~26:00 */
-  var h='<div class="pln-tl"><div class="pln-tl-track">';
+  if(!segs.length)return'';
+  var mn=Math.min.apply(null,segs.map(function(x){return x.a;}));
+  var mx=Math.max.apply(null,segs.map(function(x){return x.b;}));
+  var lo=Math.floor(mn/60)*60,hi=Math.ceil(mx/60)*60;
+  if(hi-lo<180){var pad=180-(hi-lo);lo-=Math.floor(pad/120)*60;hi=lo+180;if(hi<Math.ceil(mx/60)*60)hi=Math.ceil(mx/60)*60;}
+  var span=hi-lo,step=span<=480?60:span<=960?120:180;
+  function pct(v){return ((v-lo)/span*100).toFixed(2);}
+  function hm(v){v=v%1440;return p2(Math.floor(v/60))+':'+p2(v%60);}
+  var h='<div class="pln-tl">';
+  h+='<div class="pln-tl-head"><span>시간대</span><span>'+hm(mn)+' – '+hm(mx)+'</span></div>';
+  h+='<div class="pln-tl-track">';
+  for(var t=lo+step;t<hi;t+=step)h+='<i class="pln-tl-grid" style="left:'+pct(t)+'%"></i>';
   segs.forEach(function(sg){
-    var l=Math.max(0,(sg[0]-lo)/(hi-lo)*100),w=Math.max(0.8,(Math.min(sg[1],hi)-Math.max(sg[0],lo))/(hi-lo)*100);
-    h+='<span class="pln-tl-seg" style="left:'+l.toFixed(1)+'%;width:'+w.toFixed(1)+'%"></span>';
+    h+='<span class="pln-tl-seg c'+sg.c+'" style="left:'+pct(sg.a)+'%;width:'+Math.max(0.6,(sg.b-sg.a)/span*100).toFixed(2)+'%" title="'+escHtml(sg.t)+' '+sg.sv+'"></span>';
   });
   h+='</div><div class="pln-tl-ticks">';
-  [6,9,12,15,18,21,24].forEach(function(t){
-    h+='<span style="left:'+((t*60-lo)/(hi-lo)*100).toFixed(1)+'%">'+(t>=24?t-24:t)+'</span>';
-  });
-  h+='</div></div>';
+  for(var t2=lo;t2<=hi;t2+=step){
+    var cls=t2===lo?' first':t2===hi?' last':'';
+    h+='<span class="'+cls.trim()+'" style="left:'+pct(t2)+'%">'+(Math.floor(t2/60)%24)+'시</span>';
+  }
+  h+='</div>';
+  if(legend.length>1){
+    h+='<div class="pln-tl-legend">';
+    legend.forEach(function(l){
+      h+='<span class="pln-tl-lg"><i class="c'+l.c+'"></i><span class="pln-tl-lg-t">'+escHtml(l.t)+'</span></span>';
+    });
+    h+='</div>';
+  }
+  h+='</div>';
   return h;
 }
 var PLN_IC={
@@ -259,12 +280,13 @@ function planCardHtml(){
   var h='<div class="dash-card pln-card">';
   h+='<div class="pln-head">';
   h+='<div class="dash-card-ttl">오늘 플래너<span class="ttl-caption">'+(d.getMonth()+1)+'월 '+d.getDate()+'일</span></div>';
+  h+='<button class="pln-hist" onclick="histOpen()">지난 기록<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>';
+  h+='</div>';
   if(a.length){
     h+='<div class="pln-sum">'+(sum.total?sum.done+'/'+sum.total+' 완료':'')
       +(sum.secs?' · '+tmFmtShort(sum.secs*1000):'')
       +(sum.goal?' · '+sum.pct+'%':'')+'</div>';
   }
-  h+='</div>';
   if(sum.goal){
     h+='<div class="pln-sum-track"><div class="pln-sum-bar'+(sum.pct>=100?' done':'')+'" style="width:'+sum.pct+'%"></div></div>';
   }

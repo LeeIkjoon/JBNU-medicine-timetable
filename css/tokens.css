@@ -29,6 +29,11 @@
   --heat-2: rgba(49,130,246,.26);
   --heat-3: rgba(49,130,246,.45);
   --heat-4: rgba(49,130,246,.85);
+  --tl-1: #3182F6;  /* 플래너 시간대 — 항목별 색 */
+  --tl-2: #10B981;
+  --tl-3: #F59E0B;
+  --tl-4: #A855F7;
+  --tl-5: #F43F5E;
 
   /* Text ──────────────────────────────────── */
   --text: #1C1C1E;               /* primary */
@@ -146,6 +151,11 @@
   --heat-2: rgba(78,151,255,.30);
   --heat-3: rgba(78,151,255,.50);
   --heat-4: rgba(78,151,255,.85);
+  --tl-1: #4E97FF;
+  --tl-2: #34D399;
+  --tl-3: #FBBF24;
+  --tl-4: #C084FC;
+  --tl-5: #FB7185;
   --text: #FFFFFF;
   --text-strong: #FFFFFF;
   --text-secondary: #EBEBF5;
@@ -189,6 +199,11 @@
   --heat-2: rgba(78,151,255,.30);
   --heat-3: rgba(78,151,255,.50);
   --heat-4: rgba(78,151,255,.85);
+  --tl-1: #4E97FF;
+  --tl-2: #34D399;
+  --tl-3: #FBBF24;
+  --tl-4: #C084FC;
+  --tl-5: #FB7185;
     --text: #FFFFFF;
     --text-strong: #FFFFFF;
     --text-secondary: #EBEBF5;
