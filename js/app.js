@@ -461,3 +461,50 @@ setTimeout(function(){
     },120);
   });
 })();
+
+/* ── 레이아웃 진단 (헤더 학년 이름을 5번 연속 탭) ──
+   기기가 보고하는 화면 높이·안전영역·요소 위치를 그대로 보여준다. 문제 해결 후 제거. */
+(function(){
+  var taps=0,t=null;
+  function probe(side){
+    var d=document.createElement('div');
+    d.style.cssText='position:fixed;'+side+':0;height:env(safe-area-inset-'+side+',0px);width:1px;visibility:hidden';
+    document.body.appendChild(d);
+    var h=side==='top'||side==='bottom'?d.offsetHeight:d.offsetWidth;
+    d.parentNode.removeChild(d);
+    return h;
+  }
+  function show(){
+    var b=document.body.getBoundingClientRect();
+    var nav=document.querySelector('.bnav').getBoundingClientRect();
+    var vv=window.visualViewport;
+    var css=(document.querySelector('link[href*="base.css"]')||{}).href||'';
+    var rows=[
+      ['CSS 버전',css.split('v=')[1]||'?'],
+      ['홈 화면 앱',(window.navigator.standalone?'예':'아니오')],
+      ['window.innerHeight',window.innerHeight],
+      ['visualViewport',vv?Math.round(vv.height)+' (offset '+Math.round(vv.offsetTop)+')':'없음'],
+      ['screen.height',window.screen.height],
+      ['devicePixelRatio',window.devicePixelRatio],
+      ['안전영역 위/아래',probe('top')+' / '+probe('bottom')],
+      ['body 위/아래',Math.round(b.top)+' / '+Math.round(b.bottom)],
+      ['탭바 위/아래',Math.round(nav.top)+' / '+Math.round(nav.bottom)],
+      ['탭바 아래 여백',Math.round(b.bottom-nav.bottom)+' (화면 바닥까지 '+Math.round(window.innerHeight-nav.bottom)+')'],
+      ['body position',getComputedStyle(document.body).position]
+    ];
+    var h='<div style="position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.82);color:#fff;font:12px/1.6 -apple-system,sans-serif;padding:60px 18px;overflow:auto">';
+    h+='<div style="font-size:16px;font-weight:700;margin-bottom:10px">레이아웃 진단</div><table style="width:100%;border-collapse:collapse">';
+    rows.forEach(function(r){h+='<tr><td style="opacity:.7;padding:3px 8px 3px 0;white-space:nowrap">'+r[0]+'</td><td style="font-weight:700">'+r[1]+'</td></tr>';});
+    h+='</table><button id="diag-x" style="margin-top:16px;padding:10px 16px;border:0;border-radius:10px;background:#fff;color:#000;font-weight:700">닫기</button></div>';
+    var w=document.createElement('div');w.id='diag-ovl';w.innerHTML=h;
+    document.body.appendChild(w);
+    document.getElementById('diag-x').onclick=function(){w.parentNode.removeChild(w);};
+  }
+  document.addEventListener('click',function(e){
+    if(!e.target.closest||!e.target.closest('#grade-lbl'))return;
+    taps++;
+    if(t)clearTimeout(t);
+    t=setTimeout(function(){taps=0;},2500);
+    if(taps>=5){taps=0;show();}
+  });
+})();
