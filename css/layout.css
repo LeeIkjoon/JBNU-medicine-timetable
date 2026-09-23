@@ -36,6 +36,10 @@
   /* 높이 명시 */
   min-height:calc(50px + env(safe-area-inset-bottom,0px))}
 .bnav{justify-content:center}
+/* 탭바 아래 여백 메움 — 기기·브라우저에 따라 fixed bottom:0 아래로 틈이 보이는 경우가 있어
+   같은 색을 아래로 길게 깔아 항상 바닥에 붙어 보이게 한다 */
+.bnav::after{content:'';position:absolute;top:100%;left:0;right:0;height:100px;
+  background:var(--surface);pointer-events:none}
 .bn{flex:1;max-width:200px;border:none;background:none;padding:7px var(--space-1) 5px;display:flex;flex-direction:column;
   align-items:center;gap:2px;font-size:var(--font-2xs);color:var(--text-soft);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bn.on{color:var(--accent)}
