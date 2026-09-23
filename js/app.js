@@ -78,7 +78,21 @@ function setView(v){
   var main=document.getElementById('main');
   if(main) main.scrollTop=0;
   window.scrollTo({top:0,behavior:'instant'});
+  navSettle();
 }
+
+/* iOS 홈 화면 앱에서 스크롤이 거의 없는 화면(시간표 등)일 때 고정 탭바가 바닥보다
+   위에 그려지는 경우가 있다. 1px 스크롤을 넣었다 되돌려 위치를 다시 계산시킨다. */
+function navSettle(){
+  if(!window.navigator||!window.navigator.standalone)return;
+  setTimeout(function(){
+    if(window.scrollY>1)return;
+    window.scrollTo(0,1);
+    requestAnimationFrame(function(){window.scrollTo(0,0);});
+  },60);
+}
+window.addEventListener('orientationchange',function(){setTimeout(navSettle,300);});
+window.addEventListener('resize',function(){setTimeout(navSettle,300);});
 
 function render(){
   if(ci<0||ci>=wks.length)goTodayWeek(); /* 주차 구성 변경 후 인덱스 안전장치 */
