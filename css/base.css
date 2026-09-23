@@ -5,7 +5,10 @@ body{font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFo
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior:none;
   /* 앱 셸: 헤더 / 스크롤 영역 / 탭바 3단 고정 — 문서 전체가 스크롤되지 않으므로
      iOS에서 헤더가 딸려 움직이거나 탭바가 바닥에서 뜨는 일이 없다 */
-  height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+  /* 높이를 계산(100dvh)하지 않고 화면 네 변에 직접 붙인다 —
+     iOS 홈 화면 앱에서 dvh가 실제 화면보다 작게 잡혀 탭바 아래 틈이 생기던 문제 */
+  position:fixed;top:0;right:0;bottom:0;left:0;
+  display:flex;flex-direction:column;overflow:hidden}
 button,input,select,textarea{font-family:inherit;color:inherit}
 button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 img,svg{display:inline-block;vertical-align:middle}
