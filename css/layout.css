@@ -40,6 +40,9 @@
    같은 색을 아래로 길게 깔아 항상 바닥에 붙어 보이게 한다 */
 .bnav::after{content:'';position:absolute;top:100%;left:0;right:0;height:100px;
   background:var(--surface);pointer-events:none}
+/* 키보드 입력 중에는 탭바를 내림 (js/app.js에서 body.kb-open) */
+.bnav{transition:transform var(--duration) var(--ease)}
+body.kb-open .bnav{transform:translateY(120%);pointer-events:none}
 .bn{flex:1;max-width:200px;border:none;background:none;padding:7px var(--space-1) 5px;display:flex;flex-direction:column;
   align-items:center;gap:2px;font-size:var(--font-2xs);color:var(--text-soft);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bn.on{color:var(--accent)}

@@ -429,3 +429,32 @@ setTimeout(function(){
 
 
 
+
+/* ── 키보드가 올라오면 하단 탭바 숨김 ──
+   모바일에서 입력 중에는 탭바가 키보드 위에 떠 보이는 기기가 있어,
+   입력 요소에 포커스가 있는 동안만 탭바를 아래로 내린다 (터치 기기에서만). */
+(function(){
+  if(window.matchMedia&&window.matchMedia('(hover:hover)').matches)return;
+  var off=null;
+  function isField(el){
+    if(!el||!el.tagName)return false;
+    var t=el.tagName.toLowerCase();
+    if(t==='textarea')return true;
+    if(t==='input')return['checkbox','radio','button','submit','file','range'].indexOf((el.type||'text').toLowerCase())<0;
+    return false;
+  }
+  document.addEventListener('focusin',function(e){
+    if(!isField(e.target))return;
+    if(off){clearTimeout(off);off=null;}
+    document.body.classList.add('kb-open');
+  });
+  document.addEventListener('focusout',function(e){
+    if(!isField(e.target))return;
+    if(off)clearTimeout(off);
+    /* 입력칸 사이를 옮겨 다닐 때 깜빡이지 않게 잠깐 기다림 */
+    off=setTimeout(function(){
+      off=null;
+      if(!isField(document.activeElement))document.body.classList.remove('kb-open');
+    },120);
+  });
+})();
