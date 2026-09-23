@@ -3,7 +3,7 @@
   "short_name": "시간표",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F2F4F6",
+  "background_color": "#FFFFFF",
   "theme_color": "#3182F6",
   "start_url": ".",
   "icons": [

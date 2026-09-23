@@ -508,19 +508,3 @@ setTimeout(function(){
     if(taps>=5){taps=0;show();}
   });
 })();
-
-
-/* ── 앱 화면이 화면 전체를 덮지 못하는 기기 판별 ──
-   홈 화면 앱인데 innerHeight가 screen.height보다 뚜렷이 작으면 이미 잘려 들어온 것이므로
-   안전영역 여백을 더하지 않는다 (아이폰 15 등에서 헤더가 두 번 밀리던 문제) */
-function applyInsetMode(){
-  var st=window.navigator&&window.navigator.standalone;
-  var shortSide=Math.min(window.screen.width,window.screen.height);
-  var portrait=window.innerWidth<=shortSide+1;
-  var cut=window.screen.height-window.innerHeight;
-  var inset=!!st&&portrait&&cut>20;
-  document.documentElement.classList.toggle('vp-inset',inset);
-}
-applyInsetMode();
-window.addEventListener('resize',applyInsetMode);
-window.addEventListener('orientationchange',function(){setTimeout(applyInsetMode,300);});
