@@ -4,7 +4,7 @@
 .hdr{background:var(--header-bg);padding:10px 14px 8px;
   padding-top:calc(10px + env(safe-area-inset-top));
   padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right));
-  border-bottom:none;position:sticky;top:0;z-index:200;box-shadow:var(--shadow-header)}
+  border-bottom:none;position:relative;z-index:200;flex:none;box-shadow:var(--shadow-header)}
 .hdr-top{display:flex;align-items:center;justify-content:space-between;gap:8px;max-width:var(--content-max);margin:0 auto}
 .ht2{min-width:0;overflow:hidden;text-overflow:ellipsis}
 .hdr-right{flex-shrink:0}
@@ -21,30 +21,23 @@
 .icon-btn-txt{font-size:13px;font-weight:var(--weight-bold);width:auto;padding:0 10px}
 
 /* ── MAIN ── */
-.main{padding:var(--space-1) 4px;
+.main{padding:var(--space-1) 4px var(--space-6);
   padding-left:max(4px,env(safe-area-inset-left));padding-right:max(4px,env(safe-area-inset-right));
-  padding-bottom:calc(80px + env(safe-area-inset-bottom,20px));
-  min-height:calc(100vh - 130px);min-height:calc(100dvh - 130px);box-sizing:border-box;
-  max-width:var(--content-max);margin:0 auto;width:100%}
+  box-sizing:border-box;max-width:var(--content-max);margin:0 auto;width:100%;
+  flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .sw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-md);background:var(--surface);box-shadow:var(--shadow-sm)}
 
 /* ── BOTTOM NAV ── */
-.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);
+.bnav{position:relative;flex:none;background:var(--surface);border-top:1px solid var(--border);
   display:flex;padding-bottom:env(safe-area-inset-bottom,0px);z-index:100;
   padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);
   box-shadow:0 -1px 0 rgba(0,0,0,0.08);
   /* 높이 명시 */
   min-height:calc(50px + env(safe-area-inset-bottom,0px))}
 .bnav{justify-content:center}
-/* 탭바 아래 여백 메움 — 기기·브라우저에 따라 fixed bottom:0 아래로 틈이 보이는 경우가 있어
-   같은 색을 아래로 길게 깔아 항상 바닥에 붙어 보이게 한다 */
-.bnav::after{content:'';position:absolute;top:100%;left:0;right:0;height:100px;
-  background:var(--surface);pointer-events:none}
-/* 키보드 입력 중에는 탭바를 내림 (js/app.js에서 body.kb-open) */
-.bnav{transition:transform var(--duration) var(--ease);
-  /* iOS(특히 홈 화면 앱)에서 고정 탭바가 화면 바닥보다 살짝 위에 그려지는 것 방지 */
-  transform:translateZ(0);will-change:transform;backface-visibility:hidden}
-body.kb-open .bnav{transform:translateY(120%) translateZ(0);pointer-events:none}
+/* 키보드 입력 중에는 탭바를 접음 (js/app.js에서 body.kb-open) */
+.bnav{transition:margin-bottom var(--duration) var(--ease),opacity var(--duration) var(--ease)}
+body.kb-open .bnav{margin-bottom:calc(-1 * (55px + env(safe-area-inset-bottom,0px)));opacity:0;pointer-events:none}
 .bn{flex:1;max-width:200px;border:none;background:none;padding:7px var(--space-1) 5px;display:flex;flex-direction:column;
   align-items:center;gap:2px;font-size:var(--font-2xs);color:var(--text-soft);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bn.on{color:var(--accent)}

@@ -1,5 +1,5 @@
 /* ── LIST VIEW ── */
-.list-wrap{padding:var(--space-1) 0 80px}
+.list-wrap{padding:var(--space-1) 0 var(--space-4)}
 /* 엑셀 테이블 스타일 목록 */
 .xl-table{width:100%;border-collapse:collapse;font-size:var(--font-xs);}
 .xl-table thead th{
@@ -77,7 +77,7 @@
 }
 
 /* ── FILTER ── */
-.fw{padding:var(--space-1) 0 calc(80px + env(safe-area-inset-bottom,0px));min-height:calc(100dvh - 190px);box-sizing:border-box}
+.fw{padding:var(--space-1) 0 var(--space-4);box-sizing:border-box}
 .fs{background:var(--surface);border:none;border-radius:var(--radius-lg);padding:var(--space-3) var(--space-4);margin-bottom:var(--space-2);box-shadow:var(--shadow-xs)}
 .fs-ttl{font-size:var(--font-sm);font-weight:var(--weight-bold);margin-bottom:9px}
 .chips{display:flex;flex-wrap:wrap;gap:5px}
@@ -97,8 +97,7 @@
 /* ── PLANNER ── */
 .pl-wrap{
   padding:var(--space-1) 0;
-  padding-bottom:calc(80px + env(safe-area-inset-bottom,20px));
-  min-height:calc(100dvh - 130px);
+  padding-bottom:var(--space-4);
   box-sizing:border-box;
 }
 .pl-date{font-size:var(--font-md);font-weight:var(--weight-bold);color:var(--text-secondary);padding:var(--space-1) 2px 10px}
@@ -131,7 +130,7 @@
    구조: 인사 → [타이머 히어로 · 오늘 플래너] → [기록 · 시험 · 백업]
    넓은 화면(≥720px)에서는 두 열로 배치
 ══════════════════════════════════════════ */
-.dash-wrap{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-1) 0 80px}
+.dash-wrap{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-1) 0 var(--space-4)}
 .dash-col{display:contents}
 
 .dash-greet{padding:var(--space-1) var(--space-1) 2px}
@@ -475,7 +474,7 @@
   .dash-wrap{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:var(--space-3);align-items:start}
   .dash-greet{grid-column:1/-1}
   .dash-col{display:flex;flex-direction:column;gap:var(--space-3);min-width:0}
-  .dash-col-b{position:sticky;top:calc(64px + env(safe-area-inset-top,0px))}
+  .dash-col-b{position:sticky;top:var(--space-2)}
   .tm-display{font-size:64px}
 }
 @media (hover:hover){

@@ -64,6 +64,14 @@ js/app.js             updHdr, goTodayWeek, setView, render, init(),
 
 **Inline `onclick="..."` handlers in JS-generated markup** reference 8 admin/dtodo globals (`admOpenUpload`, `closeAdminPanel`, `adminChangeWk`, `addAItem`, `publishTT`, `doLogout`, `dtodoToggle`, `dtodoDel`). Because everything is a global, they resolve at click time. If you ever migrate to ES modules, either expose those names on `window` or rewrite the inline handlers to `addEventListener`.
 
+## 앱 셸 구조 (2026-09-23)
+
+`body`가 `height:100dvh; display:flex; flex-direction:column; overflow:hidden` — 문서 전체는 스크롤되지 않는다. `.hdr`(flex:none) / `.main`(flex:1, `overflow-y:auto` — **실제 스크롤 컨테이너**) / `.bnav`(flex:none) 3단. iOS에서 sticky 헤더가 스크롤에 딸려 움직이고 `position:fixed` 탭바가 바닥에서 뜨던 문제 때문에 바꿨다.
+- 스크롤을 맨 위로 보낼 때는 `window.scrollTo`가 아니라 `mainTop()` (in `js/app.js`).
+- 뷰 래퍼의 하단 여백은 탭바 높이만큼(80px) 줄 필요가 없다 — 탭바가 본문 위에 겹치지 않는다.
+- `.main` 안의 `position:sticky`는 `.main` 기준으로 붙는다 (목록 헤더 th, `.dash-col-b`).
+- 키보드가 올라오면 `body.kb-open`으로 탭바를 접는다 (터치 기기만, `js/app.js` 끝부분).
+
 ## What the app does
 
 Korean medical-school timetable for 전북대학교 의과대학 (JBNU College of Medicine). Supports three grades selected on first launch (stored in `localStorage.user_grade`):

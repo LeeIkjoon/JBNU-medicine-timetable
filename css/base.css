@@ -1,8 +1,11 @@
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;height:100%}
 body{font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',Roboto,'Noto Sans KR','Malgun Gothic','Helvetica Neue',sans-serif;
   letter-spacing:-0.01em;background:var(--bg);color:var(--text);
-  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior:none;
+  /* 앱 셸: 헤더 / 스크롤 영역 / 탭바 3단 고정 — 문서 전체가 스크롤되지 않으므로
+     iOS에서 헤더가 딸려 움직이거나 탭바가 바닥에서 뜨는 일이 없다 */
+  height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
 button,input,select,textarea{font-family:inherit;color:inherit}
 button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 img,svg{display:inline-block;vertical-align:middle}

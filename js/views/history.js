@@ -12,9 +12,9 @@ function histOpen(){
   histYm=[d.getFullYear(),d.getMonth()];
   histSel=dashYmd(d);
   dashPage='hist';
-  animMain();renderDashboard();window.scrollTo({top:0,behavior:'instant'});
+  animMain();renderDashboard();mainTop();
 }
-function histClose(){dashPage='main';animMain();renderDashboard();window.scrollTo({top:0,behavior:'instant'});}
+function histClose(){dashPage='main';animMain();renderDashboard();mainTop();}
 function histMonth(delta){
   var d=new Date(histYm[0],histYm[1]+delta,1);
   histYm=[d.getFullYear(),d.getMonth()];
