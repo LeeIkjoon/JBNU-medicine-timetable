@@ -528,3 +528,32 @@ function measureVpExtra(){
 measureVpExtra();
 window.addEventListener('resize',measureVpExtra);
 window.addEventListener('orientationchange',function(){setTimeout(measureVpExtra,300);});
+
+
+/* ── 레이아웃 값 자동 보고 (문제 해결용, 임시) ──
+   홈 화면 앱에서 화면/웹뷰 크기를 study/diag/<코드>에 남긴다. 개인 정보는 담지 않는다. */
+setTimeout(function(){
+  try{
+    if(!fbDb||!window.navigator.standalone)return;
+    var probe=document.createElement('div');
+    probe.style.cssText='position:fixed;top:0;height:env(safe-area-inset-top,0px);width:1px;visibility:hidden';
+    document.body.appendChild(probe);var saTop=probe.offsetHeight;
+    probe.style.cssText='position:fixed;bottom:0;height:env(safe-area-inset-bottom,0px);width:1px;visibility:hidden';
+    var saBottom=probe.offsetHeight;
+    probe.parentNode.removeChild(probe);
+    var nav=document.querySelector('.bnav'),b=document.body.getBoundingClientRect();
+    var css=(document.querySelector('link[href*="base.css"]')||{}).href||'';
+    fbDb.ref('study/diag/'+syncUid()).set({
+      ts:Date.now(),
+      innerH:window.innerHeight,innerW:window.innerWidth,
+      screenH:window.screen.height,screenW:window.screen.width,
+      dpr:window.devicePixelRatio,
+      saTop:saTop,saBottom:saBottom,
+      bodyTop:Math.round(b.top),bodyBottom:Math.round(b.bottom),
+      navBottom:nav?Math.round(nav.getBoundingClientRect().bottom):-1,
+      sbOverlay:document.documentElement.classList.contains('sb-overlay'),
+      cssV:css.split('v=')[1]||'?',
+      ua:navigator.userAgent.slice(0,120)
+    });
+  }catch(e){}
+},2500);
