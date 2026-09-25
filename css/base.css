@@ -15,3 +15,9 @@ body{font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFo
 button,input,select,textarea{font-family:inherit;color:inherit}
 button{-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 img,svg{display:inline-block;vertical-align:middle}
+
+/* 웹뷰가 화면 아래까지 못 미치는 아이폰 홈 화면 앱 보정 시도 —
+   --vp-extra(js/app.js에서 계산)가 0보다 클 때만 그 영역을 탭바 색으로 칠한다.
+   iOS가 그 바깥을 그리지 못하면 아무것도 보이지 않으므로 다른 기기에는 영향이 없다 */
+html::after{content:'';position:fixed;left:0;right:0;height:var(--vp-extra,0px);
+  bottom:calc(-1 * var(--vp-extra,0px));background:var(--surface);z-index:150;pointer-events:none}

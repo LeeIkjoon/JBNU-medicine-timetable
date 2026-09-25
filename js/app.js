@@ -508,3 +508,18 @@ setTimeout(function(){
     if(taps>=5){taps=0;show();}
   });
 })();
+
+
+/* 홈 화면 앱인데 화면 높이보다 웹뷰가 작은 경우(아이폰 15 등: 852 vs 793)
+   그 차이만큼 아래를 탭바 색으로 덮어 본다. CSS: html::after in base.css */
+function measureVpExtra(){
+  var extra=0;
+  if(window.navigator&&window.navigator.standalone&&window.innerHeight>window.innerWidth){
+    var cut=window.screen.height-window.innerHeight;
+    if(cut>20&&cut<120)extra=cut;
+  }
+  document.documentElement.style.setProperty('--vp-extra',extra+'px');
+}
+measureVpExtra();
+window.addEventListener('resize',measureVpExtra);
+window.addEventListener('orientationchange',function(){setTimeout(measureVpExtra,300);});

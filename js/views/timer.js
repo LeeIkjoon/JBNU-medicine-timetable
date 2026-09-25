@@ -206,7 +206,7 @@ function tmInnerHtml(){
     h+='<button class="tm-btn tm-btn-pause" id="tm-pause">'+TM_IC.pause+'일시정지</button>';
     h+='<button class="tm-btn tm-btn-stop" id="tm-stop">'+TM_IC.stop+'종료</button>';
   } else {
-    h+='<button class="tm-btn tm-btn-start" id="tm-start">'+TM_IC.play+'재개</button>';
+    h+='<button class="tm-btn tm-btn-start" id="tm-start">'+TM_IC.play+'이어서</button>';
     h+='<button class="tm-btn tm-btn-stop" id="tm-stop">'+TM_IC.save+'기록 저장</button>';
     h+='<button class="tm-btn tm-btn-reset" id="tm-reset" title="초기화" aria-label="초기화">'+TM_IC.reset+'</button>';
   }
