@@ -524,6 +524,8 @@ function measureVpExtra(){
   var saTop=probe.offsetHeight;
   probe.parentNode.removeChild(probe);
   document.documentElement.classList.toggle('sb-overlay',!!st&&cut<20&&saTop>0);
+  /* 웹뷰가 화면 아래까지 못 미치는 상태 — 탭바 안전영역 여백을 빼서 뜬 것처럼 보이지 않게 */
+  document.documentElement.classList.toggle('vp-cut',!!st&&window.innerHeight>window.innerWidth&&cut>20&&cut<120);
 }
 measureVpExtra();
 window.addEventListener('resize',measureVpExtra);
