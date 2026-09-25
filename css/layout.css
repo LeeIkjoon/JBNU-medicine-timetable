@@ -153,3 +153,9 @@ body.kb-open .bnav{margin-bottom:calc(-1 * (55px + env(safe-area-inset-bottom,0p
   .bn-ic{height:22px}
   .bnav{min-height:calc(40px + env(safe-area-inset-bottom,0px))}
 }
+
+
+/* 전체화면(홈 화면 앱)일 때만: 상태바 뒤를 채워 흰 글씨가 보이게 — js/app.js에서 html.sb-overlay */
+html.sb-overlay .hdr{position:relative}
+html.sb-overlay .hdr::before{content:'';position:absolute;left:0;right:0;top:0;
+  height:env(safe-area-inset-top,0px);background:var(--statusbar-bg)}

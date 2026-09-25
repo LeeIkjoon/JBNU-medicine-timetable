@@ -10,6 +10,7 @@
   --brand-gradient: linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
   --brand-header: #3182F6;       /* 토스 블루 */
   --header-bg: #ffffff;          /* 토스 스타일 화이트 헤더 */
+  --statusbar-bg: #3182F6;       /* 전체화면일 때 상태바 뒤 (흰 글씨 대비) */
   --accent: #3182F6;             /* 토스 블루 — 토글/포커스/뱃지 */
 
   /* Surface (배경 / 표면) ─────────────────── */
@@ -132,6 +133,7 @@
 :root[data-theme="dark"] {
   --bg: #000000;
   --header-bg: #1C1C1E;
+  --statusbar-bg: #1C1C1E;
   --surface: #1C1C1E;
   --surface-2: #2C2C2E;
   --surface-sunken: #0A0A0A;
@@ -176,6 +178,7 @@
   :root:not([data-theme="light"]) {
     --bg: #000000;
     --header-bg: #1C1C1E;
+  --statusbar-bg: #1C1C1E;
     --surface: #1C1C1E;
     --surface-2: #2C2C2E;
     --surface-sunken: #0A0A0A;

@@ -513,12 +513,17 @@ setTimeout(function(){
 /* 홈 화면 앱인데 화면 높이보다 웹뷰가 작은 경우(아이폰 15 등: 852 vs 793)
    그 차이만큼 아래를 탭바 색으로 덮어 본다. CSS: html::after in base.css */
 function measureVpExtra(){
-  var extra=0;
-  if(window.navigator&&window.navigator.standalone&&window.innerHeight>window.innerWidth){
-    var cut=window.screen.height-window.innerHeight;
-    if(cut>20&&cut<120)extra=cut;
-  }
+  var extra=0,st=window.navigator&&window.navigator.standalone;
+  var cut=window.screen.height-window.innerHeight;
+  if(st&&window.innerHeight>window.innerWidth&&cut>20&&cut<120)extra=cut;
   document.documentElement.style.setProperty('--vp-extra',extra+'px');
+  /* 전체화면이 실제로 적용됐는지 — 웹뷰가 화면 전체를 덮고 위 안전영역이 있는 경우 */
+  var probe=document.createElement('div');
+  probe.style.cssText='position:fixed;top:0;height:env(safe-area-inset-top,0px);width:1px;visibility:hidden';
+  document.body.appendChild(probe);
+  var saTop=probe.offsetHeight;
+  probe.parentNode.removeChild(probe);
+  document.documentElement.classList.toggle('sb-overlay',!!st&&cut<20&&saTop>0);
 }
 measureVpExtra();
 window.addEventListener('resize',measureVpExtra);
