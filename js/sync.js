@@ -57,6 +57,58 @@ function syncStatusText(){
   var d=new Date(t);
   return'마지막 백업 '+(d.getMonth()+1)+'/'+d.getDate()+' '+p2(d.getHours())+':'+p2(d.getMinutes());
 }
+/* ── 복원: 덮어쓰지 않고 합친다 ──
+   기기에만 있는 최근 공부 기록이 지워지지 않도록 키 종류별로 병합한다. */
+function syncMergeJson(k,localStr,remoteStr){
+  function P(v,d){try{var x=JSON.parse(v);return x||d;}catch(e){return d;}}
+  if(!localStr)return remoteStr;
+  if(k==='tm_logs'){
+    var out=P(localStr,[]),rem=P(remoteStr,[]);
+    rem.forEach(function(r){
+      var hit=null;
+      out.forEach(function(l){if(l.date===r.date&&l.subject===r.subject)hit=l;});
+      if(hit)hit.secs=Math.max(hit.secs||0,r.secs||0);
+      else out.push(r);
+    });
+    return JSON.stringify(out);
+  }
+  if(k.indexOf('plan_meta_')===0){
+    var lm=P(localStr,{}),rm=P(remoteStr,{});
+    return JSON.stringify({
+      res:lm.res||rm.res||'',ref:lm.ref||rm.ref||'',
+      rate:Math.max(lm.rate||0,rm.rate||0),
+      carryOff:lm.carryOff||rm.carryOff||0
+    });
+  }
+  if(k.indexOf('plan_')===0||k==='pl_todos'){
+    var lo=P(localStr,[]),ro=P(remoteStr,[]);
+    if(!Array.isArray(lo)||!Array.isArray(ro))return localStr;
+    ro.forEach(function(r){
+      var hit=null;
+      lo.forEach(function(l){if(l.id===r.id||(l.text===r.text&&l.date===r.date))hit=l;});
+      if(!hit){lo.push(r);return;}
+      hit.secs=Math.max(hit.secs||0,r.secs||0);
+      hit.done=hit.done||r.done;
+      var ss=(hit.sessions||[]).slice();
+      (r.sessions||[]).forEach(function(v){if(ss.indexOf(v)<0)ss.push(v);});
+      ss.sort();
+      if(ss.length)hit.sessions=ss;
+    });
+    return JSON.stringify(lo);
+  }
+  if(k.indexOf('dtodo_')===0){
+    var ld=P(localStr,[]),rd=P(remoteStr,[]);
+    if(!Array.isArray(ld)||!Array.isArray(rd))return localStr;
+    rd.forEach(function(r){
+      var hit=null;
+      ld.forEach(function(l){if(l.text===r.text)hit=l;});
+      if(hit)hit.done=hit.done||r.done;
+      else ld.push(r);
+    });
+    return JSON.stringify(ld);
+  }
+  return localStr; /* 그 밖의 키는 기기 값을 유지 */
+}
 function syncRestore(code,cb){
   if(!fbDb){cb('연결할 수 없습니다');return;}
   code=(code||'').trim().toUpperCase();
@@ -65,11 +117,15 @@ function syncRestore(code,cb){
     var b=snap.val();
     if(!b||!b.data){cb('해당 코드의 백업이 없습니다');return;}
     Object.keys(b.data).forEach(function(k){
-      try{localStorage.setItem(k,b.data[k]);}catch(e){}
+      try{
+        var cur=localStorage.getItem(k);
+        localStorage.setItem(k,cur?syncMergeJson(k,cur,b.data[k]):b.data[k]);
+      }catch(e){}
     });
     cb(null);
   }).catch(function(){cb('불러오기에 실패했습니다');});
 }
+
 
 
 /* ── 익명 사용 통계 핑 (학교·학년·최근 사용 시각만, 6시간 스로틀) ── */

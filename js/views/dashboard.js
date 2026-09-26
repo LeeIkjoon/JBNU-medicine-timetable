@@ -134,13 +134,13 @@ function syncCardHtml(){
     +'</button>';
   if(syncOpen){
     h+='<div class="sync-body">';
-    h+='<div class="sync-desc">공부기록·플래너·할 일이 이 코드로 자동 백업돼요. 새 기기에서 코드를 입력하면 그대로 복원됩니다.</div>';
+    h+='<div class="sync-desc">공부기록·플래너·할 일이 이 코드로 자동 백업돼요. 다른 기기에서 코드를 넣으면 그 기록을 이 기기 기록과 합쳐서 가져옵니다.</div>';
     if(syncRestoreOpen){
       h+='<div class="memo-add-row">'
         +'<input class="memo-input" id="sync-code-input" placeholder="코드 8자리" maxlength="8" style="text-transform:uppercase" autocapitalize="characters" autocomplete="off">'
         +'<button class="memo-add-btn" id="sync-restore-btn">가져오기</button>'
         +'</div>';
-      h+='<div class="sync-warn" id="sync-restore-msg">가져오면 현재 기기의 기록을 덮어씁니다</div>';
+      h+='<div class="sync-warn" id="sync-restore-msg">이 기기 기록과 합쳐집니다 (지워지지 않아요)</div>';
     }else{
       h+='<button class="dash-more" id="sync-restore-open">다른 기기에서 가져오기</button>';
     }
