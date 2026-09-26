@@ -4,7 +4,10 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%;height:100%;
      iOS에서 안전영역이 잘려도 탭바가 바닥까지 이어져 보인다 */
   background:var(--surface)}
 body{font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo',Roboto,'Noto Sans KR','Malgun Gothic','Helvetica Neue',sans-serif;
-  letter-spacing:-0.01em;background:var(--bg);color:var(--text);
+  letter-spacing:-0.01em;color:var(--text);
+  /* body 배경은 화면 밖(웹뷰가 못 미치는 영역)에 iOS가 칠하는 색이 된다 →
+     탭바와 같은 색으로 두고, 회색 페이지 배경은 .main이 칠한다 */
+  background:var(--surface);
   -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;overscroll-behavior:none;
   /* 앱 셸: 헤더 / 스크롤 영역 / 탭바 3단 고정 — 문서 전체가 스크롤되지 않으므로
      iOS에서 헤더가 딸려 움직이거나 탭바가 바닥에서 뜨는 일이 없다 */

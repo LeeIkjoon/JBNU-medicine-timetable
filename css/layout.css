@@ -21,7 +21,7 @@
 .icon-btn-txt{font-size:13px;font-weight:var(--weight-bold);width:auto;padding:0 10px}
 
 /* ── MAIN ── */
-.main{padding:var(--space-1) 4px var(--space-6);
+.main{background:var(--bg);padding:var(--space-1) 4px var(--space-6);
   padding-left:max(4px,env(safe-area-inset-left));padding-right:max(4px,env(safe-area-inset-right));
   box-sizing:border-box;max-width:var(--content-max);margin:0 auto;width:100%;
   flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
