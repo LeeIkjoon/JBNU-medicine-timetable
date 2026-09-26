@@ -164,5 +164,9 @@ html.sb-overlay .hdr::before{content:'';position:absolute;left:0;right:0;top:0;
 /* ── 웹뷰가 화면 아래까지 못 미치는 아이폰 홈 화면 앱 (js/app.js: html.vp-cut) ──
    홈 인디케이터가 웹뷰 바깥에 있으므로 탭바에 안전영역 여백을 넣지 않는다.
    (헤더는 그대로 — 위쪽은 실제로 상태바가 겹친다) */
-html.vp-cut .bnav{padding-bottom:0;min-height:50px}
+html.vp-cut .bnav{padding-bottom:0;min-height:0}
+/* 아래쪽 iOS 영역(약 59pt)이 이미 비어 보이므로 탭바 자체는 납작하게 */
+html.vp-cut .bn{padding:5px var(--space-1) 2px}
+html.vp-cut .bn-ic{height:22px;width:44px}
+html.vp-cut .bn-ic svg{width:21px;height:21px}
 html.vp-cut .admin-fab{bottom:70px}

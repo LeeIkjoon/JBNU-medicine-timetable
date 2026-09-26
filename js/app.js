@@ -546,7 +546,7 @@ setTimeout(function(){
     var nav=document.querySelector('.bnav'),b=document.body.getBoundingClientRect();
     var css=(document.querySelector('link[href*="base.css"]')||{}).href||'';
     fbDb.ref('study/diag/'+syncUid()).set({
-      ts:Date.now(),build:'20260926f',
+      ts:Date.now(),build:'20260926g',
       vpCut:document.documentElement.classList.contains('vp-cut'),
       navTop:nav?Math.round(nav.getBoundingClientRect().top):-1,
       innerH:window.innerHeight,innerW:window.innerWidth,
