@@ -124,6 +124,29 @@ function dashExamCardHtml(){
 
 /* ── 백업 카드 (컴팩트 — 탭하면 펼침) ── */
 var syncOpen=false,syncRestoreOpen=false;
+/* 기존 사용자용 안내 — 로그인 안 했고 닫지 않았을 때만 */
+function authPromptHtml(){
+  if(window.authUser&&authUser.uid)return'';
+  try{if(localStorage.getItem('auth_prompt_off')==='1')return'';}catch(e){}
+  var h='<div class="dash-card auth-card">';
+  h+='<div class="dash-card-ttl">계정</div>';
+  h+='<div class="dash-empty">구글로 로그인하면 기기를 바꾸거나 앱을 지워도 공부 기록이 그대로 이어져요.</div>';
+  h+='<button class="sync-google" id="auth-card-btn">'
+    +'<svg viewBox="0 0 24 24" width="17" height="17"><path fill="#4285F4" d="M23 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.2a5.3 5.3 0 0 1-2.3 3.5v2.9h3.7c2.2-2 3.4-5 3.4-8.6z"/><path fill="#34A853" d="M12 23.5c3.1 0 5.7-1 7.6-2.8l-3.7-2.9c-1 .7-2.3 1.1-3.9 1.1-3 0-5.5-2-6.4-4.7H1.8v3C3.7 20.9 7.6 23.5 12 23.5z"/><path fill="#FBBC05" d="M5.6 14.2a6.9 6.9 0 0 1 0-4.4v-3H1.8a11.5 11.5 0 0 0 0 10.4l3.8-3z"/><path fill="#EA4335" d="M12 4.9c1.7 0 3.2.6 4.4 1.7l3.3-3.3C17.7 1.4 15.1.5 12 .5 7.6.5 3.7 3.1 1.8 6.8l3.8 3C6.5 7 9 4.9 12 4.9z"/></svg>'
+    +'구글로 로그인</button>';
+  h+='<button class="dash-more" id="auth-card-off">나중에</button>';
+  h+='</div>';
+  return h;
+}
+function authPromptBind(){
+  var b=document.getElementById('auth-card-btn');
+  if(b)b.onclick=function(){
+    var me=this;me.disabled=true;me.textContent='로그인 창을 여는 중...';
+    authSignIn(function(err){if(err){me.disabled=false;me.textContent=err;}});
+  };
+  var x=document.getElementById('auth-card-off');
+  if(x)x.onclick=function(){try{localStorage.setItem('auth_prompt_off','1');}catch(e){}renderDashboard();};
+}
 function syncCardHtml(){
   var signed=!!(window.authUser&&authUser.uid);
   var h='<div class="dash-card">';
@@ -503,6 +526,7 @@ function renderDashboard(){
   h+=planCardHtml();
   h+='</div>';
   h+='<div class="dash-col dash-col-b">';
+  h+=authPromptHtml();
   h+=dashExamCardHtml();
   h+=dashRecordHtml();
   h+=syncCardHtml();
@@ -512,4 +536,5 @@ function renderDashboard(){
   if(typeof tmBind==='function')tmBind();
   planBind();
   syncBind();
+  authPromptBind();
 }

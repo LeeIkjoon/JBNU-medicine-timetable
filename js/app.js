@@ -248,6 +248,31 @@ function init(){
 
   var GS_IC='<span class="gs-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#3182F6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.3C10.4 5 8 4.5 5 4.7v12c3-.2 5.4.3 7 1.6 1.6-1.3 4-1.8 7-1.6v-12c-3-.2-5.4.3-7 1.6z"/><path d="M12 6.3v12"/></svg></span>';
 
+  /* 로그인 화면 (신규 사용자 첫 단계) — 로그인했거나 건너뛴 적 있으면 학교 화면으로 */
+  function showAuthScreen(){
+    var skipped=false;
+    try{skipped=localStorage.getItem('auth_skipped')==='1';}catch(e){}
+    if((window.authUser&&authUser.uid)||skipped){showSchoolScreen();return;}
+    var sc=document.getElementById('auth-screen');
+    sc.style.display='flex';
+    document.getElementById('auth-google').onclick=function(){
+      var btn=this,note=document.getElementById('auth-note');
+      btn.disabled=true;note.textContent='로그인 창을 여는 중...';
+      authSignIn(function(err){
+        if(err){btn.disabled=false;note.textContent=err+' — 로그인 없이도 사용할 수 있어요';return;}
+        sc.style.display='none';showSchoolScreen();
+      });
+    };
+    document.getElementById('auth-skip').onclick=function(){
+      try{localStorage.setItem('auth_skipped','1');}catch(e){}
+      sc.style.display='none';showSchoolScreen();
+    };
+  }
+  window._onboardAfterSignIn=function(){
+    var sc=document.getElementById('auth-screen');
+    if(sc&&sc.style.display!=='none'){sc.style.display='none';showSchoolScreen();}
+  };
+
   /* 학교 선택 — 휠 */
   function showSchoolScreen(){
     var grid=document.getElementById('sc-grid');
@@ -368,7 +393,7 @@ function init(){
   } else if(savedSchool){
     showGradeScreen();
   } else {
-    showSchoolScreen(); /* 신규 사용자: 학교부터 */
+    showAuthScreen(); /* 신규 사용자: 로그인 → 학교 → 학년 */
   }
 
   /* 저장된 시간표 복원 */

@@ -17,6 +17,7 @@ var authUser=null, fbAuth=null, authReady=false;
     authReady=true;
     try{localStorage.setItem('auth_signed',u?'1':'0');}catch(e){}
     if(u&&u.uid!==was)authAfterSignIn();
+    if(u&&typeof window._onboardAfterSignIn==='function')window._onboardAfterSignIn();
     if(typeof renderDashboard==='function'&&vw==='dashboard')renderDashboard();
   });
 })();
