@@ -331,7 +331,7 @@ function planCardHtml(){
   var sum=planSummary(a);
   var h='<div class="dash-card pln-card">';
   h+='<div class="pln-head">';
-  h+='<div class="dash-card-ttl">오늘 플래너<span class="ttl-caption">'+(d.getMonth()+1)+'월 '+d.getDate()+'일</span></div>';
+  h+='<div class="dash-card-ttl">오늘 할 일<span class="ttl-caption">'+(d.getMonth()+1)+'월 '+d.getDate()+'일</span></div>';
   h+='<button class="pln-hist" onclick="histOpen()">지난 기록<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>';
   h+='</div>';
   if(a.length){
@@ -346,11 +346,14 @@ function planCardHtml(){
   if(a.length){
     h+='<div class="pln-list">';
     /* 미완료 먼저, 완료는 아래로 (원래 순서 유지) */
-    a.slice().sort(function(x,y){return (x.done?1:0)-(y.done?1:0);}).forEach(function(it){
+    var order=a.slice().sort(function(x,y){return (x.done?1:0)-(y.done?1:0);});
+    order.forEach(function(it,ix){
       var pct=it.goal?Math.min(100,Math.round((it.secs||0)/(it.goal*60)*100)):0;
       var linked=(typeof tmPlanId!=='undefined'&&tmPlanId===it.id&&tmState!=='idle');
       var running=linked&&tmState==='running';
-      h+='<div class="pln-item'+(it.done?' done':'')+(linked?' live':'')+'">';
+      var ci2=(a.indexOf(it)%5)+1;
+      h+='<div class="pln-item c'+ci2+(it.done?' done':'')+(linked?' live':'')+'">';
+      h+='<span class="pln-edge"></span>';
       h+='<button class="pln-chk'+(it.done?' on':'')+'" data-id="'+it.id+'" aria-label="완료">'+(it.done?PLN_IC.chk:'')+'</button>';
       h+='<div class="pln-body">';
       h+='<div class="pln-text">'+escHtml(it.text)+'</div>';
@@ -368,7 +371,7 @@ function planCardHtml(){
     });
     h+='</div>';
   }else{
-    h+='<div class="dash-empty">오늘 공부할 내용을 적어보세요. 항목마다 목표 시간을 두면 달성률이 표시돼요.</div>';
+    h+='<div class="dash-empty">오늘 무엇을 할지 적어보세요. 목표 시간을 정하면 달성률이 함께 보여요.</div>';
   }
   /* 타임테이블 (세션이 있을 때만) */
   var hasSess=a.some(function(it){return it.sessions&&it.sessions.length;});
@@ -491,8 +494,9 @@ function renderDashboard(){
   var h='<div class="dash-wrap">';
   h+=dashGreetHtml();
   h+='<div class="dash-col dash-col-a">';
-  h+=(typeof tmCardHtml==='function')?tmCardHtml():'';
-  h+=planCardHtml();
+  var tmH=(typeof tmCardHtml==='function')?tmCardHtml():'';
+  if(tmState==='idle'){h+=planCardHtml();h+=tmH;}   /* 대기 중: 오늘 할 일이 먼저 */
+  else{h+=tmH;h+=planCardHtml();}                   /* 공부 중: 타이머가 먼저 */
   h+='</div>';
   h+='<div class="dash-col dash-col-b">';
   h+=dashExamCardHtml();

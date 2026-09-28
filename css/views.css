@@ -360,44 +360,52 @@
 .pln-sum-bar{height:100%;border-radius:2px;background:var(--accent);transition:width .5s var(--ease)}
 .pln-sum-bar.done{background:var(--success)}
 .pln-list{margin:2px 0 4px}
-.pln-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border-faint);
+.pln-item{position:relative;display:flex;align-items:flex-start;gap:11px;padding:12px 0 12px 12px;
+  border-bottom:1px solid var(--border-faint);
   transition:opacity .22s var(--ease),transform .22s var(--ease)}
+/* 항목마다 색 띠 — 한눈에 구분되게 (시간표 블럭과 같은 파스텔) */
+.pln-edge{position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:2px;background:var(--tl-1)}
+.pln-item.c2 .pln-edge{background:var(--tl-2)}
+.pln-item.c3 .pln-edge{background:var(--tl-3)}
+.pln-item.c4 .pln-edge{background:var(--tl-4)}
+.pln-item.c5 .pln-edge{background:var(--tl-5)}
+.pln-item.done .pln-edge{opacity:.45}
 .pln-item:last-child{border-bottom:none}
 .pln-item.removing{opacity:0;transform:translateX(24px)}
 .pln-item.live{margin:0 -8px;padding-left:8px;padding-right:8px;border-radius:12px;background:var(--tint-brand);border-bottom-color:transparent}
-.pln-chk{width:24px;height:24px;border-radius:50%;border:2px solid var(--border-strong);background:var(--surface);
+.pln-chk{width:26px;height:26px;border-radius:50%;border:2px solid var(--border-strong);background:var(--surface);
   cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;padding:0;
   color:#fff;margin-top:1px;-webkit-tap-highlight-color:transparent;transition:background .2s,border-color .2s,transform var(--duration-fast) var(--ease)}
 .pln-chk svg{width:14px;height:14px}
 .pln-chk:active{transform:scale(.88)}
 .pln-chk.on{background:var(--accent);border-color:var(--accent)}
 .pln-body{flex:1;min-width:0}
-.pln-text{font-size:var(--font-base);font-weight:var(--weight-semi);color:var(--text);word-break:keep-all;line-height:1.35;
+.pln-text{font-size:var(--font-lg);font-weight:var(--weight-bold);color:var(--text-strong);word-break:keep-all;line-height:1.35;
   position:relative;display:inline-block}
 .pln-text::after{content:'';position:absolute;left:0;top:52%;height:1.5px;width:0;background:currentColor;transition:width .3s var(--ease)}
 .pln-item.done .pln-text{color:var(--text-fade)}
 .pln-item.done .pln-text::after{width:100%}
-.pln-meta{font-size:var(--font-sm);color:var(--text-soft);margin-top:3px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pln-meta{font-size:var(--font-md);color:var(--text-soft);margin-top:4px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .pln-live{font-size:var(--font-2xs);font-weight:var(--weight-bold);color:var(--brand-1);background:var(--surface);border-radius:6px;padding:1px 6px}
 .pln-live.paused{color:var(--warning-2)}
-.pln-track{height:5px;background:var(--surface-muted);border-radius:3px;overflow:hidden;margin-top:6px}
+.pln-track{height:6px;background:var(--surface-muted);border-radius:3px;overflow:hidden;margin-top:7px}
 .pln-item.live .pln-track{background:rgba(255,255,255,.75)}
 .pln-bar{height:100%;border-radius:3px;background:var(--accent);transition:width .4s}
 .pln-bar.done{background:var(--success)}
 .pln-sess{font-size:var(--font-2xs);color:var(--text-fade);margin-top:4px;font-variant-numeric:tabular-nums;word-break:break-all}
-.pln-play{width:36px;height:36px;border-radius:50%;border:none;background:var(--tint-accent);color:var(--accent);
+.pln-play{width:42px;height:42px;border-radius:50%;border:none;background:var(--tint-accent);color:var(--accent);
   cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;padding:0;
   -webkit-tap-highlight-color:transparent;transition:transform var(--duration-fast) var(--ease),background var(--duration-fast)}
-.pln-play svg{width:16px;height:16px}
+.pln-play svg{width:18px;height:18px}
 .pln-play:active{transform:scale(.88)}
 .pln-play.running{background:var(--accent);color:#fff}
 .pln-del{border:none;background:none;color:var(--text-fade);cursor:pointer;flex:none;width:34px;height:36px;
   display:flex;align-items:center;justify-content:center;padding:0;margin-right:-8px;-webkit-tap-highlight-color:transparent}
 .pln-del svg{width:14px;height:14px}
-.pln-add{display:flex;gap:6px;margin-top:10px}
-.pln-add .memo-input{min-width:0;font-size:var(--font-base);padding:10px 12px}
+.pln-add{display:flex;gap:6px;margin-top:14px}
+.pln-add .memo-input{min-width:0;font-size:var(--font-base);padding:12px 13px}
 .pln-goal{flex:none;width:78px;padding-right:8px}
-.pln-add .memo-add-btn{padding:10px 14px}
+.pln-add .memo-add-btn{padding:12px 16px;font-size:var(--font-base)}
 
 /* 플래너 확장 — 각오·타임테이블·반성·자평 */
 .pln-res{width:100%;border:none;border-bottom:1.5px solid var(--border);background:none;

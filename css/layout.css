@@ -33,19 +33,19 @@
   padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right);
   box-shadow:0 -1px 0 rgba(0,0,0,0.08);
   /* 높이 명시 */
-  min-height:calc(50px + env(safe-area-inset-bottom,0px))}
+  min-height:calc(58px + env(safe-area-inset-bottom,0px))}
 .bnav{justify-content:center}
 /* 키보드 입력 중에는 탭바를 접음 (js/app.js에서 body.kb-open) */
 .bnav{transition:margin-bottom var(--duration) var(--ease),opacity var(--duration) var(--ease)}
 body.kb-open .bnav{margin-bottom:calc(-1 * (55px + env(safe-area-inset-bottom,0px)));opacity:0;pointer-events:none}
 .bn{flex:1;max-width:200px;border:none;background:none;padding:8px var(--space-1) 6px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:3px;min-height:52px;font-size:var(--font-2xs);font-weight:var(--weight-medium);
+  align-items:center;justify-content:center;gap:4px;min-height:58px;font-size:var(--font-xs);font-weight:var(--weight-medium);
   color:var(--text-soft);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bn.on{font-weight:var(--weight-bold)}
 .bn.on{color:var(--accent)}
 .bn.on .bn-ic{background:var(--tint-accent)}
-.bn-ic{font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;height:28px;width:52px;border-radius:14px;transition:background var(--duration-fast) var(--ease)}
-.bn-ic svg{width:23px;height:23px;display:block}
+.bn-ic{font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;height:30px;width:56px;border-radius:15px;transition:background var(--duration-fast) var(--ease)}
+.bn-ic svg{width:24px;height:24px;display:block}
 .bn.on .bn-ic svg{stroke-width:2}
 
 /* ── GRADE SELECT SCREEN ── */
@@ -166,11 +166,6 @@ html.sb-overlay .hdr::before{content:'';position:absolute;left:0;right:0;top:0;
 /* ── 웹뷰가 화면 아래까지 못 미치는 아이폰 홈 화면 앱 (js/app.js: html.vp-cut) ──
    홈 인디케이터가 웹뷰 바깥에 있으므로 탭바에 안전영역 여백을 넣지 않는다.
    (헤더는 그대로 — 위쪽은 실제로 상태바가 겹친다) */
-html.vp-cut .bnav{padding-bottom:0;min-height:0}
-/* 아래쪽 iOS 영역(약 59pt)이 이미 비어 보이므로 탭바 자체는 납작하게 */
-html.vp-cut .bn{padding:5px var(--space-1) 2px}
-html.vp-cut .bn-ic{height:22px;width:44px}
-html.vp-cut .bn-ic svg{width:21px;height:21px}
 html.vp-cut .admin-fab{bottom:70px}
 
 /* ── 휠 선택기 (학교·학년 선택) ── */
