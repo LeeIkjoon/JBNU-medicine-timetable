@@ -583,3 +583,14 @@
 .sync-google:active{transform:scale(.97);background:var(--surface-muted)}
 .sync-google:disabled{opacity:.6}
 .sync-google svg{flex:none}
+
+/* 시수 — 교수별 수업 목록 */
+.hrs-row-top{display:flex;align-items:center;gap:6px;width:100%;border:none;background:none;padding:0;
+  font-family:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.hrs-arrow.sm{font-size:var(--font-md);margin-left:2px}
+.hrs-cls{margin:6px 0 2px;border-left:2px solid var(--border);padding-left:9px}
+.hrs-cls-row{display:flex;align-items:baseline;gap:7px;padding:3px 0;font-size:var(--font-sm);color:var(--text-secondary)}
+.hrs-cls-d{font-variant-numeric:tabular-nums;font-weight:var(--weight-semi);min-width:58px}
+.hrs-cls-p{color:var(--text-soft)}
+.hrs-cls-t{color:var(--text-soft);font-variant-numeric:tabular-nums}
+.hrs-cls-tp{flex:1;min-width:0;color:var(--text-fade);font-size:var(--font-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

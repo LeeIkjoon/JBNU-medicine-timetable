@@ -336,12 +336,10 @@ function planCardHtml(){
   h+='</div>';
   if(a.length){
     h+='<div class="pln-sum">'+(sum.total?sum.done+'/'+sum.total+' 완료':'')
-      +(sum.secs?' · '+tmFmtShort(sum.secs*1000):'')
-      +(sum.goal?' · '+sum.pct+'%':'')+'</div>';
+      +(sum.secs?' · '+tmFmtShort(sum.secs*1000):'')+'</div>';
   }
-  if(sum.goal){
-    h+='<div class="pln-sum-track"><div class="pln-sum-bar'+(sum.pct>=100?' done':'')+'" style="width:'+sum.pct+'%"></div></div>';
-  }
+  /* 진행률 바 대신 그날 시간대 타임라인을 위에 */
+  if(a.some(function(it){return it.sessions&&it.sessions.length;}))h+=planTimelineHtml(a);
   h+='<input class="pln-res" id="pln-res" placeholder="오늘의 각오" maxlength="60" value="'+escHtml(meta.res||'')+'" autocomplete="off">';
   if(a.length){
     h+='<div class="pln-list">';
@@ -373,9 +371,6 @@ function planCardHtml(){
   }else{
     h+='<div class="dash-empty">오늘 무엇을 할지 적어보세요. 목표 시간을 정하면 달성률이 함께 보여요.</div>';
   }
-  /* 타임테이블 (세션이 있을 때만) */
-  var hasSess=a.some(function(it){return it.sessions&&it.sessions.length;});
-  if(hasSess)h+=planTimelineHtml(a);
   h+=planCarryHtml(meta);
   h+='<div class="pln-add">'
     +'<input class="memo-input" id="pln-text" placeholder="공부할 내용" maxlength="60" autocomplete="off" enterkeyhint="done">'

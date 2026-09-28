@@ -92,6 +92,24 @@ var fView='hours';      /* 'hours' | 'sched' — 시수가 기본 */
 var fCleared=false;     /* 전체 해제 상태 (빈 선택을 전체선택으로 되돌리지 않게) */
 var hrsRange='all';     /* 시수 범위: all | mid(중간까지) | fin(중간 이후) */
 var fHoursOpen={};      /* 과목명 → 펼침 여부 */
+var fProfOpen={};       /* '과목|교수' → 수업 목록 펼침 여부 */
+
+/* 과목·교수로 실제 수업 목록 (범위 필터 반영, 날짜순) */
+function profClasses(subject,prof){
+  function baseName(x){
+    return x.replace(/\s*\(([^)]*)\)\s*$/,function(m,inner){
+      return /^\d+$/.test(inner.trim())?m:'';
+    })||x;
+  }
+  return viewItems(merged).filter(function(it){
+    var s=it.subject;
+    if(!s||isEv(s)||isHoliday(s))return false;
+    if((it.is_exam===true||it.is_exam==='true')||isEx(s))return false;
+    if(baseName(s)!==subject&&s!==subject)return false;
+    var p=(it.professor||'').trim()||'미정';
+    return p===prof;
+  }).sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:a.period-b.period;});
+}
 
 function hoursData(){
   var subj={};
@@ -169,11 +187,29 @@ function renderHours(){
           var pr=d.profs[j];
           var pct=d.total>0?Math.round(pr.hours/d.total*100):0;
           var lastTxt=pr.last?('~'+parseInt(pr.last.slice(5,7),10)+'/'+parseInt(pr.last.slice(8,10),10)):'';
+          var pkey=d.subject+'|'+pr.name,popen=!!fProfOpen[pkey];
           h+='<div class="hrs-row">';
-          h+='<div class="hrs-row-top"><span class="hrs-prof">'+escHtml(pr.name)
+          h+='<button class="hrs-row-top" data-s="'+escHtml(d.subject)+'" data-p="'+escHtml(pr.name)+'">'
+            +'<span class="hrs-prof">'+escHtml(pr.name)
             +(lastTxt?'<span class="hrs-last">'+lastTxt+'</span>':'')+'</span>'
-            +'<span class="hrs-meta">'+pr.hours+'시간 · '+pct+'%</span></div>';
+            +'<span class="hrs-meta">'+pr.hours+'시간 · '+pct+'%</span>'
+            +'<span class="hrs-arrow sm'+(popen?' open':'')+'">›</span></button>';
           h+='<div class="hrs-track"><div class="hrs-bar" style="width:'+pct+'%;background:'+c+'"></div></div>';
+          if(popen){
+            var cls=profClasses(d.subject,pr.name),WK=['일','월','화','수','목','금','토'];
+            h+='<div class="hrs-cls">';
+            cls.forEach(function(it){
+              var dt=new Date(it.date);
+              h+='<div class="hrs-cls-row">'
+                +'<span class="hrs-cls-d">'+(dt.getMonth()+1)+'/'+dt.getDate()+' ('+WK[dt.getDay()]+')</span>'
+                +'<span class="hrs-cls-p">'+it.period+'교시</span>'
+                +'<span class="hrs-cls-t">'+(PERIOD_START[it.period]||'')+'</span>'
+                +(it.topic?'<span class="hrs-cls-tp">'+escHtml(it.topic)+'</span>':'')
+                +'</div>';
+            });
+            if(!cls.length)h+='<div class="hrs-cls-row"><span class="hrs-cls-d">수업 정보가 없어요</span></div>';
+            h+='</div>';
+          }
           h+='</div>';
         }
         h+='</div>';
@@ -185,6 +221,13 @@ function renderHours(){
   el.innerHTML=h;
   el.querySelectorAll('.hrs-range-btn').forEach(function(b){
     b.onclick=function(){hrsRange=this.getAttribute('data-r');renderF();};
+  });
+  el.querySelectorAll('.hrs-row-top').forEach(function(b){
+    b.onclick=function(){
+      var k=this.getAttribute('data-s')+'|'+this.getAttribute('data-p');
+      fProfOpen[k]=!fProfOpen[k];
+      renderF();
+    };
   });
   var heads=el.querySelectorAll('.hrs-head');
   for(var k=0;k<heads.length;k++){
