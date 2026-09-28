@@ -248,45 +248,40 @@ function init(){
 
   var GS_IC='<span class="gs-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#3182F6" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.3C10.4 5 8 4.5 5 4.7v12c3-.2 5.4.3 7 1.6 1.6-1.3 4-1.8 7-1.6v-12c-3-.2-5.4.3-7 1.6z"/><path d="M12 6.3v12"/></svg></span>';
 
-  /* 학교 선택 화면 */
+  /* 학교 선택 — 휠 */
   function showSchoolScreen(){
     var grid=document.getElementById('sc-grid');
-    var h='';
-    SCHOOL_ORDER.forEach(function(k){
-      var sc=SCHOOLS[k];
-      h+='<div class="gs-card sc-card'+(savedSchool===k?' sel':'')+'" data-school="'+k+'">'
-        +'<div class="gs-name">'+sc.name+'</div>'
-        +'<div class="gs-desc">'+sc.dept+'</div></div>';
+    var items=SCHOOL_ORDER.map(function(k){
+      return {v:k,t:SCHOOLS[k].name,d:SCHOOLS[k].dept};
     });
-    grid.innerHTML=h;
-    grid.querySelectorAll('.sc-card').forEach(function(c){
-      c.onclick=function(){
-        savedSchool=this.getAttribute('data-school');
-        try{localStorage.setItem('user_school',savedSchool);}catch(e){}
-        document.getElementById('sc-screen').style.display='none';
-        showGradeScreen();
-      };
-    });
+    grid.style.cssText='display:block;width:100%;max-width:320px';
+    grid.innerHTML=wheelHtml('sc-wheel',items)
+      +'<button class="gs-ok" id="sc-ok">다음</button>';
     document.getElementById('sc-screen').style.display='flex';
+    wheelInit('sc-wheel',savedSchool||'jbnu',null);
+    document.getElementById('sc-ok').onclick=function(){
+      var v=wheelValue('sc-wheel');if(!v)return;
+      savedSchool=v;
+      try{localStorage.setItem('user_school',savedSchool);}catch(e){}
+      document.getElementById('sc-screen').style.display='none';
+      showGradeScreen();
+    };
   }
 
-  /* 학년 선택 화면 — 현재 학교의 학년 목록으로 렌더 */
+  /* 학년 선택 — 휠 (현재 학교의 학년 목록) */
   function showGradeScreen(){
     var sc=SCHOOLS[savedSchool||'jbnu'];
     document.getElementById('gs-title').textContent=sc.name+' '+sc.dept;
     var grid=document.getElementById('gs-grid');
-    grid.style.gridTemplateColumns='repeat('+Math.min(sc.grades.length,3)+',1fr)';
-    var h='';
-    sc.grades.forEach(function(g){
-      h+='<div class="gs-card" data-grade="'+g.label+'">'+GS_IC
-        +'<div class="gs-name">'+g.label+'</div>'
-        +(g.desc?'<div class="gs-desc">'+g.desc+'</div>':'')+'</div>';
-    });
-    grid.innerHTML=h;
-    grid.querySelectorAll('.gs-card').forEach(function(c){
-      c.onclick=function(){applyGrade(this.getAttribute('data-grade'));};
-    });
+    var items=sc.grades.map(function(g){return {v:g.label,t:g.label,d:g.desc||''};});
+    grid.style.cssText='display:block;width:100%;max-width:320px';
+    grid.innerHTML=wheelHtml('gs-wheel',items)
+      +'<button class="gs-ok" id="gs-ok">시작하기</button>';
     document.getElementById('gs-screen').style.display='flex';
+    wheelInit('gs-wheel',savedGrade||items[0].v,null);
+    document.getElementById('gs-ok').onclick=function(){
+      var v=wheelValue('gs-wheel');if(v)applyGrade(v);
+    };
   }
   function hideGradeScreen(){document.getElementById('gs-screen').style.display='none';}
   document.getElementById('gs-school-change').onclick=function(){
@@ -546,7 +541,7 @@ setTimeout(function(){
     var nav=document.querySelector('.bnav'),b=document.body.getBoundingClientRect();
     var css=(document.querySelector('link[href*="base.css"]')||{}).href||'';
     fbDb.ref('study/diag/'+syncUid()).set({
-      ts:Date.now(),build:'20260926g',
+      ts:Date.now(),build:'20260928a',
       vpCut:document.documentElement.classList.contains('vp-cut'),
       navTop:nav?Math.round(nav.getBoundingClientRect().top):-1,
       innerH:window.innerHeight,innerW:window.innerWidth,

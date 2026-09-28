@@ -35,6 +35,10 @@ function syncQueue(){
   if(_syncTimer)clearTimeout(_syncTimer);
   _syncTimer=setTimeout(syncPush,4000);
 }
+/* 백업 위치: 로그인했으면 계정, 아니면 기존 8자리 코드 */
+function syncPath(){
+  return (window.authUser&&authUser.uid)?('u/'+authUser.uid):('users/'+syncUid());
+}
 function syncPush(){
   _syncTimer=null;
   if(!fbDb)return;
@@ -44,7 +48,7 @@ function syncPush(){
     if(syncWatched(k))data[k]=localStorage.getItem(k);
   }
   var blob={v:1,grade:savedGrade||'',ts:Date.now(),data:data};
-  fbDb.ref('users/'+syncUid()).set(blob).then(function(){
+  fbDb.ref(syncPath()).set(blob).then(function(){
     try{localStorage.setItem('sync_last',String(blob.ts));}catch(e){}
     var el=document.getElementById('sync-status');
     if(el)el.textContent=syncStatusText();

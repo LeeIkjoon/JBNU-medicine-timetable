@@ -170,3 +170,26 @@ html.vp-cut .bn{padding:5px var(--space-1) 2px}
 html.vp-cut .bn-ic{height:22px;width:44px}
 html.vp-cut .bn-ic svg{width:21px;height:21px}
 html.vp-cut .admin-fab{bottom:70px}
+
+/* ── 휠 선택기 (학교·학년 선택) ── */
+.wheel{position:relative;height:232px;width:100%;max-width:320px;margin:0 auto}
+.wheel-band{position:absolute;left:0;right:0;top:50%;height:46px;transform:translateY(-50%);
+  border-radius:14px;background:var(--surface);box-shadow:var(--shadow-xs);pointer-events:none}
+.wheel-scroll{position:relative;height:100%;overflow-y:auto;scroll-snap-type:y mandatory;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior:contain;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 24%,#000 76%,transparent 100%);
+  mask-image:linear-gradient(to bottom,transparent 0,#000 24%,#000 76%,transparent 100%)}
+.wheel-scroll::-webkit-scrollbar{display:none}
+.wheel-item{height:46px;scroll-snap-align:center;display:flex;align-items:center;justify-content:center;gap:7px;
+  font-size:var(--font-xl);font-weight:var(--weight-semi);color:var(--text-fade);cursor:pointer;
+  transition:color var(--duration-fast) var(--ease),transform var(--duration-fast) var(--ease);
+  -webkit-tap-highlight-color:transparent}
+.wheel-item .wheel-d{font-size:var(--font-sm);font-weight:var(--weight-medium);color:var(--text-disabled)}
+.wheel-item.on{color:var(--text-strong);font-weight:var(--weight-bold);transform:scale(1.04)}
+.wheel-item.on .wheel-d{color:var(--text-soft)}
+.gs-ok{display:block;width:100%;max-width:320px;margin:var(--space-5) auto 0;padding:15px;border:none;
+  border-radius:var(--radius-pill);background:var(--accent);color:var(--text-onbrand);
+  font-family:inherit;font-size:var(--font-xl);font-weight:var(--weight-bold);cursor:pointer;
+  box-shadow:var(--shadow-brand);-webkit-tap-highlight-color:transparent;
+  transition:transform var(--duration-fast) var(--ease)}
+.gs-ok:active{transform:scale(.97)}

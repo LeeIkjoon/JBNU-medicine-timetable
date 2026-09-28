@@ -553,3 +553,13 @@
 .pln-carry-x svg{width:13px;height:13px}
 .hist-ref-head{display:flex;align-items:center;justify-content:space-between}
 .hist-dcard .pln-ref{margin-top:6px}
+
+/* 백업 — 구글 로그인 버튼 */
+.sync-google{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;
+  padding:11px var(--space-4);border:1.5px solid var(--border);border-radius:var(--radius-pill);
+  background:var(--surface);color:var(--text-strong);font-family:inherit;font-size:var(--font-base);
+  font-weight:var(--weight-bold);cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform var(--duration-fast) var(--ease),background var(--duration-fast)}
+.sync-google:active{transform:scale(.97);background:var(--surface-muted)}
+.sync-google:disabled{opacity:.6}
+.sync-google svg{flex:none}
