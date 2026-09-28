@@ -4,7 +4,10 @@ try {
     apiKey: "AIzaSyBZ6wJKM4sku2ag0Ac2idDgKnl85_Ctuc4",
     /* 우리 도메인(/__/auth 프록시)을 쓰려면 구글 OAuth 클라이언트에 그 주소를
        '승인된 리디렉션 URI'로 등록해야 한다. 등록 전에는 기본 도메인 사용. */
-    authDomain: (location.hostname.indexOf('vercel.app')>=0 && localStorage.getItem('auth_proxy')==='1')
+    /* 우리 도메인(/__/auth 프록시)을 authDomain으로 사용 — 사파리·아이폰 홈 화면 앱에서
+       다른 도메인으로 넘어가는 로그인이 막히는 문제를 피한다. 구글 OAuth 클라이언트에
+       https://<도메인>/__/auth/handler 가 리디렉션 URI로 등록돼 있어야 한다. */
+    authDomain: (location.hostname.indexOf('vercel.app')>=0)
       ? location.hostname : "jbnu-med-timetable.firebaseapp.com",
     databaseURL: "https://jbnu-med-timetable-default-rtdb.firebaseio.com",
     projectId: "jbnu-med-timetable",
