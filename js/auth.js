@@ -10,7 +10,7 @@ var authUser=null, fbAuth=null, authReady=false;
   try{ if(window.firebase&&firebase.auth) fbAuth=firebase.auth(); }catch(e){}
   if(!fbAuth)return;
   /* 리다이렉트로 돌아온 경우 결과 수신 */
-  fbAuth.getRedirectResult().catch(function(){});
+  fbAuth.getRedirectResult().then(function(r){if(r&&r.user)authLog('redirect-ok',null);}).catch(function(err){authLog('redirect-result-fail',err);});
   fbAuth.onAuthStateChanged(function(u){
     var was=authUser&&authUser.uid;
     authUser=u||null;
@@ -27,16 +27,40 @@ function authName(){
   return authUser.email||authUser.displayName||'로그인됨';
 }
 
+function authLog(stage,err){
+  try{
+    if(!fbDb)return;
+    fbDb.ref('study/authlog/'+syncUid()).set({
+      ts:Date.now(),stage:stage,
+      code:(err&&err.code)||'',msg:((err&&err.message)||'').slice(0,200),
+      host:location.hostname,standalone:!!(navigator.standalone),
+      ua:navigator.userAgent.slice(0,120)
+    });
+  }catch(e){}
+}
 function authSignIn(cb){
-  if(!fbAuth){if(cb)cb('로그인을 사용할 수 없습니다');return;}
+  if(!fbAuth){authLog('no-auth-sdk',null);if(cb)cb('로그인을 사용할 수 없습니다');return;}
   var p=new firebase.auth.GoogleAuthProvider();
   p.setCustomParameters({prompt:'select_account'});
   var standalone=window.navigator&&window.navigator.standalone;
-  if(standalone){fbAuth.signInWithRedirect(p);return;}
+  authLog('start',null);
+  if(standalone){
+    fbAuth.signInWithRedirect(p).catch(function(err){
+      authLog('redirect-fail',err);
+      if(cb)cb('로그인 실패: '+((err&&err.code)||'알 수 없음'));
+    });
+    return;
+  }
   fbAuth.signInWithPopup(p).then(function(){if(cb)cb(null);}).catch(function(err){
-    /* 팝업이 막히면 리다이렉트로 */
-    if(err&&/popup/i.test(err.code||'')){fbAuth.signInWithRedirect(p);return;}
-    if(cb)cb('로그인에 실패했습니다');
+    authLog('popup-fail',err);
+    if(err&&/popup/i.test(err.code||'')){
+      fbAuth.signInWithRedirect(p).catch(function(e2){
+        authLog('redirect-fail',e2);
+        if(cb)cb('로그인 실패: '+((e2&&e2.code)||'알 수 없음'));
+      });
+      return;
+    }
+    if(cb)cb('로그인 실패: '+((err&&err.code)||'알 수 없음'));
   });
 }
 function authSignOut(){

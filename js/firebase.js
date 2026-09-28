@@ -2,7 +2,10 @@ var fbDb = null;
 try {
   var _fbCfg = {
     apiKey: "AIzaSyBZ6wJKM4sku2ag0Ac2idDgKnl85_Ctuc4",
-    authDomain: "jbnu-med-timetable.firebaseapp.com",
+    /* 사파리·아이폰 홈 화면 앱에서 로그인 리다이렉트가 막히지 않도록,
+       인증 핸들러를 프록시하는 우리 도메인을 authDomain으로 쓴다 (vercel.json rewrites) */
+    authDomain: (location.hostname.indexOf('vercel.app')>=0||location.hostname==='localhost')
+      ? location.hostname : "jbnu-med-timetable.firebaseapp.com",
     databaseURL: "https://jbnu-med-timetable-default-rtdb.firebaseio.com",
     projectId: "jbnu-med-timetable",
     storageBucket: "jbnu-med-timetable.firebasestorage.app",
