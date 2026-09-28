@@ -30,7 +30,7 @@ function byDateH(items){
     var lbl=m+'/'+day+' ('+dow+')';
     var hx=false;for(var gi=0;gi<grp.length;gi++)if(isEx(grp[gi].subject)){hx=true;break;}
     var todayCls=isToday?' today':'';
-    h+='<tr class="xl-date-row'+todayCls+'"><td colspan="4">'+lbl+
+    h+='<tr class="xl-date-row'+todayCls+'" data-date="'+dt+'"><td colspan="4">'+lbl+
       (isToday?'<span class="xl-today-badge">오늘</span>':'')+
       (hx?'<span class="exam-flag">시험</span>':'')+
     '</td></tr>';
@@ -148,7 +148,7 @@ function renderHours(){
   if(!data.length){
     h+='<div class="no-res">수업 데이터가 없습니다</div>';
   }else{
-    h+='<div class="hrs-note">1교시 = 1시간 · 시험·행사 제외 · 배점은 교수님별 시수에 비례 · ~날짜는 그 교수님의 마지막 수업</div>';
+    h+='<div class="hrs-note">1교시 = 1시간, 시험·행사 제외 · ~날짜는 그 교수님의 마지막 수업</div>';
     h+='<div class="hrs-range">'
       +'<button class="hrs-range-btn'+(hrsRange==='all'?' on':'')+'" data-r="all">전체</button>'
       +'<button class="hrs-range-btn'+(hrsRange==='mid'?' on':'')+'" data-r="mid">중간 범위</button>'
@@ -289,4 +289,25 @@ function renderFR(){
   var el=document.getElementById('fres');if(!el)return;
   if(!items.length){el.innerHTML='<div class="no-res">조건에 맞는 수업이 없습니다</div>';return;}
   el.innerHTML='<div class="list-wrap">'+byDateH(items)+'</div>';
+  fScrollToToday();
+}
+
+/* 목록을 열면 지난 날짜부터 보이지 않게, 오늘(없으면 다음 수업일)로 맞춘다 */
+function fScrollToToday(){
+  var main=document.getElementById('main');
+  if(!main)return;
+  var t=today(),rows=main.querySelectorAll('.xl-date-row'),hit=null;
+  for(var i=0;i<rows.length;i++){
+    var d=rows[i].getAttribute('data-date')||'';
+    if(d>=t){hit=rows[i];break;}
+  }
+  if(!hit)hit=rows[rows.length-1]; /* 학기가 끝났으면 마지막 날로 */
+  if(!hit)return;
+  /* 레이아웃이 잡힌 뒤 스크롤 — 목록 헤더(sticky)에 가리지 않게 띄운다 */
+  requestAnimationFrame(function(){
+    var th=main.querySelector('.xl-table thead');
+    var pad=(th?th.getBoundingClientRect().height:26)+10;
+    hit.scrollIntoView({block:'start'});
+    main.scrollTop=Math.max(0,main.scrollTop-pad);
+  });
 }
