@@ -463,6 +463,38 @@ function ttSrcHtml(){
   if(electiveGroups().length)el='<button class="tt-src-btn ghost" id="el-manage">선택과목 설정</button>';
   return '<div class="tt-src">'+el+'<button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button></div>';
 }
+/* 지금 진행 중인 교시 번호 (없으면 0) */
+function wkNowPeriod(){
+  var d=new Date(),mins=d.getHours()*60+d.getMinutes();
+  function toMin(v){var p=(v||'').split(':');return (+p[0])*60+(+p[1]||0);}
+  for(var k in PERIOD_START){
+    if(mins>=toMin(PERIOD_START[k])&&mins<toMin(PERIOD_END[k]))return parseInt(k,10);
+  }
+  return 0;
+}
+/* 오늘 칼럼 음영 + 진행 중인 교시 표시 (이번 주에 오늘이 포함될 때만) */
+function wkMarkToday(){
+  var dd=wdd[wks[ci]]||{},t=today(),di=-1;
+  for(var i=0;i<DAYS.length;i++)if(dd[DAYS[i]]===t)di=i;
+  if(di<0)return;
+  var tbl=document.querySelector('.sw table.tt');
+  if(!tbl)return;
+  var np=wkNowPeriod();
+  var rows=tbl.querySelectorAll('tbody tr'),pn=0;
+  for(var r=0;r<rows.length;r++){
+    var tr=rows[r];
+    if(tr.className.indexOf('lunchrow')>=0)continue;
+    var tds=tr.querySelectorAll('td');
+    if(tds.length<2)continue;
+    pn++; /* 점심 행을 뺀 순서 = 교시 번호 */
+    var cell=tds[di+1];
+    if(cell)cell.className+=' td-today';
+    if(np&&pn===np){
+      tds[0].className+=' td-t-now';
+      if(cell)cell.className+=' td-now';
+    }
+  }
+}
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
   /* 시간표 없음(신규 학교·학년) → 개인 업로드 안내 */
@@ -491,6 +523,7 @@ function renderW(){
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>'
     +ttSrcHtml();
+  wkMarkToday();
   bindSecBar();
   var up=document.getElementById('tt-upload');
   if(up)up.onclick=function(){openXL();};
