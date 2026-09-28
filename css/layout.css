@@ -39,13 +39,13 @@
 .bnav{transition:margin-bottom var(--duration) var(--ease),opacity var(--duration) var(--ease)}
 body.kb-open .bnav{margin-bottom:calc(-1 * (55px + env(safe-area-inset-bottom,0px)));opacity:0;pointer-events:none}
 .bn{flex:1;max-width:200px;border:none;background:none;padding:8px var(--space-1) 6px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:4px;min-height:58px;font-size:var(--font-md);font-weight:var(--weight-medium);
+  align-items:center;justify-content:center;gap:3px;min-height:58px;font-size:var(--font-sm);font-weight:var(--weight-medium);
   color:var(--text-soft);cursor:pointer;-webkit-tap-highlight-color:transparent}
 .bn.on{font-weight:var(--weight-bold)}
 .bn.on{color:var(--accent)}
 .bn.on .bn-ic{background:var(--tint-accent)}
-.bn-ic{font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;height:30px;width:56px;border-radius:15px;transition:background var(--duration-fast) var(--ease)}
-.bn-ic svg{width:24px;height:24px;display:block}
+.bn-ic{font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center;height:26px;width:48px;border-radius:13px;transition:background var(--duration-fast) var(--ease)}
+.bn-ic svg{width:20px;height:20px;display:block}
 .bn.on .bn-ic svg{stroke-width:2}
 
 /* ── GRADE SELECT SCREEN ── */
@@ -136,7 +136,7 @@ body.kb-open .bnav{margin-bottom:calc(-1 * (55px + env(safe-area-inset-bottom,0p
 }
 @media (max-width:340px){
   #grade-btn{display:none}
-  .bn{font-size:var(--font-sm)}
+  .bn{font-size:var(--font-xs)}
 }
 @media (min-width:720px){
   .main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right));padding-top:var(--space-4)}
