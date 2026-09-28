@@ -2,9 +2,9 @@ var fbDb = null;
 try {
   var _fbCfg = {
     apiKey: "AIzaSyBZ6wJKM4sku2ag0Ac2idDgKnl85_Ctuc4",
-    /* 사파리·아이폰 홈 화면 앱에서 로그인 리다이렉트가 막히지 않도록,
-       인증 핸들러를 프록시하는 우리 도메인을 authDomain으로 쓴다 (vercel.json rewrites) */
-    authDomain: (location.hostname.indexOf('vercel.app')>=0||location.hostname==='localhost')
+    /* 우리 도메인(/__/auth 프록시)을 쓰려면 구글 OAuth 클라이언트에 그 주소를
+       '승인된 리디렉션 URI'로 등록해야 한다. 등록 전에는 기본 도메인 사용. */
+    authDomain: (location.hostname.indexOf('vercel.app')>=0 && localStorage.getItem('auth_proxy')==='1')
       ? location.hostname : "jbnu-med-timetable.firebaseapp.com",
     databaseURL: "https://jbnu-med-timetable-default-rtdb.firebaseio.com",
     projectId: "jbnu-med-timetable",
