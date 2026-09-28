@@ -463,6 +463,32 @@ function ttSrcHtml(){
   if(electiveGroups().length)el='<button class="tt-src-btn ghost" id="el-manage">선택과목 설정</button>';
   return '<div class="tt-src">'+el+'<button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button></div>';
 }
+/* 좌우로 밀어 주차 이동 (표가 가로 스크롤 중이면 무시) */
+function wkBindSwipe(){
+  var el=document.querySelector('.sw');
+  if(!el)return;
+  var x0=0,y0=0,on=false;
+  el.addEventListener('touchstart',function(e){
+    if(e.touches.length!==1){on=false;return;}
+    if(el.scrollWidth>el.clientWidth+4){on=false;return;} /* 가로 스크롤 가능한 표는 제외 */
+    on=true;x0=e.touches[0].clientX;y0=e.touches[0].clientY;
+  },{passive:true});
+  el.addEventListener('touchend',function(e){
+    if(!on)return;on=false;
+    var t=e.changedTouches&&e.changedTouches[0];if(!t)return;
+    var dx=t.clientX-x0,dy=t.clientY-y0;
+    if(Math.abs(dx)<60||Math.abs(dx)<Math.abs(dy)*1.5)return;
+    wkGoWeek(dx<0?1:-1);
+  },{passive:true});
+}
+function wkGoWeek(step){
+  var ni=ci+step;
+  if(ni<0||ni>=wks.length)return;
+  ci=ni;
+  if(typeof animMain==='function')animMain();
+  render();
+}
+
 /* 지금 진행 중인 교시 번호 (없으면 0) */
 function wkNowPeriod(){
   var d=new Date(),mins=d.getHours()*60+d.getMinutes();
@@ -524,6 +550,7 @@ function renderW(){
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>'
     +ttSrcHtml();
   wkMarkToday();
+  wkBindSwipe();
   bindSecBar();
   var up=document.getElementById('tt-upload');
   if(up)up.onclick=function(){openXL();};
