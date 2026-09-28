@@ -219,8 +219,16 @@
 
 /* 버튼 — 알약형 + 아이콘 */
 .tm-btns{display:flex;gap:var(--space-2);justify-content:center;margin:var(--space-4) auto 0;max-width:360px}
-/* 대기 상태: 큰 숫자 없이 압축 — 플래너가 위로 올라오게 */
-.tm-hero.idle{padding:var(--space-4) var(--space-5)}
+/* 대기 상태: 한 줄 — 대상 칩 + 시작 버튼 */
+.tm-hero.idle{padding:var(--space-3) var(--space-4)}
+.tm-idle{display:flex;align-items:center;gap:12px}
+.tm-idle .tm-pick{flex:1 1 0;min-width:0;width:0;overflow:hidden;align-items:stretch;gap:6px;
+  -webkit-mask-image:linear-gradient(to right,#000 82%,transparent 100%);
+  mask-image:linear-gradient(to right,#000 82%,transparent 100%)}
+.tm-idle .tm-chips{justify-content:flex-start;margin:0;padding:2px 0;width:100%;min-width:0}
+.tm-idle .tm-chip{padding:9px 13px;max-width:150px}
+.tm-idle .tm-subj-wrap{max-width:none}
+.tm-start-sm{flex:0 0 auto;padding:12px 18px;min-height:44px;font-size:var(--font-lg);white-space:nowrap}
 .tm-hero.idle .tm-btns{margin-top:var(--space-3)}
 .tm-hero.idle .tm-goal-line{margin-top:var(--space-3)}
 .tm-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;

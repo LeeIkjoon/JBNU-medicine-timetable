@@ -163,9 +163,10 @@ function tmInnerHtml(){
     h+='</div>';
     h+='<div class="tm-live-subj">'+escHtml(tmSubject||'과목 미지정')+'</div>';
   } else {
-    /* 대상 선택: 플래너 미완료 항목 칩 + 과목 직접 선택 */
+    /* 대기 상태 — 한 줄로 압축 (대상 칩 + 시작 버튼) */
     var open=plans.filter(function(it){return !it.done;});
     if(!linkedPlan&&open.length&&!tmSubject){tmPlanId=open[0].id;tmSubject=open[0].text;linkedPlan=open[0];}
+    h+='<div class="tm-idle">';
     h+='<div class="tm-pick">';
     if(open.length){
       h+='<div class="tm-chips">';
@@ -174,7 +175,7 @@ function tmInnerHtml(){
         h+='<button class="tm-chip'+(on?' on':'')+'" data-plan="'+it.id+'" data-text="'+escHtml(it.text)+'">'+escHtml(it.text)+'</button>';
       });
       var subjOn=!tmPlanId&&tmSubject;
-      h+='<button class="tm-chip'+(subjOn?' on':'')+(tmPickOpen?' open':'')+'" id="tm-chip-subj">'+(subjOn?escHtml(tmSubject):'과목 선택')+'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>';
+      h+='<button class="tm-chip'+(subjOn?' on':'')+(tmPickOpen?' open':'')+'" id="tm-chip-subj">'+(subjOn?escHtml(tmSubject):'과목')+'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>';
       h+='</div>';
     }
     if(!open.length||tmPickOpen){
@@ -191,18 +192,19 @@ function tmInnerHtml(){
       h+='</div>';
     }
     h+='</div>';
+    h+='<button class="tm-btn tm-btn-start tm-start-sm" id="tm-start">'+TM_IC.play+'시작</button>';
+    h+='</div>';
   }
   if(active)h+='<div class="tm-display'+(running?' running':' paused')+'" id="tm-disp">'+tmFmt(tmElapsed())+'</div>';
-  if(linkedPlan&&linkedPlan.goal){
+  if(active&&linkedPlan&&linkedPlan.goal){
     var done=(linkedPlan.secs||0)+Math.floor(tmElapsed()/1000),goal=linkedPlan.goal*60;
     var pct=Math.min(100,Math.round(done/goal*100));
     h+='<div class="tm-goal-line"><span>'+(active?'':escHtml(linkedPlan.text)+' · ')+'목표 '+tmFmtShort(goal*1000)+'</span><span>'+pct+'%</span></div>';
     h+='<div class="tm-goal-track"><div class="tm-goal-bar" id="tm-goal-bar" style="width:'+pct+'%"></div></div>';
   }
+  if(tmState!=='idle'){
   h+='<div class="tm-btns">';
-  if(tmState==='idle'){
-    h+='<button class="tm-btn tm-btn-start" id="tm-start">'+TM_IC.play+'공부 시작</button>';
-  } else if(running){
+  if(running){
     h+='<button class="tm-btn tm-btn-pause" id="tm-pause">'+TM_IC.pause+'일시정지</button>';
     h+='<button class="tm-btn tm-btn-stop" id="tm-stop">'+TM_IC.stop+'종료</button>';
   } else {
@@ -211,6 +213,7 @@ function tmInnerHtml(){
     h+='<button class="tm-btn tm-btn-reset" id="tm-reset" title="초기화" aria-label="초기화">'+TM_IC.reset+'</button>';
   }
   h+='</div>';
+  }
   return h;
 }
 

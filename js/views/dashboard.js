@@ -494,9 +494,9 @@ function renderDashboard(){
   var h='<div class="dash-wrap">';
   h+=dashGreetHtml();
   h+='<div class="dash-col dash-col-a">';
-  var tmH=(typeof tmCardHtml==='function')?tmCardHtml():'';
-  if(tmState==='idle'){h+=planCardHtml();h+=tmH;}   /* 대기 중: 오늘 할 일이 먼저 */
-  else{h+=tmH;h+=planCardHtml();}                   /* 공부 중: 타이머가 먼저 */
+  /* 타이머는 항상 위 (대기 중엔 한 줄로 압축), 그 아래 오늘 할 일 */
+  h+=(typeof tmCardHtml==='function')?tmCardHtml():'';
+  h+=planCardHtml();
   h+='</div>';
   h+='<div class="dash-col dash-col-b">';
   h+=dashExamCardHtml();
