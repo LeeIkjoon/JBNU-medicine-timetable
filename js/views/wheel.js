@@ -37,7 +37,10 @@ function wheelInit(id,value,onChange){
     if(i===cur)return;
     cur=i;
     for(var j=0;j<items.length;j++)items[j].className='wheel-item'+(j===i?' on':'');
-    if(fire&&onChange)onChange(items[i].getAttribute('data-v'));
+    if(fire){
+      try{if(navigator.vibrate)navigator.vibrate(8);}catch(e){}  /* 안드로이드 등 지원 기기에서만 */
+      if(onChange)onChange(items[i].getAttribute('data-v'));
+    }
   }
   function onScroll(){
     var i=Math.round(sc.scrollTop/WHEEL_ITEM_H);

@@ -21,8 +21,8 @@
 .icon-btn-txt{font-size:13px;font-weight:var(--weight-bold);width:auto;padding:0 10px}
 
 /* ── MAIN ── */
-.main{background:var(--bg);padding:var(--space-1) 4px var(--space-6);
-  padding-left:max(4px,env(safe-area-inset-left));padding-right:max(4px,env(safe-area-inset-right));
+.main{background:var(--bg);padding:var(--space-2) var(--space-3) var(--space-7);
+  padding-left:max(var(--space-3),env(safe-area-inset-left));padding-right:max(var(--space-3),env(safe-area-inset-right));
   box-sizing:border-box;max-width:var(--content-max);margin:0 auto;width:100%;
   flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .sw{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius-md);background:var(--surface);box-shadow:var(--shadow-sm)}
@@ -139,7 +139,7 @@ body.kb-open .bnav{margin-bottom:calc(-1 * (55px + env(safe-area-inset-bottom,0p
   .bn{font-size:9px}
 }
 @media (min-width:720px){
-  .main{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-top:var(--space-3)}
+  .main{padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right));padding-top:var(--space-4)}
   .sw{border-radius:var(--radius-lg)}
   .bnav{padding-top:2px}
   .bn-ic{width:56px}

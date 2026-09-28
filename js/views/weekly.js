@@ -485,13 +485,10 @@ function wkNowBarHtml(){
       if(toMin(PERIOD_START[list[k].period])>mins){next=list[k];break;}
     }
   }
-  var it=cur||next;
-  if(!it)return'<div class="tt-now done"><span class="tt-now-dot"></span>'
-    +'<span class="tt-now-lbl">오늘</span><span class="tt-now-txt">수업이 끝났어요</span></div>';
-  var lbl=cur?'지금':'다음';
-  var txt=escHtml(it.subject)+(it.professor?' · '+escHtml(it.professor):'');
-  var tm=(PERIOD_START[it.period]||'')+(cur?' ~ '+(PERIOD_END[it.period]||''):'');
-  return '<div class="tt-now"><span class="tt-now-dot"></span><span class="tt-now-lbl">'+lbl+'</span>'
+  if(!cur)return''; /* 진행 중인 수업이 있을 때만 표시 */
+  var txt=escHtml(cur.subject)+(cur.professor?' · '+escHtml(cur.professor):'');
+  var tm=(PERIOD_START[cur.period]||'')+' ~ '+(PERIOD_END[cur.period]||'');
+  return '<div class="tt-now"><span class="tt-now-dot"></span><span class="tt-now-lbl">지금</span>'
     +'<span class="tt-now-txt">'+txt+'</span><span class="tt-now-time">'+tm+'</span></div>';
 }
 

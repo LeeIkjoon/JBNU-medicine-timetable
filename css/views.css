@@ -130,7 +130,7 @@
    구조: 인사 → [타이머 히어로 · 오늘 플래너] → [기록 · 시험 · 백업]
    넓은 화면(≥720px)에서는 두 열로 배치
 ══════════════════════════════════════════ */
-.dash-wrap{display:flex;flex-direction:column;gap:var(--space-2);padding:var(--space-1) 0 var(--space-4)}
+.dash-wrap{display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-2) 0 var(--space-5)}
 .dash-col{display:contents}
 
 .dash-greet{padding:var(--space-1) var(--space-1) 2px}
@@ -152,7 +152,7 @@
 .dash-seg-b.on{background:var(--surface);color:var(--text-strong);box-shadow:var(--shadow-sm)}
 
 /* 카드 공통 */
-.dash-card{background:var(--surface);border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);border:none;box-shadow:var(--shadow-xs);min-width:0}
+.dash-card{background:var(--surface);border-radius:var(--radius-lg);padding:var(--space-5);border:none;box-shadow:var(--shadow-xs);min-width:0}
 .dash-card-ttl{font-size:var(--font-sm);font-weight:var(--weight-bold);color:var(--text-soft);letter-spacing:.01em;margin-bottom:var(--space-3)}
 .ttl-caption{font-size:var(--font-2xs);font-weight:var(--weight-regular);color:var(--text-fade);margin-left:6px}
 .dash-empty{font-size:var(--font-sm);color:var(--text-soft);line-height:1.55;padding:var(--space-1) 0;word-break:keep-all}
