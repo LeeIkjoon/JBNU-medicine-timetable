@@ -3,8 +3,10 @@
    - 공부기록·플래너·할일을 users/<코드>에 자동 백업 (디바운스)
    - 복원: 다른 기기에서 코드 입력 → localStorage 덮어쓰기 → 리로드
 ══════════════════════════════════════════ */
-var SYNC_KEYS=['tm_logs','pl_todos','study_goal_min'];
-var SYNC_PREFIX=['dtodo_','tt_ov_','plan_'];
+var SYNC_KEYS=['tm_logs','pl_todos','study_goal_min','user_school','user_grade'];
+/* dtodo_: 날짜별 할 일, tt_ov_: 개인 수정, plan_: 플래너, section_/elective_: 분반·전공선택,
+   tt_local_: 내 파일 모드 표시 */
+var SYNC_PREFIX=['dtodo_','tt_ov_','plan_','section_','elective_','tt_local_'];
 
 function syncUid(){
   var u=null;
@@ -19,6 +21,8 @@ function syncUid(){
 function syncWatched(k){
   if(SYNC_KEYS.indexOf(k)>=0)return true;
   for(var i=0;i<SYNC_PREFIX.length;i++)if(k.indexOf(SYNC_PREFIX[i])===0)return true;
+  /* 직접 올린 시간표만 백업 (학교 공유 시간표는 서버에서 받으므로 제외) */
+  if(k.indexOf('timetable_data_')===0&&typeof ttLocalOn==='function'&&ttLocalOn())return true;
   return false;
 }
 
@@ -110,6 +114,13 @@ function syncMergeJson(k,localStr,remoteStr){
       else ld.push(r);
     });
     return JSON.stringify(ld);
+  }
+  if(k.indexOf('timetable_data_')===0){
+    /* 직접 올린 시간표: 더 최근에 적용한 쪽 */
+    try{
+      var L=JSON.parse(localStr),R=JSON.parse(remoteStr);
+      return ((R&&R.ts||0)>(L&&L.ts||0))?remoteStr:localStr;
+    }catch(e){return localStr;}
   }
   return localStr; /* 그 밖의 키는 기기 값을 유지 */
 }
