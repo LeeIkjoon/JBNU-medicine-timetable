@@ -161,7 +161,7 @@
 .dash-more:active{background:var(--surface-muted)}
 
 /* ── 타이머 히어로 ── */
-.tm-hero{background:var(--surface);border-radius:var(--radius-xl);padding:var(--space-5) var(--space-5) var(--space-4);
+.tm-hero{background:var(--surface);border-radius:var(--radius-xl);padding:var(--space-4) var(--space-4) var(--space-3);
   text-align:center;box-shadow:var(--shadow-xs);
   transition:background var(--duration) var(--ease),box-shadow var(--duration) var(--ease)}
 .tm-hero.running{background:var(--tint-brand);box-shadow:0 0 0 1.5px var(--brand-1),0 10px 30px -10px rgba(49,130,246,.35)}
@@ -200,25 +200,25 @@
 .tm-live-tag{font-size:var(--font-2xs);font-weight:var(--weight-bold);color:var(--text-soft);background:var(--surface);
   border-radius:6px;padding:1px 6px;margin-left:2px}
 .tm-hero.running .tm-live-tag{background:rgba(255,255,255,.7)}
-.tm-live-subj{font-size:var(--font-xl);font-weight:var(--weight-heavy);letter-spacing:-0.02em;color:var(--text-strong);
-  margin-top:6px;word-break:keep-all;line-height:1.3}
+.tm-live-subj{font-size:var(--font-lg);font-weight:var(--weight-heavy);letter-spacing:-0.02em;color:var(--text-strong);
+  margin-top:3px;word-break:keep-all;line-height:1.3}
 
 /* 시간 표시 — 큰 타이포, 고정폭 숫자 */
-.tm-display{font-size:56px;font-weight:var(--weight-semi);color:var(--text-strong);
-  letter-spacing:-0.01em;line-height:1.05;font-variant-numeric:tabular-nums;margin-top:var(--space-4);
+.tm-display{font-size:44px;font-weight:var(--weight-semi);color:var(--text-strong);
+  letter-spacing:-0.01em;line-height:1.05;font-variant-numeric:tabular-nums;margin-top:var(--space-2);
   font-family:'Pretendard Variable',Pretendard,-apple-system,BlinkMacSystemFont,'SF Pro Display',system-ui,sans-serif}
 .tm-display.running{color:var(--brand-1)}
 .tm-display.paused{color:var(--text-muted)}
 
 /* 플래너 목표 진행(연동 중일 때) */
-.tm-goal-line{display:flex;justify-content:space-between;margin:var(--space-3) auto 0;max-width:320px;
+.tm-goal-line{display:flex;justify-content:space-between;margin:var(--space-2) auto 0;max-width:320px;
   font-size:var(--font-sm);color:var(--text-soft);font-weight:var(--weight-medium);font-variant-numeric:tabular-nums}
 .tm-goal-track{height:6px;background:var(--surface-muted);border-radius:3px;overflow:hidden;margin:6px auto 0;max-width:320px}
 .tm-hero.running .tm-goal-track{background:rgba(255,255,255,.7)}
 .tm-goal-bar{height:100%;border-radius:3px;background:var(--brand-1);transition:width .5s var(--ease)}
 
 /* 버튼 — 알약형 + 아이콘 */
-.tm-btns{display:flex;gap:var(--space-2);justify-content:center;margin:var(--space-4) auto 0;max-width:360px}
+.tm-btns{display:flex;gap:var(--space-2);justify-content:center;margin:var(--space-3) auto 0;max-width:360px}
 /* 대기 상태: 한 줄 — 대상 칩 + 시작 버튼 */
 .tm-hero.idle{padding:var(--space-3) var(--space-4)}
 .tm-idle{display:flex;align-items:center;gap:12px}
@@ -232,8 +232,8 @@
 .tm-hero.idle .tm-btns{margin-top:var(--space-3)}
 .tm-hero.idle .tm-goal-line{margin-top:var(--space-3)}
 .tm-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
-  border:none;border-radius:var(--radius-pill);padding:13px var(--space-4);min-height:46px;
-  font-size:var(--font-lg);font-weight:var(--weight-bold);font-family:inherit;
+  border:none;border-radius:var(--radius-pill);padding:11px var(--space-4);min-height:42px;
+  font-size:var(--font-base);font-weight:var(--weight-bold);font-family:inherit;
   cursor:pointer;-webkit-tap-highlight-color:transparent;white-space:nowrap;
   transition:transform var(--duration-fast) var(--ease),opacity var(--duration-fast)}
 .tm-btn:active{transform:scale(.96);opacity:.9}
@@ -368,11 +368,11 @@
 .pln-sum-bar{height:100%;border-radius:2px;background:var(--accent);transition:width .5s var(--ease)}
 .pln-sum-bar.done{background:var(--success)}
 .pln-list{margin:2px 0 4px}
-.pln-item{position:relative;display:flex;align-items:flex-start;gap:11px;padding:12px 0 12px 12px;
+.pln-item{position:relative;display:flex;align-items:flex-start;gap:10px;padding:8px 0 8px 11px;
   border-bottom:1px solid var(--border-faint);
   transition:opacity .22s var(--ease),transform .22s var(--ease)}
 /* 항목마다 색 띠 — 한눈에 구분되게 (시간표 블럭과 같은 파스텔) */
-.pln-edge{position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:2px;background:var(--tl-1)}
+.pln-edge{position:absolute;left:0;top:7px;bottom:7px;width:3.5px;border-radius:2px;background:var(--tl-1)}
 .pln-item.c2 .pln-edge{background:var(--tl-2)}
 .pln-item.c3 .pln-edge{background:var(--tl-3)}
 .pln-item.c4 .pln-edge{background:var(--tl-4)}
@@ -381,33 +381,33 @@
 .pln-item:last-child{border-bottom:none}
 .pln-item.removing{opacity:0;transform:translateX(24px)}
 .pln-item.live{margin:0 -8px;padding-left:8px;padding-right:8px;border-radius:12px;background:var(--tint-brand);border-bottom-color:transparent}
-.pln-chk{width:26px;height:26px;border-radius:50%;border:2px solid var(--border-strong);background:var(--surface);
+.pln-chk{width:22px;height:22px;border-radius:50%;border:2px solid var(--border-strong);background:var(--surface);
   cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;padding:0;
   color:#fff;margin-top:1px;-webkit-tap-highlight-color:transparent;transition:background .2s,border-color .2s,transform var(--duration-fast) var(--ease)}
-.pln-chk svg{width:14px;height:14px}
+.pln-chk svg{width:12px;height:12px}
 .pln-chk:active{transform:scale(.88)}
 .pln-chk.on{background:var(--accent);border-color:var(--accent)}
 .pln-body{flex:1;min-width:0}
-.pln-text{font-size:var(--font-lg);font-weight:var(--weight-bold);color:var(--text-strong);word-break:keep-all;line-height:1.35;
+.pln-text{font-size:var(--font-base);font-weight:var(--weight-bold);color:var(--text-strong);word-break:keep-all;line-height:1.35;
   position:relative;display:inline-block}
 .pln-text::after{content:'';position:absolute;left:0;top:52%;height:1.5px;width:0;background:currentColor;transition:width .3s var(--ease)}
 .pln-item.done .pln-text{color:var(--text-fade)}
 .pln-item.done .pln-text::after{width:100%}
-.pln-meta{font-size:var(--font-md);color:var(--text-soft);margin-top:4px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pln-meta{font-size:var(--font-sm);color:var(--text-soft);margin-top:2px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .pln-live{font-size:var(--font-2xs);font-weight:var(--weight-bold);color:var(--brand-1);background:var(--surface);border-radius:6px;padding:1px 6px}
 .pln-live.paused{color:var(--warning-2)}
-.pln-track{height:6px;background:var(--surface-muted);border-radius:3px;overflow:hidden;margin-top:7px}
+.pln-track{height:4px;background:var(--surface-muted);border-radius:2px;overflow:hidden;margin-top:5px}
 .pln-item.live .pln-track{background:rgba(255,255,255,.75)}
 .pln-bar{height:100%;border-radius:3px;background:var(--accent);transition:width .4s}
 .pln-bar.done{background:var(--success)}
-.pln-sess{font-size:var(--font-2xs);color:var(--text-fade);margin-top:4px;font-variant-numeric:tabular-nums;word-break:break-all}
-.pln-play{width:42px;height:42px;border-radius:50%;border:none;background:var(--tint-accent);color:var(--accent);
+.pln-sess{font-size:var(--font-2xs);color:var(--text-fade);margin-top:3px;font-variant-numeric:tabular-nums;word-break:break-all}
+.pln-play{width:36px;height:36px;border-radius:50%;border:none;background:var(--tint-accent);color:var(--accent);
   cursor:pointer;flex:none;display:flex;align-items:center;justify-content:center;padding:0;
   -webkit-tap-highlight-color:transparent;transition:transform var(--duration-fast) var(--ease),background var(--duration-fast)}
-.pln-play svg{width:18px;height:18px}
+.pln-play svg{width:15px;height:15px}
 .pln-play:active{transform:scale(.88)}
 .pln-play.running{background:var(--accent);color:#fff}
-.pln-del{border:none;background:none;color:var(--text-fade);cursor:pointer;flex:none;width:34px;height:36px;
+.pln-del{border:none;background:none;color:var(--text-fade);cursor:pointer;flex:none;width:30px;height:34px;
   display:flex;align-items:center;justify-content:center;padding:0;margin-right:-8px;-webkit-tap-highlight-color:transparent}
 .pln-del svg{width:14px;height:14px}
 .pln-add{display:flex;gap:6px;margin-top:14px}
@@ -496,7 +496,7 @@
   .dash-greet{grid-column:1/-1}
   .dash-col{display:flex;flex-direction:column;gap:var(--space-3);min-width:0}
   .dash-col-b{position:sticky;top:var(--space-2)}
-  .tm-display{font-size:64px}
+  .tm-display{font-size:52px}
 }
 @media (hover:hover){
   .tm-btn:hover,.memo-add-btn:hover{filter:brightness(1.04)}
