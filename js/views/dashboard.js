@@ -487,9 +487,10 @@ function dashGreetHtml(){
   var a=planLoad(),sum=planSummary(a);
   var title;
   if(tmState==='running')title='집중 중';
+  else if(tmState==='paused')title='잠시 멈춤';
   else if(!a.length)title='오늘 계획을 세워보세요';
   else if(sum.done===sum.total)title='오늘 계획을 모두 마쳤어요';
-  else title='계획 '+sum.total+'개 중 '+sum.done+'개 완료';
+  else title='남은 계획 '+(sum.total-sum.done)+'개';
   var h='<div class="dash-greet"><div class="dash-greet-top">'+dateStr+'</div>';
   h+='<div class="dash-greet-row"><div class="dash-greet-msg">'+title+'</div>';
   var upc=dashUpcomingExams();

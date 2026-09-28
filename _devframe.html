@@ -1,13 +1,16 @@
 <!doctype html><meta charset="utf-8"><body style="margin:0">
 <script>
-var P=new URLSearchParams(location.search);
+var P=new URLSearchParams(location.search),W=+(P.get('w')||393);
 localStorage.clear();localStorage.setItem('user_school','jbnu');localStorage.setItem('user_grade','의학과 1학년');localStorage.setItem('auth_prompt_off','1');
-document.write('<iframe id=f width=393 height=800 style="border:0;display:block" src="index.html?theme='+(P.get('theme')||'light')+'"></iframe>');
-f.onload=function(){setTimeout(function(){
-  var w=f.contentWindow,dd=w.wdd[w.wks[w.ci]]||{};
-  w.setView('weekly');
-  w.today=function(){return dd['수'];};
-  w.PERIOD_START['6']='00:00';w.PERIOD_END['6']='23:59';
-  w.renderW();
-},1800);};
+function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+var k=ymd(new Date(Date.now()-4*3600e3));
+if(P.get('full')){
+  localStorage.setItem('plan_'+k,JSON.stringify([
+   {id:1,text:'병리학 3단원 복습',goal:120,secs:5400,sessions:['09:12~10:30','13:05~13:40'],done:false},
+   {id:2,text:'해부 족보 1회독',goal:60,secs:3900,sessions:['10:40~11:45'],done:true}]));
+  localStorage.setItem('tm_logs',JSON.stringify([{date:k,subject:'병리학 3단원 복습',secs:9300}]));
+  localStorage.setItem('plan_meta_'+k,JSON.stringify({res:'오늘은 병리 끝낸다',ref:'',rate:0}));
+}
+document.write('<iframe id=f width='+W+' height=800 style="border:0;display:block" src="index.html?theme='+(P.get('theme')||'light')+'"></iframe>');
+f.onload=function(){setTimeout(function(){f.contentWindow.setView('dashboard');},1500);};
 </script>

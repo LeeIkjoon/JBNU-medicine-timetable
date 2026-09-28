@@ -219,6 +219,10 @@
 
 /* 버튼 — 알약형 + 아이콘 */
 .tm-btns{display:flex;gap:var(--space-2);justify-content:center;margin:var(--space-4) auto 0;max-width:360px}
+/* 대기 상태: 큰 숫자 없이 압축 — 플래너가 위로 올라오게 */
+.tm-hero.idle{padding:var(--space-4) var(--space-5)}
+.tm-hero.idle .tm-btns{margin-top:var(--space-3)}
+.tm-hero.idle .tm-goal-line{margin-top:var(--space-3)}
 .tm-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
   border:none;border-radius:var(--radius-pill);padding:13px var(--space-4);min-height:46px;
   font-size:var(--font-lg);font-weight:var(--weight-bold);font-family:inherit;

@@ -138,7 +138,7 @@ function tmRenderHost(){
 /* 타이머 카드 HTML — 공부 탭 최상단 (renderDashboard에서 삽입) */
 function tmCardHtml(){
   var running=tmState==='running',paused=tmState==='paused';
-  return '<div class="tm-hero'+(running?' running':paused?' paused':'')+'">'+tmInnerHtml()+'</div>';
+  return '<div class="tm-hero'+(running?' running':paused?' paused':' idle')+'">'+tmInnerHtml()+'</div>';
 }
 var tmPickOpen=false; /* 대기 상태에서 '과목 직접 선택' 셀렉트 노출 여부 */
 function tmSubjects(){
@@ -192,7 +192,7 @@ function tmInnerHtml(){
     }
     h+='</div>';
   }
-  h+='<div class="tm-display'+(running?' running':paused?' paused':'')+'" id="tm-disp">'+tmFmt(tmElapsed())+'</div>';
+  if(active)h+='<div class="tm-display'+(running?' running':' paused')+'" id="tm-disp">'+tmFmt(tmElapsed())+'</div>';
   if(linkedPlan&&linkedPlan.goal){
     var done=(linkedPlan.secs||0)+Math.floor(tmElapsed()/1000),goal=linkedPlan.goal*60;
     var pct=Math.min(100,Math.round(done/goal*100));
