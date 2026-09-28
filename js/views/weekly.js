@@ -463,6 +463,66 @@ function ttSrcHtml(){
   if(electiveGroups().length)el='<button class="tt-src-btn ghost" id="el-manage">선택과목 설정</button>';
   return '<div class="tt-src">'+el+'<button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button></div>';
 }
+/* 오늘 요약 줄 — 지금 수업 / 다음 수업 / 오늘 수업 끝 */
+function wkNowBarHtml(){
+  var t=today(),dd=wdd[wks[ci]]||{},inWeek=false;
+  for(var i=0;i<DAYS.length;i++)if(dd[DAYS[i]]===t)inWeek=true;
+  if(!inWeek)return'';
+  var list=viewItems(merged).filter(function(m){return m.date===t&&!isHoliday(m.subject);})
+    .sort(function(a,b){return a.period-b.period;});
+  if(!list.length)return'<div class="tt-now done"><span class="tt-now-dot"></span>'
+    +'<span class="tt-now-lbl">오늘</span><span class="tt-now-txt">수업이 없어요</span></div>';
+  var np=wkNowPeriod(),cur=null,next=null;
+  for(var j=0;j<list.length;j++){
+    if(np&&list[j].period===np){cur=list[j];break;}
+    if(list[j].period>np&&!next)next=list[j];
+  }
+  var d=new Date(),mins=d.getHours()*60+d.getMinutes();
+  function toMin(v){var p=(v||'').split(':');return (+p[0])*60+(+p[1]||0);}
+  if(!cur&&!next){
+    /* 남은 수업이 있는지 시각으로 한 번 더 확인 */
+    for(var k=0;k<list.length;k++){
+      if(toMin(PERIOD_START[list[k].period])>mins){next=list[k];break;}
+    }
+  }
+  var it=cur||next;
+  if(!it)return'<div class="tt-now done"><span class="tt-now-dot"></span>'
+    +'<span class="tt-now-lbl">오늘</span><span class="tt-now-txt">수업이 끝났어요</span></div>';
+  var lbl=cur?'지금':'다음';
+  var txt=escHtml(it.subject)+(it.professor?' · '+escHtml(it.professor):'');
+  var tm=(PERIOD_START[it.period]||'')+(cur?' ~ '+(PERIOD_END[it.period]||''):'');
+  return '<div class="tt-now"><span class="tt-now-dot"></span><span class="tt-now-lbl">'+lbl+'</span>'
+    +'<span class="tt-now-txt">'+txt+'</span><span class="tt-now-time">'+tm+'</span></div>';
+}
+
+/* 위·아래 연속으로 비어 있는 교시는 한 줄로 접는다 (탭하면 펼침) */
+var wkFoldOpen=false;
+function wkFoldEmpty(){
+  if(wkFoldOpen)return;
+  var tbl=document.querySelector('.sw table.tt');if(!tbl)return;
+  var rows=[],all=tbl.querySelectorAll('tbody tr');
+  for(var i=0;i<all.length;i++){
+    if(all[i].className.indexOf('lunchrow')>=0)continue;
+    rows.push(all[i]);
+  }
+  function empty(tr){return !tr.querySelector('.card');}
+  var head=0;while(head<rows.length&&empty(rows[head]))head++;
+  var tail=rows.length-1;while(tail>=0&&empty(rows[tail]))tail--;
+  function fold(from,to){
+    if(to-from+1<2)return;
+    var label=(from+1)+'~'+(to+1)+'교시 수업 없음';
+    for(var r=from;r<=to;r++)rows[r].style.display='none';
+    var tr=document.createElement('tr');
+    tr.className='tt-fold';
+    tr.innerHTML='<td colspan="6"><button type="button">'+label+' · 펼치기</button></td>';
+    tr.querySelector('button').onclick=function(){wkFoldOpen=true;renderW();};
+    rows[from].parentNode.insertBefore(tr,rows[from]);
+  }
+  if(tail<head){return;} /* 하루도 수업이 없으면 그대로 */
+  fold(tail+1,rows.length-1);
+  fold(0,head-1);
+}
+
 /* 좌우로 밀어 주차 이동 (표가 가로 스크롤 중이면 무시) */
 function wkBindSwipe(){
   var el=document.querySelector('.sw');
@@ -484,7 +544,7 @@ function wkBindSwipe(){
 function wkGoWeek(step){
   var ni=ci+step;
   if(ni<0||ni>=wks.length)return;
-  ci=ni;
+  ci=ni;wkFoldOpen=false; /* 주차를 옮기면 다시 접어서 보여준다 */
   if(typeof animMain==='function')animMain();
   render();
 }
@@ -545,11 +605,13 @@ function renderW(){
     +secBarHtml()
     +elBarHtml()
     +ovBarHtml()
+    +wkNowBarHtml()
     +wkTodoRowHtml()
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
     +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>'
     +ttSrcHtml();
   wkMarkToday();
+  wkFoldEmpty();
   wkBindSwipe();
   bindSecBar();
   var up=document.getElementById('tt-upload');

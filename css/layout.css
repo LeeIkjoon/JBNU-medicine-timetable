@@ -38,11 +38,13 @@
 /* 키보드 입력 중에는 탭바를 접음 (js/app.js에서 body.kb-open) */
 .bnav{transition:margin-bottom var(--duration) var(--ease),opacity var(--duration) var(--ease)}
 body.kb-open .bnav{margin-bottom:calc(-1 * (55px + env(safe-area-inset-bottom,0px)));opacity:0;pointer-events:none}
-.bn{flex:1;max-width:200px;border:none;background:none;padding:7px var(--space-1) 5px;display:flex;flex-direction:column;
-  align-items:center;gap:2px;font-size:var(--font-2xs);color:var(--text-soft);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bn{flex:1;max-width:200px;border:none;background:none;padding:8px var(--space-1) 6px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;min-height:52px;font-size:var(--font-2xs);font-weight:var(--weight-medium);
+  color:var(--text-soft);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.bn.on{font-weight:var(--weight-bold)}
 .bn.on{color:var(--accent)}
 .bn.on .bn-ic{background:var(--tint-accent)}
-.bn-ic{font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;height:26px;width:48px;border-radius:13px;transition:background var(--duration-fast) var(--ease)}
+.bn-ic{font-size:20px;line-height:1;display:flex;align-items:center;justify-content:center;height:28px;width:52px;border-radius:14px;transition:background var(--duration-fast) var(--ease)}
 .bn-ic svg{width:23px;height:23px;display:block}
 .bn.on .bn-ic svg{stroke-width:2}
 
@@ -175,7 +177,7 @@ html.vp-cut .admin-fab{bottom:70px}
 .wheel{position:relative;height:232px;width:100%;max-width:320px;margin:0 auto}
 .wheel-band{position:absolute;left:0;right:0;top:50%;height:46px;transform:translateY(-50%);
   border-radius:14px;background:var(--surface);box-shadow:var(--shadow-xs);pointer-events:none}
-.wheel-scroll{position:relative;height:100%;overflow-y:auto;scroll-snap-type:y mandatory;
+.wheel-scroll{position:relative;height:100%;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;scroll-snap-type:y mandatory;
   -webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior:contain;
   -webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 24%,#000 76%,transparent 100%);
   mask-image:linear-gradient(to bottom,transparent 0,#000 24%,#000 76%,transparent 100%)}
@@ -185,7 +187,7 @@ html.vp-cut .admin-fab{bottom:70px}
   transition:color var(--duration-fast) var(--ease),transform var(--duration-fast) var(--ease);
   -webkit-tap-highlight-color:transparent}
 .wheel-item .wheel-d{font-size:var(--font-sm);font-weight:var(--weight-medium);color:var(--text-disabled)}
-.wheel-item.on{color:var(--text-strong);font-weight:var(--weight-bold);transform:scale(1.04)}
+.wheel-item.on{color:var(--text-strong);font-weight:var(--weight-bold)}
 .wheel-item.on .wheel-d{color:var(--text-soft)}
 .gs-ok{display:block;width:100%;max-width:320px;margin:var(--space-5) auto 0;padding:15px;border:none;
   border-radius:var(--radius-pill);background:var(--accent);color:var(--text-onbrand);

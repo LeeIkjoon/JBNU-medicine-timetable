@@ -345,7 +345,8 @@ function planCardHtml(){
   h+='<input class="pln-res" id="pln-res" placeholder="오늘의 각오" maxlength="60" value="'+escHtml(meta.res||'')+'" autocomplete="off">';
   if(a.length){
     h+='<div class="pln-list">';
-    a.forEach(function(it){
+    /* 미완료 먼저, 완료는 아래로 (원래 순서 유지) */
+    a.slice().sort(function(x,y){return (x.done?1:0)-(y.done?1:0);}).forEach(function(it){
       var pct=it.goal?Math.min(100,Math.round((it.secs||0)/(it.goal*60)*100)):0;
       var linked=(typeof tmPlanId!=='undefined'&&tmPlanId===it.id&&tmState!=='idle');
       var running=linked&&tmState==='running';
