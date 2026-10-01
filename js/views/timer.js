@@ -153,7 +153,7 @@ function tmCardHtml(){
       +'<button class="tm-mini-btn stop" id="tm-stop" aria-label="종료하고 기록">'+TM_IC.stop+'</button>'
       +'</div>';
   }
-  return '<div class="tm-hero idle">'+tmInnerHtml()+'</div>';
+  return''; /* 대기 중엔 카드 없음 — 할 일 항목의 ▶로 시작 */
 }
 var tmPickOpen=false; /* 대기 상태에서 '과목 직접 선택' 셀렉트 노출 여부 */
 function tmSubjects(){

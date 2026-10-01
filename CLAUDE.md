@@ -81,7 +81,7 @@ Korean medical-school timetable for 전북대학교 의과대학 (JBNU College o
 
 Three main views, switched via the bottom nav (`#bn-w` / `#bn-f` / `#bn-t`) plus a calendar overlay and per-date todo sheet:
 - **시간표 (weekly)** — period × weekday grid for the current 주차.
-- **공부 (dashboard, `js/views/dashboard.js`)** — 인사(날짜·플래너 진행·가장 가까운 시험 D-day 칩) → 타이머(`tmCardHtml`: 대기 시 플래너 미완료 항목 칩 + 시작 버튼. 공부 중엔 큰 타이머 없음 — 플래너 연동 시 해당 항목 안에 '공부 중 mm:ss'·■종료, 과목만 고른 경우 한 줄 `.tm-mini` 바; 2026-10 결정) → 오늘 플래너(항목별 목표·실제·달성률, ▶ 연동, 접이식 '오늘 회고'+자기평가) → 시험(한 카드, [남은|본] 세그먼트) → 기록(연속·최고 연속·이번 주, '날짜별 기록 보기' → `js/views/history.js`) → 백업. 상단에 총 공부시간·일일 목표는 표시하지 않음(2026-09 결정: 플래너가 측정). ≥720px는 `.dash-col-a/-b` 두 열.
+- **공부 (dashboard, `js/views/dashboard.js`)** — 인사(날짜·플래너 진행·가장 가까운 시험 D-day 칩) → 타이머(`tmCardHtml`: 대기 중엔 카드 없음 — 할 일 항목 ▶로 시작. 공부 중엔 큰 타이머 없음 — 플래너 연동 시 해당 항목 안에 '공부 중 mm:ss'·■종료, 과목만 고른 경우 한 줄 `.tm-mini` 바; 2026-10 결정) → 오늘 플래너(항목별 목표·실제·달성률, ▶ 연동, 접이식 '오늘 회고'+자기평가) → 시험(한 카드, [남은|본] 세그먼트) → 기록(연속·최고 연속·이번 주, '날짜별 기록 보기' → `js/views/history.js`) → 백업. 상단에 총 공부시간·일일 목표는 표시하지 않음(2026-09 결정: 플래너가 측정). ≥720px는 `.dash-col-a/-b` 두 열.
 - **필터 (filter)** — list view filtered by subject / exam-only, 시수 뷰.
 
 ## Reading the source
