@@ -4,18 +4,23 @@
    - 기존 코드 백업은 처음 로그인할 때 한 번 합쳐서 가져온다 (지우지 않음).
    - 아이폰 홈 화면 앱에서는 팝업이 막히므로 리다이렉트 방식으로 대체.
 ══════════════════════════════════════════ */
-var authUser=null, fbAuth=null, authReady=false;
+var authUser=null, fbAuth=null, authReady=false, authRedirectDone=false;
 
 (function(){
   try{ if(window.firebase&&firebase.auth) fbAuth=firebase.auth(); }catch(e){}
   if(!fbAuth)return;
   /* 리다이렉트로 돌아온 경우 결과 수신 */
-  fbAuth.getRedirectResult().then(function(r){if(r&&r.user)authLog('redirect-ok',null);}).catch(function(err){authLog('redirect-result-fail',err);});
+  fbAuth.getRedirectResult().then(function(r){
+    if(r&&r.user)authLog('redirect-ok',null);
+    else if(authRedirectPending())authLog('redirect-no-user',null); /* 돌아왔는데 로그인 결과 없음 */
+  }).catch(function(err){authLog('redirect-result-fail',err);})
+    .then(function(){authRedirectDone=true;});
   fbAuth.onAuthStateChanged(function(u){
     var was=authUser&&authUser.uid;
     authUser=u||null;
     authReady=true;
     try{localStorage.setItem('auth_signed',u?'1':'0');}catch(e){}
+    if(u){try{localStorage.removeItem('auth_redirect_at');}catch(e){}}
     if(u&&u.uid!==was)authAfterSignIn();
     else if(!u&&typeof syncStart==='function')syncStart(); /* 비로그인: 코드 경로로 동기화 */
     if(u&&typeof window._onboardAfterSignIn==='function')window._onboardAfterSignIn();
@@ -46,6 +51,7 @@ function authSignIn(cb){
   var standalone=window.navigator&&window.navigator.standalone;
   authLog('start',null);
   if(standalone){
+    try{localStorage.setItem('auth_redirect_at',String(Date.now()));}catch(e){}
     fbAuth.signInWithRedirect(p).catch(function(err){
       authLog('redirect-fail',err);
       if(cb)cb('로그인 실패: '+((err&&err.code)||'알 수 없음'));
@@ -63,6 +69,11 @@ function authSignIn(cb){
     }
     if(cb)cb('로그인 실패: '+((err&&err.code)||'알 수 없음'));
   });
+}
+/* 리다이렉트 로그인을 시작한 지 5분 안이면 true */
+function authRedirectPending(){
+  var t=0;try{t=parseInt(localStorage.getItem('auth_redirect_at')||'0',10);}catch(e){}
+  return Date.now()-t<5*60*1000;
 }
 function authSignOut(){
   if(!fbAuth)return;
