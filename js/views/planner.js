@@ -3,9 +3,9 @@
 ══════════════════════════════════════════ */
 var plTodos=[];
 (function(){
-  try{var s=localStorage.getItem('pl_todos');if(s)plTodos=JSON.parse(s);}catch(e){}
+  try{var s=localStorage.getItem('pl_todos');if(s)plTodos=JSON.parse(s).filter(function(t){return t&&!t.del;});}catch(e){}
 })();
-function plSave(){try{localStorage.setItem('pl_todos',JSON.stringify(plTodos));}catch(e){}}
+function plSave(){try{localStorage.setItem('pl_todos',(typeof syncListStore==='function')?syncListStore('pl_todos',plTodos):JSON.stringify(plTodos));}catch(e){}}
 function plTodayKey(){var d=new Date();return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());}
 
 function renderPlanner(){

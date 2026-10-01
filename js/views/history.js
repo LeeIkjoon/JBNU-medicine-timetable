@@ -47,7 +47,7 @@ function histDay(k){
 function histHasData(k){
   if(dashDayTotal(k)>0)return true;
   try{
-    if((localStorage.getItem('plan_'+k)||'[]')!=='[]')return true;
+    if(planLoad(k).length)return true;
     var m=JSON.parse(localStorage.getItem('plan_meta_'+k)||'null');
     if(m&&(m.res||m.ref||m.rate))return true;
   }catch(e){}

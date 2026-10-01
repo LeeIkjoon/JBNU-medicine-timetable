@@ -7,8 +7,8 @@ var DTODO_COLORS=['dtodo-item-0','dtodo-item-1','dtodo-item-2','dtodo-item-3','d
 var DTODO_LCOLORS=['dtodo-item-lc-0','dtodo-item-lc-1','dtodo-item-lc-2','dtodo-item-lc-3','dtodo-item-lc-4'];
 
 function dtodoKey(d){return 'dtodo_'+d;}
-function dtodoLoad(d){try{return JSON.parse(localStorage.getItem(dtodoKey(d))||'[]');}catch(e){return[];}}
-function dtodoSave(d,arr){try{localStorage.setItem(dtodoKey(d),JSON.stringify(arr));}catch(e){}}
+function dtodoLoad(d){try{return syncListVisible(JSON.parse(localStorage.getItem(dtodoKey(d))||'[]'));}catch(e){return[];}}
+function dtodoSave(d,arr){try{localStorage.setItem(dtodoKey(d),syncListStore(dtodoKey(d),arr));}catch(e){}}
 
 function dtodoDdDay(ds){
   var t=new Date();t.setHours(0,0,0,0);
@@ -96,7 +96,7 @@ function dtodoAdd(){
   var text=inp.value.trim();
   if(!text)return;
   var arr=dtodoLoad(dtodoDate);
-  arr.push({text:text,done:false});
+  arr.push({id:Date.now(),text:text,done:false});
   dtodoSave(dtodoDate,arr);
   dtodoInputMode=false;
   renderDtodoList();

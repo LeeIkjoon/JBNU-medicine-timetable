@@ -136,19 +136,19 @@ function syncCardHtml(){
   if(syncOpen){
     h+='<div class="sync-body">';
     if(signed){
-      h+='<div class="sync-desc">구글 계정에 자동 백업되고 있어요. 다른 기기에서 같은 계정으로 로그인하면 그대로 이어집니다.</div>';
+      h+='<div class="sync-desc">이 구글 계정으로 로그인한 기기끼리 시간표 설정·할 일·공부 기록이 실시간으로 맞춰져요.</div>';
       h+='<button class="dash-more" id="sync-signout">로그아웃</button>';
     }else{
-      h+='<div class="sync-desc">이 기기에만 저장되고 있어요. 아래 코드로 다른 기기에 옮길 수 있어요.</div>';
+      h+='<div class="sync-desc">폰과 태블릿에서 같은 구글 계정으로 로그인하면 자동으로 동기화돼요. 로그인 없이 쓰려면 다른 기기에서 이 코드를 입력하세요.</div>';
     }
     if(syncRestoreOpen){
       h+='<div class="memo-add-row">'
         +'<input class="memo-input" id="sync-code-input" placeholder="코드 8자리" maxlength="8" style="text-transform:uppercase" autocapitalize="characters" autocomplete="off">'
         +'<button class="memo-add-btn" id="sync-restore-btn">가져오기</button>'
         +'</div>';
-      h+='<div class="sync-warn" id="sync-restore-msg">이 기기 기록과 합쳐집니다 (지워지지 않아요)</div>';
+      h+='<div class="sync-warn" id="sync-restore-msg">이 기기 기록과 합쳐지고, 이후 두 기기가 계속 동기화돼요</div>';
     }else{
-      h+='<button class="dash-more" id="sync-restore-open">코드로 다른 기기 기록 가져오기</button>';
+      h+='<button class="dash-more" id="sync-restore-open">다른 기기 코드로 연결하기</button>';
     }
     h+='</div>';
   }
@@ -168,8 +168,9 @@ function syncBind(){
     var msg=document.getElementById('sync-restore-msg');
     syncRestore(v,function(err){
       if(err){if(msg)msg.textContent=err;return;}
-      if(msg)msg.textContent='가져왔어요 — 새로고침합니다';
-      setTimeout(function(){location.reload();},700);
+      if(msg)msg.textContent='연결했어요 — 이제 두 기기가 함께 동기화돼요';
+      syncRestoreOpen=false;
+      setTimeout(function(){renderDashboard();},1200);
     });
   };
 }
@@ -177,10 +178,11 @@ function syncBind(){
 /* ══════════ 오늘 플래너 (내용·목표·실제·시간대, 타이머 연동) ══════════ */
 function planKey(d){return 'plan_'+(d||dashYmd(studyDate()));}
 function planLoad(d){
-  try{var a=JSON.parse(localStorage.getItem(planKey(d))||'[]');if(Array.isArray(a))return a;}catch(e){}
+  try{var a=JSON.parse(localStorage.getItem(planKey(d))||'[]');if(Array.isArray(a))return syncListVisible(a);}catch(e){}
   return[];
 }
-function planSave(arr,d){try{localStorage.setItem(planKey(d),JSON.stringify(arr));}catch(e){}}
+/* 삭제 표시·수정 시각을 남겨 기기 간 동기화 (sync.js) */
+function planSave(arr,d){try{localStorage.setItem(planKey(d),syncListStore(planKey(d),arr));}catch(e){}}
 function planAdd(text,goalMin){
   var a=planLoad();
   a.push({id:Date.now(),text:text,goal:goalMin,secs:0,sessions:[],done:false});

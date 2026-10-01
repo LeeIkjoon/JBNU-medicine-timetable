@@ -17,6 +17,7 @@ var authUser=null, fbAuth=null, authReady=false;
     authReady=true;
     try{localStorage.setItem('auth_signed',u?'1':'0');}catch(e){}
     if(u&&u.uid!==was)authAfterSignIn();
+    else if(!u&&typeof syncStart==='function')syncStart(); /* 비로그인: 코드 경로로 동기화 */
     if(u&&typeof window._onboardAfterSignIn==='function')window._onboardAfterSignIn();
     if(typeof renderDashboard==='function'&&vw==='dashboard')renderDashboard();
   });
@@ -70,23 +71,23 @@ function authSignOut(){
   });
 }
 
-/* 로그인 직후: 계정 백업 + (처음이면) 기존 코드 백업을 이 기기 기록과 합치고 다시 올린다 */
+/* 로그인 직후: 계정(u/<uid>) 실시간 동기화 시작.
+   처음 로그인하는 기기면 그동안 쓰던 코드 백업(users/<코드>)도 한 번 합쳐 계정으로 올린다 */
 function authAfterSignIn(){
   if(!fbDb||!authUser)return;
-  var uid=authUser.uid;
-  fbDb.ref('u/'+uid).once('value').then(function(snap){
-    var b=snap.val();
-    if(b&&b.data)authMergeBlob(b.data);
-    var doneLegacy=false;
-    try{doneLegacy=localStorage.getItem('auth_migrated')==='1';}catch(e){}
-    if(doneLegacy){authPushAndRender();return;}
-    fbDb.ref('users/'+syncUid()).once('value').then(function(s2){
-      var old=s2.val();
-      if(old&&old.data)authMergeBlob(old.data);
-      try{localStorage.setItem('auth_migrated','1');}catch(e){}
-      authPushAndRender();
-    }).catch(authPushAndRender);
-  }).catch(function(){});
+  var doneLegacy=false;
+  try{doneLegacy=localStorage.getItem('auth_migrated')==='1';}catch(e){}
+  if(doneLegacy){syncStart();return;}
+  fbDb.ref('users/'+syncUid()).once('value').then(function(s2){
+    var old=s2.val();
+    if(old&&old.data)authMergeBlob(old.data);
+    if(old&&old.k)Object.keys(old.k).forEach(function(n){
+      var v=old.k[n];if(!v||v.v===null||v.v===undefined)return;
+      var k=syncDec(n),cur=localStorage.getItem(k);
+      if(syncWatched(k))try{localStorage.setItem(k,cur?syncMergeJson(k,cur,v.v):v.v);}catch(e){}
+    });
+    try{localStorage.setItem('auth_migrated','1');}catch(e){}
+  }).catch(function(){}).then(function(){syncStart();});
 }
 function authMergeBlob(data){
   Object.keys(data).forEach(function(k){
@@ -96,7 +97,4 @@ function authMergeBlob(data){
     }catch(e){}
   });
 }
-function authPushAndRender(){
-  if(typeof syncPush==='function')syncPush();
-  if(typeof render==='function')render();
-}
+
