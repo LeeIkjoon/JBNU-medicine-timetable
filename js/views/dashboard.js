@@ -321,6 +321,7 @@ var PLN_IC={
   play:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.2v13.6a1 1 0 0 0 1.5.86l11-6.8a1 1 0 0 0 0-1.72l-11-6.8A1 1 0 0 0 8 5.2z"/></svg>',
   pause:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="5" width="3.6" height="14" rx="1.3"/><rect x="13.9" y="5" width="3.6" height="14" rx="1.3"/></svg>',
   x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  stop:'<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2.5"/></svg>',
   chk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 12.5l4 4L18.5 7.5"/></svg>'
 };
 var planRefOpen=null; /* null=자동(내용 있거나 18시 이후 펼침) / true / false */
@@ -346,9 +347,10 @@ function planCardHtml(){
     /* 미완료 먼저, 완료는 아래로 (원래 순서 유지) */
     var order=a.slice().sort(function(x,y){return (x.done?1:0)-(y.done?1:0);});
     order.forEach(function(it,ix){
-      var pct=it.goal?Math.min(100,Math.round((it.secs||0)/(it.goal*60)*100)):0;
       var linked=(typeof tmPlanId!=='undefined'&&tmPlanId===it.id&&tmState!=='idle');
       var running=linked&&tmState==='running';
+      var liveSecs=linked?Math.floor(tmElapsed()/1000):0;
+      var pct=it.goal?Math.min(100,Math.round(((it.secs||0)+liveSecs)/(it.goal*60)*100)):0;
       var ci2=(a.indexOf(it)%5)+1;
       h+='<div class="pln-item c'+ci2+(it.done?' done':'')+(linked?' live':'')+'">';
       h+='<span class="pln-edge"></span>';
@@ -356,15 +358,19 @@ function planCardHtml(){
       h+='<div class="pln-body">';
       h+='<div class="pln-text">'+escHtml(it.text)+'</div>';
       var meta2=[];
-      meta2.push(tmFmtShort((it.secs||0)*1000)+(it.goal?' / '+planGoalLabel(it.goal):''));
+      meta2.push(tmFmtShort(((it.secs||0)+liveSecs)*1000)+(it.goal?' / '+planGoalLabel(it.goal):''));
       if(it.goal)meta2.push(pct+'%');
-      h+='<div class="pln-meta">'+meta2.join(' · ')+(running?'<span class="pln-live">기록 중</span>':linked?'<span class="pln-live paused">일시정지</span>':'')+'</div>';
-      if(it.goal)h+='<div class="pln-track"><div class="pln-bar'+(it.done?' done':'')+'" style="width:'+pct+'%"></div></div>';
+      h+='<div class="pln-meta">'+meta2.join(' · ')+'</div>';
+      /* 공부 중인 항목: 이번 세션 시간·상태를 작게 */
+      if(linked)h+='<div class="pln-live'+(running?'':' paused')+'"><span class="pln-live-dot"></span>'
+        +(running?'공부 중':'일시정지')+'<b'+(running?' id="tm-disp"':'')+'>'+tmFmt(tmElapsed())+'</b></div>';
+      if(it.goal)h+='<div class="pln-track"><div class="pln-bar'+(it.done?' done':'')+'"'+(running?' id="tm-goal-bar"':'')+' style="width:'+pct+'%"></div></div>';
       if(it.sessions&&it.sessions.length)h+='<div class="pln-sess">'+it.sessions.join(' · ')+'</div>';
       h+='</div>';
       h+='<button class="pln-play'+(running?' running':'')+'" data-id="'+it.id+'" data-text="'+escHtml(it.text)+'" aria-label="'+(running?'일시정지':'시작')+'">'
         +(running?PLN_IC.pause:PLN_IC.play)+'</button>';
-      h+='<button class="pln-del" data-id="'+it.id+'" aria-label="삭제">'+PLN_IC.x+'</button>';
+      if(linked)h+='<button class="pln-stop" aria-label="종료하고 기록">'+PLN_IC.stop+'</button>';
+      else h+='<button class="pln-del" data-id="'+it.id+'" aria-label="삭제">'+PLN_IC.x+'</button>';
       h+='</div>';
     });
     h+='</div>';
@@ -431,6 +437,9 @@ function planBind(){
       if(row){row.classList.add('removing');setTimeout(function(){planDel(id);},220);}
       else planDel(id);
     };
+  });
+  document.querySelectorAll('.pln-stop').forEach(function(b){
+    b.onclick=function(){if(typeof tmStop==='function')tmStop();};
   });
   document.querySelectorAll('.pln-play').forEach(function(b){
     b.onclick=function(){

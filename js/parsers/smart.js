@@ -143,6 +143,14 @@ function smartIsHoliday(s){
   if(typeof isHoliday==='function'&&isHoliday(s))return true;
   return /공휴일|휴일|휴업|휴강|방학|삼일절|현충일|광복절|개천절|한글날|어린이날|근로자|부처님|석가탄신|대체휴|선거|창립기념|개교기념|체육대회|추석|설날|연휴|성탄|크리스마스|신정/.test(s);
 }
+/* 셀 안의 시각 범위 '09:00~10:00' / '9:00-9:50' → ['9:00','10:00'] (없으면 null) */
+function smartTimeRange(v){
+  var m=smartStr(v).match(/(\d{1,2})[:시.](\d{2})\s*[~\-–—]\s*(\d{1,2})[:시.](\d{2})/);
+  if(!m)return null;
+  var a=+m[1],b=+m[3];
+  if(a>23||b>23||+m[2]>59||+m[4]>59)return null;
+  return [a+':'+m[2],b+':'+m[4]];
+}
 function smartTimes(p){
   var st=(typeof PERIOD_START!=='undefined'&&PERIOD_START[p])||({1:'8:30',2:'9:30',3:'10:30',4:'11:30',5:'13:30',6:'14:30',7:'15:30',8:'16:30',9:'17:30',10:'18:30'})[p]||'8:30';
   var en=(typeof PERIOD_END!=='undefined'&&PERIOD_END[p])||({1:'9:20',2:'10:20',3:'11:20',4:'12:20',5:'14:20',6:'15:20',7:'16:20',8:'17:20',9:'18:20',10:'19:20'})[p]||'9:20';
@@ -220,7 +228,7 @@ function smartFindWideHeader(rows){
   var limit=Math.min(rows.length,30);
   for(var r=0;r<limit;r++){
     var row=rows[r]||[];
-    var map={week:-1,date:-1,day:-1},periods={},nPer=0;
+    var map={week:-1,date:-1,day:-1},periods={},times={},nPer=0,nLbl=0;
     for(var c=0;c<row.length;c++){
       var k=smartHeaderKind(row[c]);
       if(k==='week'&&map.week<0)map.week=c;
@@ -228,10 +236,21 @@ function smartFindWideHeader(rows){
       else if(k==='day'&&map.day<0)map.day=c;
       else{
         var p=smartPeriod(row[c]);
-        if(p&&!periods[c]){periods[c]=p;nPer++;}
+        if(p&&!periods[c]){
+          periods[c]=p;nPer++;
+          if(/교시|period|^\s*\d{1,2}\s*$/i.test(smartStr(row[c])))nLbl++;
+          var tr=smartTimeRange(row[c]);if(tr)times[c]=tr;
+        }
       }
     }
-    if((map.date>=0||map.day>=0)&&nPer>=4)return{row:r,map:map,periods:periods};
+    if((map.date>=0||map.day>=0)&&nPer>=4){
+      /* 교시 번호 없이 시각만 적힌 헤더('09:00~10:00')는 왼쪽부터 1교시 */
+      if(!nLbl&&Object.keys(times).length){
+        var pc=Object.keys(periods).map(Number).sort(function(a,b){return a-b;});
+        pc.forEach(function(cc,i){periods[cc]=i+1;});
+      }
+      return{row:r,map:map,periods:periods,times:times};
+    }
   }
   return null;
 }
@@ -284,7 +303,7 @@ function smartParseWide(rows,hdr){
       if(c>=row.length)break;
       var cell=smartCell(row[c]);
       if(!cell)continue;
-      var t=smartTimes(p);
+      var t=(hdr.times&&hdr.times[c])||smartTimes(p);
       var ex=smartIsExam(cell.subj);
       var it={week:wk,date:dateStr,day:day,period:p,start:t[0],end:t[1],
         subject:cell.subj,professor:cell.prof||'',is_exam:ex};
@@ -343,6 +362,7 @@ function smartParseLong(rows,hdr){
     var start=t[0];
     if(m.time!==undefined){var tm=smartStr(row[m.time]).match(/(\d{1,2}):(\d{2})/);if(tm)start=parseInt(tm[1],10)+':'+tm[2];}
     var end=t[1];
+    if(m.time!==undefined){var trg=smartTimeRange(row[m.time]);if(trg){start=trg[0];end=trg[1];}}
     if(m.end!==undefined){var te=smartStr(row[m.end]).match(/(\d{1,2}):(\d{2})/);if(te)end=parseInt(te[1],10)+':'+te[2];}
     if(smartIsHoliday(subj)){
       if(holidayAdded[ds])continue;holidayAdded[ds]=true;
@@ -415,15 +435,16 @@ function smartParseGrid(rows){
     while(rr2<rows.length){
       var row2=rows[rr2]||[];
       if(smartFindDayHeaderRow(row2))break; /* 다음 블록 */
-      var period=0;
+      var period=0,lblT=null;
       for(var lc=0;lc<firstDayCol;lc++){period=smartPeriod(row2[lc]);if(period)break;}
+      for(var lc2=0;lc2<firstDayCol&&!lblT;lc2++)lblT=smartTimeRange(row2[lc2]);
       /* 교시 라벨 없는 행: 날짜 행/빈 행이면 건너뜀. 좌측 열이 시간(예 '8:30')이면 smartPeriod가 처리 */
       if(period&&period<=10){
         seq=period;
         days.forEach(function(d){
           var ds=dates[d];if(!ds)return;
           var cell=smartCell(row2[dayCols[d]]);if(!cell)return;
-          var t=smartTimes(period);
+          var t=lblT||smartTimes(period);
           var it={week:week,date:ds,day:d,period:period,start:t[0],end:t[1],
             subject:cell.subj,professor:cell.prof||'',is_exam:smartIsExam(cell.subj)};
           if(smartIsHoliday(cell.subj))it.is_holiday=true;

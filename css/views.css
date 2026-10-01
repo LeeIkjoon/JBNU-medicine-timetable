@@ -197,6 +197,20 @@
 .tm-live-dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0}
 .tm-live-head.running .tm-live-dot{animation:tmPulse 1.5s var(--ease) infinite}
 @keyframes tmPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+/* 과목만 고르고 공부 중일 때 — 한 줄 상태 바 */
+.tm-mini{display:flex;align-items:center;gap:8px;background:var(--surface);border-radius:var(--radius-lg);
+  padding:8px 8px 8px 14px;box-shadow:var(--shadow-xs);min-width:0;color:var(--brand-1)}
+.tm-mini.paused{color:var(--warning-2)}
+.tm-mini.running .tm-live-dot{animation:tmPulse 1.5s var(--ease) infinite}
+.tm-mini-lbl{flex:none;font-size:var(--font-xs);font-weight:var(--weight-bold)}
+.tm-mini-subj{flex:1;min-width:0;font-size:var(--font-base);font-weight:var(--weight-semi);color:var(--text-strong);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tm-mini-time{flex:none;font-size:var(--font-sm);font-weight:var(--weight-bold);font-variant-numeric:tabular-nums}
+.tm-mini-btn{width:32px;height:32px;border-radius:50%;border:none;background:var(--tint-accent);color:var(--accent);flex:none;
+  display:flex;align-items:center;justify-content:center;padding:0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tm-mini-btn.stop{background:var(--surface-muted);color:var(--text-soft)}
+.tm-mini-btn .tm-ic{width:13px;height:13px;margin:0}
+.tm-mini-btn:active{transform:scale(.9)}
 .tm-live-tag{font-size:var(--font-2xs);font-weight:var(--weight-bold);color:var(--text-soft);background:var(--surface);
   border-radius:6px;padding:1px 6px;margin-left:2px}
 .tm-hero.running .tm-live-tag{background:rgba(255,255,255,.7)}
@@ -396,8 +410,17 @@
 .pln-item.done .pln-play{background:var(--surface-muted);color:var(--text-fade);box-shadow:none}
 .pln-item.done .pln-text::after{width:100%}
 .pln-meta{font-size:var(--font-sm);color:var(--text-soft);margin-top:2px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.pln-live{font-size:var(--font-2xs);font-weight:var(--weight-bold);color:var(--brand-1);background:var(--surface);border-radius:6px;padding:1px 6px}
+/* 공부 중인 항목 — 이번 세션 시간 (큰 타이머 대신) */
+.pln-live{display:inline-flex;align-items:center;gap:5px;margin-top:4px;font-size:var(--font-xs);font-weight:var(--weight-semi);
+  color:var(--brand-1);background:var(--surface);border-radius:6px;padding:2px 7px}
+.pln-live b{font-weight:var(--weight-bold);font-variant-numeric:tabular-nums}
+.pln-live-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none;animation:tmPulse 1.5s var(--ease) infinite}
 .pln-live.paused{color:var(--warning-2)}
+.pln-live.paused .pln-live-dot{animation:none}
+.pln-stop{width:30px;height:34px;border:none;background:none;color:var(--text-soft);cursor:pointer;flex:none;
+  display:flex;align-items:center;justify-content:center;padding:0;margin-right:-8px;-webkit-tap-highlight-color:transparent}
+.pln-stop svg{width:13px;height:13px}
+.pln-stop:active{transform:scale(.88)}
 .pln-track{height:4px;background:var(--surface-muted);border-radius:2px;overflow:hidden;margin-top:5px}
 .pln-item.live .pln-track{background:rgba(255,255,255,.75)}
 .pln-bar{height:100%;border-radius:3px;background:var(--accent);transition:width .4s}

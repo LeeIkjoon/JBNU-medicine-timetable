@@ -35,9 +35,19 @@ var SCHOOLS={
       {label:'의예과 1학년'},{label:'의예과 2학년'},
       {label:'의학과 1학년'},{label:'의학과 2학년'},
       {label:'의학과 3학년'},{label:'의학과 4학년'}
-    ]}
+    ]},
+  ajou:{name:'아주대학교',dept:'의과대학',
+    grades:[
+      {label:'의예과 1학년'},{label:'의예과 2학년'},
+      {label:'의학과 1학년'},{label:'의학과 2학년'},
+      {label:'의학과 3학년'},{label:'의학과 4학년'}
+    ],
+    /* 09:00~17:00, 60분 단위, 점심 12:00~13:00 (2026 해부학 시간표 기준) */
+    periods:{times:{1:['9:00','10:00'],2:['10:00','11:00'],3:['11:00','12:00'],
+      4:['13:00','14:00'],5:['14:00','15:00'],6:['15:00','16:00'],7:['16:00','17:00']},
+      lunchAfter:3,lunchLabel:'점심시간  12:00 ~ 13:00'}}
 };
-var SCHOOL_ORDER=['jbnu','kmu','wku'];
+var SCHOOL_ORDER=['jbnu','kmu','wku','ajou'];
 
 /* 학년별 관리자 비밀번호 (jbnu 레거시) */
 var ADMIN_PWS={
@@ -50,7 +60,9 @@ var ADMIN_PWS_EXT={
   wku:{'의예과 1학년':'wkupremed1','의예과 2학년':'wkupremed2','의학과 1학년':'wkumed1',
        '의학과 2학년':'wkumed2','의학과 3학년':'wkumed3','의학과 4학년':'wkumed4'},
   kmu:{'의예과 1학년':'kmupremed1','의예과 2학년':'kmupremed2','의학과 1학년':'kmumed1',
-       '의학과 2학년':'kmumed2','의학과 3학년':'kmumed3','의학과 4학년':'kmumed4'}
+       '의학과 2학년':'kmumed2','의학과 3학년':'kmumed3','의학과 4학년':'kmumed4'},
+  ajou:{'의예과 1학년':'ajoupremed1','의예과 2학년':'ajoupremed2','의학과 1학년':'ajoumed1',
+       '의학과 2학년':'ajoumed2','의학과 3학년':'ajoumed3','의학과 4학년':'ajoumed4'}
 };
 function adminPwFor(school,grade){
   if((school||'jbnu')==='jbnu')return ADMIN_PWS[grade];
@@ -79,6 +91,56 @@ function applySchoolPeriods(){
   });
   SCHOOL_LUNCH_AFTER=(conf.lunchAfter!=null)?conf.lunchAfter:4;
   SCHOOL_LUNCH_LABEL=conf.lunchLabel||DEFAULT_PERIODS.lunchLabel;
+}
+/* 시간표 데이터의 실제 교시 시각으로 덮어쓰기 — 학교 설정은 기본값, 파일·DB에 적힌 시각이 우선.
+   교시마다 가장 많이 쓰인 start/end를 채택, 30분 이상 빈 구간을 점심으로 본다. */
+function applyDataPeriods(items){
+  applySchoolPeriods();
+  if(!items||!items.length)return;
+  function toMin(v){var m=String(v||'').match(/^(\d{1,2}):(\d{2})$/);return m?(+m[1])*60+(+m[2]):-1;}
+  function fmt(n){return Math.floor(n/60)+':'+('0'+(n%60)).slice(-2);}
+  var cnt={};
+  items.forEach(function(it){
+    var p=parseInt(it.period,10),st=toMin(it.start),en=toMin(it.end);
+    if(!p||st<0||en<=st||en-st>180||it.is_holiday)return;
+    var k=st+'-'+en;(cnt[p]=cnt[p]||{})[k]=(cnt[p][k]||0)+1;
+  });
+  var ps=Object.keys(cnt).map(Number);
+  if(!ps.length)return;
+  var times={};
+  /* 학교 설정 교시를 깔고 데이터 교시로 덮음 */
+  Object.keys(PERIOD_START).forEach(function(k){times[k]=[toMin(PERIOD_START[k]),toMin(PERIOD_END[k])];});
+  ps.forEach(function(p){
+    var best=null,bn=0;
+    for(var k in cnt[p])if(cnt[p][k]>bn){bn=cnt[p][k];best=k;}
+    var se=best.split('-');times[p]=[+se[0],+se[1]];
+  });
+  /* 데이터 교시와 시각이 겹치거나 순서가 어긋나는 (설정 기본값) 교시는 버림 */
+  var keys=Object.keys(times).map(Number).sort(function(a,b){return a-b;}),ok=[];
+  keys.forEach(function(k){
+    if(ps.indexOf(k)<0){
+      for(var i=0;i<ps.length;i++){
+        var d=times[ps[i]];
+        if(times[k][0]<d[1]&&times[k][1]>d[0])return;           /* 겹침 */
+        if((ps[i]<k&&d[0]>=times[k][0])||(ps[i]>k&&d[0]<=times[k][0]))return; /* 순서 역전 */
+      }
+    }
+    ok.push(k);
+  });
+  PERIOD_START={};PERIOD_END={};PERIOD_INFO={};
+  ok.forEach(function(k){
+    PERIOD_START[k]=fmt(times[k][0]);PERIOD_END[k]=fmt(times[k][1]);
+    PERIOD_INFO[k]={label:k+'교시',time:PERIOD_START[k]+'~'+PERIOD_END[k]};
+  });
+  var gapAt=0,gap=0;
+  for(var i=0;i+1<ok.length;i++){
+    var g=times[ok[i+1]][0]-times[ok[i]][1];
+    if(g>gap){gap=g;gapAt=ok[i];}
+  }
+  if(gap>=30){
+    SCHOOL_LUNCH_AFTER=gapAt;
+    SCHOOL_LUNCH_LABEL='점심시간  '+PERIOD_END[gapAt]+' ~ '+PERIOD_START[ok[ok.indexOf(gapAt)+1]];
+  }
 }
 var PERIOD_INFO={
   1:{label:'1교시',time:'08:30~09:20'},2:{label:'2교시',time:'09:30~10:20'},

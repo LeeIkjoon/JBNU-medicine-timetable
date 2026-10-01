@@ -81,7 +81,7 @@ Korean medical-school timetable for 전북대학교 의과대학 (JBNU College o
 
 Three main views, switched via the bottom nav (`#bn-w` / `#bn-f` / `#bn-t`) plus a calendar overlay and per-date todo sheet:
 - **시간표 (weekly)** — period × weekday grid for the current 주차.
-- **공부 (dashboard, `js/views/dashboard.js`)** — 인사(날짜·플래너 진행·가장 가까운 시험 D-day 칩) → 타이머 히어로(`tmCardHtml`: 대기 시 플래너 미완료 항목 칩으로 대상 선택, '과목 선택' 칩이 셀렉트 토글; 연동 항목의 목표 진행 바) → 오늘 플래너(항목별 목표·실제·달성률, ▶ 연동, 접이식 '오늘 회고'+자기평가) → 시험(한 카드, [남은|본] 세그먼트) → 기록(연속·최고 연속·이번 주, '날짜별 기록 보기' → `js/views/history.js`) → 백업. 상단에 총 공부시간·일일 목표는 표시하지 않음(2026-09 결정: 플래너가 측정). ≥720px는 `.dash-col-a/-b` 두 열.
+- **공부 (dashboard, `js/views/dashboard.js`)** — 인사(날짜·플래너 진행·가장 가까운 시험 D-day 칩) → 타이머(`tmCardHtml`: 대기 시 플래너 미완료 항목 칩 + 시작 버튼. 공부 중엔 큰 타이머 없음 — 플래너 연동 시 해당 항목 안에 '공부 중 mm:ss'·■종료, 과목만 고른 경우 한 줄 `.tm-mini` 바; 2026-10 결정) → 오늘 플래너(항목별 목표·실제·달성률, ▶ 연동, 접이식 '오늘 회고'+자기평가) → 시험(한 카드, [남은|본] 세그먼트) → 기록(연속·최고 연속·이번 주, '날짜별 기록 보기' → `js/views/history.js`) → 백업. 상단에 총 공부시간·일일 목표는 표시하지 않음(2026-09 결정: 플래너가 측정). ≥720px는 `.dash-col-a/-b` 두 열.
 - **필터 (filter)** — list view filtered by subject / exam-only, 시수 뷰.
 
 ## Reading the source
@@ -147,7 +147,8 @@ After parsing, `buildFromItems()` rebuilds all derived state and `render()` redr
 
 - `escHtml()` was previously defined twice in the original single file with the later, null-safe version winning via hoisting. The split kept only the null-safe version (in `js/utils.js`).
 - `goTodayWeek()` (in `js/app.js`) and the IIFE at the end of `init()` snap to the **next** Monday when today is Sat/Sun.
-- Period grid is fixed 1–10 with a lunch row inserted after period 4 inside `buildWeekTable()`. `HOUR_TO_PERIOD` (in `js/views/weekly.js`) and `PERIOD_INFO` / `PERIOD_START` / `PERIOD_END` (in `js/config.js`) must agree if you change times.
+- 교시 축은 데이터 기반: `buildFromItems()`가 `applyDataPeriods(items)`(in `js/config.js`)를 불러 학교 설정(`SCHOOLS[key].periods`, 없으면 `DEFAULT_PERIODS`) 위에 시간표 항목의 실제 start/end(교시별 최빈값)를 덮고, 30분 이상 빈 구간을 점심 행 위치(`SCHOOL_LUNCH_AFTER`)로 잡는다. 주간표·관리자 표·교시 선택은 모두 `PERIOD_START` 키를 순회 — 1~10 하드코딩 금지. 업로드 파서는 헤더/교시 라벨의 '09:00~10:00' 시각을 항목에 그대로 넣는다(`smartTimeRange`).
+- 시간표 상단 '지금/다음' 바와 칸 표시(`wkTodayState`·`wkNowBarHtml`·`wkMarkToday`, 1분마다 `wkLiveTick`): 수업 중=초록, 쉬는·점심·등교 전=다음 수업 파랑, 그날 수업이 끝나면 표시 없음.
 - Holiday rendering: `HOLIDAY_KW` / `EVK` (in `js/config.js`) and the `isHoliday()` guard inside `buildWeekTable()` collapse a whole day to a single 🗓 cell on period 1.
 - Header date `<th>` cells get a tap handler from `bindThClick()` (in `js/views/dtodo.js`) to open the per-date todo sheet — re-call it after any re-render of the weekly table.
 

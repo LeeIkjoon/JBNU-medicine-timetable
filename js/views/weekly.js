@@ -31,7 +31,7 @@ function buildWeekTable(w,items){
 
   /* period -> day -> item 맵 (각 교시·요일별 수업) */
   var grid={};
-  for(var pi=1;pi<=10;pi++){grid[pi]={};}
+  PERIODS.forEach(function(pp){grid[pp.n]={};});
 
   for(var i=0;i<items.length;i++){
     var it=items[i];
@@ -292,7 +292,9 @@ function openClassEdit(dt,day,period,base){
   document.getElementById('edit-prof-list').innerHTML=Object.keys(profSet).sort().map(function(x){return '<option value="'+escHtml(x)+'">';}).join('');
   /* 교시 선택 (이동 가능) */
   var ps=document.getElementById('edit-period'),ph='';
-  for(var pi=1;pi<=10;pi++)ph+='<option value="'+pi+'"'+(pi===period?' selected':'')+'>'+pi+'교시 · '+PERIOD_START[pi]+'~'+PERIOD_END[pi]+'</option>';
+  Object.keys(PERIOD_START).map(Number).sort(function(a,b){return a-b;}).forEach(function(pi){
+    ph+='<option value="'+pi+'"'+(pi===period?' selected':'')+'>'+pi+'교시 · '+PERIOD_START[pi]+'~'+PERIOD_END[pi]+'</option>';
+  });
   ps.innerHTML=ph;
   /* 날짜 선택 (다른 날로 이동 가능) — 학기 범위 안에서 */
   var de=document.getElementById('edit-date');
@@ -463,33 +465,61 @@ function ttSrcHtml(){
   if(electiveGroups().length)el='<button class="tt-src-btn ghost" id="el-manage">선택과목 설정</button>';
   return '<div class="tt-src">'+el+'<button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button></div>';
 }
-/* 오늘 요약 줄 — 지금 수업 / 다음 수업 / 오늘 수업 끝 */
-function wkNowBarHtml(){
+/* 오늘 수업 상태 — 지금 진행 중인 수업(cur) / 쉬는·점심·등교 전이면 다음 수업(next) / 다 끝나면 done
+   시각은 수업 자체의 start/end (없으면 교시 설정) 기준 */
+function wkMin(v){var p=String(v||'').split(':');return p.length<2?-1:(+p[0])*60+(+p[1]||0);}
+function wkItemSt(it){var m=wkMin(it.start);return m>=0?m:wkMin(PERIOD_START[it.period]);}
+function wkItemEn(it){var m=wkMin(it.end);return m>=0?m:wkMin(PERIOD_END[it.period]);}
+function wkTodayState(){
   var t=today(),dd=wdd[wks[ci]]||{},inWeek=false;
   for(var i=0;i<DAYS.length;i++)if(dd[DAYS[i]]===t)inWeek=true;
-  if(!inWeek)return'';
-  var list=viewItems(merged).filter(function(m){return m.date===t&&!isHoliday(m.subject);})
-    .sort(function(a,b){return a.period-b.period;});
-  if(!list.length)return'<div class="tt-now done"><span class="tt-now-dot"></span>'
-    +'<span class="tt-now-lbl">오늘</span><span class="tt-now-txt">수업이 없어요</span></div>';
-  var np=wkNowPeriod(),cur=null,next=null;
-  for(var j=0;j<list.length;j++){
-    if(np&&list[j].period===np){cur=list[j];break;}
-    if(list[j].period>np&&!next)next=list[j];
-  }
+  if(!inWeek)return null;
+  var list=viewItems(merged).filter(function(m){return m.date===t&&!isHoliday(m.subject)&&!m.is_holiday;})
+    .sort(function(a,b){return wkItemSt(a)-wkItemSt(b)||a.period-b.period;});
   var d=new Date(),mins=d.getHours()*60+d.getMinutes();
-  function toMin(v){var p=(v||'').split(':');return (+p[0])*60+(+p[1]||0);}
-  if(!cur&&!next){
-    /* 남은 수업이 있는지 시각으로 한 번 더 확인 */
-    for(var k=0;k<list.length;k++){
-      if(toMin(PERIOD_START[list[k].period])>mins){next=list[k];break;}
-    }
+  var st={list:list,mins:mins,cur:null,next:null,blockEnd:0,first:false};
+  if(!list.length)return st;
+  for(var j=0;j<list.length;j++){
+    var s0=wkItemSt(list[j]),e0=wkItemEn(list[j]);
+    if(mins>=s0&&mins<e0){st.cur=list[j];break;}
+    if(s0>mins){st.next=list[j];st.first=(j===0);break;}
   }
-  if(!cur)return''; /* 진행 중인 수업이 있을 때만 표시 */
-  var txt=escHtml(cur.subject)+(cur.professor?' · '+escHtml(cur.professor):'');
-  var tm=(PERIOD_START[cur.period]||'')+' ~ '+(PERIOD_END[cur.period]||'');
-  return '<div class="tt-now"><span class="tt-now-dot"></span><span class="tt-now-lbl">지금</span>'
-    +'<span class="tt-now-txt">'+txt+'</span><span class="tt-now-time">'+tm+'</span></div>';
+  /* 같은 과목이 연달아 이어지면 그 블록 끝까지 */
+  var base=st.cur||st.next;
+  if(base){
+    var k=list.indexOf(base),end=wkItemEn(base);
+    while(k+1<list.length&&list[k+1].subject===base.subject&&(list[k+1].professor||'')===(base.professor||'')
+      &&wkItemSt(list[k+1])-end<=20){k++;end=wkItemEn(list[k]);}
+    st.blockEnd=end;
+    var b=list.indexOf(base),beg=wkItemSt(base);
+    while(st.cur&&b>0&&list[b-1].subject===base.subject&&(list[b-1].professor||'')===(base.professor||'')
+      &&beg-wkItemEn(list[b-1])<=20){b--;beg=wkItemSt(list[b]);}
+    st.blockStart=beg;
+  }
+  return st;
+}
+function wkFmtMin(m){return Math.floor(m/60)+':'+('0'+(m%60)).slice(-2);}
+function wkNowBarHtml(){
+  var st=wkTodayState();
+  if(!st)return'';
+  if(!st.list.length)return'<div class="tt-now done"><span class="tt-now-dot"></span>'
+    +'<span class="tt-now-lbl">오늘</span><span class="tt-now-txt">수업이 없어요</span></div>';
+  var it=st.cur||st.next;
+  if(!it)return''; /* 오늘 수업 모두 끝 */
+  var txt=escHtml(it.subject)+(it.professor?' <span class="tt-now-prof">'+escHtml(it.professor)+'</span>':'');
+  var s0=wkItemSt(it);
+  if(st.cur){
+    var left=st.blockEnd-st.mins;
+    return '<div class="tt-now live"><span class="tt-now-dot"></span><span class="tt-now-lbl">지금</span>'
+      +'<span class="tt-now-txt">'+txt+'</span>'
+      +'<span class="tt-now-time">'+wkFmtMin(st.blockStart)+' ~ '+wkFmtMin(st.blockEnd)
+      +'<small>'+(left>=60?Math.floor(left/60)+'시간 '+(left%60?left%60+'분 ':''):left+'분 ')+'남음</small></span></div>';
+  }
+  var gap=s0-st.mins;
+  return '<div class="tt-now next"><span class="tt-now-dot"></span><span class="tt-now-lbl">'+(st.first?'첫 수업':'다음')+'</span>'
+    +'<span class="tt-now-txt">'+txt+'</span>'
+    +'<span class="tt-now-time">'+wkFmtMin(s0)
+    +'<small>'+(gap>=60?Math.floor(gap/60)+'시간 '+(gap%60?gap%60+'분 ':''):gap+'분 ')+'후</small></span></div>';
 }
 
 /* 위·아래 연속으로 비어 있는 교시는 한 줄로 접는다 (탭하면 펼침) */
@@ -555,29 +585,44 @@ function wkNowPeriod(){
   }
   return 0;
 }
-/* 오늘 칼럼 음영 + 진행 중인 교시 표시 (이번 주에 오늘이 포함될 때만) */
+/* 오늘 칼럼 음영 + 진행 중인 수업(초록)·다음 수업(파랑) 칸 표시. 오늘 수업이 끝났으면 표시 없음 */
 function wkMarkToday(){
   var dd=wdd[wks[ci]]||{},t=today(),di=-1;
   for(var i=0;i<DAYS.length;i++)if(dd[DAYS[i]]===t)di=i;
   if(di<0)return;
   var tbl=document.querySelector('.sw table.tt');
   if(!tbl)return;
-  var np=wkNowPeriod();
-  var rows=tbl.querySelectorAll('tbody tr'),pn=0;
+  tbl.querySelectorAll('.td-now,.td-next,.td-t-now,.td-t-next').forEach(function(el){
+    el.classList.remove('td-now','td-next','td-t-now','td-t-next');
+  });
+  var st=wkTodayState(),it=st&&(st.cur||st.next);
+  var rows=tbl.querySelectorAll('tbody tr');
   for(var r=0;r<rows.length;r++){
-    var tr=rows[r];
-    if(tr.className.indexOf('lunchrow')>=0)continue;
-    var tds=tr.querySelectorAll('td');
-    if(tds.length<2)continue;
-    pn++; /* 점심 행을 뺀 순서 = 교시 번호 */
+    var tds=rows[r].querySelectorAll('td');
     var cell=tds[di+1];
-    if(cell)cell.className+=' td-today';
-    if(np&&pn===np){
-      tds[0].className+=' td-t-now';
-      if(cell)cell.className+=' td-now';
+    if(!cell||!cell.hasAttribute('data-p'))continue;
+    cell.classList.add('td-today');
+    if(it&&parseInt(cell.getAttribute('data-p'),10)===it.period){
+      cell.classList.add(st.cur?'td-now':'td-next');
+      tds[0].classList.add(st.cur?'td-t-now':'td-t-next');
     }
   }
 }
+/* 1분마다 지금/다음 표시 갱신 (시간표 탭이 보일 때만) */
+function wkLiveTick(){
+  if(typeof vw==='undefined'||vw!=='weekly'||document.hidden)return;
+  var bar=document.querySelector('#main .tt-now'),html=wkNowBarHtml();
+  if(bar){
+    if(html){var tmp=document.createElement('div');tmp.innerHTML=html;bar.parentNode.replaceChild(tmp.firstChild,bar);}
+    else bar.parentNode.removeChild(bar);
+  }else if(html){
+    var sw=document.querySelector('#main .sw'),anchor=sw&&sw.previousElementSibling&&sw.previousElementSibling.classList.contains('wk-todos')?sw.previousElementSibling:sw;
+    if(anchor){var tmp2=document.createElement('div');tmp2.innerHTML=html;anchor.parentNode.insertBefore(tmp2.firstChild,anchor);}
+  }
+  wkMarkToday();
+}
+setInterval(wkLiveTick,60000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden)wkLiveTick();});
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
   /* 시간표 없음(신규 학교·학년) → 개인 업로드 안내 */

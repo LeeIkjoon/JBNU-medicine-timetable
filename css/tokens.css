@@ -23,6 +23,7 @@
   --overlay-light: rgba(0, 0, 0, 0.25);
   --tint-brand: #EAF2FE;         /* today 칼럼 하이라이트 */
   --tint-accent: #EAF2FE;        /* hover/active */
+  --tint-success: #E7F8F1;       /* 진행 중 수업 */
   --tint-info: #EEF1FF;          /* fmt-badge */
   --tint-exam: #FFF5F5;          /* exam row */
   --tint-warm: #FFF7ED;          /* changelog item bg */
@@ -142,6 +143,7 @@
   --overlay-light: rgba(0, 0, 0, 0.35);
   --tint-brand: #1A2138;
   --tint-accent: #14233D;
+  --tint-success: #10291F;
   --tint-info: #1A2138;
   --tint-exam: #2A1418;
   --tint-warm: #2A1F12;
@@ -187,6 +189,7 @@
     --overlay-light: rgba(0, 0, 0, 0.35);
     --tint-brand: #1A2138;
     --tint-accent: #14233D;
+    --tint-success: #10291F;
     --tint-info: #1A2138;
     --tint-exam: #2A1418;
     --tint-warm: #2A1F12;

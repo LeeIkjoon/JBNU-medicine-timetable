@@ -138,7 +138,22 @@ function tmRenderHost(){
 /* 타이머 카드 HTML — 공부 탭 최상단 (renderDashboard에서 삽입) */
 function tmCardHtml(){
   var running=tmState==='running',paused=tmState==='paused';
-  return '<div class="tm-hero'+(running?' running':paused?' paused':' idle')+'">'+tmInnerHtml()+'</div>';
+  if(running||paused){
+    /* 공부 중엔 큰 타이머 대신: 오늘 할 일 항목에 연동돼 있으면 그 항목 안에 작게 표시 → 카드 생략 */
+    if(tmPlanId&&(!tmSessDate||tmSessDate===tmTodayKey())&&typeof planLoad==='function'
+      &&planLoad().some(function(it){return it.id===tmPlanId;}))return'';
+    /* 과목만 고른 경우: 한 줄짜리 상태 바 */
+    return '<div class="tm-mini'+(running?' running':' paused')+'">'
+      +'<span class="tm-live-dot"></span>'
+      +'<span class="tm-mini-lbl">'+(running?'공부 중':'일시정지')+'</span>'
+      +'<span class="tm-mini-subj">'+escHtml(tmSubject||'과목 미지정')+'</span>'
+      +'<span class="tm-mini-time" id="tm-disp">'+tmFmt(tmElapsed())+'</span>'
+      +(running?'<button class="tm-mini-btn" id="tm-pause" aria-label="일시정지">'+TM_IC.pause+'</button>'
+        :'<button class="tm-mini-btn" id="tm-start" aria-label="이어서">'+TM_IC.play+'</button>')
+      +'<button class="tm-mini-btn stop" id="tm-stop" aria-label="종료하고 기록">'+TM_IC.stop+'</button>'
+      +'</div>';
+  }
+  return '<div class="tm-hero idle">'+tmInnerHtml()+'</div>';
 }
 var tmPickOpen=false; /* 대기 상태에서 '과목 직접 선택' 셀렉트 노출 여부 */
 function tmSubjects(){

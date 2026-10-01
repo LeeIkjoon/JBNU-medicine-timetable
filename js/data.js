@@ -45,6 +45,8 @@ var cmap  = {
 };
 
 function buildFromItems(items,nativeWdd,nativeEd){
+  /* 교시 축·시각을 이 시간표의 실제 시각으로 */
+  if(typeof applyDataPeriods==='function')applyDataPeriods(items);
   /* 1. 주차 목록 */
   var weekSet={};
   for(var i=0;i<items.length;i++)weekSet[items[i].week]=true;

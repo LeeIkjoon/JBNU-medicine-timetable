@@ -273,7 +273,7 @@ function renderAdminEditModal(){
   /* ── 교시 목록 렌더 ── */
   function renderPer(){
     perCard.innerHTML='';
-    for(var p=1;p<=10;p++){
+    Object.keys(PERIOD_INFO).map(Number).sort(function(a,b){return a-b;}).forEach(function(p){
       var pI=PERIOD_INFO[p];
       var isOn=(p===admSrc()[ri].period);
       var row=document.createElement('div');
@@ -295,7 +295,7 @@ function renderAdminEditModal(){
         renderPer();
       }; })(p);
       perCard.appendChild(row);
-    }
+    });
   }
   renderPer();
 
@@ -485,15 +485,21 @@ function renderAdminBody(){
 function buildAdminTable(w, items, srcArr){
   srcArr=srcArr||admSrc();
   var dd=wdd[w]||{};
-  var PERIODS=[{n:1,t:'8:30'},{n:2,t:'9:30'},{n:3,t:'10:30'},{n:4,t:'11:30'},
-    {n:5,t:'13:30'},{n:6,t:'14:30'},{n:7,t:'15:30'},{n:8,t:'16:30'},{n:9,t:'17:30'},{n:10,t:'18:30'}];
-  var H2P={'8':1,'9':2,'10':3,'11':4,'13':5,'14':6,'15':7,'16':8,'17':9,'18':10};
+  /* 학교 교시 설정 기반 (weekly.js buildWeekTable과 동일) */
+  var PERIODS=Object.keys(PERIOD_START).map(Number).sort(function(a,b){return a-b;})
+    .map(function(n){return {n:n,t:PERIOD_START[n]};});
+  var H2P={};
+  PERIODS.forEach(function(pp){H2P[String(parseInt(pp.t.split(':')[0],10))]=pp.n;});
   var grid={};
-  for(var pi=1;pi<=10;pi++) grid[pi]={};
+  PERIODS.forEach(function(pp){grid[pp.n]={};});
   items.forEach(function(it){
     if(!it.day||DAYS.indexOf(it.day)<0) return;
-    var h=parseInt((it.start||'8:30').split(':')[0]);
-    var sp=H2P[String(h)]||1;
+    var sp=parseInt(it.period,10);
+    if(!sp||!PERIOD_START[sp]){
+      var h=parseInt((it.start||'8:30').split(':')[0]);
+      sp=H2P[String(h)]||1;
+    }
+    if(!grid[sp])grid[sp]={};
     grid[sp][it.day]=it;
   });
   var h='<table class="tt"><thead><tr><th class="th-t"></th>';
@@ -504,9 +510,9 @@ function buildAdminTable(w, items, srcArr){
   h+='</tr></thead><tbody>';
   PERIODS.forEach(function(per){
     var pn=per.n;
-    if(pn===5){
+    if(SCHOOL_LUNCH_AFTER&&pn===SCHOOL_LUNCH_AFTER+1){
       h+='<tr class="lunchrow"><td class="td-t"><span style="font-size:12px">🍱</span></td>';
-      h+='<td colspan="5" class="td-lunch">점심시간&nbsp;&nbsp;12:20 ~ 13:30</td></tr>';
+      h+='<td colspan="5" class="td-lunch">'+SCHOOL_LUNCH_LABEL+'</td></tr>';
     }
     h+='<tr><td class="td-t"><span class="pn">'+pn+'</span><span class="pt">'+per.t+'</span></td>';
     DAYS.forEach(function(d){
