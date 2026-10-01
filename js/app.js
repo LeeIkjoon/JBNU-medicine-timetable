@@ -266,7 +266,7 @@ function init(){
       });
     };
     document.getElementById('auth-skip').onclick=function(){
-      try{localStorage.setItem('auth_skipped','1');}catch(e){}
+      try{localStorage.setItem('auth_skipped','1');localStorage.setItem('auth_skipped2','1');}catch(e){}
       sc.style.display='none';showSchoolScreen();
     };
   }
@@ -277,7 +277,7 @@ function init(){
   /* 이미 쓰던 사용자(첫 실행 로그인 단계 이전 가입): 로그인 안 했고 건너뛴 적 없으면 한 번 안내 */
   function promptExistingLogin(tries){
     var skipped=false;
-    try{skipped=localStorage.getItem('auth_skipped')==='1';}catch(e){}
+    try{skipped=localStorage.getItem('auth_skipped2')==='1';}catch(e){} /* 10/1 로그인 반복 오류 때 건너뛴 사람에게 한 번 더 안내 (v2) */
     if(skipped||!window.fbAuth)return;
     if(typeof moveIsOld==='function'&&moveIsOld())return; /* 옛 주소는 로그인 대신 이전 안내 */
     /* 로그인 상태와 리다이렉트 결과를 모두 받은 뒤 판단 (최대 약 10초) */
@@ -285,7 +285,7 @@ function init(){
     if(authUser&&authUser.uid)return;
     /* 방금 로그인하고 돌아왔는데 실패한 경우: 같은 화면을 또 띄우지 않고 안내만 */
     if(authRedirectPending()){
-      try{localStorage.removeItem('auth_redirect_at');localStorage.setItem('auth_skipped','1');}catch(e){}
+      try{localStorage.removeItem('auth_redirect_at');localStorage.setItem('auth_skipped','1');localStorage.setItem('auth_skipped2','1');}catch(e){}
       if(typeof xlToast==='function')xlToast('로그인이 완료되지 않았어요 · 공부 탭 동기화 카드에서 다시 시도할 수 있어요');
       return;
     }
@@ -302,7 +302,7 @@ function init(){
       });
     };
     document.getElementById('auth-skip').onclick=function(){
-      try{localStorage.setItem('auth_skipped','1');}catch(e){}
+      try{localStorage.setItem('auth_skipped','1');localStorage.setItem('auth_skipped2','1');}catch(e){}
       sc.style.display='none';
     };
   }
