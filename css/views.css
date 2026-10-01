@@ -91,6 +91,13 @@
 /* 시험만/전체 칩 — 시맨틱 토큰 */
 .chip-exam{border-color:var(--danger-strong);color:var(--danger)}
 .chip-exam.on{background:var(--danger-bg);border-color:var(--danger-strong);color:var(--danger-strong);font-weight:var(--weight-bold)}
+/* 필터 — 과목별 교수님 선택 */
+.fprof-grp+.fprof-grp{margin-top:12px}
+.fprof-subj{display:flex;align-items:center;gap:6px;font-size:var(--font-xs);font-weight:var(--weight-semi);color:var(--text-secondary);margin-bottom:7px}
+.fprof.on{color:var(--text-on-pastel);font-weight:var(--weight-bold)}
+.fprof.off{color:var(--text-secondary)}
+.fprof-n{margin-left:5px;font-size:var(--font-2xs);opacity:.6;font-variant-numeric:tabular-nums}
+.fprof-all.on{background:var(--tint-brand);border-color:var(--brand-1);color:var(--brand-1);font-weight:var(--weight-bold)}
 .chip-all.on{background:var(--tint-brand);border-color:var(--brand-1);color:var(--brand-1);font-weight:var(--weight-bold)}
 .no-res{text-align:center;padding:36px;color:var(--text-soft);font-size:var(--font-md)}
 

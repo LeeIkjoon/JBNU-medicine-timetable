@@ -89,6 +89,25 @@ function renderL(){
    (시험 배점이 교수별 시수에 비례하므로 비율 표시)
 ══════════════════════════════════════════ */
 var fView='hours';      /* 'hours' | 'sched' — 시수가 기본 */
+var fProfSel={};       /* 과목 → 선택한 교수 목록 (없으면 그 과목 교수 전체) */
+/* '이재호, 홍효원' 같은 공동 담당은 이름별로 나눔 */
+function fProfNames(p){return String(p||'').split(/\s*[,·\/&]\s*/).map(function(x){return x.trim();}).filter(Boolean);}
+/* 과목별 교수 목록 (수업 수 많은 순) */
+function fProfsOf(subject){
+  var cnt={};
+  viewItems(merged).forEach(function(it){
+    if(it.subject!==subject||isEx(it.subject)||it.is_exam===true||it.is_exam==='true')return;
+    fProfNames(it.professor).forEach(function(n){cnt[n]=(cnt[n]||0)+1;});
+  });
+  return Object.keys(cnt).map(function(n){return{name:n,n:cnt[n]};})
+    .sort(function(a,b){return b.n-a.n||a.name.localeCompare(b.name,'ko');});
+}
+var fKeepScroll=false; /* 칩 탭으로 다시 그릴 땐 스크롤 유지 (오늘로 점프 X) */
+function fRerenderKeep(){
+  var m=document.getElementById('main'),y=m?m.scrollTop:0;
+  fKeepScroll=true;renderF();fKeepScroll=false;
+  if(m)m.scrollTop=y;
+}
 var fCleared=false;     /* 전체 해제 상태 (빈 선택을 전체선택으로 되돌리지 않게) */
 var hrsRange='all';     /* 시수 범위: all | mid(중간까지) | fin(중간 이후) */
 var fHoursOpen={};      /* 과목명 → 펼침 여부 */
@@ -289,9 +308,41 @@ function renderF(){
     }
     h+='</div></div>';
   }
+  /* 과목을 1~3개 고르면 그 과목의 교수님도 고를 수 있게 */
+  if(!fExam&&fsubj2.length>=1&&fsubj2.length<=3){
+    var ph='';
+    nS.forEach(function(s){
+      if(fsubj2.indexOf(s)<0)return;
+      var profs=fProfsOf(s);
+      if(profs.length<2)return;
+      var sel=fProfSel[s]||[],c=gcol(s);
+      ph+='<div class="fprof-grp"><div class="fprof-subj"><span class="hrs-dot" style="background:'+c+'"></span>'+escHtml(s)+'</div><div class="chips">';
+      ph+='<button class="chip fprof-all'+(sel.length?'':' on')+'" data-s="'+escHtml(s)+'">전체</button>';
+      profs.forEach(function(pr){
+        var on=sel.indexOf(pr.name)>=0;
+        ph+='<button class="chip fprof '+(on?'on':'off')+'" data-s="'+escHtml(s)+'" data-p="'+escHtml(pr.name)+'" style="border-color:'+c+';'+(on?'background:'+c+';':'')+'">'
+          +escHtml(pr.name)+'<span class="fprof-n">'+pr.n+'</span></button>';
+      });
+      ph+='</div></div>';
+    });
+    if(ph)h+='<div class="fs"><div class="fs-ttl">교수님</div>'+ph+'</div>';
+  }
   h+='<div id="fres"></div></div>';
   document.getElementById('main').innerHTML=h;
   bindFSeg();
+  document.querySelectorAll('.fprof-all').forEach(function(b){
+    b.onclick=function(){delete fProfSel[this.getAttribute('data-s')];fRerenderKeep();};
+  });
+  document.querySelectorAll('.fprof').forEach(function(b){
+    b.onclick=function(){
+      var s=this.getAttribute('data-s'),p=this.getAttribute('data-p');
+      var sel=(fProfSel[s]||[]).slice(),ix=sel.indexOf(p);
+      if(ix>=0)sel.splice(ix,1);else sel.push(p);
+      /* 아무도 안 골랐거나 모두 고르면 '전체' */
+      if(!sel.length||sel.length>=fProfsOf(s).length)delete fProfSel[s];else fProfSel[s]=sel;
+      fRerenderKeep();
+    };
+  });
 
   document.getElementById('chip-exam').onclick=function(){
     fExam=!fExam;
@@ -307,7 +358,7 @@ function renderF(){
       fExam=false;
       var idx=fsubj2.indexOf(s);
       if(idx>=0)fsubj2.splice(idx,1);else fsubj2.push(s);
-      renderF();
+      fRerenderKeep();
     };
   }
   renderFR();
@@ -324,7 +375,12 @@ function renderFR(){
     /* 시험 항목은 원 과목이 선택돼 있으면 함께 표시 */
     items=items.filter(function(i){
       var s=i.subject;
-      if(fsubj2.indexOf(s)>=0)return true;
+      if(fsubj2.indexOf(s)>=0){
+        /* 교수 선택이 있으면 그 교수님 수업만 (시험은 그대로 표시) */
+        var sel=(fsubj2.length<=3)&&fProfSel[s];
+        if(!sel||!sel.length||i.is_exam===true||i.is_exam==='true')return true;
+        return fProfNames(i.professor).some(function(n){return sel.indexOf(n)>=0;});
+      }
       if(isEx(s)){var b=examBase(s);return b&&fsubj2.indexOf(b)>=0;}
       return false;
     });
@@ -332,7 +388,7 @@ function renderFR(){
   var el=document.getElementById('fres');if(!el)return;
   if(!items.length){el.innerHTML='<div class="no-res">조건에 맞는 수업이 없습니다</div>';return;}
   el.innerHTML='<div class="list-wrap">'+byDateH(items)+'</div>';
-  fScrollToToday();
+  if(!fKeepScroll)fScrollToToday();
 }
 
 /* 목록을 열면 지난 날짜부터 보이지 않게, 오늘(없으면 다음 수업일)로 맞춘다 */
