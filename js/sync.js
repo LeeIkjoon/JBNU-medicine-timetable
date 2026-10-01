@@ -87,6 +87,7 @@ function syncPushKey(k,cb){
     return{v:m,t:Math.max(lt,cur.t||0,Date.now()),d:SYNC_DEV};
   },function(err,committed,snap){
     if(cb)cb(!err);
+    if(err)syncLog('push-err',{key:k.replace(/[^a-z_]/g,'').slice(0,20),err:String(err.code||err.message||err).slice(0,80)});
     if(err||base!==_syncPathOn)return;
     var val=snap&&snap.val();
     if(val)syncApplyLocal(k,val.v===undefined?null:val.v,val.t||0);
@@ -159,7 +160,10 @@ function syncStart(){
     if(path!==_syncPathOn)return;
     return ref.once('value').then(function(snap){
       if(path!==_syncPathOn)return;
-      var remote={};
+      var remote={},nr=0,nl=0;
+      snap.forEach(function(){nr++;});
+      for(var i0=0;i0<localStorage.length;i0++)if(syncWatched(localStorage.key(i0)))nl++;
+      syncLog('start',{remote:nr,local:nl});
       snap.forEach(function(c){remote[syncDec(c.key)]=1;syncOnRemote(c.key,c.val());});
       /* 이 기기에만 있는 키는 올림 */
       for(var i=0;i<localStorage.length;i++){
@@ -168,12 +172,25 @@ function syncStart(){
       }
       syncQueue();
       _syncRef=ref;
-      ref.on('child_added',function(c){syncOnRemote(c.key,c.val());});
-      ref.on('child_changed',function(c){syncOnRemote(c.key,c.val());});
+      function cancel(e){syncLog('listen-err',{err:String(e&&(e.code||e.message)||e).slice(0,80)});}
+      ref.on('child_added',function(c){syncOnRemote(c.key,c.val());},cancel);
+      ref.on('child_changed',function(c){syncOnRemote(c.key,c.val());syncLog('recv',{key:syncDec(c.key).replace(/[^a-z_]/g,'').slice(0,20)});},cancel);
     });
-  }).catch(function(){});
+  }).catch(function(e){syncLog('start-err',{err:String(e&&(e.code||e.message)||e).slice(0,80)});});
 }
 
+/* 동기화 진단 로그 (문제 해결용, 임시) — study/synclog/<코드>/<이벤트>. 내용은 남기지 않고 키 수·오류만 */
+function syncLog(ev,info){
+  try{
+    if(!fbDb)return;
+    var uid=(window.authUser&&authUser.uid)||'';
+    var o={ts:Date.now(),path:_syncPathOn?_syncPathOn.split('/')[0]:'',uid4:uid.slice(0,4),dev:SYNC_DEV,
+      email4:((window.authUser&&authUser.email)||'').slice(0,4),standalone:!!window.navigator.standalone,
+      ua:navigator.userAgent.slice(13,45)};
+    for(var k in (info||{}))o[k]=info[k];
+    fbDb.ref('study/synclog/'+syncUid()+'/'+ev).set(o).catch(function(){});
+  }catch(e){}
+}
 function syncStatusText(){
   var t=0;
   try{t=parseInt(localStorage.getItem('sync_last')||'0',10);}catch(e){}
