@@ -270,8 +270,32 @@ function init(){
   }
   window._onboardAfterSignIn=function(){
     var sc=document.getElementById('auth-screen');
-    if(sc&&sc.style.display!=='none'){sc.style.display='none';showSchoolScreen();}
+    if(sc&&sc.style.display!=='none'){sc.style.display='none';if(!window._authExisting)showSchoolScreen();}
   };
+  /* 이미 쓰던 사용자(첫 실행 로그인 단계 이전 가입): 로그인 안 했고 건너뛴 적 없으면 한 번 안내 */
+  function promptExistingLogin(tries){
+    var skipped=false;
+    try{skipped=localStorage.getItem('auth_skipped')==='1';}catch(e){}
+    if(skipped||!window.fbAuth)return;
+    if(!authReady){if((tries||0)<20)setTimeout(function(){promptExistingLogin((tries||0)+1);},300);return;}
+    if(authUser&&authUser.uid)return;
+    window._authExisting=true;
+    var sc=document.getElementById('auth-screen');
+    var note=document.getElementById('auth-note');
+    if(note)note.textContent='폰·태블릿에서 같은 계정으로 로그인하면 시간표 설정과 공부 기록이 자동으로 맞춰져요';
+    sc.style.display='flex';
+    document.getElementById('auth-google').onclick=function(){
+      var btn=this;btn.disabled=true;note.textContent='로그인 창을 여는 중...';
+      authSignIn(function(err){
+        if(err){btn.disabled=false;note.textContent=err+' — 로그인 없이도 사용할 수 있어요';return;}
+        sc.style.display='none';
+      });
+    };
+    document.getElementById('auth-skip').onclick=function(){
+      try{localStorage.setItem('auth_skipped','1');}catch(e){}
+      sc.style.display='none';
+    };
+  }
 
   /* 학교 선택 — 휠 */
   function showSchoolScreen(){
@@ -390,6 +414,7 @@ function init(){
   /* 저장된 학교·학년 복원 */
   if(savedGrade){
     var gl0=document.getElementById('grade-lbl');if(gl0)gl0.textContent=savedGrade;
+    promptExistingLogin(0);
   } else if(savedSchool){
     showGradeScreen();
   } else {
