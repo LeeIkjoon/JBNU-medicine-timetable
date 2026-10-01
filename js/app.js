@@ -101,6 +101,8 @@ function render(){
    초기화
 ══════════════════════════════════════════ */
 function init(){
+  /* 옛 주소에서 넘어온 경우(?link=코드): 기록부터 받고 새로고침 */
+  if(typeof moveLinkHandle==='function'&&moveLinkHandle())return;
   /* wh 데이터 후처리: 날짜 하이픈→점, 색상 교체, td-e 통일, rowspan 제거 */
   var oldColors = {
     /* 이전 초연한 파스텔 → 새 구별되는 색상으로 */
@@ -277,6 +279,7 @@ function init(){
     var skipped=false;
     try{skipped=localStorage.getItem('auth_skipped')==='1';}catch(e){}
     if(skipped||!window.fbAuth)return;
+    if(typeof moveIsOld==='function'&&moveIsOld())return; /* 옛 주소는 로그인 대신 이전 안내 */
     /* 로그인 상태와 리다이렉트 결과를 모두 받은 뒤 판단 (최대 약 10초) */
     if(!authReady||!authRedirectDone){if((tries||0)<33)setTimeout(function(){promptExistingLogin((tries||0)+1);},300);return;}
     if(authUser&&authUser.uid)return;
@@ -449,6 +452,8 @@ function init(){
       setTimeout(function(){var t2=document.getElementById('pwa-toast');if(t2)t2.style.display='none';},7000);
     },2500);
   }
+  /* 옛 주소(GitHub Pages) → 새 주소 이전 안내 */
+  if(typeof moveOldCheck==='function')moveOldCheck();
 }
 
 init();

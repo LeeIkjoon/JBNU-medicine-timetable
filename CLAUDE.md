@@ -57,6 +57,9 @@ js/views/dtodo.js     dtodo state, open/close/render/add/toggle/del,
                       updateTodoDots, bindThClick + overlay glue
 js/admin.js           admSrc, panel + modal, publishTT/doPublish,
                       admShowConfirm, admOpenUpload
+js/move.js            옛 주소(leeikjoon.github.io) → sehyunlee.vercel.app 이전:
+                      옛 주소는 기록 업로드 후 이동(브라우저)·안내 화면(홈 화면 앱),
+                      새 주소는 ?link=<코드>로 기록 받고 시작 (moveLinkHandle)
 js/app.js             updHdr, goTodayWeek, setView, render, init(),
                       init() call, boot setTimeouts (admin-FAB bind,
                       non-admin Firebase listener startup)

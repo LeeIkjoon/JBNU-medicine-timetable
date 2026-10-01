@@ -77,7 +77,7 @@ function syncFlush(){
   var keys=Object.keys(_syncDirty);_syncDirty={};
   keys.forEach(syncPushKey);
 }
-function syncPushKey(k){
+function syncPushKey(k,cb){
   var base=_syncPathOn;
   fbDb.ref(base+'/k/'+syncEnc(k)).transaction(function(cur){
     var lv=localStorage.getItem(k),lt=syncKT()[k]||0;
@@ -86,6 +86,7 @@ function syncPushKey(k){
     if(m===cur.v)return; /* 서버가 이미 최신 — 쓰지 않음 */
     return{v:m,t:Math.max(lt,cur.t||0,Date.now()),d:SYNC_DEV};
   },function(err,committed,snap){
+    if(cb)cb(!err);
     if(err||base!==_syncPathOn)return;
     var val=snap&&snap.val();
     if(val)syncApplyLocal(k,val.v===undefined?null:val.v,val.t||0);
@@ -116,6 +117,24 @@ function syncOnRemote(name,val){
   var m=syncMerge(k,lv,lt,rv,rt);
   if(m!==lv)syncApplyLocal(k,m,Math.max(lt,rt));
   if(m!==rv){_syncDirty[k]=1;syncQueue();} /* 합친 결과를 다시 올림 */
+}
+/* 이 기기의 모든 기록을 지금 서버에 올림 (주소 이전 전) — 완료되면 true, 시간 초과·오프라인이면 false */
+function syncFlushAll(timeoutMs){
+  return new Promise(function(res){
+    var t0=Date.now(),lim=timeoutMs||10000,done=false;
+    function fin(ok){if(!done){done=true;res(ok);}}
+    setTimeout(function(){fin(false);},lim);
+    (function wait(){
+      if(done)return;
+      if(!fbDb){fin(false);return;}
+      if(!_syncRef){if(Date.now()-t0<lim)setTimeout(wait,200);return;} /* 첫 동기화가 끝날 때까지 */
+      var keys=[];
+      for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(syncWatched(k))keys.push(k);}
+      var left=keys.length,fail=false;
+      if(!left){fin(true);return;}
+      keys.forEach(function(k){syncPushKey(k,function(ok){if(!ok)fail=true;if(--left===0)fin(!fail);});});
+    })();
+  });
 }
 /* 동기화 시작/경로 전환 (앱 시작·로그인·로그아웃·코드 가져오기 때) */
 function syncStart(){

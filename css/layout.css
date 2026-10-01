@@ -197,3 +197,10 @@ html.vp-cut .admin-fab{bottom:70px}
 .auth-note{margin-top:var(--space-3);font-size:var(--font-sm);color:var(--text-soft);text-align:center;line-height:1.5;word-break:keep-all}
 .auth-skip{margin-top:var(--space-5);border:none;background:none;color:var(--text-soft);font-family:inherit;
   font-size:var(--font-md);text-decoration:underline;cursor:pointer;padding:6px 10px}
+
+/* 주소 이전 안내 (옛 GitHub Pages 주소) */
+.move-sub{line-height:1.5;word-break:keep-all;text-align:center}
+.move-steps{margin:var(--space-5) 0 0;padding-left:20px;font-size:var(--font-base);color:var(--text-secondary);line-height:1.7;word-break:keep-all;align-self:stretch}
+.move-steps b{color:var(--text-strong)}
+.move-go{text-align:center;text-decoration:none;box-sizing:border-box}
+.move-go.wait{opacity:.55;pointer-events:none}
