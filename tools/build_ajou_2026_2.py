@@ -8,6 +8,9 @@
 같은 문구가 한 셀에 3번 반복된 칸(12/10 이론시험·12/11 실습시험)은 원본에서 3교시짜리
 병합이 풀린 흔적 — 그 칸을 가운데로 앞뒤 1교시씩 펼친다.
 
+2026-10-01 수정본(2026년_해부학_수업_시간표.xlsx): 줄바꿈 정리·'오전만 운영' 칸·12/8 구연시험 7교시·
+12/11 실습시험 2~4교시로 확정. 3회 반복 셀은 없음(구버전 호환용으로 처리 유지).
+
 사용: python3 tools/build_ajou_2026_2.py <xlsx경로> <출력디렉토리>
 """
 import sys, os, re, json, time
@@ -85,6 +88,8 @@ def main(xlsx_path, out_dir):
             if v is None or not str(v).strip():
                 continue
             subj, prof, rep = parse_cell(v)
+            if re.fullmatch(r'오전만\s*운영', subj):  # 11/2~11/6 오후 = 수업 없음 표시
+                continue
             ps = [p]
             if rep == 3:
                 ps = [q for q in (p - 1, p, p + 1) if q in PERIOD_START]

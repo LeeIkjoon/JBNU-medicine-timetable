@@ -360,10 +360,10 @@ function planCardHtml(){
       var meta2=[];
       meta2.push(tmFmtShort(((it.secs||0)+liveSecs)*1000)+(it.goal?' / '+planGoalLabel(it.goal):''));
       if(it.goal)meta2.push(pct+'%');
-      h+='<div class="pln-meta">'+meta2.join(' · ')+'</div>';
-      /* 공부 중인 항목: 이번 세션 시간·상태를 작게 */
-      if(linked)h+='<div class="pln-live'+(running?'':' paused')+'"><span class="pln-live-dot"></span>'
-        +(running?'공부 중':'일시정지')+'<b'+(running?' id="tm-disp"':'')+'>'+tmFmt(tmElapsed())+'</b></div>';
+      /* 공부 중인 항목: 이번 세션 시간·상태를 목표·진행률 옆에 작게 */
+      var live=linked?'<span class="pln-live'+(running?'':' paused')+'"><span class="pln-live-dot"></span>'
+        +(running?'공부 중':'일시정지')+'<b'+(running?' id="tm-disp"':'')+'>'+tmFmt(tmElapsed())+'</b></span>':'';
+      h+='<div class="pln-meta"><span>'+meta2.join(' · ')+'</span>'+live+'</div>';
       if(it.goal)h+='<div class="pln-track"><div class="pln-bar'+(it.done?' done':'')+'"'+(running?' id="tm-goal-bar"':'')+' style="width:'+pct+'%"></div></div>';
       if(it.sessions&&it.sessions.length)h+='<div class="pln-sess">'+it.sessions.join(' · ')+'</div>';
       h+='</div>';

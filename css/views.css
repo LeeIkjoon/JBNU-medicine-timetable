@@ -411,7 +411,7 @@
 .pln-item.done .pln-text::after{width:100%}
 .pln-meta{font-size:var(--font-sm);color:var(--text-soft);margin-top:2px;font-variant-numeric:tabular-nums;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 /* 공부 중인 항목 — 이번 세션 시간 (큰 타이머 대신) */
-.pln-live{display:inline-flex;align-items:center;gap:5px;margin-top:4px;font-size:var(--font-xs);font-weight:var(--weight-semi);
+.pln-live{display:inline-flex;align-items:center;gap:5px;font-size:var(--font-xs);font-weight:var(--weight-semi);
   color:var(--brand-1);background:var(--surface);border-radius:6px;padding:2px 7px}
 .pln-live b{font-weight:var(--weight-bold);font-variant-numeric:tabular-nums}
 .pln-live-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none;animation:tmPulse 1.5s var(--ease) infinite}
