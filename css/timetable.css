@@ -189,14 +189,22 @@
 /* ── 오늘 칼럼 · 진행 중인 교시 ── */
 td.td-today{background:var(--tint-brand)}
 .td-today .card{box-shadow:inset 0 0 0 1px rgba(0,0,0,.05),0 1px 3px rgba(0,0,0,.06)}
-td.td-now{box-shadow:inset 0 0 0 2px var(--success)}
-td.td-next{box-shadow:inset 0 0 0 1.5px var(--accent)}
+/* 지금/다음 교시 — 칸 테두리 대신 카드 오른쪽 위 불빛.
+   수업 중 = 초록 불빛이 깜빡임 / 쉬는·점심시간의 다음 수업 = 파란 빈 고리(움직임 없음) */
+.td-now .card,.td-next .card{position:relative}
+.td-now .card::after,.td-next .card::after{content:'';position:absolute;border-radius:50%;box-sizing:border-box}
+.td-now .card::after{top:4px;right:4px;width:9px;height:9px;background:var(--success);
+  box-shadow:0 0 0 1.5px var(--surface),0 0 6px var(--success);animation:tt-now-blink 1.2s ease-in-out infinite}
+.td-now .card::before{content:'';position:absolute;top:4px;right:4px;width:9px;height:9px;border-radius:50%;
+  background:var(--success);animation:tt-now-halo 1.2s cubic-bezier(0,0,.2,1) infinite}
+.td-next .card::after{top:5px;right:5px;width:7px;height:7px;border:1.5px solid var(--accent)}
+@keyframes tt-now-blink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes tt-now-halo{0%{transform:scale(1);opacity:.7}80%,100%{transform:scale(2);opacity:0}}
 td.td-t-now{color:var(--success-2);font-weight:var(--weight-bold);background:var(--tint-success)}
-td.td-t-now::after{content:'지금';display:block;font-size:8px;font-weight:var(--weight-bold);color:var(--success-2);letter-spacing:-.02em;margin-top:1px}
+td.td-t-now::after{content:'지금';display:block;width:max-content;margin:2px auto 0;padding:1px 5px;border-radius:var(--radius-pill);
+  background:var(--success);color:#fff;font-size:8px;font-weight:var(--weight-bold);letter-spacing:-.02em;line-height:1.3}
 td.td-t-next{color:var(--accent);font-weight:var(--weight-bold);background:var(--tint-accent)}
 td.td-t-next::after{content:'다음';display:block;font-size:8px;font-weight:var(--weight-bold);color:var(--accent);letter-spacing:-.02em;margin-top:1px}
-.td-now .card{animation:tt-now-glow 2.4s ease-in-out infinite}
-@keyframes tt-now-glow{0%,100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}50%{box-shadow:0 0 0 3px rgba(16,185,129,.28)}}
 
 
 /* ── 오늘 요약 줄 (시간표 상단) ── */
@@ -220,7 +228,7 @@ td.td-t-next::after{content:'다음';display:block;font-size:8px;font-weight:var
 .tt-now.done .tt-now-dot{background:var(--text-disabled)}
 .tt-now.done .tt-now-lbl{color:var(--text-soft)}
 @media (prefers-reduced-motion:reduce){
-  .tt-now-dot::after,.td-now .card{animation:none!important}
+  .tt-now-dot::after,.td-now .card::after,.td-now .card::before{animation:none!important}
 }
 
 /* ── 앞뒤 빈 교시 접기 ── */
