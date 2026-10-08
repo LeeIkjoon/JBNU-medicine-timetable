@@ -1,3 +1,5 @@
+/* 앱스토어 앱(Capacitor) 안에서 실행 중인지 — 구글 로그인·웹 푸시는 웹뷰에서 못 쓰므로 숨긴다 */
+var IS_APP=!!(window.Capacitor&&typeof Capacitor.isNativePlatform==='function'&&Capacitor.isNativePlatform());
 var DAYS = ['월','화','수','목','금'];
 var WN   = ['일','월','화','수','목','금','토'];
 var ML   = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
@@ -20,9 +22,9 @@ var SECTION_RULES={
 var SCHOOLS={
   jbnu:{name:'전북대학교',dept:'의과대학',
     grades:[
-      {label:'의예과 2학년',desc:'예과 2년차'},
-      {label:'의학과 1학년',desc:'본과 1년차'},
-      {label:'의학과 2학년',desc:'본과 2년차'}
+      {label:'의예과 2학년',desc:'예과 2학년'},
+      {label:'의학과 1학년',desc:'본과 1학년'},
+      {label:'의학과 2학년',desc:'본과 2학년'}
     ]},
   kmu:{name:'계명대학교',dept:'의과대학',
     grades:[

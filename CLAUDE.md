@@ -75,6 +75,14 @@ js/app.js             updHdr, goTodayWeek, setView, render, init(),
 - `.main` 안의 `position:sticky`는 `.main` 기준으로 붙는다 (목록 헤더 th, `.dash-col-b`).
 - 키보드가 올라오면 `body.kb-open`으로 탭바를 접는다 (터치 기기만, `js/app.js` 끝부분).
 
+## iOS 앱 (app/, 2026-10-08 시작)
+
+앱스토어용 Capacitor 8 포장. 웹 저장소와 분리된 `app/package.json`을 쓴다(루트 package.json은 Vercel용이라 건드리지 않음, `.vercelignore`로 `app` 제외).
+- `cd app && npm run sync` — `build.mjs`가 상위 폴더의 index.html·css·js·icons를 `app/www`로 복사(xlsx·Firebase는 내려받아 `vendor/`로, 구글 로그인 SDK·manifest는 제거)한 뒤 `cap sync ios`. `www/`는 생성물이라 커밋하지 않는다.
+- 앱 안에서는 `IS_APP`(js/config.js)가 true — 구글 로그인 화면·버튼과 웹 푸시 벨을 숨기고 8자리 코드 동기화만 쓴다(첫 버전 결정). 웹에서는 false라 동작이 같다.
+- 번들 ID `com.sehyunlee.medtimetable`(첫 업로드 전까지만 변경 가능), 아이콘 원본 `app/assets/icon-1024.png`.
+- 개인정보처리방침은 루트 `privacy.html`(웹에 배포돼야 심사 URL로 쓸 수 있음).
+
 ## What the app does
 
 Korean medical-school timetable for 전북대학교 의과대학 (JBNU College of Medicine). Supports three grades selected on first launch (stored in `localStorage.user_grade`):

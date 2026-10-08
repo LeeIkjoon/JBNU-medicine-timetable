@@ -7,6 +7,7 @@
 var authUser=null, fbAuth=null, authReady=false, authRedirectDone=false;
 
 (function(){
+  if(IS_APP){authReady=true;authRedirectDone=true;return;} /* 앱: 코드 동기화만 */
   try{ if(window.firebase&&firebase.auth) fbAuth=firebase.auth(); }catch(e){}
   if(!fbAuth)return;
   /* 리다이렉트로 돌아온 경우 결과 수신 */

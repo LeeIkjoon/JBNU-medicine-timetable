@@ -254,7 +254,7 @@ function init(){
   function showAuthScreen(){
     var skipped=false;
     try{skipped=localStorage.getItem('auth_skipped')==='1';}catch(e){}
-    if((window.authUser&&authUser.uid)||skipped){showSchoolScreen();return;}
+    if(IS_APP||(window.authUser&&authUser.uid)||skipped){showSchoolScreen();return;}
     var sc=document.getElementById('auth-screen');
     sc.style.display='flex';
     document.getElementById('auth-google').onclick=function(){
@@ -444,7 +444,7 @@ function init(){
   /* iOS Safari 홈 화면 미추가 시 안내 토스트 */
   var isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
   var isStandalone=window.navigator.standalone===true;
-  if(isIOS&&!isStandalone&&!sessionStorage.getItem('pwa_shown')){
+  if(isIOS&&!isStandalone&&!IS_APP&&!sessionStorage.getItem('pwa_shown')){
     setTimeout(function(){
       var t=document.getElementById('pwa-toast');
       if(t){t.style.display='block';}

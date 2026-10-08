@@ -84,6 +84,7 @@ function pushBtnUpdate(){
 }
 (function(){
   var b=document.getElementById('push-btn');if(!b)return;
+  if(IS_APP){b.style.display='none';return;} /* 웹 푸시는 앱 웹뷰에서 동작하지 않음 */
   pushBtnUpdate();
   pushMetaUpdate();
   b.onclick=function(){

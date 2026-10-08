@@ -138,6 +138,8 @@ function syncCardHtml(){
     if(signed){
       h+='<div class="sync-desc">이 구글 계정으로 로그인한 기기끼리 시간표 설정·할 일·공부 기록이 실시간으로 맞춰져요.</div>';
       h+='<button class="dash-more" id="sync-signout">로그아웃</button>';
+    }else if(IS_APP){
+      h+='<div class="sync-desc">다른 기기에서 이 코드를 입력하면 시간표 설정·할 일·공부 기록이 함께 동기화돼요.</div>';
     }else{
       h+='<div class="sync-desc">폰과 태블릿에서 같은 구글 계정으로 로그인하면 자동으로 동기화돼요. 로그인 없이 쓰려면 다른 기기에서 이 코드를 입력하세요.</div>';
       if(typeof moveIsOld==='function'&&moveIsOld())h+='<button class="sync-google" id="sync-move">새 주소로 옮기고 구글 로그인</button>';
