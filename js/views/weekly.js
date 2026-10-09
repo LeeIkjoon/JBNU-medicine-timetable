@@ -624,6 +624,74 @@ function wkLiveTick(){
 }
 setInterval(wkLiveTick,60000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden)wkLiveTick();});
+/* 과목명 글자 크기 맞춤 — 칸 폭에 맞춰 줄여서 어절이 음절 중간에서 끊기지 않게.
+   가장 작은 크기로도 안 들어가는 긴 어절만 비슷한 길이로 나눠 끊는다(전문외상/소생술). */
+var _wkFitCtx=null;
+function wkFitCards(){
+  var els=document.querySelectorAll('#main .sw .card .cn-s:not(.cn-exam):not(.cn-hol)');
+  if(!els.length)return;
+  if(!_wkFitCtx)_wkFitCtx=document.createElement('canvas').getContext('2d');
+  var ctx=_wkFitCtx,ZW='​',MIN=9;
+  els[0].style.fontSize='';
+  var cs0=getComputedStyle(els[0]),base=parseFloat(cs0.fontSize)||12;
+  var fam=cs0.fontFamily,wt=cs0.fontWeight;
+  function plan(text,size,W){
+    /* 반환: {t:줄바꿈 후보(ZW) 넣은 문자열, cut:어절을 쪼갰는지} */
+    ctx.font=wt+' '+size+'px '+fam;
+    var cut=false;
+    var out=text.split(/\s+/).map(function(word){
+      /* 괄호 앞은 자연스러운 끊는 자리 */
+      return word.replace(/(.)\(/g,'$1'+ZW+'(').split(ZW).map(function(part){
+        var w=ctx.measureText(part).width;
+        if(w<=W)return part;
+        cut=true;
+        var ch=Array.from(part),n=Math.ceil(w/W),per=Math.ceil(ch.length/n),r=[];
+        for(var i=0;i<ch.length;i+=per)r.push(ch.slice(i,i+per).join(''));
+        /* 마지막 조각이 한 글자면 앞 조각에서 하나 넘겨받음 */
+        if(r.length>1&&Array.from(r[r.length-1]).length===1&&Array.from(r[r.length-2]).length>2){
+          var pv=Array.from(r[r.length-2]);r[r.length-1]=pv.pop()+r[r.length-1];r[r.length-2]=pv.join('');
+        }
+        return r.join(ZW);
+      }).join(ZW);
+    }).join(' ');
+    return {t:out,cut:cut};
+  }
+  Array.prototype.forEach.call(els,function(el){
+    var card=el.parentNode;
+    if(!card||!el.clientWidth)return;
+    var orig=el.getAttribute('data-o');
+    if(orig==null){orig=el.textContent;el.setAttribute('data-o',orig);}
+    var ccs=getComputedStyle(card),other=0;
+    Array.prototype.forEach.call(card.children,function(c){if(c!==el)other+=c.offsetHeight;});
+    var avail=card.clientHeight-parseFloat(ccs.paddingTop)-parseFloat(ccs.paddingBottom)-other;
+    card.style.paddingLeft=card.style.paddingRight='';
+    var W=el.clientWidth-0.5,pick=null,soft=null,last=null;
+    for(var size=base;size>=MIN;size-=0.5){
+      /* 줄여야 하는 칸은 좌우 여백도 조금 좁혀 한 글자 더 들어가게 */
+      if(size===base-0.5){card.style.paddingLeft=card.style.paddingRight='4px';W=el.clientWidth-0.5;}
+      var pl=plan(orig,size,W),lh=size*1.2;
+      var lines=Math.max(1,Math.floor((avail+1.5)/lh));
+      el.style.fontSize=size+'px';
+      el.style.webkitLineClamp=lines;
+      el.style.overflowWrap='normal';
+      el.textContent=pl.t;
+      var fits=el.scrollHeight<=lines*lh+1.5;
+      last={size:size,t:pl.t,lines:lines};
+      if(fits&&!pl.cut){pick=last;break;}
+      if(fits&&!soft)soft=last;
+    }
+    var use=pick||soft||last;
+    if(use.size===base)card.style.paddingLeft=card.style.paddingRight='';
+    el.style.fontSize=use.size===base?'':use.size+'px';
+    el.style.webkitLineClamp=use.lines;
+    el.textContent=use.t;
+  });
+}
+var _wkFitTimer=null;
+window.addEventListener('resize',function(){
+  clearTimeout(_wkFitTimer);
+  _wkFitTimer=setTimeout(function(){if(typeof vw!=='undefined'&&vw==='weekly')wkFitCards();},150);
+});
 function renderW(){
   var w=wks[ci],t=today(),dd=wdd[w]||{};
   /* 시간표 없음(신규 학교·학년) → 개인 업로드 안내 */
@@ -655,6 +723,7 @@ function renderW(){
     +ttSrcHtml();
   wkMarkToday();
   wkFoldEmpty();
+  wkFitCards();
   wkBindSwipe();
   bindSecBar();
   var up=document.getElementById('tt-upload');
