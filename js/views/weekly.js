@@ -74,7 +74,8 @@ function buildWeekTable(w,items){
     var pt=PERIODS[pi].t;
 
     /* 점심 행 (학교 설정 위치) */
-    if(SCHOOL_LUNCH_AFTER&&pn===SCHOOL_LUNCH_AFTER+1){
+    /* 점심 뒤 첫 교시 앞 — 교시 번호가 건너뛰는 학교(3교시 뒤 5교시)도 맞게 */
+    if(SCHOOL_LUNCH_AFTER&&pi>0&&PERIODS[pi-1].n===SCHOOL_LUNCH_AFTER){
       html+='<tr class="lunchrow"><td class="td-t"><span style="font-size:12px">🍱</span></td>';
       html+='<td colspan="5" class="td-lunch">'+SCHOOL_LUNCH_LABEL+'</td></tr>';
     }
