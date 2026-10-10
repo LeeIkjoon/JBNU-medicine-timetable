@@ -381,6 +381,7 @@ function syncRestore(code,cb){
 /* ── 익명 사용 통계 핑 (학교·학년·최근 사용 시각만, 6시간 스로틀) ── */
 function presencePing(){
   if(!fbDb||!savedGrade)return;
+  if(navigator.webdriver)return; /* 자동화 테스트 브라우저는 사용자 수에 넣지 않음 */
   var last=0;
   try{last=parseInt(localStorage.getItem('presence_ts')||'0',10);}catch(e){}
   if(Date.now()-last<6*3600*1000)return;

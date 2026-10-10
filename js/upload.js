@@ -366,6 +366,12 @@ function xlHandlePdf(file){
             xlSetCands([{name:file.name,result:gp}]);
             return;
           }
+          /* 그것도 아니면: 표를 통째로 복원해서 엑셀과 같은 방식으로 읽음 (행이 날짜인 표, 날짜·요일이 따로 적힌 표 등) */
+          var tp=pdfTableParse(pageContents.map(function(pc){return pc.grid;}).filter(Boolean));
+          if(tp&&tp.items&&tp.items.length>=10){
+            xlSetCands([{name:file.name,result:tp}]);
+            return;
+          }
           xlOfferAI('PDF에서 시간표를 바로 인식하지 못했어요. AI로 읽어볼 수 있어요(파일이 서버로 전송돼요).',file.name,xlAiPdf(file));
           return;
         }

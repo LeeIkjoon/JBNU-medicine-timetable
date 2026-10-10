@@ -14,7 +14,8 @@
    우선순위: URL ?theme= (preview/디버그) > localStorage.theme > OS 설정 자동 추종 */
 (function(){var u=new URLSearchParams(location.search).get('theme');var s=null;try{s=localStorage.getItem('theme');}catch(e){}var t=u||s;if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);})();</script>
 
-<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png?v=2">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="manifest" href="manifest.json?v=20260923i">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -157,10 +158,10 @@
 <script src="js/firebase.js?v=20261001g"></script>
 <script src="js/parsers/csv.js?v=20260916a"></script>
 <script src="js/parsers/xlsx.js?v=20260916a"></script>
-<script src="js/parsers/smart.js?v=20261001a"></script>
+<script src="js/parsers/smart.js?v=20261011a"></script>
 <script src="js/parsers/pdf.js?v=20260826e"></script>
-<script src="js/parsers/pdfgrid.js?v=20261010a"></script>
-<script src="js/upload.js?v=20261011b"></script>
+<script src="js/parsers/pdfgrid.js?v=20261011a"></script>
+<script src="js/upload.js?v=20261011c"></script>
 <script src="js/views/wheel.js?v=20260928n"></script>
 <script src="js/views/schoolmap.js?v=20261011c"></script>
 <script src="js/views/weekly.js?v=20261010b"></script>
@@ -172,7 +173,7 @@
 <script src="js/views/history.js?v=20261011a"></script>
 <script src="js/views/dtodo.js?v=20261001d"></script>
 <script src="js/admin.js?v=20261001a"></script>
-<script src="js/sync.js?v=20261011a"></script>
+<script src="js/sync.js?v=20261011b"></script>
 <script src="js/auth.js?v=20261008a"></script>
 <script src="js/push.js?v=20261008a"></script>
 <script src="js/move.js?v=20261001h"></script>

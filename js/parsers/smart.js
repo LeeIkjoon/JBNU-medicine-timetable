@@ -116,22 +116,58 @@ function smartHeaderKind(v){
 /* 셀 → {subj, prof, topic?} : 전북대 대시 표기 → 괄호 표기 → 줄바꿈 표기 순으로 시도 */
 /* 여러 줄 셀 '과목 [강의번호] / 강의주제 / 교수' (경희대 등):
    마지막 줄이 이름(들)이거나 '(이름)'으로 끝나면 교수, 첫 줄은 과목(끝의 강의번호 제거), 나머지는 주제.
-   '과목-교수' 한 줄 형식(전북대)은 건드리지 않는다. */
+   '과목-교수' 한 줄 형식(전북대)은 건드리지 않는다. 강의번호는 여기서 떼지 않고 smartStripLectureNo가 판단. */
 function smartCellLines(s){
   var lines=String(s).split(/[\r\n]+/).map(function(l){return l.replace(/\s+/g,' ').trim();}).filter(Boolean);
   if(lines.length<2)return null;
+  /* '[과목-강의번호] / 주제 / [소속] 교수' (이화여대): 대괄호 첫 줄이 과목, '[소속] 이름' 줄이 교수 */
+  var bi=-1,bm=null;
+  for(var b0=0;b0<lines.length&&b0<3&&bi<0;b0++){
+    var mm0=lines[b0].match(/^\[\s*([^\]]+?)\s*\]$/);
+    if(mm0&&!/^(전공선택|전선|선택|필수|공통)$/.test(mm0[1].replace(/\s/g,''))){bi=b0;bm=mm0;}
+  }
+  if(bi>=0){
+    var bs=bm[1].replace(/\s*-\s*[\d,\s~]+$/,'').replace(/\s+/g,' ').trim(),bp='',bt=[];
+    for(var b1=bi+1;b1<lines.length;b1++){
+      var pm0=lines[b1].match(/^\[\s*[^\]]+\]\s*(.*)$/);
+      if(pm0&&!bp){
+        /* 교수 이름이 다음 줄로 이어지는 경우(실습: 여러 명) */
+        var names=pm0[1];
+        while(/,\s*$/.test(names)&&b1+1<lines.length){b1++;names+=' '+lines[b1];}
+        bp=names.replace(/\s*,\s*/g,', ').trim();
+        continue;
+      }
+      if(/^\[/.test(lines[b1]))break; /* 같은 칸의 다른 수업(전공선택 묶음) — 첫 수업만 */
+      if(!bp)bt.push(lines[b1]);
+    }
+    if(bs){
+      var br={subj:bs,prof:bp};
+      if(bt.length)br.topic=bt.join(' ').slice(0,120);
+      return br;
+    }
+  }
   for(var i=0;i<lines.length;i++)if(/-\s*[가-힣]{2,5}$/.test(lines[i]))return null;
+  /* '과목 / 1차 시험' 두 줄: 시험 이름을 과목 뒤에 붙임 */
+  if(lines.length===2&&/^(\d\s*차|중간|기말|최종)?\s*(시험|고사|퀴즈|평가)(\s*\(.*\))?$/.test(lines[1])&&!/시험|고사|퀴즈/.test(lines[0]))
+    return{subj:lines[0]+' '+lines[1].replace(/\s+/g,' ').replace(/(\d)\s+차/,'$1차'),prof:''};
   var NAMES=/^[가-힣]{2,4}(\s*[,·\/]\s*[가-힣]{2,4})*$/;
   var last=lines[lines.length-1],prof='',mid=lines.slice(1),m;
   if(NAMES.test(last)){prof=last.replace(/\s*[·\/]\s*/g,', ');mid=lines.slice(1,-1);}
   else if((m=last.match(/^\(\s*([가-힣]{2,4}(?:\s*,\s*[가-힣]{2,4})*)\s*\)$/))){prof=m[1];mid=lines.slice(1,-1);}
   else if((m=last.match(/^(.*\S)\s*\(\s*([가-힣]{2,4}(?:\s*,\s*[가-힣]{2,4})*)\s*\)$/))&&lines.length===2){prof=m[2];mid=[m[1]];}
-  var head=lines[0].match(/^(.*[^\s\d])\s+\d{1,3}(-\d{1,2})?$/);
-  if(!prof&&!head)return null;
-  var subj=head?head[1].trim():lines[0];
+  /* 교수 줄이 없으면: 첫 줄이 '과목 강의번호'이고 3줄 이상일 때만 (실습 칸 'A반 … / B반 …') */
+  var numbered=/^.*\S\s+\d{1,3}(-\d{1,2})?$/.test(lines[0]);
+  if(!prof&&!(numbered&&lines.length>=3))return null;
+  var subj=lines[0];
   if(!subj)return null;
+  subj=subj.replace(/(\s+-)+\s*$/,'').trim();
   var r={subj:subj,prof:prof};
-  if(mid.length)r.topic=mid.join(' ').slice(0,120);
+  if(mid.length){
+    /* 주제 줄 잇기: 한두 글자만 넘어간 줄('…진' / '단')은 띄우지 않고 붙임 */
+    var tp='';
+    mid.forEach(function(l){tp+=(tp&&!(/^[가-힣]{1,2}$/.test(l)&&/[가-힣]$/.test(tp))?' ':'')+l;});
+    r.topic=tp.slice(0,120);
+  }
   return r;
 }
 function smartCell(val){
@@ -166,6 +202,14 @@ function smartIsHoliday(s){
   return /공휴일|휴일|휴업|휴강|방학|삼일절|현충일|광복절|개천절|한글날|어린이날|근로자|부처님|석가탄신|대체휴|선거|창립기념|개교기념|체육대회|추석|설날|연휴|성탄|크리스마스|신정/.test(s);
 }
 /* 셀 안의 시각 범위 '09:00~10:00' / '9:00-9:50' → ['9:00','10:00'] (없으면 null) */
+/* 휴일 칸의 글자에서 휴일 이름만 ('8/17 광복절 2주 - 8/21 대체공휴일' → '광복절 대체공휴일') */
+function smartHolidayName(s){
+  var KW=['신정','설날','설 연휴','삼일절','어린이날','부처님오신날','석가탄신일','현충일','광복절','추석연휴','추석','개천절','한글날','성탄절','크리스마스',
+    '대체공휴일','대체휴일','임시공휴일','개교기념일','선거일','지방선거','근로자의날'];
+  var t=String(s||'').replace(/\s+/g,' '),hit=[];
+  KW.forEach(function(k){if(t.replace(/ /g,'').indexOf(k.replace(/ /g,''))>=0&&!hit.some(function(h){return h.indexOf(k)>=0;}))hit.push(k);});
+  return hit.length?hit.join(' '):String(s||'').trim();
+}
 function smartTimeRange(v){
   var m=smartStr(v).match(/(\d{1,2})[:시.](\d{2})\s*[~\-–—]\s*(\d{1,2})[:시.](\d{2})/);
   if(!m)return null;
@@ -193,7 +237,8 @@ function smartAssignWeeks(items){
 /* ── 과목명 없는 '시험' 셀: 직전 7일간 가장 많이 들은 과목 이름을 붙임 ('감염학 시험') ── */
 function smartNameBareExams(items){
   var n=0;
-  var bare=items.filter(function(it){return /^(중간|기말|[1-4]차)?\s*(시험|고사|퀴즈)\s*(\(퀴즈\))?$/.test(it.subject);});
+  /* '중간고사'·'기말고사'는 여러 과목을 보는 시험 주간이라 과목 이름을 붙이지 않는다 */
+  var bare=items.filter(function(it){return /^(중간|기말|[1-4]차)?\s*(시험|고사|퀴즈)\s*(\(퀴즈\))?$/.test(it.subject)&&!/^(중간|기말)\s*고사$/.test(it.subject);});
   if(!bare.length)return 0;
   var byDate={};
   items.forEach(function(it){
@@ -213,6 +258,28 @@ function smartNameBareExams(items){
   return n;
 }
 
+/* ── 강의번호 떼기: '병리학 1', '병리학 2-1', '병리학 3' … 처럼 같은 이름에 번호가 3가지 이상 붙으면
+   번호는 강의 차수로 보고 과목명에서 뗀다. '문제바탕학습 2'처럼 번호가 한두 가지뿐이면 과목명의 일부로 둔다. ── */
+function smartStripLectureNo(items){
+  var RE=/^(.*\S)\s+(\d{1,3}(?:-\d{1,2})?)$/,nums={};
+  items.forEach(function(it){
+    var m=String(it.subject||'').match(RE);
+    if(m&&!it.is_exam){(nums[m[1]]=nums[m[1]]||{})[m[2]]=1;}
+  });
+  var strip={};
+  Object.keys(nums).forEach(function(b){if(Object.keys(nums[b]).length>=3)strip[b]=1;});
+  if(Object.keys(strip).length)items.forEach(function(it){
+    var m=String(it.subject||'').match(RE);
+    if(m&&strip[m[1]])it.subject=m[1];
+  });
+  /* 띄어쓰기 없이 번호가 붙은 드문 표기('미생물학2' 2칸 vs '미생물학' 50칸)는 같은 과목으로 */
+  var cnt={};items.forEach(function(it){cnt[it.subject]=(cnt[it.subject]||0)+1;});
+  items.forEach(function(it){
+    var m=String(it.subject||'').match(/^(.*[가-힣])(\d{1,2})$/);
+    if(m&&cnt[m[1]]>=10&&cnt[it.subject]<=cnt[m[1]]*0.1)it.subject=m[1];
+  });
+}
+
 /* ── 결과 조립 (공통) ── */
 function smartFinish(items,format,warnings){
   if(!items.length)return{error:'수업 데이터를 찾을 수 없습니다. 파일 형식을 확인해주세요.'};
@@ -225,6 +292,7 @@ function smartFinish(items,format,warnings){
     items.forEach(function(it){if(!it.week)it.week=byMon[smartMonNum(it.date)]||'';});
     items=items.filter(function(it){return it.week;});
   }
+  smartStripLectureNo(items);
   var named=smartNameBareExams(items);
   if(named)warnings=(warnings||[]).concat(['과목명 없는 시험 '+named+'개는 직전 수업 과목 이름을 붙였어요']);
   var wddLocal={},edLocal=[];
@@ -246,7 +314,7 @@ function smartFinish(items,format,warnings){
 }
 
 /* ══════════ wide 레이아웃 ══════════ */
-function smartFindWideHeader(rows){
+function smartFindWideHeader(rows,opts){
   var limit=Math.min(rows.length,30);
   for(var r=0;r<limit;r++){
     var row=rows[r]||[];
@@ -263,6 +331,14 @@ function smartFindWideHeader(rows){
           if(/교시|period|^\s*\d{1,2}\s*$/i.test(smartStr(row[c])))nLbl++;
           var tr=smartTimeRange(row[c]);if(tr)times[c]=tr;
         }
+      }
+    }
+    /* PDF 표: 머리 칸이 비어 있어도(경희대 3주차부터) 바로 아래 행 앞쪽에 요일·날짜가 있으면 머리로 본다 */
+    if(map.date<0&&map.day<0&&nPer>=4&&opts&&opts.fromPdf){
+      var nx=rows[r+1]||[],fp=Math.min.apply(null,Object.keys(periods).map(Number));
+      for(var c2=0;c2<fp;c2++){
+        if(map.day<0&&smartDay(nx[c2]))map.day=c2;
+        else if(map.date<0&&smartDate(nx[c2],2000))map.date=c2;
       }
     }
     if((map.date>=0||map.day>=0)&&nPer>=4){
@@ -296,7 +372,7 @@ function smartGuessWide(rows){
   }
   return null;
 }
-function smartParseWide(rows,hdr){
+function smartParseWide(rows,hdr,opts){
   var items=[],warnings=[],mismatch=0,curWeek='',yearHint=null;
   var pcols=Object.keys(hdr.periods).map(Number).sort(function(a,b){return a-b;});
   /* 연도 힌트: 파일 안에서 4자리 연도 찾기 */
@@ -311,6 +387,14 @@ function smartParseWide(rows,hdr){
     if(!isNaN(wkNum)&&wkNum>=1&&wkNum<=60&&/^\d+\s*주?차?$/.test(wkRaw))curWeek=String(wkNum);
     var dateStr=hdr.map.date>=0?smartDate(row[hdr.map.date],yearHint):'';
     var day=hdr.map.day>=0?smartDay(row[hdr.map.day]):'';
+    if(!dateStr&&opts&&opts.fromPdf){
+      /* '일자' 머리 아래에 요일 칸과 날짜 칸이 나란히 있는 표(경희대 PDF): 교시 열 앞쪽에서 날짜를 찾음.
+         엑셀은 '선택 영역 가운데 맞춤'으로 만든 가짜 병합을 알 수 없어 교시가 빠지므로 PDF에서만 */
+      for(var fc=0;fc<pcols[0]&&fc<row.length;fc++){
+        var fd=smartDate(row[fc],yearHint);
+        if(fd){dateStr=fd;break;}
+      }
+    }
     if(!dateStr){
       /* 날짜 열이 없거나 비어 있는데 요일만 있는 행: 날짜 못 잡으면 건너뜀 */
       continue;
@@ -458,9 +542,19 @@ function smartParseGrid(rows){
     while(rr2<rows.length){
       var row2=rows[rr2]||[];
       if(smartFindDayHeaderRow(row2))break; /* 다음 블록 */
-      var period=0,lblT=null;
-      for(var lc=0;lc<firstDayCol;lc++){period=smartPeriod(row2[lc]);if(period)break;}
+      var period=0,lblT=null,explicit=false;
+      for(var lc=0;lc<firstDayCol;lc++){period=smartPeriod(row2[lc]);if(period){explicit=/교시|^\s*\d{1,2}\s*$/.test(smartStr(row2[lc]));break;}}
       for(var lc2=0;lc2<firstDayCol&&!lblT;lc2++)lblT=smartTimeRange(row2[lc2]);
+      /* 점심 행(요일 칸이 전부 '점심시간')은 교시가 아님 */
+      var dayVals=days.map(function(d){return smartStr(row2[dayCols[d]]);}).filter(Boolean);
+      if(dayVals.length&&dayVals.every(function(v){return /^(점심|중식)(\s*시간)?$/.test(v)||smartIsHoliday(v);})&&dayVals.some(function(v){return /점심|중식/.test(v);})){rr2++;continue;}
+      /* '17:00~'처럼 시작 시각만 적힌 라벨: 50분 수업으로 본다 */
+      if(!lblT){
+        for(var lc3=0;lc3<firstDayCol&&!lblT;lc3++){
+          var sm=smartStr(row2[lc3]).match(/^(\d{1,2}):(\d{2})\s*[~\-–—]?\s*$/);
+          if(sm&&+sm[1]<24){var e0=(+sm[1])*60+(+sm[2])+50;lblT=[(+sm[1])+':'+sm[2],Math.floor(e0/60)+':'+('0'+(e0%60)).slice(-2)];}
+        }
+      }
       /* 교시 라벨 없는 행: 날짜 행/빈 행이면 건너뜀. 좌측 열이 시간(예 '8:30')이면 smartPeriod가 처리 */
       if(period&&period<=10){
         seq=period;
@@ -468,9 +562,11 @@ function smartParseGrid(rows){
           var ds=dates[d];if(!ds)return;
           var cell=smartCell(row2[dayCols[d]]);if(!cell)return;
           var t=lblT||smartTimes(period);
+          if(/^(점심|중식)(\s*시간)?$/.test(cell.subj))return;
           var it={week:week,date:ds,day:d,period:period,start:t[0],end:t[1],
             subject:cell.subj,professor:cell.prof||'',is_exam:smartIsExam(cell.subj)};
-          if(smartIsHoliday(cell.subj))it.is_holiday=true;
+          if(cell.topic)it.topic=cell.topic;
+          if(smartIsHoliday(cell.subj)){it.is_holiday=true;it.is_exam=false;it.subject=smartHolidayName(cell.subj);}
           items.push(it);
         });
       }
@@ -541,15 +637,15 @@ function smartParseMultiGrade(rows){
 }
 
 /* ══════════ 진입점 ══════════ */
-function smartParseRows(rows){
+function smartParseRows(rows,opts){
   if(!rows||!rows.length)return{error:'파일이 비어있습니다.'};
   /* 완전히 빈 행·열 정리 */
   rows=rows.map(function(r){return Array.isArray(r)?r:[];});
   var results=[];
   var legacy=(rows[0]&&rows[0].some(function(h){return /^(subject|period|date)$/i.test(smartStr(h));}))?smartParseLegacy(rows):null;
   if(legacy&&!legacy.error)results.push(legacy);
-  var wideH=smartFindWideHeader(rows);
-  if(wideH){var w=smartParseWide(rows,wideH);if(!w.error)results.push(w);}
+  var wideH=smartFindWideHeader(rows,opts);
+  if(wideH){var w=smartParseWide(rows,wideH,opts);if(!w.error)results.push(w);}
   var longH=smartFindLongHeader(rows);
   if(longH){var l=smartParseLong(rows,longH);if(!l.error)results.push(l);}
   var g=smartParseGrid(rows);if(!g.error)results.push(g);

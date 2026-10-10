@@ -37,7 +37,26 @@ function pdfGridExtract(page){
       var s=(t.str||'').replace(/\s+/g,' ').trim();
       if(s)text.push({s:s,x:t.transform[4],y:t.transform[5],w:t.width||0,h:t.height||Math.abs(t.transform[3])||10});
     });
-    return{text:text,segs:segs};
+    /* 화면 좌표(쪽 회전 반영, y는 아래로 증가) — 표 복원(pdfTableRows)용 */
+    var vis=null;
+    try{
+      var vp=page.getViewport({scale:1}),vt=vp.transform;
+      var vtext=[];
+      r[0].items.forEach(function(t){
+        var s=(t.str||'').replace(/\s+/g,' ').trim();if(!s)return;
+        var m=pdfjsLib.Util.transform(vt,t.transform);
+        var h=t.height||Math.hypot(m[2],m[3])||10;
+        /* 글자 진행 방향이 가로(→)인 것만: 세로쓰기·기울인 글자는 표 내용이 아님 */
+        if(Math.abs(m[1])>Math.abs(m[0])*0.3)return;
+        vtext.push({s:s,x:m[4],y:m[5]-h*0.35,w:t.width||0,h:h}); /* y = 글자 가운데쯤 */
+      });
+      var vsegs=segs.map(function(g){
+        var p=vp.convertToViewportPoint(g[0],g[1]),q=vp.convertToViewportPoint(g[2],g[3]);
+        return[p[0],p[1],q[0],q[1]];
+      });
+      vis={text:vtext,segs:vsegs,w:vp.width,h:vp.height};
+    }catch(e){}
+    return{text:text,segs:segs,vis:vis};
   });
 }
 
@@ -284,4 +303,170 @@ function pdfGridCell(lines){
   if(subj.length<2)return null;
   var isExam=/시험|고사|퀴즈|땡시|exam|quiz/i.test(subj)||(/평가$/.test(subj)&&subj.length<=10&&!/자기평가/.test(subj));
   return{subject:subj,professor:prof,room:room,isExam:isExam};
+}
+
+/* ══════════ 표 복원: PDF 쪽 → 표마다 2차원 배열(병합 칸은 같은 값으로 채움) ══════════
+   테두리 선으로 격자를 만들고, 사이에 선이 없는 이웃 칸을 한 칸으로 합친 뒤 글자를 넣는다.
+   결과는 엑셀 시트 행과 같은 모양이라 smartParseRows(wide·long·grid)가 그대로 읽는다.
+   — 행이 날짜인 표(경희대), 날짜와 요일이 따로 적힌 요일표(이화여대)처럼 pdfGridParse가 못 읽는 양식용. */
+function pdfTableRows(vis){
+  if(!vis||!vis.segs||!vis.segs.length)return[];
+  /* ① 선분 → 가로줄(y별 구간들)·세로줄(x별 구간들), 점선은 이어 붙임 */
+  function collect(horizontal){
+    var M={};
+    vis.segs.forEach(function(g){
+      var dx=Math.abs(g[0]-g[2]),dy=Math.abs(g[1]-g[3]);
+      if(horizontal?(dy<0.8&&dx>0.3):(dx<0.8&&dy>0.3)){
+        var k=Math.round(horizontal?(g[1]+g[3])/2:(g[0]+g[2])/2);
+        (M[k]=M[k]||[]).push(horizontal?[Math.min(g[0],g[2]),Math.max(g[0],g[2])]:[Math.min(g[1],g[3]),Math.max(g[1],g[3])]);
+      }
+    });
+    var ks=Object.keys(M).map(Number).sort(function(a,b){return a-b;}),out=[];
+    ks.forEach(function(k){
+      var last=out[out.length-1];
+      if(last&&k-last.k<=2)last.iv=last.iv.concat(M[k]);else out.push({k:k,iv:M[k].slice()});
+    });
+    out.forEach(function(L){
+      L.iv.sort(function(a,b){return a[0]-b[0];});
+      var m=[];
+      L.iv.forEach(function(v){var q=m[m.length-1];if(q&&v[0]-q[1]<=3.5)q[1]=Math.max(q[1],v[1]);else m.push([v[0],v[1]]);});
+      L.iv=m.filter(function(v){return v[1]-v[0]>6;});
+    });
+    return out.filter(function(L){return L.iv.length;});
+  }
+  var HL=collect(true),VL=collect(false);
+  if(HL.length<3||VL.length<3)return[];
+  function cov(L,a,b){
+    var t=0;L.iv.forEach(function(v){var lo=Math.max(v[0],a),hi=Math.min(v[1],b);if(hi>lo)t+=hi-lo;});
+    return t/Math.max(1,b-a);
+  }
+  /* ② 표 나누기: 선들이 서로 닿는 덩어리마다 하나 (한 쪽에 표가 둘 이상인 경우) */
+  var nodes=[];
+  HL.forEach(function(L){L.iv.forEach(function(v){nodes.push({h:1,k:L.k,a:v[0],b:v[1],L:L});});});
+  VL.forEach(function(L){L.iv.forEach(function(v){nodes.push({h:0,k:L.k,a:v[0],b:v[1],L:L});});});
+  var par=nodes.map(function(_,i){return i;});
+  function find(i){while(par[i]!==i){par[i]=par[par[i]];i=par[i];}return i;}
+  var hs=nodes.map(function(n,i){return n.h?i:-1;}).filter(function(i){return i>=0;});
+  var vs=nodes.map(function(n,i){return n.h?-1:i;}).filter(function(i){return i>=0;});
+  hs.forEach(function(i){
+    var H=nodes[i];
+    vs.forEach(function(j){
+      var V=nodes[j];
+      if(V.k>=H.a-3&&V.k<=H.b+3&&H.k>=V.a-3&&H.k<=V.b+3){var a=find(i),b=find(j);if(a!==b)par[a]=b;}
+    });
+  });
+  var comps={};
+  nodes.forEach(function(n,i){var r=find(i);(comps[r]=comps[r]||[]).push(n);});
+  var tables=[];
+  Object.keys(comps).forEach(function(r){
+    var ns=comps[r],xs={},ys={};
+    ns.forEach(function(n){if(n.h)ys[n.k]=n.L;else xs[n.k]=n.L;});
+    var X=Object.keys(xs).map(Number).sort(function(a,b){return a-b;}),Y=Object.keys(ys).map(Number).sort(function(a,b){return a-b;});
+    if(X.length<3||Y.length<3)return;
+    /* ③ 칸 사이 선 유무 → 병합 */
+    var nc=X.length-1,nr=Y.length-1,id=[],n=0;
+    for(var rr=0;rr<nr;rr++){id.push([]);for(var cc=0;cc<nc;cc++)id[rr].push(n++);}
+    /* 사각형으로만 합친다: 왼쪽 위 칸에서 오른쪽으로(세로선 없는 동안), 아래로(그 폭 전체에 가로선이 없는 동안) 넓힘.
+       선 하나가 빠진 곳으로 병합이 옆 칸까지 번지는 것을 막는다(공휴일처럼 큰 칸이 있는 주). */
+    function noRight(r,c){return c+1<nc&&cov(xs[X[c+1]],Y[r]+1.5,Y[r+1]-1.5)<0.5;}
+    function noBottom(r,c){return r+1<nr&&cov(ys[Y[r+1]],X[c]+1.5,X[c+1]-1.5)<0.5;}
+    var own=[];for(var q=0;q<n;q++)own.push(-1);
+    for(var r2=0;r2<nr;r2++)for(var c2=0;c2<nc;c2++){
+      if(own[id[r2][c2]]>=0)continue;
+      var c1=c2;while(noRight(r2,c1)&&own[id[r2][c1+1]]<0)c1++;
+      var r1=r2,grow=true;
+      while(grow&&r1+1<nr){
+        for(var cc2=c2;cc2<=c1&&grow;cc2++){
+          if(!noBottom(r1,cc2)||own[id[r1+1][cc2]]>=0)grow=false;
+          /* 아래 행 안쪽에 세로선이 있으면 다른 칸 */
+          if(grow&&cc2<c1&&!noRight(r1+1,cc2))grow=false;
+        }
+        if(grow)r1++;
+      }
+      for(var ra=r2;ra<=r1;ra++)for(var ca=c2;ca<=c1;ca++)own[id[ra][ca]]=id[r2][c2];
+    }
+    function f2(i){return own[i];}
+    /* ④ 글자 넣기 (중심점이 속한 칸 → 병합 묶음) */
+    var buckets={};
+    vis.text.forEach(function(t){
+      var cx=t.x+t.w/2,cy=t.y;
+      if(cx<X[0]||cx>X[nc]||cy<Y[0]||cy>Y[nr])return;
+      var ci=0,ri=0;
+      while(ci<nc-1&&cx>X[ci+1])ci++;
+      while(ri<nr-1&&cy>Y[ri+1])ri++;
+      var g=f2(id[ri][ci]);(buckets[g]=buckets[g]||[]).push(t);
+    });
+    var textOf={};
+    Object.keys(buckets).forEach(function(g){
+      var ts=buckets[g].sort(function(a,b){return (a.y-b.y)||(a.x-b.x);}),lines=[],ly=null;
+      ts.forEach(function(t){
+        if(ly!==null&&Math.abs(t.y-ly)<Math.max(2.5,t.h*0.45)){
+          /* 같은 줄: x 순서로 이어 붙임 */
+          lines[lines.length-1].push(t);
+        }else{lines.push([t]);ly=t.y;}
+      });
+      textOf[g]=lines.map(function(L){
+        var ln=L.sort(function(a,b){return a.x-b.x;}).map(function(t){return t.s;}).join(' ');
+        /* '기 말 고 사'처럼 한 글자씩 띄운 제목은 붙임, ' ,'는 ','로 */
+        ln=ln.replace(/(^|\s)((?:[가-힣] ){2,}[가-힣])(?=\s|$)/g,function(_,p,w){return p+w.replace(/ /g,'');});
+        if(/^[가-힣]( [가-힣])+$/.test(ln))ln=ln.replace(/ /g,'');
+        return ln.replace(/\s+,/g,',').replace(/\s{2,}/g,' ').trim();
+      }).filter(Boolean).join('\n');
+    });
+    var rows=[],filled=0;
+    for(var r3=0;r3<nr;r3++){
+      var row=[];
+      for(var c3=0;c3<nc;c3++){var v=textOf[f2(id[r3][c3])]||'';if(v)filled++;row.push(v);}
+      rows.push(row);
+    }
+    if(filled>=6)tables.push({rows:rows,x:X[0],y:Y[0]});
+  });
+  /* 읽는 순서: 위→아래, 왼→오른쪽 */
+  tables.sort(function(a,b){return (Math.abs(a.y-b.y)>20?a.y-b.y:a.x-b.x);});
+  return tables.map(function(t){return t.rows;});
+}
+
+/* 여러 쪽 → 표마다 smartParseRows → 합쳐서 smartFinish. 못 읽으면 {error} */
+function pdfTableParse(pages){
+  var items=[],warn=[],fmt='';
+  var all=pages.map(function(p){return (p&&p.text||[]).map(function(t){return t.s;}).join(' ');}).join(' ');
+  var ym=all.match(/(20\d{2})\s*(?:학년도|년|[-.]\s*[12]\s*학기)/);
+  var head=ym?[[ym[1]+'학년도']]:[];
+  pages.forEach(function(pg){
+    if(!pg||!pg.vis)return;
+    pdfTableRows(pg.vis).forEach(function(rows){
+      var res=null;
+      try{res=smartParseRows(head.concat(rows),{fromPdf:true});}catch(e){res=null;}
+      if(!res||res.error||!res.items||!res.items.length)return;
+      fmt=fmt||res.format;
+      res.items.forEach(function(it){it.week='';items.push(it);});
+    });
+  });
+  if(!items.length)return{error:'PDF에서 표를 읽지 못했어요.'};
+  /* 교시 번호 다시 매기기: 시작 시각이 이른 순서대로 1,2,3… — 표마다·주마다 번호가 달라지지 않게.
+     (시각만 적힌 표는 번호가 2부터 시작하거나 주마다 어긋날 수 있음) */
+  function tm(v){var m=String(v||'').match(/^(\d{1,2}):(\d{2})$/);return m?(+m[1])*60+(+m[2]):-1;}
+  var cnt={};items.forEach(function(it){var t=tm(it.start);if(t>=0)cnt[t]=(cnt[t]||0)+1;});
+  var starts=Object.keys(cnt).map(Number).sort(function(a,b){return a-b;});
+  /* 드물게 나오는 시작 시각(전체의 2% 미만)은 가장 가까운 앞 교시에 붙임 */
+  var main=starts.filter(function(t){return cnt[t]>=Math.max(2,items.length*0.02);});
+  if(main.length>=3&&main.length<=14){
+    items.forEach(function(it){
+      var t=tm(it.start);if(t<0)return;
+      var idx=0;for(var i=0;i<main.length;i++)if(main[i]<=t)idx=i;
+      it.period=idx+1;
+    });
+  }
+  /* 같은 날 같은 교시에 두 수업이 겹치면(시작 시각이 30분 어긋난 날 등) 늦게 시작하는 쪽을 비어 있는 다음 교시로 민다 */
+  var maxP=0,byDate={};
+  items.forEach(function(it){if(it.period>maxP)maxP=it.period;(byDate[it.date]=byDate[it.date]||[]).push(it);});
+  Object.keys(byDate).forEach(function(d){
+    var used={};
+    byDate[d].sort(function(a,b){return (tm(a.start)-tm(b.start))||(a.period-b.period);}).forEach(function(it){
+      var p=it.period;
+      while(used[p]&&used[p]!==(it.subject+'|'+(it.topic||''))&&p<maxP+2)p++;
+      it.period=p;used[p]=it.subject+'|'+(it.topic||'');
+    });
+  });
+  return smartFinish(items,'pdf-table',warn);
 }
