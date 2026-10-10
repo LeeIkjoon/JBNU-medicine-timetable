@@ -12,6 +12,7 @@ function openXL(){
   var ovl=document.getElementById('xl-ovl');
   if(!ovl)return;
   xlReset();
+  xlShareProbe();
   ovl.classList.add('show');
 }
 function closeXL(){
@@ -107,6 +108,48 @@ function xlSelect(i){
     else{wn.innerHTML='';wn.style.display='none';}
   }
   var ap=document.getElementById('xl-apply');if(ap)ap.disabled=false;
+  xlShareRow();
+}
+
+/* ── 첫 업로드를 학년 기본 시간표로 등록 ──
+   이 학교·학년에 공유 시간표(Firebase timetable/<키>)가 아직 없을 때만, 사용자가 올린 파일을
+   기본값으로 올린다(트랜잭션 — 이미 있으면 건드리지 않음). AI가 읽은 결과는 오류가 섞일 수 있어 제외. */
+var _xlShareOk=false;
+function xlShareProbe(){
+  _xlShareOk=false;xlShareRow();
+  if(typeof isAdmin!=='undefined'&&isAdmin)return;
+  if(typeof fbRef!=='function'||!savedGrade)return;
+  var ref=fbRef(savedGrade),key=fbGradeKey(savedGrade);
+  if(!ref)return;
+  ref.child('ts').once('value').then(function(snap){
+    if(key!==fbGradeKey(savedGrade))return;
+    _xlShareOk=!snap.exists();xlShareRow();
+  }).catch(function(){});
+}
+function xlShareAble(){
+  var c=_xlCands[_xlSel];
+  return _xlShareOk&&!!c&&c.result.format!=='ai'&&c.result.items.length>=10;
+}
+function xlShareRow(){
+  var row=document.getElementById('xl-share');if(!row)return;
+  row.style.display=xlShareAble()?'flex':'none';
+}
+function xlShareRegister(){
+  var ref=fbRef(savedGrade),key=fbGradeKey(savedGrade);if(!ref)return;
+  var ts=Date.now();
+  var payload=JSON.parse(JSON.stringify({items:merged,wdd:wdd,ed:ed,wks:wks,grade:savedGrade,ts:ts,src:'user',
+    changelog:{ts:ts,msg:'첫 업로드로 기본 시간표 등록',grade:savedGrade}}));
+  ref.transaction(function(cur){
+    if(cur&&cur.items&&cur.items.length)return; /* 그사이 누가 먼저 등록함 — 그대로 둠 */
+    return payload;
+  },function(err,committed){
+    if(err||!committed||key!==fbGradeKey(savedGrade))return;
+    /* 내 파일이 곧 공유본 — 내 파일 모드를 풀고 같은 ts로 맞춰 다시 받지 않게 */
+    try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:wdd,ed:ed,grade:savedGrade,ts:ts}));}catch(e){}
+    if(typeof ttLocalSet==='function')ttLocalSet(false);
+    if(typeof render==='function')render();
+    xlToast('이 학년의 기본 시간표로 등록했어요');
+  });
 }
 function xlMd(ds){var p=ds.split('-');return parseInt(p[1],10)+'/'+parseInt(p[2],10);}
 
@@ -374,10 +417,13 @@ function xlApply(){
   _subjColorMap=null;
   try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:nWdd||wdd,ed:nEd||ed,grade:savedGrade,ts:Date.now()}));}catch(e){}
   if(typeof ttLocalSet==='function')ttLocalSet(true); /* 내 파일 모드 — 공유 동기화 일시 중지 */
+  var shareCb=document.getElementById('xl-share-cb');
+  var doShare=xlShareAble()&&(!shareCb||shareCb.checked);
   goTodayWeek();
   closeXL();
   if(typeof setView==='function')setView('weekly');else render();
   xlToast('시간표를 적용했어요');
+  if(doShare)xlShareRegister();
 }
 function xlToast(msg){
   var t=document.getElementById('update-toast');
