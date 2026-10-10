@@ -75,7 +75,7 @@ function syncFlush(){
   _syncTimer=null;
   if(!fbDb||!_syncPathOn)return;
   var keys=Object.keys(_syncDirty);_syncDirty={};
-  keys.forEach(syncPushKey);
+  keys.forEach(function(k){syncPushKey(k);}); /* forEach의 인덱스가 cb로 넘어가 두 번째 키부터 오류 나던 것 방지 */
 }
 function syncPushKey(k,cb){
   var base=_syncPathOn;

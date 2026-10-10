@@ -237,11 +237,22 @@ function xlHandlePdf(file){
         return Promise.all(pagePromises);
       }).then(function(pages){
         return Promise.all(pages.map(function(page){
-          return page.getTextContent().then(function(tc){return{page:page,items:tc.items};});
+          return page.getTextContent().then(function(tc){
+            /* 표 테두리 선까지 읽어 둠(격자 파서용) — 실패해도 글자만으로 진행 */
+            return pdfGridExtract(page).catch(function(){return null;}).then(function(grid){
+              return{page:page,items:tc.items,grid:grid};
+            });
+          });
         }));
       }).then(function(pageContents){
         var result=parseWkuPdf(pageContents);
         if(!result||!result.items||!result.items.length){
+          /* 원광대 양식이 아니면: 요일×교시 격자 PDF로 읽어 봄 (학교 무관) */
+          var gp=pdfGridParse(pageContents.map(function(pc){return pc.grid;}).filter(Boolean));
+          if(gp&&gp.items&&gp.items.length){
+            xlSetCands([{name:file.name,result:gp}]);
+            return;
+          }
           xlStatus('PDF에서 시간표를 인식하지 못했어요. 엑셀 파일이 있다면 그쪽을 올려주세요.','err');
           return;
         }
