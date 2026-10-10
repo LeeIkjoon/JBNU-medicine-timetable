@@ -459,3 +459,20 @@ input[type=date].memo-input{line-height:1.3;min-height:38px}
 /* 첫 실행 화면(학교·학년 선택): 다크 모드에서는 밝은 그라데이션 대신 배경색 — 글자가 안 보이던 것 수정 */
 :root[data-theme="dark"] .gs-screen{background:var(--bg)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gs-screen{background:var(--bg)}}
+
+/* ── 시간표 신고 시트 ── */
+.rpt-sh{padding:var(--space-5)}
+.rpt-ttl{font-size:var(--font-xl);font-weight:var(--weight-bold);color:var(--text-strong)}
+.rpt-sub{margin-top:6px;font-size:var(--font-sm);color:var(--text-soft);line-height:1.5}
+.rpt-opts{display:flex;flex-direction:column;gap:6px;margin-top:var(--space-4)}
+.rpt-opt{text-align:left;border:1px solid var(--border);background:var(--surface);border-radius:var(--radius-md);padding:11px 13px;
+  font-family:inherit;font-size:var(--font-base);font-weight:var(--weight-medium);color:var(--text);cursor:pointer}
+.rpt-opt.on{border-color:var(--accent);background:var(--tint-accent);color:var(--accent);font-weight:var(--weight-bold)}
+.rpt-text{display:block;width:100%;box-sizing:border-box;margin-top:var(--space-3);min-height:68px;padding:10px 12px;border:1px solid var(--border);
+  border-radius:var(--radius-md);background:var(--surface);color:var(--text);font-family:inherit;font-size:16px;resize:none;outline:none}
+.rpt-text:focus{border-color:var(--accent)}
+.rpt-btns{display:flex;gap:var(--space-2);margin-top:var(--space-4)}
+.rpt-btn{flex:1;border:none;border-radius:var(--radius-md);padding:13px;font-family:inherit;font-size:var(--font-base);font-weight:var(--weight-bold);
+  background:var(--surface-muted);color:var(--text-secondary);cursor:pointer}
+.rpt-btn.primary{background:var(--accent);color:#fff}
+.rpt-btn:disabled{opacity:.45;cursor:default}

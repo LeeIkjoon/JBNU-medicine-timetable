@@ -464,7 +464,8 @@ function ttSrcHtml(){
   }
   var el='';
   if(electiveGroups().length)el='<button class="tt-src-btn ghost" id="el-manage">선택과목 설정</button>';
-  return '<div class="tt-src">'+el+'<button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button></div>';
+  return '<div class="tt-src">'+el+'<button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button>'
+    +'<button class="tt-src-btn ghost" id="tt-report">시간표 신고</button></div>';
 }
 /* 오늘 수업 상태 — 지금 진행 중인 수업(cur) / 쉬는·점심·등교 전이면 다음 수업(next) / 다 끝나면 done
    시각은 수업 자체의 start/end (없으면 교시 설정) 기준 */
@@ -728,6 +729,8 @@ function renderW(){
   bindSecBar();
   var up=document.getElementById('tt-upload');
   if(up)up.onclick=function(){openXL();};
+  var rp=document.getElementById('tt-report');
+  if(rp)rp.onclick=function(){if(typeof rptOpen==='function')rptOpen();};
   var rs=document.getElementById('tt-resync');
   if(rs)rs.onclick=function(){
     ttLocalSet(false);
