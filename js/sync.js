@@ -385,8 +385,12 @@ function presencePing(){
   var last=0;
   try{last=parseInt(localStorage.getItem('presence_ts')||'0',10);}catch(e){}
   if(Date.now()-last<6*3600*1000)return;
+  /* dev·sa: 사용자 수를 폰 기준으로 세기 위한 기기 종류(폰/태블릿/PC)와 홈 화면 앱 여부 — tools/users.py */
+  var ua=navigator.userAgent||'',tablet=/iPad/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1)||(/Android/.test(ua)&&!/Mobile/.test(ua));
+  var dev=tablet?'tablet':/iPhone|Android.*Mobile|Mobile/.test(ua)?'phone':'pc';
+  var sa=!!((typeof IS_APP!=='undefined'&&IS_APP)||window.navigator.standalone||(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches));
   fbDb.ref('study/presence/'+syncUid()).set({
-    school:savedSchool||'jbnu',grade:savedGrade,ts:Date.now()
+    school:savedSchool||'jbnu',grade:savedGrade,ts:Date.now(),dev:dev,sa:sa
   }).then(function(){
     try{localStorage.setItem('presence_ts',String(Date.now()));}catch(e){}
   }).catch(function(){});
