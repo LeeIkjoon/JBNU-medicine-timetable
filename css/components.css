@@ -395,21 +395,60 @@ input[type=date].memo-input{line-height:1.3;min-height:38px}
   background:var(--surface-2);font-size:var(--font-xs);color:var(--text-secondary);line-height:1.45;cursor:pointer}
 .xl-share input{flex:none;width:16px;height:16px;margin:1px 0 0;accent-color:var(--accent)}
 
-/* 학교 선택: 전국 지도 (왼쪽 지도 + 오른쪽 근처 학교) */
-.sc-map{display:flex;align-items:center;gap:var(--space-3);margin:0 0 var(--space-3);padding:var(--space-3);
-  background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-xs)}
-.sc-map-svg{flex:none;width:104px;height:188px;cursor:pointer;touch-action:manipulation}
-.sc-map-land{fill:var(--surface-muted);stroke:var(--border-strong);stroke-width:2;stroke-linejoin:round}
-.sc-map-dot{fill:var(--accent);opacity:.55;pointer-events:none}
-.sc-map-sel{fill:none;stroke:var(--accent);stroke-width:4;pointer-events:none;transition:cx .25s var(--ease),cy .25s var(--ease)}
-.sc-map-side{flex:1;min-width:0;max-height:188px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.sc-map-hint{font-size:var(--font-sm);color:var(--text-soft);line-height:1.5}
-.sc-map-chips{display:flex;flex-wrap:wrap;gap:6px}
-.sc-map-chip{border:1px solid var(--border);background:var(--surface);border-radius:var(--radius-pill);padding:6px 10px;
-  font-size:var(--font-sm);font-weight:var(--weight-semi);color:var(--text-secondary);cursor:pointer;font-family:inherit}
-.sc-map-chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
-@media (max-height:760px){.sc-req{display:none}}
-@media (max-height:640px){.sc-map{display:none}}
+/* ── 학교 선택: 지도(지역 고르기) + 학교 목록 ── */
+#sc-screen{justify-content:flex-start;padding-top:calc(var(--space-5) + env(safe-area-inset-top));padding-bottom:calc(var(--space-4) + env(safe-area-inset-bottom))}
+#sc-screen .gs-logo{margin-bottom:var(--space-4)}
+#sc-screen .gs-title{margin-top:0}
+#sc-screen .sc-req{display:none}
+#sc-grid{display:flex;flex-direction:column;flex:1;min-height:0;width:100%;max-width:420px;grid-template-columns:none}
+.scp-top{display:flex;gap:var(--space-3);align-items:stretch;background:var(--surface);border-radius:var(--radius-xl);
+  padding:var(--space-3);box-shadow:var(--shadow-xs);flex:none}
+.scp-map{flex:none;width:128px;height:232px;cursor:pointer;touch-action:manipulation}
+.scp-land{fill:var(--surface-muted);stroke:var(--border-strong);stroke-width:2;stroke-linejoin:round}
+.scp-dot{fill:var(--surface);stroke:var(--text-fade);stroke-width:2.5;pointer-events:none;transition:opacity .2s}
+.scp-dot.has{fill:var(--accent);stroke:var(--accent)}
+.scp-dot.dim{opacity:.18}
+.scp-ring{fill:none;stroke:var(--accent);stroke-width:4;pointer-events:none}
+.scp-regions{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;justify-content:space-between}
+.scp-reg{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;border:none;background:none;
+  border-radius:var(--radius-sm);padding:5px 10px;font-family:inherit;cursor:pointer;color:var(--text-secondary);min-height:27px}
+.scp-reg span{font-size:var(--font-sm);font-weight:var(--weight-semi);white-space:nowrap}
+.scp-reg b{font-size:var(--font-xs);font-weight:var(--weight-semi);color:var(--text-fade);font-variant-numeric:tabular-nums}
+.scp-reg.on{background:var(--tint-accent);color:var(--accent)}
+.scp-reg.on b{color:var(--accent)}
+#sc-grid .sc-q{margin:var(--space-3) 0 0;flex:none}
+.scp-legend{display:flex;gap:var(--space-3);margin:var(--space-2) 4px 6px;font-size:var(--font-2xs);color:var(--text-soft);flex:none}
+.scp-legend span{display:inline-flex;align-items:center;gap:5px}
+.scp-lg{width:8px;height:8px;border-radius:50%;box-sizing:border-box;border:1.5px solid var(--text-fade);background:var(--surface)}
+.scp-lg.on{background:var(--accent);border-color:var(--accent)}
+.scp-list{flex:1;min-height:96px;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--surface);border-radius:var(--radius-xl);
+  box-shadow:var(--shadow-xs);padding:4px}
+.scp-row{display:flex;align-items:center;gap:8px;width:100%;border:none;background:none;border-radius:var(--radius-md);
+  padding:11px 12px;font-family:inherit;cursor:pointer;text-align:left;color:var(--text-strong)}
+.scp-row+.scp-row{box-shadow:0 -1px 0 var(--border-faint)}
+.scp-row-n{flex:1;min-width:0;font-size:var(--font-base);font-weight:var(--weight-semi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scp-row-n i{font-style:normal;font-size:var(--font-xs);font-weight:var(--weight-medium);color:var(--text-fade);margin-left:6px}
+.scp-badge{flex:none;font-size:var(--font-2xs);font-weight:var(--weight-bold);color:var(--accent);background:var(--tint-accent);
+  border-radius:var(--radius-pill);padding:3px 8px}
+.scp-check{flex:none;width:20px;height:20px;color:transparent}
+.scp-check svg{width:20px;height:20px;display:block}
+.scp-row.on{background:var(--tint-accent);box-shadow:none}
+.scp-row.on+.scp-row{box-shadow:none}
+.scp-row.on .scp-check{color:var(--accent)}
+.scp-row:active{background:var(--surface-2)}
+.scp-none{padding:var(--space-5) var(--space-3);text-align:center;font-size:var(--font-sm);color:var(--text-soft)}
+.scp-req{display:block;text-align:center;padding:12px;font-size:var(--font-xs);color:var(--text-fade);text-decoration:underline;text-underline-offset:3px}
+#sc-grid .gs-ok{flex:none;max-width:none;margin-top:var(--space-3)}
+#sc-grid .gs-ok:disabled{opacity:.45}
+@media (max-height:700px){
+  .scp-map{width:96px;height:174px}
+  .scp-reg{min-height:21px;padding:2px 10px}
+  #sc-screen .gs-sub{display:none}
+}
+@media (min-width:720px){
+  #sc-grid{max-width:520px}
+  .scp-map{width:170px;height:308px}
+}
 /* 첫 실행 화면(학교·학년 선택): 다크 모드에서는 밝은 그라데이션 대신 배경색 — 글자가 안 보이던 것 수정 */
 :root[data-theme="dark"] .gs-screen{background:var(--bg)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gs-screen{background:var(--bg)}}

@@ -307,40 +307,15 @@ function init(){
     };
   }
 
-  /* 학교 선택 — 휠 */
+  /* 학교 선택 — 지도(지역) + 목록 (js/views/schoolmap.js) */
   function showSchoolScreen(){
     var grid=document.getElementById('sc-grid');
-    var items=SCHOOL_ORDER.map(function(k){
-      return {v:k,t:SCHOOLS[k].name,d:SCHOOLS[k].dept};
-    });
-    grid.style.cssText='display:block;width:100%;max-width:320px';
-    grid.innerHTML=(typeof scMapHtml==='function'?scMapHtml():'')
-      +'<input class="sc-q" id="sc-q" type="search" placeholder="학교 이름 검색" autocomplete="off" autocorrect="off" spellcheck="false">'
-      +wheelHtml('sc-wheel',items)
-      +'<button class="gs-ok" id="sc-ok">다음</button>';
+    grid.style.cssText='';
+    grid.innerHTML=scPickerHtml();
     document.getElementById('sc-screen').style.display='flex';
-    wheelInit('sc-wheel',savedSchool||'jbnu',function(v){if(typeof scMapSelect==='function')scMapSelect(v);});
-    /* 지도에서 고르면 휠을 그 학교로 돌림 */
-    if(typeof scMapInit==='function')scMapInit(function(k){
-      for(var i=0;i<items.length;i++)if(items[i].v===k){
-        var ws=document.getElementById('sc-wheel-s');
-        if(ws)ws.scrollTo({top:i*WHEEL_ITEM_H,behavior:'smooth'});
-        break;
-      }
-    });
-    /* 검색: 이름에 글자가 들어간 첫 학교로 휠을 돌림 */
-    document.getElementById('sc-q').oninput=function(){
-      var q=this.value.replace(/\s+/g,'');if(!q)return;
-      for(var i=0;i<items.length;i++){
-        if(items[i].t.replace(/\s+/g,'').indexOf(q)>=0){
-          var ws=document.getElementById('sc-wheel-s');
-          if(ws)ws.scrollTo({top:i*WHEEL_ITEM_H,behavior:'smooth'});
-          break;
-        }
-      }
-    };
+    scPickerInit(savedSchool||'',null);
     document.getElementById('sc-ok').onclick=function(){
-      var v=wheelValue('sc-wheel');if(!v)return;
+      var v=scPickerValue();if(!v)return;
       savedSchool=v;
       try{localStorage.setItem('user_school',savedSchool);}catch(e){}
       document.getElementById('sc-screen').style.display='none';
@@ -353,12 +328,19 @@ function init(){
     var sc=SCHOOLS[savedSchool||'jbnu'];
     document.getElementById('gs-title').textContent=sc.name+' '+sc.dept;
     var grid=document.getElementById('gs-grid');
-    var items=sc.grades.map(function(g){return {v:g.label,t:g.label,d:g.desc||''};});
+    var withData=(typeof scGradesWithData==='function')?scGradesWithData(savedSchool||'jbnu'):[];
+    var items=sc.grades.map(function(g){
+      return {v:g.label,t:g.label,d:g.desc||(withData.indexOf(g.label)>=0?'시간표 있음':'')};
+    });
     grid.style.cssText='display:block;width:100%;max-width:320px';
     grid.innerHTML=wheelHtml('gs-wheel',items)
       +'<button class="gs-ok" id="gs-ok">시작하기</button>';
     document.getElementById('gs-screen').style.display='flex';
-    wheelInit('gs-wheel',savedGrade||items[0].v,null);
+    /* 처음 고르는 경우: 시간표가 있는 첫 학년에 맞춰 둠 */
+    var firstData=null;
+    for(var gi=0;gi<items.length&&!firstData;gi++)if(withData.indexOf(items[gi].v)>=0)firstData=items[gi].v;
+    var keep=savedGrade&&items.some(function(x){return x.v===savedGrade;});
+    wheelInit('gs-wheel',keep?savedGrade:(firstData||items[0].v),null);
     document.getElementById('gs-ok').onclick=function(){
       var v=wheelValue('gs-wheel');if(v)applyGrade(v);
     };

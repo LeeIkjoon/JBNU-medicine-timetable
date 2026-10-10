@@ -518,10 +518,20 @@ function dashStatData(){
   var bars=[];
   if(isWeek){
     var DN=['월','화','수','목','금','토','일'];
-    days.forEach(function(k,i){bars.push({l:DN[i],v:byDay[k]||0,on:k===todayKey,future:k>todayKey});});
+    days.forEach(function(k,i){
+      var pa=k<=todayKey?planLoad(k):[],pd=0;pa.forEach(function(it){if(it.done)pd++;});
+      var md=k.split('-');
+      bars.push({l:DN[i],v:byDay[k]||0,on:k===todayKey,future:k>todayKey,key:k,
+        title:parseInt(md[1],10)+'월 '+parseInt(md[2],10)+'일 '+DN[i]+'요일',planAll:pa.length,planDone:pd});
+    });
   }else{
     var WL=['3주 전','2주 전','지난주','이번 주'];
-    for(var w=0;w<4;w++){var sum=0;for(var d=0;d<7;d++)sum+=byDay[days[w*7+d]]||0;bars.push({l:WL[w],v:sum,on:w===3,future:false});}
+    for(var w=0;w<4;w++){
+      var sum=0;for(var d=0;d<7;d++)sum+=byDay[days[w*7+d]]||0;
+      var a0=days[w*7].split('-'),a1=days[w*7+6].split('-');
+      bars.push({l:WL[w],v:sum,on:w===3,future:false,key:'',
+        title:parseInt(a0[1],10)+'/'+parseInt(a0[2],10)+' ~ '+parseInt(a1[1],10)+'/'+parseInt(a1[2],10),planAll:0,planDone:0});
+    }
   }
   /* 비교: 주 = 지난주 같은 요일까지, 4주 = 그 앞 4주 */
   var prev=0,pStart=new Date(start);pStart.setDate(start.getDate()-(isWeek?7:28));
@@ -530,61 +540,72 @@ function dashStatData(){
   var subj=Object.keys(bySubj).map(function(k){return{n:k,v:bySubj[k]};}).sort(function(a,b){return b.v-a.v;});
   return{isWeek:isWeek,total:total,bars:bars,studied:studied,pastN:past.length,planAll:planAll,planDone:planDone,prev:prev,subj:subj};
 }
+var dashStatPick=-1; /* 누른 막대(없으면 -1) */
+function dashStatBar(i){dashStatPick=(dashStatPick===i?-1:i);renderDashboard();}
 function dashRecordHtml(){
   var st=dashStatData(),streak=dashStreak(),best=dashBestStreak(),today=dashDayTotal(dashYmd(studyDate()));
   function fmt(secs){return secs?tmFmtShort(secs*1000):'0분';}
   var h='<div class="dash-card dash-record">';
   h+='<div class="dash-card-head"><div class="dash-card-ttl">통계</div>';
   h+='<div class="dash-seg">'
-    +'<button class="dash-seg-b'+(st.isWeek?' on':'')+'" onclick="dashStatSeg(\'week\')">이번 주</button>'
-    +'<button class="dash-seg-b'+(!st.isWeek?' on':'')+'" onclick="dashStatSeg(\'month\')">최근 4주</button>'
+    +'<button class="dash-seg-b'+(st.isWeek?' on':'')+'" onclick="dashStatPick=-1;dashStatSeg(\'week\')">이번 주</button>'
+    +'<button class="dash-seg-b'+(!st.isWeek?' on':'')+'" onclick="dashStatPick=-1;dashStatSeg(\'month\')">최근 4주</button>'
     +'</div></div>';
-  h+='<div class="dash-rec-grid">';
-  h+='<div class="dash-rec"><div class="dash-rec-n">'+fmt(today)+'</div><div class="dash-rec-l">오늘</div></div>';
-  h+='<div class="dash-rec"><div class="dash-rec-n">'+streak+'<span>일</span></div><div class="dash-rec-l">연속 공부</div></div>';
-  h+='<div class="dash-rec"><div class="dash-rec-n">'+fmt(st.total)+'</div><div class="dash-rec-l">'+(st.isWeek?'이번 주':'4주 합계')+'</div></div>';
+  if(!st.total&&!st.planAll&&!streak){
+    h+='<div class="stat-empty">아직 기록이 없어요.<br>할 일의 ▶를 눌러 공부를 시작하면 여기에 쌓여요.</div>';
+    h+='</div>';
+    return h;
+  }
+  /* 합계 + 지난 기간 대비 */
+  var diff=st.total-st.prev;
+  h+='<div class="stat-hero"><div><div class="stat-hero-l">'+(st.isWeek?'이번 주 공부 시간':'최근 4주 공부 시간')+'</div>'
+    +'<div class="stat-hero-n">'+fmt(st.total)+'</div></div>';
+  if(st.prev||st.total){
+    h+='<div class="stat-chip '+(diff>0?'up':diff<0?'down':'')+'"><span>'+(st.isWeek?'지난주 이맘때보다':'그 전 4주보다')+'</span>'
+      +'<b>'+(diff===0?'같아요':(diff>0?'+':'−')+fmt(Math.abs(diff)))+'</b></div>';
+  }
   h+='</div>';
-  if(!st.total&&!st.planAll){
-    h+='<div class="stat-empty">아직 기록이 없어요. 할 일의 ▶를 눌러 공부를 시작하면 여기에 쌓여요.</div>';
-  }else{
-    /* 막대 */
-    var max=0;st.bars.forEach(function(b){if(b.v>max)max=b.v;});
-    h+='<div class="stat-bars'+(st.isWeek?'':' wide')+'">';
-    st.bars.forEach(function(b){
-      var pct=max?Math.max(b.v?4:0,Math.round(b.v/max*100)):0;
-      h+='<div class="stat-bar-col'+(b.on?' on':'')+(b.future?' future':'')+'">'
-        +'<div class="stat-bar-v">'+(b.v?histShort(b.v):'')+'</div>'
-        +'<div class="stat-bar-track"><div class="stat-bar" style="height:'+pct+'%"></div></div>'
-        +'<div class="stat-bar-l">'+b.l+'</div></div>';
+  /* 막대 — 누르면 그 날(주)의 내용 */
+  var max=0;st.bars.forEach(function(b){if(b.v>max)max=b.v;});
+  h+='<div class="stat-bars'+(st.isWeek?'':' wide')+'">';
+  st.bars.forEach(function(b,i){
+    var pct=max?Math.max(b.v?5:0,Math.round(b.v/max*100)):0;
+    h+='<button class="stat-bar-col'+(b.on?' on':'')+(b.future?' future':'')+(dashStatPick===i?' pick':'')+'"'
+      +(b.future?' disabled':'')+' onclick="dashStatBar('+i+')" aria-label="'+b.l+' '+fmt(b.v)+'">'
+      +'<div class="stat-bar-v">'+(b.v?histShort(b.v):'')+'</div>'
+      +'<div class="stat-bar-track"><div class="stat-bar" style="height:'+pct+'%"></div></div>'
+      +'<div class="stat-bar-l">'+b.l+'</div></button>';
+  });
+  h+='</div>';
+  if(dashStatPick>=0&&st.bars[dashStatPick]){
+    var pb=st.bars[dashStatPick];
+    h+='<div class="stat-pick"><b>'+escHtml(pb.title)+'</b><span>'+fmt(pb.v)
+      +(pb.planAll?' · 계획 '+pb.planDone+'/'+pb.planAll:'')+'</span>'
+      +(pb.key?'<button onclick="histOpen(\''+pb.key+'\')">자세히</button>':'')+'</div>';
+  }
+  /* 요약 4칸 */
+  var avg=st.studied?Math.round(st.total/st.studied):0;
+  h+='<div class="stat-tiles">';
+  var tp=planSummary(planLoad());
+  h+='<div class="stat-tile"><span>오늘</span><b>'+fmt(today)+'</b><i>'+(tp.total?'계획 '+tp.total+'개 중 '+tp.done+'개 완료':'세운 계획 없음')+'</i></div>';
+  h+='<div class="stat-tile"><span>연속 공부</span><b>'+streak+'일</b><i>최고 '+best+'일</i></div>';
+  h+='<div class="stat-tile"><span>하루 평균</span><b>'+fmt(avg)+'</b><i>'+st.pastN+'일 중 '+st.studied+'일 공부</i></div>';
+  h+='<div class="stat-tile"><span>계획 달성</span><b>'+(st.planAll?Math.round(st.planDone/st.planAll*100)+'%':'–')+'</b>'
+    +(st.planAll?'<i>'+st.planAll+'개 중 '+st.planDone+'개 완료</i>':'<i>세운 계획 없음</i>')+'</div>';
+  h+='</div>';
+  /* 과목별: 한 줄 누적 막대 + 목록 */
+  if(st.subj.length&&st.total){
+    var top=st.subj.slice(0,5),rest=st.subj.slice(5).reduce(function(a,x){return a+x.v;},0);
+    if(rest)top.push({n:'그 밖',v:rest,etc:true});
+    function col(x){return (!x.etc&&typeof cmap!=='undefined'&&cmap[x.n])?cmap[x.n]:'var(--border-strong)';}
+    h+='<div class="stat-sub-ttl">과목별</div><div class="stat-stack">';
+    top.forEach(function(x){h+='<i style="flex:'+x.v+';background:'+col(x)+'"></i>';});
+    h+='</div><div class="stat-sub-list">';
+    top.forEach(function(x){
+      h+='<div class="stat-sub"><i style="background:'+col(x)+'"></i><span class="stat-sub-n">'+escHtml(x.n)+'</span>'
+        +'<span class="stat-sub-v">'+fmt(x.v)+'</span><span class="stat-sub-p">'+Math.round(x.v/st.total*100)+'%</span></div>';
     });
     h+='</div>';
-    /* 지난 기간과 비교 */
-    if(st.prev||st.total){
-      var diff=st.total-st.prev,base=st.isWeek?'지난주 같은 요일까지보다':'그 전 4주보다';
-      h+='<div class="stat-cmp">'+(diff===0?base.replace(/보다$/,'와')+' 같아요'
-        :base+' <b class="'+(diff>0?'up':'down')+'">'+(diff>0?'+':'−')+fmt(Math.abs(diff))+'</b>')+'</div>';
-    }
-    /* 요약 4가지 */
-    var avg=st.studied?Math.round(st.total/st.studied):0;
-    h+='<div class="stat-kv">';
-    h+='<div class="stat-kv-i"><span>공부한 날</span><b>'+st.studied+'<i>/'+st.pastN+'일</i></b></div>';
-    h+='<div class="stat-kv-i"><span>하루 평균</span><b>'+fmt(avg)+'</b></div>';
-    h+='<div class="stat-kv-i"><span>계획 달성</span><b>'+(st.planAll?Math.round(st.planDone/st.planAll*100)+'%<i> '+st.planDone+'/'+st.planAll+'</i>':'–')+'</b></div>';
-    h+='<div class="stat-kv-i"><span>최고 연속</span><b>'+best+'<i>일</i></b></div>';
-    h+='</div>';
-    /* 과목별 */
-    if(st.subj.length){
-      h+='<div class="stat-sub-ttl">과목별</div>';
-      var top=st.subj.slice(0,5),rest=st.subj.slice(5).reduce(function(a,x){return a+x.v;},0);
-      if(rest)top.push({n:'그 밖',v:rest,etc:true});
-      top.forEach(function(x){
-        var pc=Math.round(x.v/st.total*100);
-        var col=(!x.etc&&typeof cmap!=='undefined'&&cmap[x.n])?cmap[x.n]:'var(--border-strong)';
-        h+='<div class="stat-sub"><div class="stat-sub-top"><span class="stat-sub-n">'+escHtml(x.n)+'</span>'
-          +'<span class="stat-sub-v">'+fmt(x.v)+' · '+pc+'%</span></div>'
-          +'<div class="stat-sub-track"><div class="stat-sub-bar" style="width:'+Math.max(2,pc)+'%;background:'+col+'"></div></div></div>';
-      });
-    }
   }
   h+='<button class="dash-more" onclick="histOpen()">날짜별 기록 보기</button>';
   h+='</div>';

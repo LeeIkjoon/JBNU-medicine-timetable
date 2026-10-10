@@ -7,8 +7,10 @@ var dashPage='main';   /* main | hist */
 var histYm=null;       /* [연, 월(0-11)] */
 var histSel=null;      /* 선택한 날짜 'YYYY-MM-DD' */
 
-function histOpen(){
+function histOpen(key){
+  /* key('YYYY-MM-DD')를 주면 그 날을 연 채로 시작 (통계 막대의 '자세히') */
   var d=studyDate();
+  if(key&&/^\d{4}-\d{2}-\d{2}$/.test(key)){var kp=key.split('-');d=new Date(+kp[0],+kp[1]-1,+kp[2]);}
   histYm=[d.getFullYear(),d.getMonth()];
   histSel=dashYmd(d);
   dashPage='hist';
