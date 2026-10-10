@@ -20,6 +20,7 @@ function closeXL(){
   xlReset();
 }
 function xlReset(){
+  if(typeof xlAiHide==='function')xlAiHide();
   pendingData=null;_xlCands=[];_xlSel=-1;
   var st=document.getElementById('xl-status');if(st){st.textContent='';st.className='xl-status';}
   var sh=document.getElementById('xl-sheets');if(sh){sh.innerHTML='';sh.style.display='none';}
@@ -59,6 +60,7 @@ function xlGradeScore(name){
 /* ── 후보 목록 → UI ── */
 function xlSetCands(cands){
   _xlCands=cands;
+  if(cands.length&&typeof xlAiHide==='function')xlAiHide();
   if(!cands.length){xlStatus('수업 데이터를 찾을 수 없습니다.','err');return;}
   /* 기본 선택: 학년 매칭 점수 → 항목 수 */
   var best=0,bestScore=-1e9;
@@ -193,7 +195,7 @@ function handleFile(file){
       try{
         var rows=xlParseDelimited(xlDecodeText(buf));
         var res=smartParseRows(rows);
-        if(res.error){xlStatus(res.error,'err');return;}
+        if(res.error){xlOfferAI(res.error+' AI로 읽어볼 수 있어요(파일 내용이 서버로 전송돼요).',file.name,xlAiText(xlDecodeText(buf)));return;}
         xlSetCands([{name:file.name,result:res}]);
       }catch(err){xlStatus('파싱 오류: '+err.message,'err');}
       return;
@@ -207,7 +209,7 @@ function handleFile(file){
       var wb=XLSX.read(u8,{type:'array',cellDates:false});
       var cands=xlWorkbookCands(wb);
       if(!cands.length){
-        xlStatus('시간표를 인식하지 못했어요. 시트: '+wb.SheetNames.join(', '),'err');
+        xlOfferAI('시간표를 바로 인식하지 못했어요. AI로 읽어볼 수 있어요(파일 내용이 서버로 전송돼요).',file.name,xlAiWorkbook(wb));
         return;
       }
       xlSetCands(cands);
@@ -222,6 +224,74 @@ function handleFile(file){
     }
   };
   reader.readAsArrayBuffer(file);
+}
+
+/* ── AI로 읽기: 기기 안의 파서가 못 읽은 파일만, 사용자가 버튼을 눌렀을 때 서버(api/tt-ai)로 보냄 ── */
+var XL_AI_URL=(/vercel\.app$/.test(location.hostname)?'':'https://sehyunlee.vercel.app')+'/api/tt-ai';
+var _xlAiPayload=null;
+function xlAiHide(){
+  _xlAiPayload=null;
+  var b=document.getElementById('xl-ai');if(b)b.style.display='none';
+}
+/* make: function(cb) → cb({kind,data}) 또는 cb(null,'안내 문구') */
+function xlOfferAI(msg,name,make){
+  xlStatus(msg,'err');
+  var b=document.getElementById('xl-ai');if(!b)return;
+  _xlAiPayload={name:name,make:make};
+  b.disabled=false;b.textContent='AI로 읽어보기';b.style.display='block';
+  b.onclick=xlAiRun;
+}
+function xlAiRun(){
+  var pl=_xlAiPayload,b=document.getElementById('xl-ai');if(!pl||!b)return;
+  b.disabled=true;b.textContent='AI가 읽는 중… (1~2분 걸릴 수 있어요)';
+  function fail(m){b.disabled=false;b.textContent='AI로 다시 읽어보기';xlStatus(m,'err');}
+  pl.make(function(body,why){
+    if(!body){fail(why||'이 파일은 AI로 보낼 수 없어요.');return;}
+    body.name=pl.name;body.grade=(typeof savedGrade==='string')?savedGrade:'';
+    fetch(XL_AI_URL,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j};});})
+      .then(function(r){
+        if(!r.ok||!r.j||!r.j.items||!r.j.items.length){fail((r.j&&r.j.msg)||'AI로도 읽지 못했어요.');return;}
+        r.j.items.forEach(function(it){
+          if(!it.start||!it.end){var t=smartTimes(it.period);it.start=it.start||t[0];it.end=it.end||t[1];}
+        });
+        var warn=['AI가 읽은 결과예요. 적용한 뒤 원본과 맞는지 한 번 확인해 주세요.'];
+        if(r.j.truncated)warn.push('문서가 길어서 뒷부분이 빠졌을 수 있어요.');
+        var res=smartFinish(r.j.items,'ai',warn);
+        if(res.error){fail(res.error);return;}
+        xlAiHide();
+        xlSetCands([{name:pl.name,result:res}]);
+      })
+      .catch(function(){fail('AI 서버에 연결하지 못했어요. 인터넷 연결을 확인해 주세요.');});
+  });
+}
+function xlAiPdf(file){
+  return function(cb){
+    if(file.size>3*1024*1024){cb(null,'PDF가 3MB보다 커서 AI로 보낼 수 없어요.');return;}
+    var fr=new FileReader();
+    fr.onload=function(e){var s=String(e.target.result||'');cb({kind:'pdf',data:s.slice(s.indexOf(',')+1)});};
+    fr.onerror=function(){cb(null,'파일을 읽을 수 없어요.');};
+    fr.readAsDataURL(file);
+  };
+}
+function xlAiText(text){
+  return function(cb){
+    if(!text||text.replace(/\s/g,'').length<20){cb(null,'파일에 읽을 내용이 없어요.');return;}
+    cb({kind:'text',data:text.slice(0,580000)});
+  };
+}
+function xlAiWorkbook(wb){
+  return function(cb){
+    var out=[];
+    try{
+      wb.SheetNames.forEach(function(n){
+        var rows=smartSheetRows(wb.Sheets[n]);if(!rows.length)return;
+        out.push('### 시트: '+n);
+        rows.forEach(function(r){out.push(r.map(function(v){return v==null?'':String(v).replace(/[\t\r\n]+/g,' ');}).join('\t').replace(/\t+$/,''));});
+      });
+    }catch(e){}
+    xlAiText(out.join('\n'))(cb);
+  };
 }
 
 /* ── PDF (원광대 등) ── */
@@ -253,7 +323,7 @@ function xlHandlePdf(file){
             xlSetCands([{name:file.name,result:gp}]);
             return;
           }
-          xlStatus('PDF에서 시간표를 인식하지 못했어요. 엑셀 파일이 있다면 그쪽을 올려주세요.','err');
+          xlOfferAI('PDF에서 시간표를 바로 인식하지 못했어요. AI로 읽어볼 수 있어요(파일이 서버로 전송돼요).',file.name,xlAiPdf(file));
           return;
         }
         /* 품질 게이트: 셀 파편이 과목으로 새는 복잡한 레이아웃이면 적용 차단 */
