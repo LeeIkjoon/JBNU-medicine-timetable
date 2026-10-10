@@ -405,8 +405,10 @@ function fScrollToToday(){
   /* 레이아웃이 잡힌 뒤 스크롤 — 목록 헤더(sticky)에 가리지 않게 띄운다 */
   requestAnimationFrame(function(){
     var th=main.querySelector('.xl-table thead');
-    var pad=(th?th.getBoundingClientRect().height:26)+10;
-    hit.scrollIntoView({block:'start'});
-    main.scrollTop=Math.max(0,main.scrollTop-pad);
+    /* 머리는 본문 위 여백 아래에 붙으므로 그 여백만큼 더 띄움 (태블릿은 여백이 더 큼) */
+    var pad=(th?th.getBoundingClientRect().height:26)+(parseFloat(getComputedStyle(main).paddingTop)||0)+4;
+    /* offsetTop으로 계산 — 화면 전환 애니메이션(translate) 중에는 화면 좌표가 어긋나서 날짜 줄이 머리에 가렸음 */
+    function topIn(el){var y=0;while(el&&el!==main){y+=el.offsetTop;el=el.offsetParent;}return el===main?y:y-main.offsetTop;}
+    main.scrollTop=Math.max(0,topIn(hit)-pad);
   });
 }

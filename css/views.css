@@ -627,3 +627,18 @@
 .hrs-cls-p{color:var(--text-soft)}
 .hrs-cls-t{color:var(--text-soft);font-variant-numeric:tabular-nums}
 .hrs-cls-tp{flex:1;min-width:0;color:var(--text-fade);font-size:var(--font-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* ── 출시 전 다듬기 (2026-10) ── */
+/* 목록 머리(시간·과목·교수): 본문 위 여백으로 앞 행이 비쳐 보이던 것 가림 */
+.xl-table thead th::before{content:'';position:absolute;left:0;right:0;bottom:100%;height:24px;background:var(--bg)}
+/* 기록 숫자: 칸이 좁으면 글자를 줄여 '20시간 30…'처럼 잘리지 않게 */
+.dash-rec-grid{container-type:inline-size}
+.dash-rec-n{font-size:clamp(15px,5.6cqw,var(--font-xl));text-overflow:clip}
+/* 목표 시간 선택: 기본 화살표 대신 얇은 꺾쇠 */
+.pln-goal{-webkit-appearance:none;appearance:none;padding-right:26px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%238B95A1' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 4.5l3 3 3-3'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;background-size:12px}
+/* 좁은 폰: 교수별 시수는 한 줄에 한 명 */
+@media (max-width:360px){
+  .hrs-body{grid-template-columns:1fr}
+}

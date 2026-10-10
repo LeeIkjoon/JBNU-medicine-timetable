@@ -172,8 +172,8 @@
   .td-c,.td-t{height:60px}
   .td-c{max-height:60px}
   .card{height:54px;max-height:54px;padding:6px 8px}
-  .cn-s{font-size:var(--font-xs)}
-  .cn-name,.cn-p{font-size:9.5px}
+  .cn-s{font-size:var(--font-md)}   /* 넓은 화면은 글씨를 키움 — 안 들어가는 칸만 wkFitCards가 줄임 */
+  .cn-name,.cn-p{font-size:var(--font-xs)}
   .th-d{font-size:var(--font-base)}
   .th-date{font-size:10px}
   .lg-grid{grid-template-columns:repeat(3,1fr)}

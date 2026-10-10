@@ -114,11 +114,33 @@ function smartHeaderKind(v){
 }
 
 /* 셀 → {subj, prof, topic?} : 전북대 대시 표기 → 괄호 표기 → 줄바꿈 표기 순으로 시도 */
+/* 여러 줄 셀 '과목 [강의번호] / 강의주제 / 교수' (경희대 등):
+   마지막 줄이 이름(들)이거나 '(이름)'으로 끝나면 교수, 첫 줄은 과목(끝의 강의번호 제거), 나머지는 주제.
+   '과목-교수' 한 줄 형식(전북대)은 건드리지 않는다. */
+function smartCellLines(s){
+  var lines=String(s).split(/[\r\n]+/).map(function(l){return l.replace(/\s+/g,' ').trim();}).filter(Boolean);
+  if(lines.length<2)return null;
+  for(var i=0;i<lines.length;i++)if(/-\s*[가-힣]{2,5}$/.test(lines[i]))return null;
+  var NAMES=/^[가-힣]{2,4}(\s*[,·\/]\s*[가-힣]{2,4})*$/;
+  var last=lines[lines.length-1],prof='',mid=lines.slice(1),m;
+  if(NAMES.test(last)){prof=last.replace(/\s*[·\/]\s*/g,', ');mid=lines.slice(1,-1);}
+  else if((m=last.match(/^\(\s*([가-힣]{2,4}(?:\s*,\s*[가-힣]{2,4})*)\s*\)$/))){prof=m[1];mid=lines.slice(1,-1);}
+  else if((m=last.match(/^(.*\S)\s*\(\s*([가-힣]{2,4}(?:\s*,\s*[가-힣]{2,4})*)\s*\)$/))&&lines.length===2){prof=m[2];mid=[m[1]];}
+  var head=lines[0].match(/^(.*[^\s\d])\s+\d{1,3}(-\d{1,2})?$/);
+  if(!prof&&!head)return null;
+  var subj=head?head[1].trim():lines[0];
+  if(!subj)return null;
+  var r={subj:subj,prof:prof};
+  if(mid.length)r.topic=mid.join(' ').slice(0,120);
+  return r;
+}
 function smartCell(val){
   var s=smartStr(val);
   if(!s||s===','||s==='-'||s==='·'||s==='x'||s==='X')return null;
   /* 숫자·시각·날짜만 있는 셀은 과목이 아님 (열 추정 실패 시 쓰레기 방지) */
   if(/^[\d.:\-~\/\s]+$/.test(s))return null;
+  var ml=smartCellLines(s);
+  if(ml)return ml;
   var r=(typeof parseNativeCell==='function')?parseNativeCell(s):{subj:s,prof:''};
   if(!r||!r.subj)return null;
   if(!r.prof){
@@ -307,6 +329,7 @@ function smartParseWide(rows,hdr){
       var ex=smartIsExam(cell.subj);
       var it={week:wk,date:dateStr,day:day,period:p,start:t[0],end:t[1],
         subject:cell.subj,professor:cell.prof||'',is_exam:ex};
+      if(cell.topic)it.topic=cell.topic;
       if(smartIsHoliday(cell.subj))it.is_holiday=true;
       items.push(it);
     }
