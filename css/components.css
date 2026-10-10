@@ -394,3 +394,22 @@ input[type=date].memo-input{line-height:1.3;min-height:38px}
 .xl-share{display:flex;align-items:flex-start;gap:8px;margin-top:var(--space-3);padding:10px 12px;border-radius:var(--radius-md);
   background:var(--surface-2);font-size:var(--font-xs);color:var(--text-secondary);line-height:1.45;cursor:pointer}
 .xl-share input{flex:none;width:16px;height:16px;margin:1px 0 0;accent-color:var(--accent)}
+
+/* 학교 선택: 전국 지도 (왼쪽 지도 + 오른쪽 근처 학교) */
+.sc-map{display:flex;align-items:center;gap:var(--space-3);margin:0 0 var(--space-3);padding:var(--space-3);
+  background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-xs)}
+.sc-map-svg{flex:none;width:104px;height:188px;cursor:pointer;touch-action:manipulation}
+.sc-map-land{fill:var(--surface-muted);stroke:var(--border-strong);stroke-width:2;stroke-linejoin:round}
+.sc-map-dot{fill:var(--accent);opacity:.55;pointer-events:none}
+.sc-map-sel{fill:none;stroke:var(--accent);stroke-width:4;pointer-events:none;transition:cx .25s var(--ease),cy .25s var(--ease)}
+.sc-map-side{flex:1;min-width:0;max-height:188px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.sc-map-hint{font-size:var(--font-sm);color:var(--text-soft);line-height:1.5}
+.sc-map-chips{display:flex;flex-wrap:wrap;gap:6px}
+.sc-map-chip{border:1px solid var(--border);background:var(--surface);border-radius:var(--radius-pill);padding:6px 10px;
+  font-size:var(--font-sm);font-weight:var(--weight-semi);color:var(--text-secondary);cursor:pointer;font-family:inherit}
+.sc-map-chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+@media (max-height:760px){.sc-req{display:none}}
+@media (max-height:640px){.sc-map{display:none}}
+/* 첫 실행 화면(학교·학년 선택): 다크 모드에서는 밝은 그라데이션 대신 배경색 — 글자가 안 보이던 것 수정 */
+:root[data-theme="dark"] .gs-screen{background:var(--bg)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .gs-screen{background:var(--bg)}}
