@@ -314,10 +314,22 @@ function init(){
       return {v:k,t:SCHOOLS[k].name,d:SCHOOLS[k].dept};
     });
     grid.style.cssText='display:block;width:100%;max-width:320px';
-    grid.innerHTML=wheelHtml('sc-wheel',items)
+    grid.innerHTML='<input class="sc-q" id="sc-q" type="search" placeholder="학교 이름 검색" autocomplete="off" autocorrect="off" spellcheck="false">'
+      +wheelHtml('sc-wheel',items)
       +'<button class="gs-ok" id="sc-ok">다음</button>';
     document.getElementById('sc-screen').style.display='flex';
     wheelInit('sc-wheel',savedSchool||'jbnu',null);
+    /* 검색: 이름에 글자가 들어간 첫 학교로 휠을 돌림 */
+    document.getElementById('sc-q').oninput=function(){
+      var q=this.value.replace(/\s+/g,'');if(!q)return;
+      for(var i=0;i<items.length;i++){
+        if(items[i].t.replace(/\s+/g,'').indexOf(q)>=0){
+          var ws=document.getElementById('sc-wheel-s');
+          if(ws)ws.scrollTo({top:i*WHEEL_ITEM_H,behavior:'smooth'});
+          break;
+        }
+      }
+    };
     document.getElementById('sc-ok').onclick=function(){
       var v=wheelValue('sc-wheel');if(!v)return;
       savedSchool=v;

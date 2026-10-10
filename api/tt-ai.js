@@ -124,11 +124,14 @@ module.exports = async (req, res) => {
 
   let out = '';
   try {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
+    const call = () => fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-goog-api-key': process.env.GEMINI_API_KEY },
       body: JSON.stringify({ contents: [{ role: 'user', parts }], generationConfig: { temperature: 0, maxOutputTokens: 64000 } }),
     });
+    let r = await call();
+    /* 일시적 과부하(429·5xx)는 잠깐 쉬고 한 번 더 */
+    if (r.status === 429 || r.status >= 500) { await new Promise(ok => setTimeout(ok, 2500)); r = await call(); }
     const j = await r.json();
     if (!r.ok) {
       const msg = (j && j.error && j.error.message) || ('HTTP ' + r.status);

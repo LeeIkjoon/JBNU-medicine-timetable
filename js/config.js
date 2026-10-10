@@ -59,7 +59,27 @@ var SCHOOLS={
       5:['13:00','13:50'],6:['14:00','14:50'],7:['15:00','15:50'],8:['16:00','16:50'],9:['17:00','17:50']},
       lunchAfter:3,lunchLabel:'점심시간  11:50 ~ 13:00'}}
 };
-var SCHOOL_ORDER=['jbnu','kmu','wku','ajou','cku'];
+/* 전국 의과대학 — 기본 시간표가 아직 없는 학교는 사용자가 파일을 올려서 시작(내 파일 모드).
+   키는 Firebase·localStorage 접두로 쓰이므로 한번 정하면 바꾸지 말 것 */
+(function(){
+  var G6=['의예과 1학년','의예과 2학년','의학과 1학년','의학과 2학년','의학과 3학년','의학과 4학년'];
+  var G4=['의학과 1학년','의학과 2학년','의학과 3학년','의학과 4학년'];
+  var L=[['gachon','가천대학교'],['cuk','가톨릭대학교'],['kangwon','강원대학교'],['konkuk','건국대학교'],
+    ['konyang','건양대학교'],['knu','경북대학교'],['gnu','경상국립대학교'],['khu','경희대학교'],
+    ['korea','고려대학교'],['kosin','고신대학교'],['dku','단국대학교'],['dcu','대구가톨릭대학교'],
+    ['dongguk','동국대학교'],['donga','동아대학교'],['pnu','부산대학교'],['snu','서울대학교'],
+    ['skku','성균관대학교'],['sch','순천향대학교'],['yonsei','연세대학교'],['yonseiwj','연세대학교 원주','원주의과대학'],
+    ['yu','영남대학교'],['ulsan','울산대학교'],['eulji','을지대학교'],['ewha','이화여자대학교'],
+    ['inje','인제대학교'],['inha','인하대학교'],['jnu','전남대학교'],['jeju','제주대학교'],
+    ['chosun','조선대학교'],['cau','중앙대학교'],['cha','차의과학대학교','의학전문대학원',G4],
+    ['cnu','충남대학교'],['cbnu','충북대학교'],['hallym','한림대학교'],['hanyang','한양대학교']];
+  L.forEach(function(r){
+    if(SCHOOLS[r[0]])return;
+    SCHOOLS[r[0]]={name:r[1],dept:r[2]||'의과대학',grades:(r[3]||G6).map(function(g){return{label:g};})};
+  });
+})();
+/* 학교 선택 목록: 가나다순 */
+var SCHOOL_ORDER=Object.keys(SCHOOLS).sort(function(a,b){return SCHOOLS[a].name.localeCompare(SCHOOLS[b].name,'ko');});
 
 /* 학년별 관리자 비밀번호 (jbnu 레거시) */
 var ADMIN_PWS={
