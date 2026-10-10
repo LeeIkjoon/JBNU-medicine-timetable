@@ -74,7 +74,7 @@ function scPickerHtml(){
   });
   h+='</div></div>';
   h+='<input class="sc-q" id="sc-q" type="search" placeholder="학교 이름 검색" autocomplete="off" autocorrect="off" spellcheck="false">';
-  h+='<div class="scp-legend"><span><i class="scp-lg on"></i>시간표 있음</span><span><i class="scp-lg"></i>파일을 올려서 시작</span></div>';
+  h+='<div class="scp-legend"><span><i class="scp-lg on"></i>시간표 있음</span><span><i class="scp-lg"></i>아직 없음 · 파일을 올려 시작</span></div>';
   h+='<div class="scp-list" id="scp-list"></div>';
   h+='<button class="gs-ok" id="sc-ok" disabled>학교를 골라주세요</button>';
   return h;
@@ -121,14 +121,25 @@ function scPickerRender(){
     });
   }
   var ok=document.getElementById('sc-ok');
-  if(ok){ok.disabled=!_scp.sel;ok.textContent=_scp.sel?SCHOOLS[_scp.sel].name+'로 시작':'학교를 골라주세요';}
+  if(ok){ok.disabled=!_scp.sel;ok.textContent=_scp.sel?SCHOOLS[_scp.sel].name+' 선택':'학교를 골라주세요';}
+  /* 검색 중에는 지도를 접어 목록이 키보드 위로 보이게 */
+  var grid=document.getElementById('sc-grid');
+  if(grid)grid.className=grid.className.replace(/\s*scp-searching/g,'')+((q||_scp.focus)?' scp-searching':'');
+}
+/* 고른 학교 줄이 목록 안에서 보이게 */
+function scPickerReveal(){
+  var l=document.getElementById('scp-list'),r=l&&l.querySelector('.scp-row.on');
+  if(!r)return;
+  var top=r.offsetTop-l.offsetTop;
+  if(top<l.scrollTop||top+r.offsetHeight>l.scrollTop+l.clientHeight)l.scrollTop=Math.max(0,top-l.clientHeight/2+r.offsetHeight/2);
 }
 function scPickerInit(current,onChange){
   _scp.sel=(current&&SCHOOLS[current])?current:'';
   _scp.region=_scp.sel?scRegionOf(_scp.sel):'';
-  _scp.q='';_scp.onChange=onChange||null;
+  _scp.q='';_scp.focus=false;_scp.onChange=onChange||null;
   scPickerRender();
-  scLoadHas(scPickerRender);
+  scLoadHas(function(){scPickerRender();scPickerReveal();});
+  scPickerReveal();
   Array.prototype.forEach.call(document.querySelectorAll('#scp-regions .scp-reg'),function(b){
     b.onclick=function(){
       _scp.region=this.getAttribute('data-r');_scp.q='';
@@ -138,7 +149,12 @@ function scPickerInit(current,onChange){
     };
   });
   var q=document.getElementById('sc-q');
-  if(q)q.oninput=function(){_scp.q=this.value;scPickerRender();};
+  if(q){
+    q.oninput=function(){_scp.q=this.value;scPickerRender();};
+    q.onfocus=function(){_scp.focus=true;scPickerRender();};
+    q.onblur=function(){setTimeout(function(){_scp.focus=false;scPickerRender();scPickerReveal();},120);};
+    q.onkeydown=function(e){if(e.key==='Enter'){e.preventDefault();this.blur();}};
+  }
   /* 지도를 누르면 그 자리에서 가장 가까운 학교의 지역을 고름 */
   var svg=document.getElementById('scp-map');
   if(svg)svg.onclick=function(e){
