@@ -481,6 +481,14 @@ function xlBind(){
   var dropzone=document.getElementById('xl-drop');
   var fileInput=document.getElementById('xl-file');
   if(dropzone&&fileInput){
+    /* 앱: 파일 선택만 (사진·카메라 메뉴 없이). 확장자 없는 학교 포털 파일도 고를 수 있게 octet-stream 포함.
+       웹은 accept 없이 둔다 — 브라우저마다 확장자 없는 파일이 막히는 경우가 있어서 */
+    if(typeof IS_APP!=='undefined'&&IS_APP){
+      fileInput.setAttribute('accept','.pdf,.xlsx,.xls,.xlsm,.xlsb,.csv,.tsv,.txt,.ods,.numbers,.htm,.html,.tmp,'
+        +'application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,'
+        +'text/csv,text/plain,text/html,application/octet-stream');
+      var ds=document.querySelector('#xl-ovl .xl-ds');if(ds)ds.textContent='엑셀 · CSV · PDF';
+    }
     dropzone.onclick=function(){fileInput.click();};
     fileInput.onchange=function(){if(fileInput.files[0])handleFile(fileInput.files[0]);};
     dropzone.ondragover=function(e){e.preventDefault();dropzone.classList.add('drag');};
