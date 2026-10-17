@@ -1,5 +1,6 @@
 /* 시간표 파일 AI 읽기 — 앱 안의 파서가 못 읽은 파일만 여기로 온다.
-   POST {kind:'pdf'|'text', data:<base64 PDF | 표를 텍스트로 옮긴 것>, grade, name}
+   POST {kind:'pdf'|'image'|'text', data:<base64 PDF·JPEG | 표를 텍스트로 옮긴 것>, grade, name}
+   image: 시간표 사진·캡처(앱에서 2200px 이하 JPEG로 줄여서 보냄)
    → {items:[{date,period,start,end,subject,professor,room,is_exam}], model}
    Gemini에 보내고, 한 줄에 수업 하나인 압축 형식으로 받아 검증한 뒤 돌려준다.
    파일은 저장하지 않는다. 하루 전체·주소별 호출 수만 Firebase study/aiq 에 센다(과금 폭주 방지).
@@ -106,10 +107,10 @@ module.exports = async (req, res) => {
   if (!process.env.GEMINI_API_KEY) return res.status(503).json({ error: 'nokey', msg: 'AI 읽기가 아직 준비되지 않았어요.' });
 
   const b = req.body || {};
-  const kind = b.kind === 'pdf' ? 'pdf' : 'text';
+  const kind = b.kind === 'pdf' ? 'pdf' : b.kind === 'image' ? 'image' : 'text';
   const data = typeof b.data === 'string' ? b.data : '';
   if (!data) return res.status(400).json({ error: 'empty' });
-  if (kind === 'pdf' && (data.length > MAX_PDF_B64 || !/^[A-Za-z0-9+/=\s]+$/.test(data.slice(0, 2000))))
+  if ((kind === 'pdf' || kind === 'image') && (data.length > MAX_PDF_B64 || !/^[A-Za-z0-9+/=\s]+$/.test(data.slice(0, 2000))))
     return res.status(413).json({ error: 'big', msg: '파일이 너무 커요(3MB 이하만 가능).' });
   if (kind === 'text' && data.length > MAX_TEXT)
     return res.status(413).json({ error: 'big', msg: '표가 너무 커요.' });
@@ -120,6 +121,9 @@ module.exports = async (req, res) => {
   const grade = String(b.grade || '').slice(0, 20), name = String(b.name || '').slice(0, 80).replace(/[`$\\]/g, '');
   const parts = kind === 'pdf'
     ? [{ inline_data: { mime_type: 'application/pdf', data: data.replace(/\s+/g, '') } }, { text: PROMPT(grade, name) }]
+    : kind === 'image'
+    ? [{ inline_data: { mime_type: 'image/jpeg', data: data.replace(/\s+/g, '') } },
+       { text: PROMPT(grade, name) + '\n- 첨부는 시간표를 찍은 사진이나 화면 캡처다. 기울어지거나 일부가 잘렸으면 보이는 칸만 읽는다.' }]
     : [{ text: PROMPT(grade, name) + '\n\n===== 문서 내용(표를 탭으로 구분한 텍스트, 병합 칸은 같은 값이 반복됨) =====\n' + data }];
 
   let out = '';

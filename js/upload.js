@@ -208,6 +208,13 @@ function xlWorkbookCands(wb){
 /* 파일 종류 판별: 확장자보다 내용(매직 바이트) 우선 — 포털에서 .tmp 등으로 받히는 엑셀 대응 */
 function xlSniff(u8,ext){
   if(u8.length>=5&&u8[0]===0x25&&u8[1]===0x50&&u8[2]===0x44&&u8[3]===0x46)return'pdf';        /* %PDF */
+  /* 사진·캡처: JPEG / PNG / HEIC·HEIF(ftyp) / WebP / GIF */
+  if(u8.length>=3&&u8[0]===0xFF&&u8[1]===0xD8&&u8[2]===0xFF)return'image';
+  if(u8.length>=4&&u8[0]===0x89&&u8[1]===0x50&&u8[2]===0x4E&&u8[3]===0x47)return'image';
+  if(u8.length>=12&&u8[4]===0x66&&u8[5]===0x74&&u8[6]===0x79&&u8[7]===0x70)return'image';
+  if(u8.length>=12&&u8[0]===0x52&&u8[1]===0x49&&u8[2]===0x46&&u8[3]===0x46&&u8[8]===0x57&&u8[9]===0x45)return'image';
+  if(u8.length>=3&&u8[0]===0x47&&u8[1]===0x49&&u8[2]===0x46)return'image';
+  if(/^(jpe?g|png|heic|heif|webp|gif)$/.test(ext))return'image';
   if(u8.length>=2&&u8[0]===0x50&&u8[1]===0x4B)return'sheet';                                 /* PK — xlsx/xlsm/ods/numbers */
   if(u8.length>=4&&u8[0]===0xD0&&u8[1]===0xCF&&u8[2]===0x11&&u8[3]===0xE0)return'sheet';     /* OLE — xls */
   if(ext==='pdf')return'pdf';
@@ -234,6 +241,11 @@ function handleFile(file){
     var buf=e.target.result,u8=new Uint8Array(buf);
     var kind=xlSniff(u8,ext);
     if(kind==='pdf'){xlHandlePdf(file);return;}
+    if(kind==='image'){
+      /* 사진은 기기에서 표로 읽을 수 없어 AI로만 — 누르기 전에는 보내지 않음 */
+      xlOfferAI('시간표 사진은 AI로 읽어요. 아래 버튼을 누르면 사진이 서버로 전송돼요.',file.name||'사진',xlAiImage(file));
+      return;
+    }
     if(kind==='text'){
       try{
         var rows=xlParseDelimited(xlDecodeText(buf));
@@ -315,6 +327,27 @@ function xlAiPdf(file){
     fr.onload=function(e){var s=String(e.target.result||'');cb({kind:'pdf',data:s.slice(s.indexOf(',')+1)});};
     fr.onerror=function(){cb(null,'파일을 읽을 수 없어요.');};
     fr.readAsDataURL(file);
+  };
+}
+/* 사진 → 긴 변 2200px 이하 JPEG(base64). 폰 사진(4~10MB)도 서버 한도 안에 들어가게 줄임 */
+function xlAiImage(file){
+  return function(cb){
+    var url=null;
+    try{url=URL.createObjectURL(file);}catch(e){cb(null,'사진을 열 수 없어요.');return;}
+    var img=new Image();
+    img.onload=function(){
+      try{
+        var w=img.naturalWidth,h=img.naturalHeight,k=Math.min(1,2200/Math.max(w,h));
+        var c=document.createElement('canvas');c.width=Math.round(w*k);c.height=Math.round(h*k);
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        var q=0.85,d=c.toDataURL('image/jpeg',q);
+        while(d.length>3800000&&q>0.4){q-=0.15;d=c.toDataURL('image/jpeg',q);}
+        URL.revokeObjectURL(url);
+        cb({kind:'image',data:d.slice(d.indexOf(',')+1)});
+      }catch(e){cb(null,'사진을 처리하지 못했어요.');}
+    };
+    img.onerror=function(){try{URL.revokeObjectURL(url);}catch(e){}cb(null,'이 형식의 사진은 열 수 없어요. 캡처나 JPG로 올려 주세요.');};
+    img.src=url;
   };
 }
 function xlAiText(text){
