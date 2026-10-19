@@ -159,6 +159,12 @@ function applyDataPeriods(items){
     }
     ok.push(k);
   });
+  /* 타 학교: 데이터의 마지막 교시보다 뒤에 남은 기본값 교시(빈 18:30 줄 등)는 표시하지 않음.
+     전북대는 관리자가 빈 교시에도 수업을 넣으므로 그대로 둔다. */
+  if(typeof savedSchool!=='undefined'&&savedSchool&&savedSchool!=='jbnu'){
+    var pmax=Math.max.apply(null,ps);
+    ok=ok.filter(function(k){return k<=pmax;});
+  }
   PERIOD_START={};PERIOD_END={};PERIOD_INFO={};
   ok.forEach(function(k){
     PERIOD_START[k]=fmt(times[k][0]);PERIOD_END[k]=fmt(times[k][1]);

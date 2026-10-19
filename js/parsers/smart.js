@@ -458,8 +458,11 @@ function smartParseLong(rows,hdr){
     var period=0;
     if(m.period!==undefined)period=smartPeriod(row[m.period]);
     if(!period&&m.time!==undefined)period=smartPeriod(row[m.time]);
+    /* 교시 열 없이 시각만 있으면 교시는 아래에서 시작 시각 순으로 다시 매김 */
+    var byTime=m.period===undefined&&m.time!==undefined&&/\d{1,2}:\d{2}/.test(smartStr(row[m.time]));
+    if(byTime&&!period)period=99;
     if(!period)continue;
-    if(period>10)continue;
+    if(period>10&&!byTime)continue;
     var prof=m.prof!==undefined?smartStr(row[m.prof]):'';
     var topic=m.topic!==undefined?smartStr(row[m.topic]):'';
     var room=m.room!==undefined?smartStr(row[m.room]):'';
@@ -484,6 +487,16 @@ function smartParseLong(rows,hdr){
     if(room)it.room=room;
     items.push(it);
   }
+  /* 시각만 있는 표: 기본 교시표에 억지로 맞추지 않고, 이 파일의 시작 시각 순서대로 1,2,3… */
+  if(m.period===undefined&&m.time!==undefined){
+    var tmin=function(v){var q=String(v||'').match(/(\d{1,2}):(\d{2})/);return q?(+q[1])*60+(+q[2]):-1;};
+    var st={};items.forEach(function(it){if(!it.is_holiday&&tmin(it.start)>=0)st[tmin(it.start)]=1;});
+    var order=Object.keys(st).map(Number).sort(function(a,b){return a-b;});
+    if(order.length&&order.length<=14){
+      items.forEach(function(it){if(!it.is_holiday&&tmin(it.start)>=0)it.period=order.indexOf(tmin(it.start))+1;});
+    }
+    items=items.filter(function(it){return it.period>=1&&it.period<=14;});
+  }
   return smartFinish(items,'long',warnings);
 }
 
@@ -492,6 +505,8 @@ function smartFindDayHeaderRow(row){
   var cols={},n=0;
   for(var c=0;c<row.length;c++){
     var d=smartDay(row[c]);
+    /* 엑셀·HTML 표가 '화 8/18'을 날짜 값으로 바꿔 버린 칸 — 날짜에서 요일을 되찾음 */
+    if(!d&&typeof row[c]==='number'){var ds0=smartDate(row[c]);if(ds0)d=smartDowOf(ds0);}
     if(d&&d!=='토'&&d!=='일'&&!cols[d]){cols[d]=c;n++;}
   }
   return n>=3?cols:null;
@@ -519,7 +534,7 @@ function smartParseGrid(rows){
     days.forEach(function(d){
       var c=dayCols[d];
       var inHdr=smartStr(row[c]).replace(/[월화수목금토일]요?일?/,'').replace(/[（()）]/g,' ').trim();
-      var ds=smartDate(inHdr,yearHint);
+      var ds=typeof row[c]==='number'?smartDate(row[c]):smartDate(inHdr,yearHint);
       if(!ds){for(var k=1;k<=2&&!ds;k++){var nr=rows[r+k]||[];ds=smartDate(nr[c],yearHint);}}
       if(!ds){var pr=rows[r-1]||[];ds=smartDate(pr[c],yearHint);}
       if(ds)dates[d]=ds;

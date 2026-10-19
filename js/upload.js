@@ -111,44 +111,83 @@ function xlSelect(i){
   xlShareRow();
 }
 
-/* ── 첫 업로드를 학년 기본 시간표로 등록 ──
-   이 학교·학년에 공유 시간표(Firebase timetable/<키>)가 아직 없을 때만, 사용자가 올린 파일을
-   기본값으로 올린다(트랜잭션 — 이미 있으면 건드리지 않음). AI가 읽은 결과는 오류가 섞일 수 있어 제외. */
-var _xlShareOk=false;
+/* ── 올린 파일을 학년 공유 시간표로 등록·업데이트 ──
+   공유 시간표(Firebase timetable/<키>)가 없으면 첫 등록, 있으면 새 파일로 교체해 같은 학교·학년이
+   실시간으로 따라오게 한다. 전북대는 관리자가 배포하므로 제외. AI가 읽은 결과·10개 미만은 제외.
+   교체 전 공유본은 study/ttprev/<키> 에 한 벌 남긴다(잘못 올라오면 되돌리기용). */
+var _xlShareMode='';   /* '' | 'new' | 'update' */
+var _xlShareCur=null;  /* 현재 공유본 요약 {sig,min,max} */
+function xlShareSchoolOk(){return (savedSchool||'jbnu')!=='jbnu';}
+function xlShareSig(items){
+  return (items||[]).map(function(it){return it.date+'|'+it.period+'|'+it.subject;}).sort().join('\n');
+}
+function xlShareRange(items){
+  var mn='',mx='';
+  (items||[]).forEach(function(it){var d=it.date||'';if(!d)return;if(!mn||d<mn)mn=d;if(!mx||d>mx)mx=d;});
+  return {min:mn,max:mx};
+}
 function xlShareProbe(){
-  _xlShareOk=false;xlShareRow();
+  _xlShareMode='';_xlShareCur=null;xlShareRow();
   if(typeof isAdmin!=='undefined'&&isAdmin)return;
   if(typeof fbRef!=='function'||!savedGrade)return;
   var ref=fbRef(savedGrade),key=fbGradeKey(savedGrade);
   if(!ref)return;
+  var jb=!xlShareSchoolOk();
   ref.child('ts').once('value').then(function(snap){
     if(key!==fbGradeKey(savedGrade))return;
-    _xlShareOk=!snap.exists();xlShareRow();
+    if(!snap.exists()){_xlShareMode='new';xlShareRow();return;}
+    if(jb)return;
+    return ref.child('items').once('value').then(function(s2){
+      if(key!==fbGradeKey(savedGrade))return;
+      var its=s2.val()||[];if(!Array.isArray(its))its=Object.keys(its).map(function(k){return its[k];});
+      var r=xlShareRange(its);
+      _xlShareCur={sig:xlShareSig(its),min:r.min,max:r.max};
+      _xlShareMode='update';xlShareRow();
+    });
   }).catch(function(){});
 }
 function xlShareAble(){
   var c=_xlCands[_xlSel];
-  return _xlShareOk&&!!c&&c.result.format!=='ai'&&c.result.items.length>=10;
+  if(!_xlShareMode||!c||c.result.format==='ai'||c.result.items.length<10)return false;
+  if(_xlShareMode==='update'){
+    if(!_xlShareCur)return false;
+    if(xlShareSig(c.result.items)===_xlShareCur.sig)return false;          /* 공유본과 같음 */
+    var r=xlShareRange(c.result.items);
+    if(r.max&&_xlShareCur.min&&r.max<_xlShareCur.min)return false;         /* 지난 학기 파일 */
+  }
+  return true;
 }
 function xlShareRow(){
   var row=document.getElementById('xl-share');if(!row)return;
-  row.style.display=xlShareAble()?'flex':'none';
+  var on=xlShareAble();
+  row.style.display=on?'flex':'none';
+  var tx=document.getElementById('xl-share-tx');
+  if(on&&tx)tx.textContent=_xlShareMode==='update'
+    ?'같은 학교·학년 친구들의 시간표도 이 파일로 바꿀게요. 학교에서 받은 새 시간표일 때만 켜 두세요. 신고된 시간표는 내려갈 수 있어요.'
+    :'이 학년에는 아직 시간표가 없어요. 같은 학교·학년 친구들도 이 시간표를 바로 볼 수 있게 등록할게요. 수업 시간표만 올려 주세요. 신고된 시간표는 내려갈 수 있어요.';
 }
 function xlShareRegister(){
   var ref=fbRef(savedGrade),key=fbGradeKey(savedGrade);if(!ref)return;
-  var ts=Date.now();
+  var mode=_xlShareMode,ts=Date.now();
   var payload=JSON.parse(JSON.stringify({items:merged,wdd:wdd,ed:ed,wks:wks,grade:savedGrade,ts:ts,src:'user',
-    changelog:{ts:ts,msg:'첫 업로드로 기본 시간표 등록',grade:savedGrade}}));
+    changelog:{ts:ts,msg:mode==='update'?'새 시간표 파일로 업데이트':'첫 업로드로 기본 시간표 등록',grade:savedGrade}}));
+  var prev=null;
   ref.transaction(function(cur){
-    if(cur&&cur.items&&cur.items.length)return; /* 그사이 누가 먼저 등록함 — 그대로 둠 */
+    var has=cur&&cur.items&&(Array.isArray(cur.items)?cur.items.length:Object.keys(cur.items).length);
+    if(mode!=='update'&&has)return;          /* 그사이 누가 먼저 등록함 — 그대로 둠 */
+    if(mode==='update'&&!xlShareSchoolOk())return;
+    prev=has?cur:null;
     return payload;
   },function(err,committed){
     if(err||!committed||key!==fbGradeKey(savedGrade))return;
+    if(prev&&typeof fbDb!=='undefined'&&fbDb){
+      try{fbDb.ref('study/ttprev/'+key).set({data:prev,by:ts}).catch(function(){});}catch(e){}
+    }
     /* 내 파일이 곧 공유본 — 내 파일 모드를 풀고 같은 ts로 맞춰 다시 받지 않게 */
     try{localStorage.setItem(ttKey(),JSON.stringify({items:merged,wdd:wdd,ed:ed,grade:savedGrade,ts:ts}));}catch(e){}
     if(typeof ttLocalSet==='function')ttLocalSet(false);
     if(typeof render==='function')render();
-    xlToast('이 학년의 기본 시간표로 등록했어요');
+    xlToast(mode==='update'?'같은 학년 친구들의 시간표도 업데이트했어요':'이 학년의 기본 시간표로 등록했어요');
   });
 }
 function xlMd(ds){var p=ds.split('-');return parseInt(p[1],10)+'/'+parseInt(p[2],10);}
@@ -205,6 +244,20 @@ function xlWorkbookCands(wb){
   return cands;
 }
 
+/* 한글(HWP·HWPX): HWP5는 OLE 안 FileHeader가 'HWP Document File'로, HWPX는 zip의 mimetype이 application/hwp+zip */
+function xlIsHwp(u8){
+  var n=Math.min(u8.length,65536),i,sig;
+  if(u8.length>=4&&u8[0]===0xD0&&u8[1]===0xCF&&u8[2]===0x11&&u8[3]===0xE0)sig='HWP Document File';
+  else if(u8.length>=2&&u8[0]===0x50&&u8[1]===0x4B){sig='application/hwp+zip';n=Math.min(u8.length,512);}
+  else return false;
+  var c0=sig.charCodeAt(0);
+  outer:for(i=0;i+sig.length<=n;i++){
+    if(u8[i]!==c0)continue;
+    for(var j=1;j<sig.length;j++)if(u8[i+j]!==sig.charCodeAt(j))continue outer;
+    return true;
+  }
+  return false;
+}
 /* 파일 종류 판별: 확장자보다 내용(매직 바이트) 우선 — 포털에서 .tmp 등으로 받히는 엑셀 대응 */
 function xlSniff(u8,ext){
   if(u8.length>=5&&u8[0]===0x25&&u8[1]===0x50&&u8[2]===0x44&&u8[3]===0x46)return'pdf';        /* %PDF */
@@ -215,6 +268,7 @@ function xlSniff(u8,ext){
   if(u8.length>=12&&u8[0]===0x52&&u8[1]===0x49&&u8[2]===0x46&&u8[3]===0x46&&u8[8]===0x57&&u8[9]===0x45)return'image';
   if(u8.length>=3&&u8[0]===0x47&&u8[1]===0x49&&u8[2]===0x46)return'image';
   if(/^(jpe?g|png|heic|heif|webp|gif)$/.test(ext))return'image';
+  if(ext==='hwp'||ext==='hwpx'||xlIsHwp(u8))return'hwp';
   if(u8.length>=2&&u8[0]===0x50&&u8[1]===0x4B)return'sheet';                                 /* PK — xlsx/xlsm/ods/numbers */
   if(u8.length>=4&&u8[0]===0xD0&&u8[1]===0xCF&&u8[2]===0x11&&u8[3]===0xE0)return'sheet';     /* OLE — xls */
   if(ext==='pdf')return'pdf';
@@ -241,6 +295,7 @@ function handleFile(file){
     var buf=e.target.result,u8=new Uint8Array(buf);
     var kind=xlSniff(u8,ext);
     if(kind==='pdf'){xlHandlePdf(file);return;}
+    if(kind==='hwp'){xlStatus('한글(HWP) 파일은 바로 읽을 수 없어요. 한글에서 [파일 → PDF로 저장하기] 후 그 PDF를 올려 주세요.','err');return;}
     if(kind==='image'){
       /* 사진은 기기에서 표로 읽을 수 없어 AI로만 — 누르기 전에는 보내지 않음 */
       xlOfferAI('시간표 사진은 AI로 읽어요. 아래 버튼을 누르면 사진이 서버로 전송돼요.',file.name||'사진',xlAiImage(file));
@@ -392,6 +447,11 @@ function xlHandlePdf(file){
         }));
       }).then(function(pageContents){
         var result=parseWkuPdf(pageContents);
+        /* 품질 게이트: 원광대 양식으로 읽혔어도 셀 파편이 과목으로 새면 버리고 일반 경로로 */
+        if(result&&result.items&&result.items.length){
+          var uq={};result.items.forEach(function(i){uq[i.subject]=1;});
+          if(Object.keys(uq).length>result.items.length*0.3)result=null;
+        }
         if(!result||!result.items||!result.items.length){
           /* 원광대 양식이 아니면: 요일×교시 격자 PDF로 읽어 봄 (학교 무관) */
           var gp=pdfGridParse(pageContents.map(function(pc){return pc.grid;}).filter(Boolean));
@@ -406,12 +466,6 @@ function xlHandlePdf(file){
             return;
           }
           xlOfferAI('PDF에서 시간표를 바로 인식하지 못했어요. AI로 읽어볼 수 있어요(파일이 서버로 전송돼요).',file.name,xlAiPdf(file));
-          return;
-        }
-        /* 품질 게이트: 셀 파편이 과목으로 새는 복잡한 레이아웃이면 적용 차단 */
-        var uq={};result.items.forEach(function(i){uq[i.subject]=1;});
-        if(Object.keys(uq).length>result.items.length*0.3){
-          xlStatus('이 PDF는 자동 인식 정확도가 낮아요. 원광대 통합 시간표는 업로드 없이 학교·학년만 선택하면 자동으로 표시됩니다.','err');
           return;
         }
         xlSetCands([{name:file.name,result:{items:result.items,wddLocal:result.wdd,edLocal:result.ed,format:'pdf',warnings:[]}}]);
@@ -484,7 +538,7 @@ function xlBind(){
     /* 앱: 파일 선택만 (사진·카메라 메뉴 없이). 확장자 없는 학교 포털 파일도 고를 수 있게 octet-stream 포함.
        웹은 accept 없이 둔다 — 브라우저마다 확장자 없는 파일이 막히는 경우가 있어서 */
     if(typeof IS_APP!=='undefined'&&IS_APP){
-      fileInput.setAttribute('accept','.pdf,.xlsx,.xls,.xlsm,.xlsb,.csv,.tsv,.txt,.ods,.numbers,.htm,.html,.tmp,'
+      fileInput.setAttribute('accept','.pdf,.xlsx,.xls,.xlsm,.xlsb,.csv,.tsv,.txt,.ods,.numbers,.htm,.html,.tmp,.hwp,.hwpx,'
         +'application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,'
         +'text/csv,text/plain,text/html,application/octet-stream');
       var ds=document.querySelector('#xl-ovl .xl-ds');if(ds)ds.textContent='엑셀 · CSV · PDF';
