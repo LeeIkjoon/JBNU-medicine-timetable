@@ -149,6 +149,10 @@ function xlShareProbe(){
 function xlShareAble(){
   var c=_xlCands[_xlSel];
   if(!_xlShareMode||!c||c.result.format==='ai'||c.result.items.length<10)return false;
+  /* 이미 끝난 학기 파일(마지막 수업이 두 달도 더 전)은 공유하지 않음 — 예전 시간표가 학교 기본값이 되지 않게 */
+  var rr=xlShareRange(c.result.items),cut=new Date(Date.now()-60*86400000);
+  var cutS=cut.getFullYear()+'-'+('0'+(cut.getMonth()+1)).slice(-2)+'-'+('0'+cut.getDate()).slice(-2);
+  if(rr.max&&rr.max<cutS)return false;
   if(_xlShareMode==='update'){
     if(!_xlShareCur)return false;
     if(xlShareSig(c.result.items)===_xlShareCur.sig)return false;          /* 공유본과 같음 */
@@ -289,9 +293,22 @@ function handleFile(file){
   xlReset();
   xlStatus('파일 읽는 중...');
 
-  var reader=new FileReader();
-  reader.onerror=function(){xlStatus('파일을 읽을 수 없습니다.','err');};
+  var reader=new FileReader(),readDone=false;
+  /* 아이폰: 카카오톡·iCloud 등 아직 기기에 없는 파일은 읽기가 끝나지 않을 수 있음 — 무한 대기 대신 안내 */
+  var readTimer=setTimeout(function(){
+    if(readDone)return;readDone=true;
+    try{reader.abort();}catch(e){}
+    xlStatus('파일을 불러오지 못했어요. 카카오톡·iCloud 등에 있는 파일이면 [파일] 앱에서 "나의 iPhone"에 저장한 뒤 다시 올려 주세요.','err');
+  },25000);
+  reader.onprogress=function(e){
+    if(!readDone&&e.lengthComputable&&e.total>2000000)xlStatus('파일 읽는 중... '+Math.round(e.loaded/e.total*100)+'%');
+  };
+  reader.onerror=function(){if(readDone)return;readDone=true;clearTimeout(readTimer);xlStatus('파일을 읽을 수 없습니다. 파일 앱에서 "나의 iPhone"에 저장한 뒤 다시 올려 주세요.','err');};
   reader.onload=function(e){
+    if(readDone)return;readDone=true;clearTimeout(readTimer);
+    try{xlOnRead(e);}catch(err){xlStatus('파일을 처리하다 오류가 났어요: '+(err&&err.message||err),'err');}
+  };
+  function xlOnRead(e){
     var buf=e.target.result,u8=new Uint8Array(buf);
     var kind=xlSniff(u8,ext);
     if(kind==='pdf'){xlHandlePdf(file);return;}
