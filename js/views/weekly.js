@@ -553,28 +553,83 @@ function wkFoldEmpty(){
 }
 
 /* 좌우로 밀어 주차 이동 (표가 가로 스크롤 중이면 무시) */
+/* 가로 스와이프로 주 이동 — 표가 손가락을 따라 움직이고, 충분히 밀면 그 방향으로 넘어간 뒤
+   새 주가 반대편에서 들어온다. 덜 밀면 제자리로 돌아오고, 첫·마지막 주에서는 끝에서 버티듯 덜 움직인다. */
+var wkSlideFrom=0;   /* 다음 렌더에서 새 표가 들어올 방향: 1 오른쪽에서, -1 왼쪽에서 */
+function wkReduceMotion(){
+  try{return window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}
+}
 function wkBindSwipe(){
   var el=document.querySelector('.sw');
   if(!el)return;
-  var x0=0,y0=0,on=false;
+  var x0=0,y0=0,dx=0,t0=0,lock=0,on=false; /* lock: 0 판단 전, 1 가로, -1 세로 */
+  var mv=wkSlideEls();    /* 표 + 위의 날짜별 할 일 줄을 함께 움직임 */
+  function setX(x,op){mv.forEach(function(m){m.style.transform=x?'translate3d('+x+'px,0,0)':'';m.style.opacity=op===1?'':String(op);});}
+  function setT(t){mv.forEach(function(m){m.style.transition=t;});}
+  function back(){
+    setT('transform .32s cubic-bezier(.2,.9,.25,1),opacity .32s');
+    setX(0,1);
+  }
   el.addEventListener('touchstart',function(e){
     if(e.touches.length!==1){on=false;return;}
     if(el.scrollWidth>el.clientWidth+4){on=false;return;} /* 가로 스크롤 가능한 표는 제외 */
-    on=true;x0=e.touches[0].clientX;y0=e.touches[0].clientY;
+    on=true;lock=0;dx=0;t0=Date.now();
+    x0=e.touches[0].clientX;y0=e.touches[0].clientY;
+    setT('none');
   },{passive:true});
-  el.addEventListener('touchend',function(e){
+  el.addEventListener('touchmove',function(e){
+    if(!on)return;
+    var mx=e.touches[0].clientX-x0,my=e.touches[0].clientY-y0;
+    if(!lock){
+      if(Math.abs(mx)<8&&Math.abs(my)<8)return;
+      lock=Math.abs(mx)>Math.abs(my)*1.2?1:-1;
+    }
+    if(lock!==1)return;
+    e.preventDefault(); /* 가로로 잡았으면 세로 스크롤과 섞이지 않게 */
+    dx=mx;
+    var w=el.offsetWidth||1,edge=(dx>0&&ci<=0)||(dx<0&&ci>=wks.length-1);
+    var d=edge?dx/(1+Math.abs(dx)/80)*0.6:dx;          /* 끝 주차: 고무줄처럼 덜 따라옴 */
+    setX(d,1-Math.min(Math.abs(d)/w,1)*0.35);
+  },{passive:false});
+  function end(){
     if(!on)return;on=false;
-    var t=e.changedTouches&&e.changedTouches[0];if(!t)return;
-    var dx=t.clientX-x0,dy=t.clientY-y0;
-    if(Math.abs(dx)<60||Math.abs(dx)<Math.abs(dy)*1.5)return;
-    wkGoWeek(dx<0?1:-1);
-  },{passive:true});
+    if(lock!==1)return;
+    var w=el.offsetWidth||1,step=dx<0?1:-1,ni=ci+step;
+    var fast=Math.abs(dx)/Math.max(1,Date.now()-t0)>0.45&&Math.abs(dx)>30;
+    if(!(Math.abs(dx)>w*0.22||fast)||ni<0||ni>=wks.length){back();return;}
+    if(wkReduceMotion()){wkGoWeek(step,true);return;}
+    setT('transform .2s cubic-bezier(.4,0,.9,.6),opacity .2s');
+    setX(dx<0?-w:w,0);
+    setTimeout(function(){wkGoWeek(step,true);},190);
+  }
+  el.addEventListener('touchend',end,{passive:true});
+  el.addEventListener('touchcancel',function(){if(on&&lock===1){on=false;back();}on=false;},{passive:true});
 }
-function wkGoWeek(step){
+function wkSlideEls(){
+  var sw=document.querySelector('#main .sw');if(!sw)return[];
+  var p=sw.previousElementSibling;
+  return p&&p.classList.contains('wk-todos')?[p,sw]:[sw];
+}
+/* 새로 그린 표를 스와이프 방향에서 밀어 넣음 */
+function wkSlideIn(){
+  var from=wkSlideFrom;wkSlideFrom=0;
+  if(!from||wkReduceMotion())return;
+  var mv=wkSlideEls();if(!mv.length)return;
+  var mn=document.getElementById('main');if(mn)mn.classList.remove('anim'); /* 화면 전환 애니메이션과 겹치지 않게 */
+  var off=from*Math.min(120,(mv[mv.length-1].offsetWidth||300)*0.35);
+  mv.forEach(function(m){m.style.transition='none';m.style.transform='translate3d('+off+'px,0,0)';m.style.opacity='0';});
+  void mv[0].offsetWidth;
+  mv.forEach(function(m){
+    m.style.transition='transform .34s cubic-bezier(.2,.9,.25,1),opacity .26s ease-out';
+    m.style.transform='';m.style.opacity='';
+  });
+}
+function wkGoWeek(step,slide){
   var ni=ci+step;
   if(ni<0||ni>=wks.length)return;
   ci=ni;wkFoldOpen=false; /* 주차를 옮기면 다시 접어서 보여준다 */
-  if(typeof animMain==='function')animMain();
+  if(slide)wkSlideFrom=step;               /* 다음 주는 오른쪽에서, 지난주는 왼쪽에서 */
+  else if(typeof animMain==='function')animMain();
   render();
 }
 
@@ -726,6 +781,7 @@ function renderW(){
   wkFoldEmpty();
   wkFitCards();
   wkBindSwipe();
+  wkSlideIn();
   bindSecBar();
   var up=document.getElementById('tt-upload');
   if(up)up.onclick=function(){openXL();};
