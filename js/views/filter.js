@@ -110,6 +110,7 @@ function fRerenderKeep(){
 }
 var fCleared=false;     /* 전체 해제 상태 (빈 선택을 전체선택으로 되돌리지 않게) */
 var hrsRange='all';     /* 시수 범위: all | mid(중간까지) | fin(중간 이후) */
+var hrsHasMid=false;    /* 중간고사 표시가 있는 과목이 하나라도 있을 때만 범위 버튼을 보여 줌 */
 var fHoursOpen={};      /* 과목명 → 펼침 여부 */
 var fProfOpen={};       /* '과목|교수' → 수업 목록 펼침 여부 */
 
@@ -148,6 +149,8 @@ function hoursData(){
       if(!midDate[b2]||m2.date<midDate[b2])midDate[b2]=m2.date;
     }
   }
+  hrsHasMid=Object.keys(midDate).length>0;
+  if(!hrsHasMid)hrsRange='all';
   for(var i=0;i<src.length;i++){
     var it=src[i],s=it.subject;
     if(!s||isEv(s)||isHoliday(s))continue;
@@ -186,7 +189,7 @@ function renderHours(){
     h+='<div class="no-res">수업 데이터가 없습니다</div>';
   }else{
     h+='<div class="hrs-note">1교시 = 1시간, 시험·행사 제외 · ~날짜는 그 교수님의 마지막 수업</div>';
-    h+='<div class="hrs-range">'
+    if(hrsHasMid)h+='<div class="hrs-range">'
       +'<button class="hrs-range-btn'+(hrsRange==='all'?' on':'')+'" data-r="all">전체</button>'
       +'<button class="hrs-range-btn'+(hrsRange==='mid'?' on':'')+'" data-r="mid">중간 범위</button>'
       +'<button class="hrs-range-btn'+(hrsRange==='fin'?' on':'')+'" data-r="fin">기말 범위</button>'
@@ -280,10 +283,11 @@ function renderF(){
   var nS=allSubj;
 
   var h='<div class="fw">';
-  h+='<div class="fseg">'
+  /* 탭은 위에 고정 — 수업 일정은 오늘 날짜로 스크롤되므로 안 그러면 '수업 시수'로 못 돌아감 */
+  h+='<div class="fseg-bar" id="fseg-bar"><div class="fseg">'
     +'<button class="fseg-btn'+(fView==='hours'?' on':'')+'" id="fseg-hours">수업 시수</button>'
     +'<button class="fseg-btn'+(fView==='sched'?' on':'')+'" id="fseg-sched">수업 일정</button>'
-    +'</div>';
+    +'</div></div>';
 
   if(fView==='hours'){
     h+='<div id="fres"></div></div>';
@@ -364,6 +368,9 @@ function renderF(){
   renderFR();
 }
 function bindFSeg(){
+  /* 목록 머리(sticky)가 고정 탭 바로 아래에 붙도록 높이를 넘김 */
+  var bar=document.getElementById('fseg-bar'),fw=bar&&bar.parentNode;
+  if(bar&&fw)fw.style.setProperty('--fseg-h',bar.offsetHeight+'px');
   document.getElementById('fseg-sched').onclick=function(){if(fView!=='sched'){fView='sched';mainTop();renderF();}};
   document.getElementById('fseg-hours').onclick=function(){if(fView!=='hours'){fView='hours';mainTop();renderF();}};
 }
@@ -406,7 +413,8 @@ function fScrollToToday(){
   requestAnimationFrame(function(){
     var th=main.querySelector('.xl-table thead');
     /* 머리는 본문 위 여백 아래에 붙으므로 그 여백만큼 더 띄움 (태블릿은 여백이 더 큼) */
-    var pad=(th?th.getBoundingClientRect().height:26)+(parseFloat(getComputedStyle(main).paddingTop)||0)+4;
+    var bar=document.getElementById('fseg-bar');
+    var pad=(th?th.getBoundingClientRect().height:26)+(bar?bar.offsetHeight:0)+(parseFloat(getComputedStyle(main).paddingTop)||0)+4;
     /* offsetTop으로 계산 — 화면 전환 애니메이션(translate) 중에는 화면 좌표가 어긋나서 날짜 줄이 머리에 가렸음 */
     function topIn(el){var y=0;while(el&&el!==main){y+=el.offsetTop;el=el.offsetParent;}return el===main?y:y-main.offsetTop;}
     main.scrollTop=Math.max(0,topIn(hit)-pad);
