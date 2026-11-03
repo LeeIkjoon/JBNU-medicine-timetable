@@ -119,7 +119,7 @@ function histDayCardHtml(k){
 
   var meta2=[];
   if(sum.total)meta2.push('계획 '+sum.total+'개 중 '+sum.done+'개 완료');
-  if(sum.goal)meta2.push('목표 달성 '+sum.pct+'%');
+  if(sum.goal)meta2.push('목표 시간의 '+sum.pct+'%');
 
   if(meta2.length)h+='<div class="hist-dmeta">'+meta2.join(' · ')+'</div>';
   if(meta.res)h+='<div class="hist-res">'+escHtml(meta.res)+'</div>';

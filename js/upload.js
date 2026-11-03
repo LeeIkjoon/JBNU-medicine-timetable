@@ -26,7 +26,9 @@ function xlReset(){
   var st=document.getElementById('xl-status');if(st){st.textContent='';st.className='xl-status';}
   var sh=document.getElementById('xl-sheets');if(sh){sh.innerHTML='';sh.style.display='none';}
   var wn=document.getElementById('xl-warn');if(wn){wn.innerHTML='';wn.style.display='none';}
-  var ap=document.getElementById('xl-apply');if(ap)ap.disabled=true;
+  var ap=document.getElementById('xl-apply');if(ap){ap.disabled=true;if(!(typeof isAdmin!=='undefined'&&isAdmin))ap.textContent='시간표 적용';}
+  var nt=document.getElementById('xl-note');if(nt){nt.innerHTML='';nt.style.display='none';}
+  _xlShareCandIdx=-1;
   var fi=document.getElementById('xl-file');if(fi)fi.value='';
 }
 function xlStatus(msg,cls){
@@ -126,6 +128,37 @@ function xlShareRange(items){
   (items||[]).forEach(function(it){var d=it.date||'';if(!d)return;if(!mn||d<mn)mn=d;if(!mx||d>mx)mx=d;});
   return {min:mn,max:mx};
 }
+/* 과목 겹침 비율 — 다른 학교·학년 파일을 실수로 올렸는지 가늠 (시험·휴일 제외한 과목명 기준) */
+function xlSubjSet(items){
+  var m={};(items||[]).forEach(function(it){var s=String(it.subject||'').trim();if(!s||it.is_exam===true||it.is_holiday)return;m[s]=1;});
+  return m;
+}
+function xlOverlap(items,ref){
+  var a=Object.keys(xlSubjSet(items)),n=0;if(!a.length||!ref)return 1;
+  var keys=Object.keys(ref);if(!keys.length)return 1;
+  a.forEach(function(s){if(ref[s])n++;});
+  return n/Math.min(a.length,keys.length);
+}
+var _xlShareCandIdx=-1;
+var _xlJbSubj=null;  /* 전북대 3개 학년 과목 목록 (다른 학교 첫 등록 검사용) */
+/* 공유하지 않는 이유 (있으면 문구) */
+function xlShareBlockWhy(){
+  var c=_xlCands[_xlSel];if(!c||!_xlShareMode)return'';
+  var its=c.result.items;
+  var rr=xlShareRange(its),cut=new Date(Date.now()-60*86400000);
+  var cutS=cut.getFullYear()+'-'+('0'+(cut.getMonth()+1)).slice(-2)+'-'+('0'+cut.getDate()).slice(-2);
+  if(rr.max&&rr.max<cutS)return rr.min.slice(0,4)+'년 '+(+rr.min.slice(5,7))+'월에 시작한 지난 학기 파일이라 이 기기에만 적용돼요. 친구들과 공유되지 않아요.';
+  var ns=Object.keys(xlSubjSet(its)).length;
+  if(ns>60)return '과목이 '+ns+'개로 읽혔어요. 강의 주제가 과목 이름으로 읽혔을 수 있어서 친구들과 공유하지 않고 이 기기에만 적용해요.';
+  if(_xlShareMode==='new'&&_xlJbSubj){
+    var nm=['의예과 2학년','의학과 1학년','의학과 2학년'];
+    for(var i=0;i<_xlJbSubj.length;i++){
+      if(Object.keys(_xlJbSubj[i]).length&&xlOverlap(its,_xlJbSubj[i])>=0.6)
+        return '전북대학교 '+nm[i]+' 시간표와 거의 같은 파일이에요. 다른 학교 시간표는 이 학년에 공유하지 않아요.';
+    }
+  }
+  return'';
+}
 function xlShareProbe(){
   _xlShareMode='';_xlShareCur=null;xlShareRow();
   if(typeof isAdmin!=='undefined'&&isAdmin)return;
@@ -135,13 +168,30 @@ function xlShareProbe(){
   var jb=!xlShareSchoolOk();
   ref.child('ts').once('value').then(function(snap){
     if(key!==fbGradeKey(savedGrade))return;
-    if(!snap.exists()){_xlShareMode='new';xlShareRow();return;}
+    if(!snap.exists()){
+      _xlShareMode='new';xlShareRow();
+      /* 다른 학교 학년의 첫 등록: 전북대 공유 시간표와 거의 같은 파일이면 막기 위해 과목 목록을 받아 둠
+         (전북대 시간표가 다른 학교로 잘못 올라간 일이 두 번 있었음 — 이화여대·충남대) */
+      if(!jb&&typeof fbDb!=='undefined'&&fbDb){
+        _xlJbSubj=null;
+        Promise.all(['premed2','med1','med2'].map(function(k){
+          return fbDb.ref('timetable/'+k+'/items').once('value').then(function(sn){
+            var v=sn.val()||[];return Array.isArray(v)?v:Object.keys(v).map(function(x){return v[x];});
+          }).catch(function(){return[];});
+        })).then(function(arr){
+          if(key!==fbGradeKey(savedGrade))return;
+          _xlJbSubj=arr.map(function(its){return xlSubjSet(its.filter(Boolean));});
+          xlShareRow();
+        });
+      }
+      return;
+    }
     if(jb)return;
     return ref.child('items').once('value').then(function(s2){
       if(key!==fbGradeKey(savedGrade))return;
       var its=s2.val()||[];if(!Array.isArray(its))its=Object.keys(its).map(function(k){return its[k];});
       var r=xlShareRange(its);
-      _xlShareCur={sig:xlShareSig(its),min:r.min,max:r.max};
+      _xlShareCur={sig:xlShareSig(its),min:r.min,max:r.max,subj:xlSubjSet(its)};
       _xlShareMode='update';xlShareRow();
     });
   }).catch(function(){});
@@ -149,6 +199,7 @@ function xlShareProbe(){
 function xlShareAble(){
   var c=_xlCands[_xlSel];
   if(!_xlShareMode||!c||c.result.format==='ai'||c.result.items.length<10)return false;
+  if(xlShareBlockWhy())return false;
   /* 이미 끝난 학기 파일(마지막 수업이 두 달도 더 전)은 공유하지 않음 — 예전 시간표가 학교 기본값이 되지 않게 */
   var rr=xlShareRange(c.result.items),cut=new Date(Date.now()-60*86400000);
   var cutS=cut.getFullYear()+'-'+('0'+(cut.getMonth()+1)).slice(-2)+'-'+('0'+cut.getDate()).slice(-2);
@@ -163,12 +214,39 @@ function xlShareAble(){
 }
 function xlShareRow(){
   var row=document.getElementById('xl-share');if(!row)return;
-  var on=xlShareAble();
+  var on=xlShareAble(),c=_xlCands[_xlSel];
   row.style.display=on?'flex':'none';
-  var tx=document.getElementById('xl-share-tx');
+  var tx=document.getElementById('xl-share-tx'),cb=document.getElementById('xl-share-cb');
+  /* 지금 공유 시간표와 과목이 거의 안 겹치면(다른 학교·학년 파일일 수 있음) 경고하고 기본으로 끔 */
+  var low=on&&_xlShareMode==='update'&&c&&_xlShareCur&&xlOverlap(c.result.items,_xlShareCur.subj)<0.3;
   if(on&&tx)tx.textContent=_xlShareMode==='update'
-    ?'같은 학교·학년 친구들의 시간표도 이 파일로 바꿀게요. 학교에서 받은 새 시간표일 때만 켜 두세요. 신고된 시간표는 내려갈 수 있어요.'
+    ?(low?'⚠ 지금 '+(savedGrade||'이 학년')+' 시간표와 과목이 거의 겹치지 않아요. 다른 학교·학년 파일이 아니라 학교에서 받은 새 시간표가 맞을 때만 켜 주세요. 켜면 같은 학년 친구들의 시간표도 이 파일로 바뀌어요.'
+         :'같은 학교·학년 친구들의 시간표도 이 파일로 바꿀게요. 학교에서 받은 새 시간표일 때만 켜 두세요. 신고된 시간표는 내려갈 수 있어요.')
     :'이 학년에는 아직 시간표가 없어요. 같은 학교·학년 친구들도 이 시간표를 바로 볼 수 있게 등록할게요. 수업 시간표만 올려 주세요. 신고된 시간표는 내려갈 수 있어요.';
+  if(on&&cb&&_xlShareCandIdx!==_xlSel+'|'+_xlShareMode){ /* 후보·모드가 바뀔 때만 기본값을 다시 정함(사용자가 바꾼 건 존중) */
+    _xlShareCandIdx=_xlSel+'|'+_xlShareMode;cb.checked=!low;
+  }
+  if(cb&&!cb._xlBound){cb._xlBound=1;cb.addEventListener('change',xlApplyLabel);}
+  xlApplyLabel();
+}
+/* 적용 버튼 이름과 적용 전 안내: 무엇이 바뀌는지 미리 보여 줌 */
+function xlApplyLabel(){
+  var ap=document.getElementById('xl-apply'),nt=document.getElementById('xl-note');
+  var c=_xlCands[_xlSel];
+  var share=xlShareAble()&&(function(){var cb=document.getElementById('xl-share-cb');return !cb||cb.checked;})();
+  var admin=typeof isAdmin!=='undefined'&&isAdmin;
+  if(ap&&!admin)ap.textContent=share?(_xlShareMode==='update'?'적용하고 친구들 시간표도 바꾸기':'적용하고 학년 시간표로 등록'):'시간표 적용';
+  if(!nt)return;
+  var msg=[];
+  if(c&&!admin){
+    var why=xlShareBlockWhy();if(why)msg.push(why);
+    if(typeof merged!=='undefined'&&merged.length&&xlOverlap(c.result.items,xlSubjSet(merged))<0.3)
+      msg.push('지금 보고 있는 시간표와 과목이 거의 겹치지 않아요. '+(savedGrade||'')+' 파일이 맞는지 확인해 주세요.');
+    if(!share&&typeof merged!=='undefined'&&merged.length)
+      msg.push('적용하면 이 기기에만 바뀌고, 학교 시간표가 바뀌어도 더 이상 따라가지 않아요. 시간표 아래 \'학교 시간표로 돌아가기\'로 언제든 되돌릴 수 있어요.');
+  }
+  nt.innerHTML=msg.map(function(m){return '<div>'+escHtml(m)+'</div>';}).join('');
+  nt.style.display=msg.length?'block':'none';
 }
 function xlShareRegister(){
   var ref=fbRef(savedGrade),key=fbGradeKey(savedGrade);if(!ref)return;

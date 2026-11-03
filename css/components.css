@@ -263,6 +263,7 @@
 .cls-ovl.show{opacity:1;pointer-events:all}
 .cls-sh{position:relative;background:var(--surface);border-radius:var(--radius-2xl);width:100%;max-width:360px;
   padding:22px 22px 20px;box-shadow:var(--shadow-xl);
+  max-height:calc(100dvh - 48px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain; /* 선택과목이 많아도 시트 안에서 스크롤 */
   transform:scale(.88) translateY(40px);opacity:0;
   transition:transform .45s var(--ease-bounce),opacity .2s}
 .cls-ovl.show .cls-sh{transform:scale(1) translateY(0);opacity:1}
@@ -496,3 +497,7 @@ input[type=date].memo-input{line-height:1.3;min-height:38px}
   padding:11px 22px;border-radius:var(--radius-md);cursor:pointer}
 .tour-next:active,.tour-skip:active{transform:scale(.96)}
 @media (prefers-reduced-motion:reduce){.tour-hole,.tour-card,.tour-ov{transition:none}}
+
+.xl-note{margin-top:var(--space-2);font-size:var(--font-sm);line-height:1.5;color:var(--text-secondary);background:var(--surface-muted);
+  border-radius:var(--radius-md);padding:10px 12px}
+.xl-note div+div{margin-top:4px}

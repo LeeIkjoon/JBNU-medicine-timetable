@@ -694,3 +694,14 @@
   .main.anim .stat-bar{transform-origin:bottom;animation:statUp .45s var(--ease) both}
   @keyframes statUp{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 }
+
+/* 공부 중 표시 (다른 탭에서) */
+.tm-float{position:fixed;left:50%;transform:translate(-50%,8px);bottom:calc(76px + env(safe-area-inset-bottom));z-index:160;
+  display:flex;align-items:center;gap:8px;border:none;background:var(--text-strong);color:var(--bg);
+  font-size:var(--font-md);font-weight:var(--weight-semi);padding:9px 16px;border-radius:var(--radius-pill);
+  box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:opacity .2s var(--ease),transform .2s var(--ease);
+  max-width:calc(100% - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:inherit;cursor:pointer}
+.tm-float.show{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
+.tm-float b{font-variant-numeric:tabular-nums;font-weight:var(--weight-bold)}
+.tm-float-dot{width:8px;height:8px;border-radius:50%;background:#34C759;flex:none}
+.tm-float-dot.paused{background:#FF9F0A}

@@ -93,18 +93,27 @@ function tourEnd(){
 }
 /* 첫 실행 흐름(로그인·학교·학년 화면)이 끝나고 시간표가 보이면 시작 */
 (function(){
-  var n=0;
+  var n=0,emptyN=0;
   function hidden(id){var e=document.getElementById(id);return !e||e.style.display==='none'||e.style.display==='';}
+  /* 서버에 이 학년 시간표가 있는데 아직 안 받아졌으면 기다림 — 안 그러면 '파일 올리기' 안내로 잘못 시작함 */
+  function dataSettled(){
+    if(typeof merged!=='undefined'&&merged.length)return true;
+    var expect=false;
+    try{expect=typeof scGradesWithData==='function'&&scGradesWithData(savedSchool||'jbnu').indexOf(savedGrade)>=0;}catch(e){}
+    if(expect)return n>40; /* 최대 약 20초 기다린 뒤에는 그냥 진행 */
+    return ++emptyN>=4;    /* 시간표가 없는 학교: 빈 화면이 2초 이어지면 확정 */
+  }
   function tick(){
     var done=false;try{done=localStorage.getItem(TOUR_KEY)==='1';}catch(e){}
     if(done||++n>1200)return;
     var ready=document.visibilityState==='visible'
       &&(function(){try{return !!localStorage.getItem('user_grade');}catch(e){return false;}})()
-      &&hidden('auth-screen')&&hidden('sc-screen')&&hidden('gs-screen')
+      &&hidden('auth-screen')&&hidden('sc-screen')&&hidden('gs-screen')&&hidden('sec-screen')
+      &&![].some.call(document.querySelectorAll('.gs-screen'),function(e){return e.style.display&&e.style.display!=='none';})
       &&typeof vw!=='undefined'&&vw==='weekly'
       &&!document.querySelector('.xl-ovl.show,.xl-ovl.open');
     var m=document.getElementById('main');
-    if(ready&&m&&m.children.length){setTimeout(function(){
+    if(ready&&m&&m.children.length&&dataSettled()){setTimeout(function(){
       var d=false;try{d=localStorage.getItem(TOUR_KEY)==='1';}catch(e){}
       if(!d)tourStart();
     },700);return;}

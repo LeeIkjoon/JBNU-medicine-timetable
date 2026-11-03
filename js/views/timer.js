@@ -265,3 +265,27 @@ function tmBind(){
   if(stopEl)stopEl.onclick=tmStop;
   if(resetEl)resetEl.onclick=tmReset;
 }
+
+/* 공부 중 표시 — 타이머가 도는 동안 공부 탭이 아닌 화면에서도 하단 탭 위에 작게 보여 줌(켜 둔 걸 잊지 않게) */
+(function(){
+  function el(){
+    var e=document.getElementById('tm-float');
+    if(!e){
+      e=document.createElement('button');e.id='tm-float';e.className='tm-float';e.type='button';
+      e.onclick=function(){var b=document.getElementById('bn-d');if(b)b.click();};
+      document.body.appendChild(e);
+    }
+    return e;
+  }
+  function tick(){
+    var on=(tmState==='running'||tmState==='paused')&&!(typeof vw!=='undefined'&&vw==='dashboard');
+    var e=document.getElementById('tm-float');
+    if(!on){if(e)e.classList.remove('show');return;}
+    e=el();
+    e.innerHTML='<span class="tm-float-dot'+(tmState==='paused'?' paused':'')+'"></span>'
+      +(tmState==='paused'?'일시정지':'공부 중')+(tmSubject?' · '+escHtml(tmSubject):'')
+      +'<b>'+tmFmt(tmElapsed())+'</b>';
+    e.classList.add('show');
+  }
+  setInterval(tick,1000);
+})();

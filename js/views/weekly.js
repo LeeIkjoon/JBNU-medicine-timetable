@@ -186,14 +186,15 @@ function bindSecBar(){
 /* 요일별 할 일 아이콘 줄 — 시간표 칼럼 위에 정렬 (가볍게, 카드 없이) */
 function wkTodoRowHtml(){
   var dd=wdd[wks[ci]]||{},t=today();
-  var IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><path d="M8 12.3l2.6 2.6 5.4-5.6"/></svg>';
+  /* 할 일이 없을 때는 '추가' 모양(+) — 체크 모양은 '다 했다'로 읽혀서 */
+  var IC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><path d="M12 8.5v7M8.5 12h7"/></svg>';
   var any=false,h='<div class="wk-todos"><span class="wk-todos-sp"></span>';
   for(var i=0;i<DAYS.length;i++){
     var d=DAYS[i],dt=dd[d]||'';
     if(!dt){h+='<span class="wk-td off"></span>';continue;}
     any=true;
     var n=0;try{n=dtodoLoad(dt).length;}catch(e){}
-    h+='<button class="wk-td'+(dt===t?' today':'')+'" data-date="'+dt+'" data-day="'+d+'" title="'+d+'요일 할 일">'
+    h+='<button class="wk-td'+(dt===t?' today':'')+'" data-date="'+dt+'" data-day="'+d+'" title="'+d+'요일 할 일" aria-label="'+d+'요일 할 일'+(n?' '+n+'개':' 추가')+'">'
       +'<span class="wk-td-ic'+(n?' has':'')+'">'+(n?n:IC)+'</span></button>';
   }
   h+='</div>';
@@ -254,20 +255,33 @@ function openClassInfo(dt,day,period){
   if(cx)cx.onclick=function(e){e.stopPropagation();closeClassInfo();};
   var eb=document.getElementById('cls-edit');
   if(eb)eb.onclick=function(){closeClassInfo();openClassEdit(dt,day,period,it);};
+  /* 삭제·원래대로는 같은 수업으로 이어진 교시 전체(ps~pe)에 적용 — 3~4교시 수업을 지우면 둘 다 */
+  var slots=[];for(var sp=ps;sp<=pe;sp++)slots.push(sp);
   var db=document.getElementById('cls-del');
   if(db)db.onclick=function(){
-    var o=ovLoad(),k=dt+'|'+period;
-    o.add=o.add.filter(function(a){return ovSlot(a)!==k;});
-    delete o.mod[k];
-    /* 원본에 있던 슬롯이면 삭제 마크 */
-    if(secFilter(merged).some(function(i){return i.date===dt&&i.period===period;}))o.del[k]=1;
+    if(!db.classList.contains('confirm')){ /* 한 번 더 눌러야 삭제 */
+      db.classList.add('confirm');db.textContent=(ps===pe?'':perTxt+' ')+'삭제할까요? 한 번 더';
+      return;
+    }
+    var o=ovLoad(),org=secFilter(merged);
+    slots.forEach(function(pp){
+      var k=dt+'|'+pp;
+      o.add=o.add.filter(function(a){return ovSlot(a)!==k;});
+      delete o.mod[k];
+      /* 원본에 있던 슬롯이면 삭제 마크 */
+      if(org.some(function(i){return i.date===dt&&i.period===pp;}))o.del[k]=1;
+    });
     ovSave(o);closeClassInfo();ovRefresh();
+    if(typeof xlToast==='function')xlToast('수업을 지웠어요 · 시간표 위 \'변경 내역\'에서 되돌릴 수 있어요');
   };
   var rb=document.getElementById('cls-reset');
   if(rb)rb.onclick=function(){
-    var o=ovLoad(),k=dt+'|'+period;
-    delete o.mod[k];delete o.del[k];
-    o.add=o.add.filter(function(a){return ovSlot(a)!==k;});
+    var o=ovLoad();
+    slots.forEach(function(pp){
+      var k=dt+'|'+pp;
+      delete o.mod[k];delete o.del[k];
+      o.add=o.add.filter(function(a){return ovSlot(a)!==k;});
+    });
     ovSave(o);closeClassInfo();ovRefresh();
   };
 }
@@ -459,7 +473,7 @@ function ttSrcHtml(){
   if(typeof isAdmin!=='undefined'&&isAdmin)return'';
   if(ttLocalOn()){
     return '<div class="tt-src"><span class="tt-src-lbl">내가 올린 파일 사용 중 · 실시간 업데이트 꺼짐</span>'
-      +'<button class="tt-src-btn" id="tt-resync">동기화 복원</button>'
+      +'<button class="tt-src-btn" id="tt-resync">학교 시간표로 돌아가기</button>'
       +'<button class="tt-src-btn" id="tt-upload">다시 업로드</button></div>';
   }
   var el='';
@@ -503,12 +517,18 @@ function wkTodayState(){
 function wkFmtMin(m){return Math.floor(m/60)+':'+('0'+(m%60)).slice(-2);}
 function wkNowBarHtml(){
   var st=wkTodayState();
-  if(!st)return'';
+  if(!st){ /* 다른 주를 보고 있으면 이번 주로 돌아가는 줄 */
+    var tw=wkThisWeekIdx();
+    if(tw<0||tw===ci)return'';
+    return '<div class="tt-now away"><span class="tt-now-txt">'+(tw>ci?'지난 주':'다음 주')+' 시간표를 보고 있어요</span>'
+      +'<button class="tt-now-go" id="wk-today">이번 주로</button></div>';
+  }
   if(!st.list.length)return'<div class="tt-now done"><span class="tt-now-dot"></span>'
     +'<span class="tt-now-lbl">오늘</span><span class="tt-now-txt">수업이 없어요</span></div>';
   var it=st.cur||st.next;
   if(!it)return''; /* 오늘 수업 모두 끝 */
-  var txt=escHtml(it.subject)+(it.professor?' <span class="tt-now-prof">'+escHtml(it.professor)+'</span>':'');
+  var txt=escHtml(it.subject)+(it.topic&&it.topic!==it.subject?' <span class="tt-now-prof">· '+escHtml(it.topic)+'</span>':'')
+    +(it.professor?' <span class="tt-now-prof">'+escHtml(it.professor)+'</span>':'');
   var s0=wkItemSt(it);
   if(st.cur){
     var left=st.blockEnd-st.mins;
@@ -524,6 +544,11 @@ function wkNowBarHtml(){
     +'<small>'+(gap>=60?Math.floor(gap/60)+'시간 '+(gap%60?gap%60+'분 ':''):gap+'분 ')+'후</small></span></div>';
 }
 
+/* 오늘이 속한(주말이면 다음) 주차 번호 — goTodayWeek 규칙 그대로, ci는 건드리지 않음 */
+function wkThisWeekIdx(){
+  if(typeof goTodayWeek!=='function'||!wks.length)return -1;
+  var save=ci;goTodayWeek();var tw=ci;ci=save;return tw;
+}
 /* 위·아래 연속으로 비어 있는 교시는 한 줄로 접는다 (탭하면 펼침) */
 var wkFoldOpen=false;
 function wkFoldEmpty(){
@@ -628,7 +653,7 @@ function wkGoWeek(step,slide){
   var ni=ci+step;
   if(ni<0||ni>=wks.length)return;
   ci=ni;wkFoldOpen=false; /* 주차를 옮기면 다시 접어서 보여준다 */
-  if(slide)wkSlideFrom=step;               /* 다음 주는 오른쪽에서, 지난주는 왼쪽에서 */
+  if(slide)wkSlideFrom=step>0?1:-1;        /* 다음 주는 오른쪽에서, 지난주는 왼쪽에서 */
   else if(typeof animMain==='function')animMain();
   render();
 }
@@ -758,7 +783,7 @@ function renderW(){
       '<div class="empty-tt">'
       +'<div class="empty-tt-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15.5V4M12 4l-4 4M12 4l4 4"/><path d="M5 15v3.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V15"/></svg></div>'
       +'<div class="empty-tt-ttl">아직 시간표가 없어요</div>'
-      +'<div class="empty-tt-sub">학교에서 받은 시간표 파일(엑셀·PDF)을 올리면<br>이 기기에서 바로 볼 수 있어요</div>'
+      +'<div class="empty-tt-sub">학교에서 받은 시간표 파일(엑셀·PDF)을 올리면 바로 볼 수 있어요.<br>같은 학교·학년 친구들도 이 시간표를 함께 받아요</div>'
       +'<button class="empty-tt-btn" id="empty-upload">시간표 파일 업로드</button>'
       +'</div>';
     var eb=document.getElementById('empty-upload');
@@ -775,13 +800,16 @@ function renderW(){
     +wkNowBarHtml()
     +wkTodoRowHtml()
     +'<div class="sw">'+(wh[w]||'<p style="padding:20px;color:#8E8E93">시간표 데이터 없음</p>')+'</div>'
-    +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div></div>'
+    +'<div class="legend"><div class="lg-title">수강 과목</div><div class="lg-grid">'+(wl[w]||'')+'</div>'
+    +'<div class="lg-note"><span class="lg-ex"></span>빨간 테두리는 시험 · <b>!</b> 표시는 교수님 마지막 수업</div></div>'
     +ttSrcHtml();
   wkMarkToday();
   wkFoldEmpty();
   wkFitCards();
   wkBindSwipe();
   wkSlideIn();
+  var tb=document.getElementById('wk-today');
+  if(tb)tb.onclick=function(){var tw=wkThisWeekIdx();if(tw>=0&&tw!==ci)wkGoWeek(tw-ci,true);};
   bindSecBar();
   var up=document.getElementById('tt-upload');
   if(up)up.onclick=function(){openXL();};
@@ -789,6 +817,10 @@ function renderW(){
   if(rp)rp.onclick=function(){if(typeof rptOpen==='function')rptOpen();};
   var rs=document.getElementById('tt-resync');
   if(rs)rs.onclick=function(){
+    if(!rs.classList.contains('confirm')){ /* 올린 파일을 버리므로 한 번 더 확인 */
+      rs.classList.add('confirm');rs.textContent='내가 올린 파일을 지우고 돌아갈까요? 한 번 더';
+      return;
+    }
     ttLocalSet(false);
     try{localStorage.removeItem(ttKey());}catch(e){}
     loadFromFirebase();

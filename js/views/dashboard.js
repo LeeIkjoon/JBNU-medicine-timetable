@@ -590,7 +590,7 @@ function dashRecordHtml(){
   h+='<div class="stat-tile"><span>오늘</span><b>'+fmt(today)+'</b><i>'+(tp.total?'계획 '+tp.total+'개 중 '+tp.done+'개 완료':'세운 계획 없음')+'</i></div>';
   h+='<div class="stat-tile"><span>연속 공부</span><b>'+streak+'일</b><i>최고 '+best+'일</i></div>';
   h+='<div class="stat-tile"><span>하루 평균</span><b>'+fmt(avg)+'</b><i>'+st.pastN+'일 중 '+st.studied+'일 공부</i></div>';
-  h+='<div class="stat-tile"><span>계획 달성</span><b>'+(st.planAll?Math.round(st.planDone/st.planAll*100)+'%':'–')+'</b>'
+  h+='<div class="stat-tile"><span>할 일 완료</span><b>'+(st.planAll?Math.round(st.planDone/st.planAll*100)+'%':'–')+'</b>'
     +(st.planAll?'<i>'+st.planAll+'개 중 '+st.planDone+'개 완료</i>':'<i>세운 계획 없음</i>')+'</div>';
   h+='</div>';
   /* 과목별: 한 줄 누적 막대 + 목록 */
