@@ -478,7 +478,8 @@ function ttSrcHtml(){
   }
   var el='';
   if(electiveGroups().length)el='<button class="tt-src-btn ghost" id="el-manage">선택과목 설정</button>';
-  return '<div class="tt-src">'+el+'<button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button>'
+  return '<div class="tt-src">'+el+(typeof inviteUrl==='function'&&inviteUrl()?'<button class="tt-src-btn invite" id="tt-invite">친구 초대</button>':'')
+    +'<button class="tt-src-btn ghost" id="tt-upload">시간표 파일로 교체</button>'
     +'<button class="tt-src-btn ghost" id="tt-report">시간표 신고</button></div>';
 }
 /* 오늘 수업 상태 — 지금 진행 중인 수업(cur) / 쉬는·점심·등교 전이면 다음 수업(next) / 다 끝나면 done
@@ -813,6 +814,8 @@ function renderW(){
   bindSecBar();
   var up=document.getElementById('tt-upload');
   if(up)up.onclick=function(){openXL();};
+  var iv=document.getElementById('tt-invite');
+  if(iv)iv.onclick=function(){if(typeof inviteShare==='function')inviteShare();};
   var rp=document.getElementById('tt-report');
   if(rp)rp.onclick=function(){if(typeof rptOpen==='function')rptOpen();};
   var rs=document.getElementById('tt-resync');

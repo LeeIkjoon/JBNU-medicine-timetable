@@ -250,3 +250,5 @@ td.td-t-next::after{content:'다음';display:block;font-size:8px;font-weight:var
 .lg-note{margin-top:8px;font-size:var(--font-sm);color:var(--text-soft);display:flex;align-items:center;gap:6px}
 .lg-note b{color:var(--danger);font-weight:var(--weight-bold)}
 .lg-ex{width:14px;height:10px;border:1.5px solid var(--danger);border-radius:3px;flex:none}
+
+.tt-src-btn.invite{background:var(--accent);color:#fff;box-shadow:none}

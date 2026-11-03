@@ -6,7 +6,8 @@
 var TOUR_KEY='tour_done';
 (function(){
   try{
-    if(!localStorage.getItem(TOUR_KEY)&&localStorage.getItem('user_grade'))localStorage.setItem(TOUR_KEY,'1');
+    /* 초대 링크로 처음 온 사람은 학년이 미리 저장돼 있어도 안내를 보여 줌(tour_pending) */
+    if(!localStorage.getItem(TOUR_KEY)&&localStorage.getItem('user_grade')&&!localStorage.getItem('tour_pending'))localStorage.setItem(TOUR_KEY,'1');
   }catch(e){}
 })();
 
@@ -24,6 +25,8 @@ function tourSteps(){
     if(!jb)st.push({sel:'#tt-upload',scroll:true,ttl:'시간표가 바뀌면',
       txt:'학교에서 새 파일을 받으면 여기서 다시 올려 주세요. 같은 학년 친구들 시간표도 함께 바뀌어요.'});
   }
+  if(hasTT)st.push({sel:'#tt-invite',scroll:true,ttl:'친구 초대',
+    txt:'링크를 학년 단톡방에 올리면 친구들은 학교·학년을 고르지 않고 바로 이 시간표로 시작해요.'});
   st.push({sel:'#bn-d',ttl:'공부',
     txt:'오늘 할 일을 적고 ▶를 누르면 공부 시간이 기록돼요. 날짜별 기록과 연속 공부일도 여기서 봐요.'});
   st.push({sel:'#bn-f',ttl:'필터',
@@ -85,7 +88,7 @@ function tourPlace(){
 function tourEnd(){
   if(!_tour)return;
   var ov=_tour.ov;_tour=null;
-  try{localStorage.setItem(TOUR_KEY,'1');}catch(e){}
+  try{localStorage.setItem(TOUR_KEY,'1');localStorage.removeItem('tour_pending');}catch(e){}
   window.removeEventListener('resize',tourPlace);
   ov.classList.remove('on');
   setTimeout(function(){if(ov.parentNode)ov.parentNode.removeChild(ov);},250);
