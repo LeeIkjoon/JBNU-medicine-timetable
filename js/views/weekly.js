@@ -469,8 +469,50 @@ function openElective(){
 }
 
 /* 시간표 출처 표시·전환 (범례 아래) */
+/* 공유 시간표 출처 한 줄: 'N/D 업데이트 · 학생이 올림' (공유본을 쓸 때만) */
+function ttProvHtml(){
+  if(typeof ttMetaGet!=='function'||ttLocalOn())return'';
+  var m=ttMetaGet();if(!m||!m.ts)return'';
+  var d=new Date(m.ts),jb=(savedSchool||'jbnu')==='jbnu';
+  var who=m.src==='user'?'학생이 올림':(jb?'학년 관리자 배포':'메디캠퍼스 등록');
+  var ds=merged.map(function(i){return i.date;}).filter(Boolean).sort();
+  var rng=ds.length?(+ds[0].slice(5,7))+'/'+(+ds[0].slice(8))+'~'+(+ds[ds.length-1].slice(5,7))+'/'+(+ds[ds.length-1].slice(8)):'';
+  return '<button class="tt-prov" id="tt-prov" type="button">'
+    +'<span class="tt-prov-dot"></span>공유 시간표 · '+(d.getMonth()+1)+'/'+d.getDate()+' 업데이트 · '+who
+    +(rng?' · '+rng:'')+'</button>';
+}
+function ttSrcRefresh(){
+  var el=document.querySelector('#main .tt-src-wrap');if(!el)return;
+  var tmp=document.createElement('div');tmp.innerHTML=ttSrcHtml();
+  if(tmp.firstChild)el.parentNode.replaceChild(tmp.firstChild,el);
+  ttSrcBind();
+}
 function ttSrcHtml(){
   if(typeof isAdmin!=='undefined'&&isAdmin)return'';
+  return '<div class="tt-src-wrap">'+ttProvHtml()+ttSrcBtnsHtml()+'</div>';
+}
+/* 시간표 아래 버튼·출처 줄 동작 */
+function ttSrcBind(){
+  var up=document.getElementById('tt-upload');
+  if(up)up.onclick=function(){openXL();};
+  var iv=document.getElementById('tt-invite');
+  if(iv)iv.onclick=function(){if(typeof inviteShare==='function')inviteShare();};
+  var rp=document.getElementById('tt-report');
+  if(rp)rp.onclick=function(){if(typeof rptOpen==='function')rptOpen();};
+  var pv=document.getElementById('tt-prov');
+  if(pv)pv.onclick=function(){if(typeof openChangelogModal==='function')openChangelogModal();};
+  var rs=document.getElementById('tt-resync');
+  if(rs)rs.onclick=function(){
+    if(!rs.classList.contains('confirm')){ /* 올린 파일을 버리므로 한 번 더 확인 */
+      rs.classList.add('confirm');rs.textContent='내가 올린 파일을 지우고 돌아갈까요? 한 번 더';
+      return;
+    }
+    ttLocalSet(false);
+    try{localStorage.removeItem(ttKey());}catch(e){}
+    loadFromFirebase();
+  };
+}
+function ttSrcBtnsHtml(){
   if(ttLocalOn()){
     return '<div class="tt-src"><span class="tt-src-lbl">내가 올린 파일 사용 중 · 실시간 업데이트 꺼짐</span>'
       +'<button class="tt-src-btn" id="tt-resync">학교 시간표로 돌아가기</button>'
@@ -812,22 +854,7 @@ function renderW(){
   var tb=document.getElementById('wk-today');
   if(tb)tb.onclick=function(){var tw=wkThisWeekIdx();if(tw>=0&&tw!==ci)wkGoWeek(tw-ci,true);};
   bindSecBar();
-  var up=document.getElementById('tt-upload');
-  if(up)up.onclick=function(){openXL();};
-  var iv=document.getElementById('tt-invite');
-  if(iv)iv.onclick=function(){if(typeof inviteShare==='function')inviteShare();};
-  var rp=document.getElementById('tt-report');
-  if(rp)rp.onclick=function(){if(typeof rptOpen==='function')rptOpen();};
-  var rs=document.getElementById('tt-resync');
-  if(rs)rs.onclick=function(){
-    if(!rs.classList.contains('confirm')){ /* 올린 파일을 버리므로 한 번 더 확인 */
-      rs.classList.add('confirm');rs.textContent='내가 올린 파일을 지우고 돌아갈까요? 한 번 더';
-      return;
-    }
-    ttLocalSet(false);
-    try{localStorage.removeItem(ttKey());}catch(e){}
-    loadFromFirebase();
-  };
+  ttSrcBind();
   var om=document.getElementById('ov-manage');
   if(om)om.onclick=openOvManage;
   var eb2=document.getElementById('el-open');

@@ -252,3 +252,10 @@ td.td-t-next::after{content:'다음';display:block;font-size:8px;font-weight:var
 .lg-ex{width:14px;height:10px;border:1.5px solid var(--danger);border-radius:3px;flex:none}
 
 .tt-src-btn.invite{background:var(--accent);color:#fff;box-shadow:none}
+
+/* 공유 시간표 출처 한 줄 */
+.tt-src-wrap{margin:10px 0 4px}
+.tt-src-wrap .tt-src{margin-top:6px}
+.tt-prov{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border:none;background:none;cursor:pointer;
+  font-family:inherit;font-size:var(--font-sm);color:var(--text-soft);padding:6px 4px;line-height:1.4;text-align:center}
+.tt-prov-dot{width:6px;height:6px;border-radius:50%;background:var(--success,#34C759);flex:none}

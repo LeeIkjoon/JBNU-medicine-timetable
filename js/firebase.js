@@ -39,8 +39,19 @@ function fbRef(grade){
 }
 
 /* Firebase 데이터를 받아서 시간표에 적용 */
+/* 공유 시간표 출처 — 언제 누가(학생 업로드/관리자 배포) 올렸는지. 시간표 아래 한 줄로 보여 준다 */
+function ttMetaKey(){return ttKey()+'_meta';}
+function ttMetaGet(){try{return JSON.parse(localStorage.getItem(ttMetaKey())||'null');}catch(e){return null;}}
+function ttMetaSave(data){
+  var m={ts:data.ts||0,src:data.src||'',msg:(data.changelog&&data.changelog.msg)||''};
+  var o=ttMetaGet();
+  if(o&&o.ts===m.ts&&o.src===m.src&&o.msg===m.msg)return;
+  try{localStorage.setItem(ttMetaKey(),JSON.stringify(m));}catch(e){}
+  if(typeof vw!=='undefined'&&vw==='weekly'&&typeof ttSrcRefresh==='function')ttSrcRefresh();
+}
 function applyFirebaseData(data){
   if(!data||!data.items||!data.items.length) return;
+  ttMetaSave(data); /* 내 파일 사용 중이어도 공유본 정보는 기록 */
   if(typeof ttLocalOn==='function'&&ttLocalOn())return; /* 내 파일 사용 중 — 동기화 일시 중지 */
   /* Firebase가 항상 최신 - 로컬 캐시와 비교 없이 바로 적용 */
   var prevTs=0;

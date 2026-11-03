@@ -140,6 +140,15 @@ function xlOverlap(items,ref){
   return n/Math.min(a.length,keys.length);
 }
 var _xlShareCandIdx=-1;
+/* 날짜·교시·과목 단위 수업 집합 (공유본과 새 파일 비교용) */
+function xlSlotSet(items){var m={};(items||[]).forEach(function(it){if(it&&it.date)m[it.date+'|'+it.period+'|'+String(it.subject||'').trim()]=1;});return m;}
+function xlShareDiff(items){
+  if(!_xlShareCur||!_xlShareCur.keys)return null;
+  var now=xlSlotSet(items),add=0,del=0;
+  Object.keys(now).forEach(function(k){if(!_xlShareCur.keys[k])add++;});
+  Object.keys(_xlShareCur.keys).forEach(function(k){if(!now[k])del++;});
+  return {add:add,del:del};
+}
 var _xlJbSubj=null;  /* 전북대 3개 학년 과목 목록 (다른 학교 첫 등록 검사용) */
 /* 공유하지 않는 이유 (있으면 문구) */
 function xlShareBlockWhy(){
@@ -191,7 +200,7 @@ function xlShareProbe(){
       if(key!==fbGradeKey(savedGrade))return;
       var its=s2.val()||[];if(!Array.isArray(its))its=Object.keys(its).map(function(k){return its[k];});
       var r=xlShareRange(its);
-      _xlShareCur={sig:xlShareSig(its),min:r.min,max:r.max,subj:xlSubjSet(its)};
+      _xlShareCur={sig:xlShareSig(its),min:r.min,max:r.max,subj:xlSubjSet(its),keys:xlSlotSet(its)};
       _xlShareMode='update';xlShareRow();
     });
   }).catch(function(){});
@@ -240,6 +249,10 @@ function xlApplyLabel(){
   var msg=[];
   if(c&&!admin){
     var why=xlShareBlockWhy();if(why)msg.push(why);
+    if(share&&_xlShareMode==='update'){
+      var df=xlShareDiff(c.result.items);
+      if(df)msg.push('지금 공유 시간표와 비교하면 수업 '+df.add+'개가 새로 생기고 '+df.del+'개가 빠져요. 친구들 시간표도 똑같이 바뀌어요.');
+    }
     if(typeof merged!=='undefined'&&merged.length&&xlOverlap(c.result.items,xlSubjSet(merged))<0.3)
       msg.push('지금 보고 있는 시간표와 과목이 거의 겹치지 않아요. '+(savedGrade||'')+' 파일이 맞는지 확인해 주세요.');
     if(!share&&typeof merged!=='undefined'&&merged.length)
