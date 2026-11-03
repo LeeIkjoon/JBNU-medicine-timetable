@@ -90,8 +90,10 @@ function buildFromItems(items,nativeWdd,nativeEd){
     for(var pi=0;pi<palette.length;pi++){
       if(!used[palette[pi]]){used[palette[pi]]=true;return palette[pi];}
     }
-    var c2=_pastel(hueSeed);
-    while(used[c2]){hueSeed+=137.5;c2=_pastel(hueSeed);}
+    /* 137.5°씩 돌면 144번 만에 같은 색조로 돌아오므로, 한 바퀴마다 조금씩 비껴 가며 찾되
+       과목이 아주 많아 빈 색이 없으면 겹치는 색을 그대로 쓴다(무한 루프 방지 — 충남대 PDF에서 멈춤) */
+    var c2=_pastel(hueSeed),tries=0;
+    while(used[c2]&&tries<720){tries++;hueSeed+=137.5+(tries%144===0?1.3:0);c2=_pastel(hueSeed);}
     hueSeed+=137.5;used[c2]=true;return c2;
   }
   /* 1차: 휴일·행사는 무채색 (팔레트 소모 방지) */
