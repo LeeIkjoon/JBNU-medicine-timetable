@@ -58,7 +58,8 @@ function histHasData(k){
 /* 달력 칸용 짧은 시간 표기: 2h 30m / 45m / 3h */
 function histShort(secs){
   var m=Math.round(secs/60),h=Math.floor(m/60);
-  if(!h)return (m||1)+'m';
+  if(secs<60)return secs>0?'<1m':'0m'; /* 9초가 '1m'로 보이던 것 */
+  if(!h)return m+'m';
   return m%60?h+'h '+(m%60)+'m':h+'h';
 }
 

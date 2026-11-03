@@ -123,6 +123,10 @@ function buildWeekTable(w,items){
         html+='<div class="cn-s">'+it.subject+'</div>';
       }
       if(it.topic)html+='<div class="cn-tp">'+it.topic+'</div>';
+      /* 이 수업의 실제 시각이 교시 줄 시각과 10분 넘게 다르면 칸에 시각을 적음
+         (요일마다 교시 시각이 다른 학교 — 예: 이화여대 월요일이 한 칸씩 밀림) */
+      var rowM=wkMin(pt),itM=wkMin(it.start);
+      if(itM>=0&&rowM>=0&&Math.abs(itM-rowM)>=10)html+='<div class="cn-tm">'+it.start+(it.end?'~'+it.end:'')+'</div>';
       if(it.professor)html+='<div class="cn-p">'+it.professor+(isLastClass(it)?' <span class="cn-last">❗</span>':'')+'</div>';
       html+='</div></td>';
     });
@@ -308,7 +312,7 @@ function openClassEdit(dt,day,period,base){
   /* 교시 선택 (이동 가능) */
   var ps=document.getElementById('edit-period'),ph='';
   Object.keys(PERIOD_START).map(Number).sort(function(a,b){return a-b;}).forEach(function(pi){
-    ph+='<option value="'+pi+'"'+(pi===period?' selected':'')+'>'+pi+'교시 · '+PERIOD_START[pi]+'~'+PERIOD_END[pi]+'</option>';
+    ph+='<option value="'+pi+'"'+(pi===period?' selected':'')+'>'+pi+'교시 '+PERIOD_START[pi]+'</option>'; /* 좁은 칸에서 잘리지 않게 짧게 */
   });
   ps.innerHTML=ph;
   /* 날짜 선택 (다른 날로 이동 가능) — 학기 범위 안에서 */
@@ -328,6 +332,7 @@ function openClassEdit(dt,day,period,base){
   document.getElementById('edit-topic').value=(base&&base.topic)||'';
   document.getElementById('edit-prof').value=(base&&base.professor)||'';
   document.getElementById('edit-exam-chk').checked=!!(base&&(base.is_exam===true||base.is_exam==='true'));
+  editBulkInit(!base,day,period);
   var eo=document.getElementById('edit-ovl');
   eo.className='cls-ovl show';
   eo.onclick=function(e){if(e.target===eo)closeClassEdit();};
@@ -349,25 +354,31 @@ function saveClassEdit(){
   var q=newDt.split('-'),dow=new Date(+q[0],+q[1]-1,+q[2]).getDay();
   if(dow===0||dow===6){newDt=c.dt;q=newDt.split('-');dow=new Date(+q[0],+q[1]-1,+q[2]).getDay();}
   var newDay=WN[dow];
-  /* 주차: wdd에서 날짜로 찾고, 없으면 그 날짜가 속한 주(월~일)의 다른 날짜로 찾음 */
-  var wk=null;
-  for(var w in wdd){for(var d in wdd[w]){if(wdd[w][d]===newDt){wk=w;break;}}if(wk)break;}
-  if(!wk){
-    var base=new Date(+q[0],+q[1]-1,+q[2]);var mon=new Date(base);mon.setDate(base.getDate()-((dow+6)%7));
-    var span={};for(var k=0;k<7;k++){var dd2=new Date(mon);dd2.setDate(mon.getDate()+k);span[dd2.getFullYear()+'-'+p2(dd2.getMonth()+1)+'-'+p2(dd2.getDate())]=1;}
-    for(var w2 in wdd){for(var d2 in wdd[w2]){if(span[wdd[w2][d2]]){wk=w2;break;}}if(wk)break;}
-  }
-  if(!wk)wk=wks[ci]||'1';
-  /* 그 주에 해당 요일 날짜가 비어 있으면(휴일 등) 열이 생기도록 등록 */
-  if(wdd[wk]&&!wdd[wk][newDay]){wdd[wk][newDay]=newDt;
-    try{var st=JSON.parse(localStorage.getItem(ttKey())||'null');if(st&&st.wdd){st.wdd[wk]=st.wdd[wk]||{};st.wdd[wk][newDay]=newDt;localStorage.setItem(ttKey(),JSON.stringify(st));}}catch(e){}}
-  var item={week:wk,date:newDt,day:newDay,period:newPeriod,
-    start:PERIOD_START[newPeriod]||'',end:PERIOD_END[newPeriod]||'',
-    subject:subj,professor:document.getElementById('edit-prof').value.trim(),
+  var wk=editWeekOf(newDt);
+  var fields={subject:subj,professor:document.getElementById('edit-prof').value.trim(),
     is_exam:document.getElementById('edit-exam-chk').checked};
   var tp=document.getElementById('edit-topic').value.trim();
-  if(tp)item.topic=tp;
+  if(tp)fields.topic=tp;
+  var item=editItem(wk,newDt,newDay,newPeriod,fields);
   var o=ovLoad();
+  /* 여러 칸에 한 번에 (새 수업 추가일 때만) */
+  var bulk=editBulkSlots(newDt,newPeriod);
+  if(bulk&&bulk.length>1){
+    /* 이미 수업이 있는 칸은 건너뜀 — 실습 블록이 강의를 덮어쓰지 않게 (처음 고른 칸만 예외) */
+    var vis=viewItems(merged),put=0,skip=0;
+    bulk.forEach(function(sl){
+      var k=sl.dt+'|'+sl.p,first=(sl.dt===newDt&&sl.p===newPeriod);
+      if(!first&&vis.some(function(i){return i.date===sl.dt&&i.period===sl.p&&!isHoliday(i.subject);})){skip++;return;}
+      var it2=editItem(editWeekOf(sl.dt),sl.dt,sl.day,sl.p,fields);
+      delete o.del[k];
+      o.add=o.add.filter(function(a){return ovSlot(a)!==k;});
+      if(secFilter(merged).some(function(i){return i.date===sl.dt&&i.period===sl.p;}))o.mod[k]=it2;else o.add.push(it2);
+      put++;
+    });
+    ovSave(o);closeClassEdit();ovRefresh();
+    if(typeof xlToast==='function')xlToast(put+'칸에 넣었어요'+(skip?' · 수업이 있는 '+skip+'칸은 그대로 뒀어요':''));
+    return;
+  }
   var moved=(newDt!==c.dt||newPeriod!==c.period);
   /* 원래 슬롯 정리 (이동 시 원 슬롯은 삭제 처리) */
   var k0=c.dt+'|'+c.period;
@@ -381,6 +392,77 @@ function saveClassEdit(){
   if(secFilter(merged).some(function(i){return i.date===newDt&&i.period===newPeriod;}))o.mod[k1]=item;
   else o.add.push(item);
   ovSave(o);closeClassEdit();ovRefresh();
+}
+/* 날짜가 속한 주차 — wdd에서 찾고, 없으면 그 날짜가 속한 주(월~일)의 다른 날짜로. 빈 요일 열은 등록 */
+function editWeekOf(dt){
+  var q=dt.split('-'),dow=new Date(+q[0],+q[1]-1,+q[2]).getDay(),day=WN[dow],wk=null;
+  for(var w in wdd){for(var d in wdd[w]){if(wdd[w][d]===dt){wk=w;break;}}if(wk)break;}
+  if(!wk){
+    var base=new Date(+q[0],+q[1]-1,+q[2]);var mon=new Date(base);mon.setDate(base.getDate()-((dow+6)%7));
+    var span={};for(var k=0;k<7;k++){var dd2=new Date(mon);dd2.setDate(mon.getDate()+k);span[dd2.getFullYear()+'-'+p2(dd2.getMonth()+1)+'-'+p2(dd2.getDate())]=1;}
+    for(var w2 in wdd){for(var d2 in wdd[w2]){if(span[wdd[w2][d2]]){wk=w2;break;}}if(wk)break;}
+  }
+  if(!wk)wk=wks[ci]||'1';
+  /* 그 주에 해당 요일 날짜가 비어 있으면(휴일 등) 열이 생기도록 등록 */
+  if(wdd[wk]&&!wdd[wk][day]){wdd[wk][day]=dt;
+    try{var st=JSON.parse(localStorage.getItem(ttKey())||'null');if(st&&st.wdd){st.wdd[wk]=st.wdd[wk]||{};st.wdd[wk][day]=dt;localStorage.setItem(ttKey(),JSON.stringify(st));}}catch(e){}}
+  return wk;
+}
+function editItem(wk,dt,day,p,f){
+  var it={week:wk,date:dt,day:day,period:p,start:PERIOD_START[p]||'',end:PERIOD_END[p]||'',
+    subject:f.subject,professor:f.professor,is_exam:f.is_exam};
+  if(f.topic)it.topic=f.topic;
+  return it;
+}
+/* '여러 칸에 한 번에' — 끝 교시·요일·매주 반복 */
+function editBulkInit(show,day,period){
+  var bx=document.getElementById('edit-bulk');if(!bx)return;
+  bx.style.display=show?'':'none';bx.open=false;
+  if(!show)return;
+  var pe=document.getElementById('edit-pend'),h='';
+  Object.keys(PERIOD_START).map(Number).sort(function(a,b){return a-b;}).forEach(function(pi){
+    if(pi>=period)h+='<option value="'+pi+'"'+(pi===period?' selected':'')+'>'+pi+'교시 '+(PERIOD_END[pi]||'')+'</option>';
+  });
+  pe.innerHTML=h;
+  var dz=document.getElementById('edit-days'),dh='';
+  ['월','화','수','목','금'].forEach(function(d){dh+='<button type="button" class="edit-day'+(d===day?' on':'')+'" data-d="'+d+'">'+d+'</button>';});
+  dz.innerHTML=dh;
+  dz.querySelectorAll('.edit-day').forEach(function(b){b.onclick=function(){b.classList.toggle('on');editBulkSum();};});
+  var un=document.getElementById('edit-until');un.value='';
+  var all=[];for(var w0 in wdd){for(var d0 in wdd[w0])if(wdd[w0][d0])all.push(wdd[w0][d0]);}all.sort();
+  un.max=all[all.length-1]||'';un.min=_editCtx?_editCtx.dt:'';
+  pe.onchange=un.onchange=editBulkSum;
+  ['edit-period','edit-date'].forEach(function(id){var e=document.getElementById(id);
+    if(e&&!e.dataset.bulkBound){e.dataset.bulkBound='1';e.addEventListener('change',editBulkSum);}});
+  editBulkSum();
+}
+function editBulkSlots(startDt,p0){
+  var bx=document.getElementById('edit-bulk');
+  if(!bx||bx.style.display==='none'||!bx.open)return null;
+  var pe=parseInt(document.getElementById('edit-pend').value,10)||p0;
+  var days=[].map.call(document.querySelectorAll('#edit-days .edit-day.on'),function(b){return b.getAttribute('data-d');});
+  if(!days.length)return null;
+  var until=document.getElementById('edit-until').value||'';
+  var q=startDt.split('-'),s0=new Date(+q[0],+q[1]-1,+q[2]),mon=new Date(s0);mon.setDate(s0.getDate()-((s0.getDay()+6)%7));
+  var end=until?new Date(+until.slice(0,4),+until.slice(5,7)-1,+until.slice(8,10)):new Date(mon.getTime()+4*86400000);
+  var out=[],ps=Object.keys(PERIOD_START).map(Number).filter(function(x){return x>=p0&&x<=pe;});
+  for(var wkS=new Date(mon);wkS<=end&&out.length<600;wkS.setDate(wkS.getDate()+7)){
+    days.forEach(function(d){
+      var di=['월','화','수','목','금'].indexOf(d),dt=new Date(wkS);dt.setDate(wkS.getDate()+di);
+      if(dt<s0||dt>end)return;
+      var ds=dt.getFullYear()+'-'+p2(dt.getMonth()+1)+'-'+p2(dt.getDate());
+      ps.forEach(function(pp){out.push({dt:ds,day:d,p:pp});});
+    });
+  }
+  return out;
+}
+function editBulkSum(){
+  var el=document.getElementById('edit-bulk-sum');if(!el||!_editCtx)return;
+  var de=document.getElementById('edit-date'),dt=(de&&de.value)||_editCtx.dt;
+  var p0=parseInt(document.getElementById('edit-period').value,10)||_editCtx.period;
+  var bx=document.getElementById('edit-bulk'),was=bx.open;bx.open=true;
+  var sl=editBulkSlots(dt,p0)||[];bx.open=was;
+  el.textContent=sl.length>1?'저장하면 '+sl.length+'칸에 같은 수업이 들어가요':'요일을 고르고 끝 교시·반복을 정하면 한 번에 넣어요';
 }
 /* ── 내 편집 목록 (오버라이드 관리) ── */
 function ovBarHtml(){
@@ -630,7 +712,7 @@ function wkReduceMotion(){
 function wkBindSwipe(){
   var el=document.querySelector('.sw');
   if(!el)return;
-  var x0=0,y0=0,dx=0,t0=0,lock=0,on=false; /* lock: 0 판단 전, 1 가로, -1 세로 */
+  var x0=0,y0=0,dx=0,t0=0,lock=0,on=false,edgeL=true,edgeR=true; /* lock: 0 판단 전, 1 가로, -1 세로 */
   var mv=wkSlideEls();    /* 표 + 위의 날짜별 할 일 줄을 함께 움직임 */
   function setX(x,op){mv.forEach(function(m){m.style.transform=x?'translate3d('+x+'px,0,0)':'';m.style.opacity=op===1?'':String(op);});}
   function setT(t){mv.forEach(function(m){m.style.transition=t;});}
@@ -640,7 +722,9 @@ function wkBindSwipe(){
   }
   el.addEventListener('touchstart',function(e){
     if(e.touches.length!==1){on=false;return;}
-    if(el.scrollWidth>el.clientWidth+4){on=false;return;} /* 가로 스크롤 가능한 표는 제외 */
+    /* 표가 화면보다 넓으면(큰 글씨 등) 표 안 가로 스크롤이 먼저 — 끝에 닿은 쪽으로만 주 넘기기 */
+    edgeL=edgeR=true;
+    if(el.scrollWidth>el.clientWidth+4){edgeL=el.scrollLeft<=2;edgeR=el.scrollLeft+el.clientWidth>=el.scrollWidth-2;if(!edgeL&&!edgeR){on=false;return;}}
     on=true;lock=0;dx=0;t0=Date.now();
     x0=e.touches[0].clientX;y0=e.touches[0].clientY;
     setT('none');
@@ -651,6 +735,7 @@ function wkBindSwipe(){
     if(!lock){
       if(Math.abs(mx)<8&&Math.abs(my)<8)return;
       lock=Math.abs(mx)>Math.abs(my)*1.2?1:-1;
+      if(lock===1&&((mx<0&&!edgeR)||(mx>0&&!edgeL)))lock=-1; /* 아직 표를 더 밀 수 있는 방향이면 표 스크롤에 맡김 */
     }
     if(lock!==1)return;
     e.preventDefault(); /* 가로로 잡았으면 세로 스크롤과 섞이지 않게 */
@@ -695,6 +780,12 @@ function wkSlideIn(){
 function wkGoWeek(step,slide){
   var ni=ci+step;
   if(ni<0||ni>=wks.length)return;
+  /* 실습 블록처럼 수업 없는 주차를 건너뛰면 알려 줌 (14주차 → 5주차) */
+  var w0=parseInt(wks[ci],10),w1=parseInt(wks[ni],10);
+  if(!isNaN(w0)&&!isNaN(w1)&&Math.abs(w1-w0)>1&&typeof xlToast==='function'){
+    var a1=Math.min(w0,w1)+1,b1=Math.max(w0,w1)-1;
+    xlToast((a1===b1?a1:a1+'~'+b1)+'주차는 수업이 없어서 건너뛰었어요');
+  }
   ci=ni;wkFoldOpen=false; /* 주차를 옮기면 다시 접어서 보여준다 */
   if(slide)wkSlideFrom=step>0?1:-1;        /* 다음 주는 오른쪽에서, 지난주는 왼쪽에서 */
   else if(typeof animMain==='function')animMain();

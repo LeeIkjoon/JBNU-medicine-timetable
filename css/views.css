@@ -705,3 +705,27 @@
 .tm-float b{font-variant-numeric:tabular-nums;font-weight:var(--weight-bold)}
 .tm-float-dot{width:8px;height:8px;border-radius:50%;background:#34C759;flex:none}
 .tm-float-dot.paused{background:#FF9F0A}
+
+/* ── FGI: 작은 터치 영역 키우기·보이게 (모양은 그대로, 누르는 범위만 넓힘) ── */
+.pln-chk{position:relative}
+.pln-chk::before{content:'';position:absolute;inset:-11px}
+.pln-stop{width:36px;height:36px;border-radius:50%;background:var(--danger-tint);color:var(--danger);margin-right:-4px}
+.pln-stop svg{width:13px;height:13px}
+.pln-del{width:36px;height:40px}
+.pln-rate-b{width:32px;height:32px}
+.dash-seg-b{padding:8px 12px}
+/* 공부 중 항목의 진행 막대 바탕이 꽉 찬 막대처럼 보이던 것 */
+.pln-item.live .pln-track{background:rgba(0,0,0,.08)}
+:root[data-theme="dark"] .pln-item.live .pln-track{background:rgba(255,255,255,.14)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pln-item.live .pln-track{background:rgba(255,255,255,.14)}}
+
+/* 학교·학년 화면 닫기 (이미 쓰는 사람) */
+.gs-close{position:absolute;top:calc(12px + env(safe-area-inset-top));right:16px;width:40px;height:40px;border-radius:50%;
+  border:none;background:rgba(0,0,0,.06);color:var(--text-secondary);font-size:17px;cursor:pointer;font-family:inherit;z-index:2}
+.gs-close:active{transform:scale(.92)}
+/* 태블릿 가로: 콘텐츠 폭을 넓히고 헤더·탭바 높이를 줄여 표가 더 보이게 */
+@media (orientation:landscape) and (min-width:1000px) and (max-height:900px){
+  :root{--content-max:1120px}
+  .hdr{padding-top:calc(6px + env(safe-area-inset-top));padding-bottom:6px}
+  .bn{padding-top:5px;padding-bottom:4px}
+}

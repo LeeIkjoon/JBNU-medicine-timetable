@@ -259,3 +259,12 @@ td.td-t-next::after{content:'다음';display:block;font-size:8px;font-weight:var
 .tt-prov{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;border:none;background:none;cursor:pointer;
   font-family:inherit;font-size:var(--font-sm);color:var(--text-soft);padding:6px 4px;line-height:1.4;text-align:center}
 .tt-prov-dot{width:6px;height:6px;border-radius:50%;background:var(--success,#34C759);flex:none}
+
+/* 칸의 실제 시각(교시 줄 시각과 다를 때) */
+.cn-tm{font-size:9px;font-weight:var(--weight-bold);color:var(--text-on-pastel-soft);margin-top:1px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 표가 넘쳐 가로로 밀 때 교시 열은 고정 */
+.sw .th-t,.sw .td-t{position:sticky;left:0;z-index:1}
+.sw .lunchrow .td-t{z-index:1}
+/* 다크 모드: 파스텔 카드가 눈부시지 않게 살짝 낮춤 */
+:root[data-theme="dark"] .card{filter:brightness(.82) saturate(.92)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card{filter:brightness(.82) saturate(.92)}}

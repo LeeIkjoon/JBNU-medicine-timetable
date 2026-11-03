@@ -175,8 +175,9 @@ function init(){
   goTodayWeek();
   var nd=new Date();cy=nd.getFullYear();cm2=nd.getMonth();
 
-  document.getElementById('pb').onclick=function(){if(ci>0){ci--;animMain();render();}};
-  document.getElementById('nb').onclick=function(){if(ci<wks.length-1){ci++;animMain();render();}};
+  /* 주차 화살표도 스와이프와 같은 슬라이드 (건너뛴 주차 안내 포함 — wkGoWeek) */
+  document.getElementById('pb').onclick=function(){if(ci>0){if(vw==='weekly'&&typeof wkGoWeek==='function')wkGoWeek(-1,true);else{ci--;animMain();render();}}};
+  document.getElementById('nb').onclick=function(){if(ci<wks.length-1){if(vw==='weekly'&&typeof wkGoWeek==='function')wkGoWeek(1,true);else{ci++;animMain();render();}}};
   document.getElementById('bn-d').onclick=function(){if(typeof dashPage!=='undefined')dashPage='main';setView('dashboard');};
   document.getElementById('bn-w').onclick=function(){goTodayWeek();setView('weekly');};
   document.getElementById('bn-f').onclick=function(){setView('filter');};
@@ -307,8 +308,29 @@ function init(){
     };
   }
 
+  /* 학교·학년 화면 닫기 — 이미 쓰는 사람이 헤더 '학년'으로 들어왔다가 그냥 돌아갈 수 있게 (첫 실행엔 없음) */
+  function gsCloseBtn(id){
+    var sc=document.getElementById(id);if(!sc)return;
+    var b=sc.querySelector('.gs-close');
+    var can=!!(savedGrade&&merged);
+    if(!b){
+      b=document.createElement('button');b.className='gs-close';b.type='button';b.setAttribute('aria-label','닫기');b.textContent='✕';
+      b.onclick=function(){
+        ['sc-screen','gs-screen'].forEach(function(x){var e=document.getElementById(x);if(e)e.style.display='none';});
+        /* 학교를 골랐다가 학년 화면에서 닫으면 원래 학교·학년으로 되돌림 */
+        var o=window._gsOrig;window._gsOrig=null;
+        if(o){savedSchool=o.school;savedGrade=o.grade;
+          try{localStorage.setItem('user_school',o.school);localStorage.setItem('user_grade',o.grade);}catch(e){}}
+        if(typeof applySchoolPeriods==='function')applySchoolPeriods();
+      };
+      sc.appendChild(b);
+    }
+    b.style.display=can&&(function(){try{return !!localStorage.getItem('user_grade');}catch(e){return false;}})()?'':'none';
+  }
   /* 학교 선택 — 지도(지역) + 목록 (js/views/schoolmap.js) */
   function showSchoolScreen(){
+    window._gsOrig={school:savedSchool,grade:savedGrade};window._gsFromSchool=true;
+    gsCloseBtn('sc-screen');
     var grid=document.getElementById('sc-grid');
     grid.style.cssText='';
     grid.innerHTML=scPickerHtml();
@@ -325,6 +347,9 @@ function init(){
 
   /* 학년 선택 — 휠 (현재 학교의 학년 목록) */
   function showGradeScreen(){
+    if(!window._gsFromSchool)window._gsOrig={school:savedSchool,grade:savedGrade};
+    window._gsFromSchool=false;
+    gsCloseBtn('gs-screen');
     var sc=SCHOOLS[savedSchool||'jbnu'];
     document.getElementById('gs-title').textContent=sc.name+' '+sc.dept;
     var grid=document.getElementById('gs-grid');

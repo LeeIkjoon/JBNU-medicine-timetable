@@ -30,9 +30,10 @@ function byDateH(items){
     var lbl=m+'/'+day+' ('+dow+')';
     var hx=false;for(var gi=0;gi<grp.length;gi++)if(isEx(grp[gi].subject)){hx=true;break;}
     var todayCls=isToday?' today':'';
+    var dd0=hx&&dt>=todayStr?Math.round((new Date(dt)-new Date(todayStr))/86400000):-1;
     h+='<tr class="xl-date-row'+todayCls+'" data-date="'+dt+'"><td colspan="4">'+lbl+
       (isToday?'<span class="xl-today-badge">오늘</span>':'')+
-      (hx?'<span class="exam-flag">시험</span>':'')+
+      (hx?'<span class="exam-flag">시험'+(dd0>0?' D-'+dd0:dd0===0?' D-Day':'')+'</span>':'')+
     '</td></tr>';
     grp.sort(function(a,b){return a.period-b.period||(a.subject<b.subject?-1:1);});
 
@@ -318,7 +319,8 @@ function renderF(){
     nS.forEach(function(s){
       if(fsubj2.indexOf(s)<0)return;
       var profs=fProfsOf(s);
-      if(profs.length<2)return;
+      profs=profs.filter(function(pr){return pr.name&&pr.name!=='미정';});
+      if(!profs.length)return; /* 교수 1명이어도 보여 줌 (아주대처럼 과목당 교수 1명인 시간표) */
       var sel=fProfSel[s]||[],c=gcol(s);
       ph+='<div class="fprof-grp"><div class="fprof-subj"><span class="hrs-dot" style="background:'+c+'"></span>'+escHtml(s)+'</div><div class="chips">';
       ph+='<button class="chip fprof-all'+(sel.length?'':' on')+'" data-s="'+escHtml(s)+'">전체</button>';

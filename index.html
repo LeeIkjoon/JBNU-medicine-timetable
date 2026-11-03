@@ -22,9 +22,9 @@
 <link rel="stylesheet" href="css/tokens.css?v=20261001a">
 <link rel="stylesheet" href="css/base.css?v=20260926f">
 <link rel="stylesheet" href="css/layout.css?v=20261001h">
-<link rel="stylesheet" href="css/timetable.css?v=20261104b">
-<link rel="stylesheet" href="css/components.css?v=20261103b">
-<link rel="stylesheet" href="css/views.css?v=20261103b">
+<link rel="stylesheet" href="css/timetable.css?v=20261104c">
+<link rel="stylesheet" href="css/components.css?v=20261104c">
+<link rel="stylesheet" href="css/views.css?v=20261104c">
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -168,20 +168,20 @@
 <script src="js/views/schoolmap.js?v=20261011c"></script>
 <script src="js/views/report.js?v=20261011a"></script>
 <script src="js/views/tour.js?v=20261104a"></script>
-<script src="js/views/weekly.js?v=20261104b"></script>
-<script src="js/views/filter.js?v=20261020a"></script>
-<script src="js/views/calendar.js?v=20260830c"></script>
+<script src="js/views/weekly.js?v=20261104c"></script>
+<script src="js/views/filter.js?v=20261104c"></script>
+<script src="js/views/calendar.js?v=20261104c"></script>
 <script src="js/views/planner.js?v=20261001d"></script>
 <script src="js/views/timer.js?v=20261103b"></script>
 <script src="js/views/dashboard.js?v=20261103b"></script>
-<script src="js/views/history.js?v=20261103b"></script>
+<script src="js/views/history.js?v=20261104c"></script>
 <script src="js/views/dtodo.js?v=20261104a"></script>
 <script src="js/admin.js?v=20261001a"></script>
 <script src="js/sync.js?v=20261011c"></script>
 <script src="js/auth.js?v=20261008a"></script>
 <script src="js/push.js?v=20261008a"></script>
 <script src="js/move.js?v=20261001h"></script>
-<script src="js/app.js?v=20261011c"></script>
+<script src="js/app.js?v=20261104c"></script>
 
 <!-- 관리자 FAB -->
 <button class="admin-fab" id="admin-fab" title="관리자 모드"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L18.5 9.5a2 2 0 0 0-2.8-2.8L5 17.2z"/><path d="M13.5 6.7l3.8 3.8"/></svg></button>
@@ -220,6 +220,13 @@
         <select class="memo-input" id="edit-period"></select>
         <label class="edit-exam"><input type="checkbox" id="edit-exam-chk"> 시험</label>
       </div>
+      <details class="edit-bulk" id="edit-bulk">
+        <summary>여러 칸에 한 번에 넣기 <span>실습·블록 일정</span></summary>
+        <div class="edit-bulk-row"><span class="edit-bulk-l">끝 교시</span><select class="memo-input" id="edit-pend"></select></div>
+        <div class="edit-bulk-row"><span class="edit-bulk-l">요일</span><div class="edit-days" id="edit-days"></div></div>
+        <div class="edit-bulk-row"><span class="edit-bulk-l">반복</span><input class="memo-input edit-date" id="edit-until" type="date" aria-label="반복 끝 날짜"><span class="edit-bulk-s">까지 매주</span></div>
+        <div class="edit-bulk-sum" id="edit-bulk-sum"></div>
+      </details>
     </div>
     <div class="edit-btns">
       <button class="edit-save" id="edit-save">저장</button>

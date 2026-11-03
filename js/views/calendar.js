@@ -53,6 +53,27 @@ function renderCal(){
     g+='<div class="'+cls+'"'+oc+'><div class="cdn">'+day+'</div>'+sub+'</div>';
   }
   document.getElementById('cal-g').innerHTML=g;
+  /* 이 달 시험 목록 — 점만으로는 무슨 시험인지 몰라서 이름·D-day를 함께 */
+  var exBox=document.getElementById('cal-ex');
+  if(!exBox){exBox=document.createElement('div');exBox.id='cal-ex';exBox.className='cal-ex';
+    var cg=document.getElementById('cal-g');cg.parentNode.insertBefore(exBox,cg.nextSibling);}
+  var mPre=cy+'-'+p2(cm2+1)+'-',exm={};
+  viewItems(merged).forEach(function(x){
+    if(!x.date||x.date.indexOf(mPre)!==0)return;
+    if(!(x.is_exam===true||x.is_exam==='true'||isEx(x.subject)))return;
+    (exm[x.date]=exm[x.date]||{})[x.subject]=1;
+  });
+  var exDs=Object.keys(exm).sort(),eh='';
+  exDs.forEach(function(d){
+    var n=Math.round((new Date(d)-new Date(t))/86400000);
+    eh+='<div class="cal-ex-row" data-d="'+d+'"><span class="cal-ex-d">'+(+d.slice(5,7))+'/'+(+d.slice(8))+'</span>'
+      +'<span class="cal-ex-n">'+escHtml(Object.keys(exm[d]).join(', '))+'</span>'
+      +'<span class="cal-ex-dd">'+(n>0?'D-'+n:n===0?'D-Day':'지남')+'</span></div>';
+  });
+  exBox.innerHTML=eh?'<div class="cal-ex-ttl">이 달 시험</div>'+eh:'';
+  exBox.querySelectorAll('.cal-ex-row').forEach(function(r){
+    r.onclick=function(){var c=document.getElementById('cd-'+r.getAttribute('data-d'));if(c)c.click();};
+  });
   var ckEls=document.querySelectorAll('.cday.ck');
   for(var ci2=0;ci2<ckEls.length;ci2++){
     ckEls[ci2].onclick=(function(el,dtw){
